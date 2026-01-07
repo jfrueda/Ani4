@@ -1,0 +1,15 @@
+trigger:
+- master
+- desarrollo
+- preproduccion
+- v1
+
+pool:
+  name: pruebassuperargo
+  demands:
+    - agent.name -equals dev
+
+jobs:
+  - job: script_master
+    steps:
+      - script: $(script-superargo)

@@ -1,0 +1,49 @@
+        <footer class="he_footer">
+            <div class="container">
+                <div class="row">
+                <div class="col-xl-2 col-lg-4 split screen-lg logos">
+                    <div class="logo"> <a href="https://www.gov.co" title="Ir al sitio web gov.co"> <img src="https://cdn.www.gov.co/assets/images/logo.svg" height="30" width="140" alt="Logo Gov.co"> </a> </div>
+                    <div class="logo_co"> <a href="https://www.colombia.co" title="Ir al sitio web colombia.co"> <img src="img/logo_co_footer.png" alt="logo co" /> </a> </div>
+                </div>
+                <div class="col-xl-10">
+                    <h4>Superintendencia Nacional de Salud</h4>
+                    <p>PBX: (57) (601) 744 2000 | Línea Gratuita Nacional: 01 8000 513 700</p>
+                    <div class="col-lg-4">
+                    <h3>Sede Administrativa</h3>
+                    <p>Carrera 68A N°. 24B - 10, Torre 3, Piso 4, 9 y 10<br/>
+                        Edificio Plaza Claro, Bogotá D.C.<br/>
+                        Lunes a viernes 8:00 a.m. a 4:00 p.m.</p>
+                    </div>
+                    <div class=" col-lg-4">
+                    <h3>Recibo de Correspondencia</h3>
+                    <p>Carrera 68A N.º 24B - 10, Torre 3, piso 4<br/>
+                        Edificio Plaza Claro, Bogotá D.C.<br/>
+                        Lunes a viernes 8:00 a.m. a 4:00 p.m.</p>
+                    </div>
+                    <div class=" col-lg-4">
+                    <h3>Centro de Atención al Ciudadano y Recibo de Correspondencia</h3>
+                    <p>Carrera 13 N.º 28-08, locales 21 y 22, Bogotá D.C.<br/>
+                        Lunes a viernes 8:00 a.m. a 4:00 p.m.</p>
+                    </div>
+                    <div class="redes"> <a href="https://www.facebook.com/supersalud" title="Ir a la página oficial en Facebook de la Supersalud" target="_blank"><span class="fb_f">Facebook</span></a> <a href="https://twitter.com/supersalud" title="Ir a la cuenta oficial en Twitter de la Supersalud" target="_blank"><span class="tw_f">Twitter</span></a> <a href="https://www.youtube.com/supersaludcomunica" title="Ir al canal oficial en YouTube de la Supersalud" target="_blank"><span class="yt_f">YouTube</span></a> <a href="https://www.instagram.com/supersalud/" title="Ir a la cuenta oficial en Twitter de la Supersalud" target="_blank"><span class="ig_f">Instagram</span></a> </div>
+                </div>
+                <div class="col-lg-2 no-split split-top screen-md-sm logos_movil">
+                    <div class="logo"> <a href="https://www.gov.co"  title="Ir al sitio web gov.co"> <img src="img/logo_footer.png" alt="logo" /> </a> </div>
+                    <div class="logo_co"> <a href="https://www.colombia.co" title="Ir al sitio web colombia.co"> <img src="img/logo_co_footer.png" alt="logo co" /> </a> </div>
+                </div>
+                </div>
+            </div>
+        </footer>
+    <!-- Fin footer gov co-->
+    </body>
+    <script type="text/javascript">
+
+        /*
+        history.pushState(null, null, 'preguntas.php');
+        window.addEventListener('popstate', function(event) {
+            history.pushState(null, null, 'preguntas.php');
+        });
+        */
+
+    </script>
+</html>

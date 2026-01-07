@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ 
+    <title>Document</title>
+</head>
+<style>
+    table
+    {
+        width: 80%;
+        margin-left: 7em;
+    }
+    .cab
+    {
+        text-align: right;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .bod
+    {
+        text-align: justify;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .pagFin
+    {
+        text-align: justify;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.5em;
+    } 
+    /* 
+    @font-face {
+  font-family: 'Libre Barcode 39';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://orfeo-des.adres.gov.co:444/restapi/App/anexos/fonts/Code3of9_Regular_0.ttf) format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}*/
+
+</style>
+
+<body>
+    
+    
+    <table>
+        <tbody>
+            <tr>
+                <td align="right"><font face="Libre Barcode 39" style="font-size:66px;">{{radicado}}</font></td>
+            </tr>--
+            <tr class="cab">
+                <!--<td>Radicado No.<?=$datos["radicado"]?></td>-->
+                <td>Radicado No.{{radicado}}</td>
+            </tr>
+            <br><br><br>    
+            <tr class="bod">
+                <td>
+                    Radicación enviada al usuario de ORFEO:{{usuario}}></br>
+                        Mensaje recibido desde Mail: {{mail}}</br>
+                        Asunto:{{asunto}}
+                </td>
+            </tr>
+            <br><br><br>    
+            <tr class="pagFin">
+                <td>
+                    Para ver los documentos adjuntos al correo, debe ingresar por el </br>
+                    enlace de la "Fecha de radicado" y seleccionar la pestaña de </br>
+                    "Documentos anexos"
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

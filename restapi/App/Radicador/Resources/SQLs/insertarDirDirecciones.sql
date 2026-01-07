@@ -1,0 +1,21 @@
+INSERT INTO sgd_dir_drecciones(
+                sgd_dir_doc,
+                sgd_dir_nombre,
+                sgd_dir_nomremdes,
+                sgd_dir_codigo,
+                sgd_dir_tipo,
+                sgd_ciu_codigo,
+                radi_nume_radi,
+                muni_codi,
+                dpto_codi,
+                sgd_dir_mail,
+                id_pais,
+                id_cont,
+                mrec_codi,
+                sgd_dir_enviado,
+                sgd_dir_direccion,
+                sgd_dir_tdoc,
+                sgd_trd_codigo
+                )
+                VALUES
+                ('{{docUsr}}','{{nombTerc}}','{{nombRem}}',{{dirCode}},1,0,{{radicado}},{{muni_codi}},{{dpto_codi}},'{{correoDir}}',170,1,0,1,'{{correoDir}}',3,2)
