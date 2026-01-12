@@ -275,3 +275,7 @@
     transform: translateY(-2px);
     color: white;
 }
+
+.hide {
+    display: none !important;
+}

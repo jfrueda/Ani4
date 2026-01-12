@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @author Jairo Losada
  * @author Cesar Gonzalez <aurigadl@gmail.com>
  * @license  GNU AFFERO GENERAL PUBLIC LICENSE
  * @copyrightF
-*
-*SIIM2 Models are the data definition of SIIM2 Information System
+ *
+ *SIIM2 Models are the data definition of SIIM2 Information System
  * Copyright (C) 2013 Infometrika Ltda.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,7 +67,7 @@ $sFileName  = "prestamo.php";
 // Variables de control
 $opcionMenu = strip($_REQUEST["opcionMenu"]); //opción seleccionada del menu
 
-if(empty($opcionMenu)){
+if (empty($opcionMenu)) {
     $opcionMenu = 0;
 }
 
@@ -74,6 +75,7 @@ $pageAnt    = strip($_REQUEST["sFileName"]);
 
 ?>
 <html>
+
 <head>
     <title>Sistema de informaci&oacute;n <?= $entidad_largo ?></title>
     <meta charset="utf-8">
@@ -81,51 +83,53 @@ $pageAnt    = strip($_REQUEST["sFileName"]);
     <link rel="shortcut icon" href="<?= $ruta_raiz ?>/img/favicon.png">
     <!-- Bootstrap core CSS -->
     <?php include_once "../htmlheader.inc.php"; ?>
-   
+
     <!--Necesario para hacer visible el calendario -->
     <script src="<?= $ruta_raiz ?>/js/popcalendar.js"></script>
     <div id="spiffycalendar" class="text"></div>
     <link rel="stylesheet" type="text/css" href="<?= $ruta_raiz ?>/js/spiffyCal/spiffyCal_v2_1.css">
 </head>
+
 <body class="PageBODY">
-	<!-- row -->
-		<br>
-		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <!-- row -->
+    <br>
+    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-				<!-- Widget ID (each widget will need unique ID)-->
-				<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
-						<header></header>
-						<!-- widget div-->
-						<div>
-								<!-- widget content -->
-								<div class="widget-body no-padding">
-										<table width="100%">
-												<tr>
-														<td valign="top"><?php Search_Show(); ?></td>
-												</tr>
-										</table>
-								</div>
-						</div>
-				</div>
-		</article>
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+            <header></header>
+            <!-- widget div-->
+            <div>
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <table width="100%">
+                        <tr>
+                            <td valign="top"><?php Search_Show(); ?></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </article>
 
-<?php if (isset($_REQUEST['genearreporte']) || isset($_REQUEST['FormPedidos_Page'] )){ ?>
+    <?php if (isset($_REQUEST['genearreporte']) || isset($_REQUEST['FormPedidos_Page'])) { ?>
 
-	<row>
+        <row>
 
-	<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<table width="100%" class="table table-striped table-bordered table-hover dataTable no-footer smart-form">
-		<tr>
-		<td valign="top">
-		<?php  Pedidos_Show(); ?>
-		</td>
-		</tr>
-	</table>
-	</article>
-	</row>
-<?php } ?>
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <table width="100%" class="table table-striped table-bordered table-hover dataTable no-footer smart-form">
+                    <tr>
+                        <td valign="top">
+                            <?php Pedidos_Show(); ?>
+                        </td>
+                    </tr>
+                </table>
+            </article>
+        </row>
+    <?php } ?>
 
 </body>
+
 </html>
 <?php
 //===============================
@@ -136,14 +140,15 @@ $pageAnt    = strip($_REQUEST["sFileName"]);
 //===============================
 // Search_Show begin
 //===============================
-function Search_Show() {
+function Search_Show()
+{
     // De sesion
 
     global $db;
     global $ruta_raiz;
     $sFileName = $_REQUEST["sFileName"];
     $opcionMenu = $_REQUEST["opcionMenu"];
-    if(empty($opcionMenu)){
+    if (empty($opcionMenu)) {
         $opcionMenu = 0;
     }
 
@@ -192,7 +197,7 @@ function Search_Show() {
     } // Inicializa el usuario para el caso en que el ingresa por la opci�n de SOLICITADOS
     $flds_DEPE_NOMB = strip($_REQUEST["s_DEPE_NOMB"]);
     $flds_USUA_NOMB = strip($_REQUEST["s_USUA_NOMB"]);
-    
+
     $flds_PRES_REQUERIMIENTO = strip($_REQUEST["s_PRES_REQUERIMIENTO"]);
     if ($v_hora_limite == "") {
         $v_hora_limite = strip($_REQUEST["s_hora_limite"]);
@@ -208,285 +213,314 @@ function Search_Show() {
     include_once "inicializarForm.inc";
 
     // Form display
-    ?>
+?>
     <form method="post" action="prestamo.php" name="busqueda" class="smart-form">
-    <!-- de sesion !-->
-    <input type="hidden" value="" name="radicado">
-    <input type="hidden" value="" name="s_sql">
-    <!-- control de visualizacion !-->
-    <input type="hidden" name="opcionMenu" value="<?= $opcionMenu ?>">
-    <input type="hidden" name="sFileName" value="">
-    <!-- orden de presentaci�n del resultado !-->
-    <input type="hidden" name="FormPedidos_Sorting" value="1">
-    <input type="hidden" name="FormPedidos_Sorted" value="0">
-    <input type="hidden" name="s_Direction" value=" DESC ">
-    <!-- control de paginacion !-->
-    <input type="hidden" name="FormPedidos_Page" value="1">
-    <input type="hidden" name="FormStarPage" value="1">
-    <input type="hidden" name="FormSiguiente" value="0">
-    <!--Calendario-->
-    <script language="JavaScript" src="<?= $ruta_raiz ?>/js/spiffyCal/spiffyCal_v2_1.js"></script>
-    <script language="javascript">
-		$(document).ready(function() {
+        <!-- de sesion !-->
+        <input type="hidden" value="" name="radicado">
+        <input type="hidden" value="" name="s_sql">
+        <!-- control de visualizacion !-->
+        <input type="hidden" name="opcionMenu" value="<?= $opcionMenu ?>">
+        <input type="hidden" name="sFileName" value="">
+        <!-- orden de presentaci�n del resultado !-->
+        <input type="hidden" name="FormPedidos_Sorting" value="1">
+        <input type="hidden" name="FormPedidos_Sorted" value="0">
+        <input type="hidden" name="s_Direction" value=" DESC ">
+        <!-- control de paginacion !-->
+        <input type="hidden" name="FormPedidos_Page" value="1">
+        <input type="hidden" name="FormStarPage" value="1">
+        <input type="hidden" name="FormSiguiente" value="0">
+        <!--Calendario-->
+        <script language="JavaScript" src="<?= $ruta_raiz ?>/js/spiffyCal/spiffyCal_v2_1.js"></script>
+        <script language="javascript">
+            $(document).ready(function() {
 
-				//Inicializa el formulario
-				function limpiar() {
-						document.busqueda.action = "menu_prestamo.php";
-						document.busqueda.submit();
-				}
-				//Presenta los usuarios segun la dependencia seleccionada
-				var codUsuaSel = "<?= $flds_USUA_NOMB ?>";
+                //Inicializa el formulario
+                function limpiar() {
+                    document.busqueda.action = "menu_prestamo.php";
+                    document.busqueda.submit();
+                }
+                //Presenta los usuarios segun la dependencia seleccionada
+                var codUsuaSel = "<?= $flds_USUA_NOMB ?>";
 
-				setRutaRaiz('<?= $ruta_raiz ?>');
-				//Datepicker muestra fecha
-				$('#fechaInicial').datepicker({
-						dateFormat : 'yy-mm-dd',
-						onSelect : function(selectedDate) {
-								$('#date').datepicker('option', 'maxDate', selectedDate);
-						}
-				});
-				$('#fechaFinal').datepicker({
-						dateFormat : 'yy-mm-dd',
-						onSelect : function(selectedDate) {
-								$('#date').datepicker('option', 'maxDate', selectedDate);
-						}
-				});
+                setRutaRaiz('<?= $ruta_raiz ?>');
+                //Datepicker muestra fecha
+                $('#fechaInicial').datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    onSelect: function(selectedDate) {
+                        $('#date').datepicker('option', 'maxDate', selectedDate);
+                    }
+                });
+                $('#fechaFinal').datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    onSelect: function(selectedDate) {
+                        $('#date').datepicker('option', 'maxDate', selectedDate);
+                    }
+                });
 
-				$('#buscarPres').click(function(event){
+                $('#buscarPres').click(function(event) {
 
-						var pass = false;
+                    var pass = false;
 
-						$('#tabledataform').find("input[name^='s']").each(function(index, value){
-								if($(value).val().length > 0){
-										pass = true;
-								}
-						});
+                    $('#tabledataform').find("input[name^='s']").each(function(index, value) {
+                        if ($(value).val().length > 0) {
+                            pass = true;
+                        }
+                    });
 
-						if($("select[name='s_USUA_NOMB']").val() !== ""){
-								pass = true;
-						}
+                    if ($("select[name='s_USUA_NOMB']").val() !== "") {
+                        pass = true;
+                    }
 
-						if($("select[name='s_DEPE_NOMB']").val() !== ""){
-								pass = true;
-						}
+                    if ($("select[name='s_DEPE_NOMB']").val() !== "") {
+                        pass = true;
+                    }
 
-						if(!pass){
-								alert('No hay parametros de busqueda');
-								return false
-						}
+                    if (!pass) {
+                        alert('No hay parametros de busqueda');
+                        return false
+                    }
 
-				})
-		});
+                })
+            });
+        </script>
 
-    </script>
-
-    <table class='table table-striped  table-hover dataTable no-footer smart-form'
-           id="tabledataform">
-<!--<tr>
+        <table class='table table-striped  table-hover dataTable no-footer smart-form'
+            id="tabledataform">
+            <!--<tr>
       <td  colspan="2"><a name="Search"><? /*=$sFormTitle[$opcionMenu]; */ ?> </a></td>
     </tr>-->
-    <?php /* */ ?>
-    <tr id="b0" style="display:<?= $tipoBusqueda[$opcionMenu][0]; ?>">
-        <td><p align="left">Radicado</p></td>
-        <td><label class="input"><input type="text" name="s_RADI_NUME_RADI" maxlength="65"
-                                        value="<?= $flds_RADI_NUME_RADI; ?>" size="25"></label>
-        </td>
-    </tr>
+            <?php /* */ ?>
+            <tr id="b0" style="display:<?= $tipoBusqueda[$opcionMenu][0]; ?>">
+                <td>
+                    <p align="left">Radicado</p>
+                </td>
+                <td><label class="input"><input type="text" name="s_RADI_NUME_RADI" maxlength="65"
+                            value="<?= $flds_RADI_NUME_RADI; ?>" size="25"></label>
+                </td>
+            </tr>
 
-    <tr id="b0" style="display:<?= $tipoBusqueda[$opcionMenu][0]; ?>">
-        <td><p align="left">Expediente</p></td>
-        <td><label class="input"><input type="text" name="s_numeroExpediente" maxlength="22"
-					value="<?= $flds_numeroExpediente; ?>"
-								size="25"></label></td>
-    </tr>
+            <tr id="b0" style="display:<?= $tipoBusqueda[$opcionMenu][0]; ?>">
+                <td>
+                    <p align="left">Expediente</p>
+                </td>
+                <td><label class="input"><input type="text" name="s_numeroExpediente" maxlength="22"
+                            value="<?= $flds_numeroExpediente; ?>"
+                            size="25"></label></td>
+            </tr>
 
-    <tr id="b1" style="display:<?= $tipoBusqueda[$opcionMenu][1]; ?>">
-        <td><p align="left">Login de Usuario</p></td>
-        <td><label class="input"><input type="text" name="s_USUA_LOGIN" maxlength="15"
-					value="<?= $flds_USUA_LOGIN; ?>" size="25"></label></td>
-    </tr>
+            <tr id="b1" style="display:<?= $tipoBusqueda[$opcionMenu][1]; ?>">
+                <td>
+                    <p align="left">Login de Usuario</p>
+                </td>
+                <td><label class="input"><input type="text" name="s_USUA_LOGIN" maxlength="15"
+                            value="<?= $flds_USUA_LOGIN; ?>" size="25"></label></td>
+            </tr>
 
-    <tr id="b2" style="display:<?= $tipoBusqueda[$opcionMenu][2]; ?>">
-        <td><p align="left">Dependencia</p></td>
-        <td><label class="select"><select name="s_DEPE_NOMB" class="select"
-																		onChange=" document.busqueda.s_sql.value='no'; document.busqueda.submit(); ">
-							<option value="">- TODAS LAS DEPENDENCIAS -</option>
-							<?
-							$lookup_s = db_fill_array("select DEPE_CODI,DEPE_NOMB from DEPENDENCIA order by 2");
-							if (is_array($lookup_s)) {
-									reset($lookup_s);
-									while (list($key, $value) = each($lookup_s)) {
-											if ($key == $flds_DEPE_NOMB) {
-													$option = "SELECTED";
-											} else {
-													$option = "";
-											}
-											echo "<option $option value=\"$key\">" . strtoupper($value) . "</option>";
-									}
-							} ?>
-					</select></td>
-	</label>
-	</tr>
+            <tr id="b2" style="display:<?= $tipoBusqueda[$opcionMenu][2]; ?>">
+                <td>
+                    <p align="left">Dependencia</p>
+                </td>
+                <td><label class="select"><select name="s_DEPE_NOMB" class="select"
+                            onChange=" document.busqueda.s_sql.value='no'; document.busqueda.submit(); ">
+                            <option value="">- TODAS LAS DEPENDENCIAS -</option>
+                            <?
+                            $lookup_s = db_fill_array("select DEPE_CODI,DEPE_NOMB from DEPENDENCIA order by 2");
+                            if (is_array($lookup_s)) {
+                                reset($lookup_s);
+                                while (list($key, $value) = each($lookup_s)) {
+                                    if ($key == $flds_DEPE_NOMB) {
+                                        $option = "SELECTED";
+                                    } else {
+                                        $option = "";
+                                    }
+                                    echo "<option $option value=\"$key\">" . strtoupper($value) . "</option>";
+                                }
+                            } ?>
+                        </select></td>
+                </label>
+            </tr>
 
-    <tr id="b3" style="display:<?= $tipoBusqueda[$opcionMenu][3]; ?>">
-        <td><p align="left">Usuario</p></td>
-        <td><label class="select"><select name="s_USUA_NOMB" class=select>
-					<option value="">- TODOS LOS USUARIOS -</option>
-					<?                  $validUsuaActiv = "";
-					// Compatibilidad con PostgreSQL 8.3
-					// Cambio USUA_ESTA=1 por USUA_ESTA='1' para listar los usuarios activos.
-					if ($opcionMenu == 1) {
-							$validUsuaActiv = " USUA_ESTA='1' ";
-					} ELSE {
-							$validUsuaActiv = " USUA_LOGIN IS NOT NULL ";
-					} //Verifica que el usuario se encuentre activo para hacer el prEstamo
-					if ($flds_DEPE_NOMB != "")
-							$tmp = " AND DEPE_CODI= " . $flds_DEPE_NOMB; else $tmp = "";
-					$lookup_s = db_fill_array("select USUA_LOGIN,USUA_NOMB from USUARIO where  " . $validUsuaActiv . $tmp . "order by usua_nomb");
+            <tr id="b3" style="display:<?= $tipoBusqueda[$opcionMenu][3]; ?>">
+                <td>
+                    <p align="left">Usuario</p>
+                </td>
+                <td><label class="select"><select name="s_USUA_NOMB" class=select>
+                            <option value="">- TODOS LOS USUARIOS -</option>
+                            <? $validUsuaActiv = "";
+                            // Compatibilidad con PostgreSQL 8.3
+                            // Cambio USUA_ESTA=1 por USUA_ESTA='1' para listar los usuarios activos.
+                            if ($opcionMenu == 1) {
+                                $validUsuaActiv = " USUA_ESTA='1' ";
+                            } else {
+                                $validUsuaActiv = " USUA_LOGIN IS NOT NULL ";
+                            } //Verifica que el usuario se encuentre activo para hacer el prEstamo
+                            if ($flds_DEPE_NOMB != "")
+                                $tmp = " AND DEPE_CODI= " . $flds_DEPE_NOMB;
+                            else $tmp = "";
+                            $lookup_s = db_fill_array("select USUA_LOGIN,USUA_NOMB from USUARIO where  " . $validUsuaActiv . $tmp . "order by usua_nomb");
 
-					if (is_array($lookup_s)) {
-							reset($lookup_s);
-							while (list($key, $value) = each($lookup_s)) {
-									if ($key == $flds_USUA_NOMB) {
-											$option = "SELECTED";
-									} else {
-											$option = "";
-									}
-									echo "<option $option value=\"$key\">" . strtoupper($value) . "</option>";
-							}
-					} ?>
-			</select></label></td>
-    </tr>
-    <?php /**/ ?>
-    <tr id="b4" style="display:<?= $tipoBusqueda[$opcionMenu][4]; ?>">
-        <td><p align="left">Requerimiento</p></td>
-        <td><label class=select><select name="s_PRES_REQUERIMIENTO" class=select>
-					<option value="">- TODOS LOS TIPOS -</option>
-					<?                               $lookup_s = db_fill_array("select PARAM_CODI,PARAM_VALOR from SGD_PARAMETRO where PARAM_NOMB='PRESTAMO_REQUERIMIENTO' order by PARAM_VALOR desc");
-					if (is_array($lookup_s)) {
-							reset($lookup_s);
-							while (list($key, $value) = each($lookup_s)) {
-									if ($key == $flds_PRES_REQUERIMIENTO)
-											$option = "<option SELECTED value=\"$key\">" . strtoupper($value) . "</option>";
-									else
-											$option = "<option value=\"$key\">" . strtoupper($value) . "</option>";
-									echo $option;
-							}
-					}    ?>
-			</select></label></td>
-	</tr>
-	<tr id="b5" style="display:<?= $tipoBusqueda[$opcionMenu][5]; ?>">
-			<td><p align="left">Estado</p></td>
-			<td><label class=select><select name="s_PRES_ESTADO" class=select>
-					<option value="">- TODOS LOS ESTADOS -</option>
-					<?                               $lookup_s = db_fill_array("select PARAM_CODI,PARAM_VALOR from SGD_PARAMETRO where PARAM_NOMB='PRESTAMO_ESTADO' order by PARAM_VALOR");
-					if (is_array($lookup_s)) {
-							reset($lookup_s);
-							while (list($key, $value) = each($lookup_s)) {
-									if ($key == $flds_PRES_ESTADO) {
-											$option = "SELECTED";
-									} else {
-											$option = "";
-									}
-									echo "<option $option value=\"$key\">" . strtoupper($value) . "</option>";
-							}
-					}
-					if ($flds_PRES_ESTADO == -1) {
-							$option = "SELECTED";
-					} else {
-							$option = "";
-					}
-					echo "<option $option value=\"-1\">VENCIDO</option>"; ?>
-							</select></label></td>
-	</tr>
-	<tr id="b6" style="display:<?= $tipoBusqueda[$opcionMenu][6]; ?>">
-			<td><p align="left">Fecha inicial<br>&nbsp;&nbsp;(aaaa-mm-dd)</p></td>
-			<td>
-					<label class="input"> <i class="icon-append fa fa-calendar"></i>
-							<input type="text" id="fechaInicial" name="fechaInicial"
-											placeholder="Fecah inicial"
-											value="<?= $fechaInicial ?>">
-					</label>
-			</td>
-	</tr>
-    <tr id="b7" style="display:<?= $tipoBusqueda[$opcionMenu][7]; ?>">
-        <td><p align="left">Fecha final<br>&nbsp;&nbsp;(aaaa-mm-dd)</p></td>
-        <td>
-            <label class="input"> <i class="icon-append fa fa-calendar"></i>
-                <input type="text" id="fechaFinal" name="fechaFinal" placeholder="fecha Final"
-                       value="<?= $fechaFinal ?>">
-            </label>
-        </td>
-    </tr>
-    <tr id="b8" style="display:<?= $tipoBusqueda[$opcionMenu][8]; ?>">
-      <td><p align="left">Hora l&iacute;mite<br>&nbsp;&nbsp;(hh:mm m)</p></td><td>
-       <table><tr>
-       <td><select name="s_hora_limite" class=select><? 
-				for ($i = 1; $i <= 12; $i++) {
-					if ($i <= 9) {
-							$h = "0" . $i;
-					} else {
-							$h = "" . $i;
-					}
-					$seleccion = "";
-					if ($h == $v_hora_limite) {
-							$seleccion = "SELECTED";
-					}     ?>
-				<option <?= $seleccion; ?> value="<?= $h; ?>"><?= $h; ?></option>
-				<? } ?>
-			</select></td><td>&nbsp;:&nbsp;</td><td><select name="s_minuto_limite" class=select>
-			<?  for ($i = 0; $i <= 59; $i++) {
-						if ($i <= 9) {
-								$h = "0" . $i;
-						} else {
-								$h = "" . $i;
-						}
-						$seleccion = "";
-						if ($h == $v_minuto_limite) {
-								$seleccion = "SELECTED";
-						}     ?>
-		<option <?= $seleccion; ?> value="<?= $h; ?>"> <?= $h; ?></option>
-		<? } ?>
-		</select></td><td>&nbsp;:&nbsp;</td><td><select name="s_meridiano" class=select>
-				<? if ($v_meridiano == "AM") { ?>
-						<option value="AM" selected>am</option>
-						<option value="PM">pm</option>
-				<?
-				} else {
-						?>
-						<option value="AM">am</option>
-						<option value="PM" selected>pm</option>
-				<? } ?>
-			</select>
-			</td></tr></table>
-		</td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <? if ($opcionMenu == 0 || $opcionMenu == 4) { ?>
-                <footer>
-                    <input type="reset" class='btn btn-default' value="Limpiar"
-                           onClick="javascript: limpiar();">
-                    <input type="submit" class="btn btn-primary" name="genearreporte"
-                           value="Generar">
-                </footer>
-            <?
-            } else {
-                ?>
-                <footer><input type="hidden" class="btn btn-primary" name="genearreporte"
-                               value="noGenerar">
-                    <input type="submit" class="btn btn-primary" id="buscarPres"
-                           name="buscarPres" value="Buscar"></footer>
-            <?
-            }?>
+                            if (is_array($lookup_s)) {
+                                reset($lookup_s);
+                                while (list($key, $value) = each($lookup_s)) {
+                                    if ($key == $flds_USUA_NOMB) {
+                                        $option = "SELECTED";
+                                    } else {
+                                        $option = "";
+                                    }
+                                    echo "<option $option value=\"$key\">" . strtoupper($value) . "</option>";
+                                }
+                            } ?>
+                        </select></label></td>
+            </tr>
+            <?php /**/ ?>
+            <tr id="b4" style="display:<?= $tipoBusqueda[$opcionMenu][4]; ?>">
+                <td>
+                    <p align="left">Requerimiento</p>
+                </td>
+                <td><label class=select><select name="s_PRES_REQUERIMIENTO" class=select>
+                            <option value="">- TODOS LOS TIPOS -</option>
+                            <? $lookup_s = db_fill_array("select PARAM_CODI,PARAM_VALOR from SGD_PARAMETRO where PARAM_NOMB='PRESTAMO_REQUERIMIENTO' order by PARAM_VALOR desc");
+                            if (is_array($lookup_s)) {
+                                reset($lookup_s);
+                                while (list($key, $value) = each($lookup_s)) {
+                                    if ($key == $flds_PRES_REQUERIMIENTO)
+                                        $option = "<option SELECTED value=\"$key\">" . strtoupper($value) . "</option>";
+                                    else
+                                        $option = "<option value=\"$key\">" . strtoupper($value) . "</option>";
+                                    echo $option;
+                                }
+                            }    ?>
+                        </select></label></td>
+            </tr>
+            <tr id="b5" style="display:<?= $tipoBusqueda[$opcionMenu][5]; ?>">
+                <td>
+                    <p align="left">Estado</p>
+                </td>
+                <td><label class=select><select name="s_PRES_ESTADO" class=select>
+                            <option value="">- TODOS LOS ESTADOS -</option>
+                            <? $lookup_s = db_fill_array("select PARAM_CODI,PARAM_VALOR from SGD_PARAMETRO where PARAM_NOMB='PRESTAMO_ESTADO' order by PARAM_VALOR");
+                            if (is_array($lookup_s)) {
+                                reset($lookup_s);
+                                while (list($key, $value) = each($lookup_s)) {
+                                    if ($key == $flds_PRES_ESTADO) {
+                                        $option = "SELECTED";
+                                    } else {
+                                        $option = "";
+                                    }
+                                    echo "<option $option value=\"$key\">" . strtoupper($value) . "</option>";
+                                }
+                            }
+                            if ($flds_PRES_ESTADO == -1) {
+                                $option = "SELECTED";
+                            } else {
+                                $option = "";
+                            }
+                            echo "<option $option value=\"-1\">VENCIDO</option>"; ?>
+                        </select></label></td>
+            </tr>
+            <tr id="b6" style="display:<?= $tipoBusqueda[$opcionMenu][6]; ?>">
+                <td>
+                    <p align="left">Fecha inicial<br>&nbsp;&nbsp;(aaaa-mm-dd)</p>
+                </td>
+                <td>
+                    <label class="input"> <i class="icon-append fa fa-calendar"></i>
+                        <input type="text" id="fechaInicial" name="fechaInicial"
+                            placeholder="Fecah inicial"
+                            value="<?= $fechaInicial ?>">
+                    </label>
+                </td>
+            </tr>
+            <tr id="b7" style="display:<?= $tipoBusqueda[$opcionMenu][7]; ?>">
+                <td>
+                    <p align="left">Fecha final<br>&nbsp;&nbsp;(aaaa-mm-dd)</p>
+                </td>
+                <td>
+                    <label class="input"> <i class="icon-append fa fa-calendar"></i>
+                        <input type="text" id="fechaFinal" name="fechaFinal" placeholder="fecha Final"
+                            value="<?= $fechaFinal ?>">
+                    </label>
+                </td>
+            </tr>
+            <tr id="b8" style="display:<?= $tipoBusqueda[$opcionMenu][8]; ?>">
+                <td>
+                    <p align="left">Hora l&iacute;mite<br>&nbsp;&nbsp;(hh:mm m)</p>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><select name="s_hora_limite" class=select><?
+                                                                            for ($i = 1; $i <= 12; $i++) {
+                                                                                if ($i <= 9) {
+                                                                                    $h = "0" . $i;
+                                                                                } else {
+                                                                                    $h = "" . $i;
+                                                                                }
+                                                                                $seleccion = "";
+                                                                                if ($h == $v_hora_limite) {
+                                                                                    $seleccion = "SELECTED";
+                                                                                }     ?>
+                                        <option <?= $seleccion; ?> value="<?= $h; ?>"><?= $h; ?></option>
+                                    <? } ?>
+                                </select></td>
+                            <td>&nbsp;:&nbsp;</td>
+                            <td><select name="s_minuto_limite" class=select>
+                                    <? for ($i = 0; $i <= 59; $i++) {
+                                        if ($i <= 9) {
+                                            $h = "0" . $i;
+                                        } else {
+                                            $h = "" . $i;
+                                        }
+                                        $seleccion = "";
+                                        if ($h == $v_minuto_limite) {
+                                            $seleccion = "SELECTED";
+                                        }     ?>
+                                        <option <?= $seleccion; ?> value="<?= $h; ?>"> <?= $h; ?></option>
+                                    <? } ?>
+                                </select></td>
+                            <td>&nbsp;:&nbsp;</td>
+                            <td><select name="s_meridiano" class=select>
+                                    <? if ($v_meridiano == "AM") { ?>
+                                        <option value="AM" selected>am</option>
+                                        <option value="PM">pm</option>
+                                    <?
+                                    } else {
+                                    ?>
+                                        <option value="AM">am</option>
+                                        <option value="PM" selected>pm</option>
+                                    <? } ?>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <? if ($opcionMenu == 0 || $opcionMenu == 4) { ?>
+                        <footer>
+                            <input type="reset" class='btn btn-default' value="Limpiar"
+                                onClick="javascript: limpiar();">
+                            <input type="submit" class="btn btn-primary" name="genearreporte"
+                                value="Generar">
+                        </footer>
+                    <?
+                    } else {
+                    ?>
+                        <footer><input type="hidden" class="btn btn-primary" name="genearreporte"
+                                value="noGenerar">
+                            <input type="submit" class="btn btn-primary" id="buscarPres"
+                                name="buscarPres" value="Buscar">
+                        </footer>
+                    <?
+                    } ?>
 
-        </td>
-    </tr>
-    </table>
+                </td>
+            </tr>
+        </table>
     </form>
 
 
-<?
+    <?
 } //end function
 //===============================
 // Search_Show end
@@ -496,7 +530,8 @@ function Search_Show() {
 //===============================
 // Pedidos_Show begin
 //===============================
-function Pedidos_Show() {
+function Pedidos_Show()
+{
     // De sesion
     global $db;
     global $ruta_raiz;
@@ -511,7 +546,7 @@ function Pedidos_Show() {
     $sFileName = $_REQUEST["sFileName"];
     $opcionMenu = empty($_POST["opcionMenu"]) ? $_GET["opcionMenu"] : $_POST["opcionMenu"];
 
-    if(empty($opcionMenu)){
+    if (empty($opcionMenu)) {
         $opcionMenu = 0;
     }
     // Valores
@@ -527,7 +562,7 @@ function Pedidos_Show() {
     $ps_USUA_LOGIN = strip($_REQUEST["s_USUA_LOGIN"]);;
     $ps_DEPE_NOMB = strip($_REQUEST["s_DEPE_NOMB"]);
     $ps_USUA_NOMB = strip($_REQUEST["s_USUA_NOMB"]);
-    if(!$ps_USUA_LOGIN) $ps_USUA_LOGIN = $ps_USUA_NOMB;
+    if (!$ps_USUA_LOGIN) $ps_USUA_LOGIN = $ps_USUA_NOMB;
     $ps_hora_limite = strip($_REQUEST["s_hora_limite"]);
     $ps_minuto_limite = strip($_REQUEST["s_minuto_limite"]);
     $ps_meridiano = strip($_REQUEST["s_meridiano"]);
@@ -544,10 +579,10 @@ function Pedidos_Show() {
         // PRESTAMO_ESTADO 4 Cancelado
         // PRESTAMO_ESTADO 5 Prestamo Indefinido
         // PRESTAMO_ESTADO 6 Devolver al Proveedor
-        if($opcionMenu == 1 or $opcionMenu == 3){
-          $sWhere .= " AND P.PRES_ESTADO = 1 ";
-        } elseif($opcionMenu == 2){
-          $sWhere .= " AND P.PRES_ESTADO = 2 ";
+        if ($opcionMenu == 1 or $opcionMenu == 3) {
+            $sWhere .= " AND P.PRES_ESTADO = 1 ";
+        } elseif ($opcionMenu == 2) {
+            $sWhere .= " AND P.PRES_ESTADO = 2 ";
         }
 
         include_once("$ruta_raiz/include/query/prestamo/builtSQL2.inc");
@@ -568,40 +603,40 @@ function Pedidos_Show() {
         }
         $s_sql = $_REQUEST["s_sql"];
         //echo "*** $s_sql";
-        $limitPage = ($iRecordsPerPage*$iPage)-$iRecordsPerPage;
+        $limitPage = ($iRecordsPerPage * $iPage) - $iRecordsPerPage;
         $sOrder = " order by " . $iSort . $sDirection . ",PRESTAMO_ID limit $iRecordsPerPage  offset $limitPage";
- 
-        if($s_sql=="no") return; 
-          include_once "inicializarRTA.inc";
-          
 
-          $posSql = strpos($sSQL, "from PRES",2);
-          $sSqlCount = "SELECT count(*) NUM_REGISTROS ".substr($sSQL, $posSql, 1000);
+        if ($s_sql == "no") return;
+        include_once "inicializarRTA.inc";
 
-          $rsCount = $db->query($sSqlCount);
-          $totalRegistros = $rsCount->fields[0];
-          $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
-          //$db->conn->debug = true;
-          $rs = $db->query($sSQL . $sOrder);
-          $db->conn->SetFetchMode(ADODB_FETCH_NUM);
-          
-        
+
+        $posSql = strpos($sSQL, "from PRES", 2);
+        $sSqlCount = "SELECT count(*) NUM_REGISTROS " . substr($sSQL, $posSql, 1000);
+
+        $rsCount = $db->query($sSqlCount);
+        $totalRegistros = $rsCount->fields[0];
+        $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
+        //$db->conn->debug = true;
+        $rs = $db->query($sSQL . $sOrder);
+        $db->conn->SetFetchMode(ADODB_FETCH_NUM);
+
+
         // Process empty recordset
         if (!$rs || $rs->EOF) {
-            ?>
+    ?>
             <p align="center" class="titulosError2">NO HAY REGISTROS SELECCIONADOS</p>
-            <?          return;
+        <? return;
         }
-        
+
         // Build parameters for order
         $form_params_search = "buscarPres=Buscar&s_RADI_NUME_RADI=" . tourl($ps_RADI_NUME_RADI) . "&s_USUA_LOGIN=" . tourl($ps_USUA_LOGIN) .
-        "&s_DEPE_NOMB=" . tourl($ps_DEPE_NOMB) . "&s_USUA_NOMB=" . tourl($ps_USUA_NOMB) . "&s_PRES_REQUERIMIENTO=" .
-        tourl($ps_PRES_REQUERIMIENTO) . "&s_PRES_ESTADO=" . tourl($ps_PRES_ESTADO) . "&fechaInicial=" .
-        tourl($fechaInicial) . "&fechaFinal=" . tourl($fechaFinal) . "&s_hora_limite=" . tourl($ps_hora_limite) .
-        "&s_minuto_limite=" . tourl($ps_minuto_limite) . "&s_meridiano=" . tourl($ps_meridiano);
+            "&s_DEPE_NOMB=" . tourl($ps_DEPE_NOMB) . "&s_USUA_NOMB=" . tourl($ps_USUA_NOMB) . "&s_PRES_REQUERIMIENTO=" .
+            tourl($ps_PRES_REQUERIMIENTO) . "&s_PRES_ESTADO=" . tourl($ps_PRES_ESTADO) . "&fechaInicial=" .
+            tourl($fechaInicial) . "&fechaFinal=" . tourl($fechaFinal) . "&s_hora_limite=" . tourl($ps_hora_limite) .
+            "&s_minuto_limite=" . tourl($ps_minuto_limite) . "&s_meridiano=" . tourl($ps_meridiano);
 
 
-/**/
+        /**/
         $form_params_page = "&FormPedidos_Page=1&FormStarPage=1&FormSiguiente=0";
         $form_params = $form_params_search . $form_params_page . "&opcionMenu=" . tourl($opcionMenu) . "&krd=" . tourl($krd) .
             "&FormPedidos_Sorted=" . tourl($iSort) . "&s_Direction=" . tourl($sDirection) . "&FormPedidos_Sorting=";
@@ -620,9 +655,9 @@ function Pedidos_Show() {
             <input type="hidden" name="s_Direction" value="<?= $sDirection ?>">
             <table class='table table-striped table-bordered table-hover dataTable no-footer smart-form'>
                 <thead>
-                <tr role="row">
-                    <th colspan="<?= $numCol ?>"><a name="Search"><?= $tituloRespuesta[$opcionMenu] ?></a></th>
-                </tr>
+                    <tr role="row">
+                        <th colspan="<?= $numCol ?>"><a name="Search"><?= $tituloRespuesta[$opcionMenu] ?></a></th>
+                    </tr>
                 </thead>
                 <?PHP // Titulos de las columnas
                 include_once "inicializarTabla.inc";
@@ -632,7 +667,7 @@ function Pedidos_Show() {
                 //----------------------
 
                 // Inicializa el valor de la pagina actual
-                
+
                 // Inicializa los registros a presentar seg�n la p�gina actual
                 $iCounter = 0;
                 $ant = "";
@@ -647,7 +682,7 @@ function Pedidos_Show() {
                         $rs->MoveNext();
                     } while ($iCounter < ($iPage - 1) * $iRecordsPerPage && !$rs->EOF);
                 }
-                **/
+                 **/
                 $iCounterIni = $iCounter;
                 // Display grid based on recordset
                 $y = 1; // Cantidad de registros presentados
@@ -659,7 +694,8 @@ function Pedidos_Show() {
                     // Fila de la tabla con los resultados
                     include "getRtaSQLAnt.inc";
 
-                  /* */ if ($fldARCH != 'SI') {
+                    /* */
+                    if ($fldARCH != 'SI') {
                         $encabARCH = "&buscar_exp=" . tourl($fldEXP) . "&krd=$krd&tipo_archivo=&nomcarpeta=";
                     }
 
@@ -674,16 +710,16 @@ function Pedidos_Show() {
                 ?>
                 <script>
                     // Inicializa el arreglo con los radicados a procesar
-                    var cantRegPorPagina =<?=$cantRegPorPagina-1?>;
+                    var cantRegPorPagina = <?= $cantRegPorPagina - 1 ?>;
                     // Marca todas las casillas si la del titulo es marcada
                     function seleccionarRta() {
-                      if(document.rta.rta_.checked) {
-                        for(i=2;i<document.rta.elements.length;i++)
-                          document.rta.elements[i].checked=1;
-                      } else {
-                        for(i=2;i<document.rta.elements.length;i++)
-                          document.rta.elements[i].checked=0;
-                      }
+                        if (document.rta.rta_.checked) {
+                            for (i = 2; i < document.rta.elements.length; i++)
+                                document.rta.elements[i].checked = 1;
+                        } else {
+                            for (i = 2; i < document.rta.elements.length; i++)
+                                document.rta.elements[i].checked = 0;
+                        }
                     }
 
                     // Valida y envia el formulario
@@ -736,8 +772,8 @@ function Pedidos_Show() {
                     $rs->MoveNext();
                 }
                 $iCounter--;
-                if($totalRegistros) $iCounter = $totalRegistros;
-                
+                if ($totalRegistros) $iCounter = $totalRegistros;
+
                 // Inicializa paginas visualizables
                 $iNumberOfPages = 10;
                 // Inicializa cantidad de p�ginas
@@ -796,53 +832,54 @@ function Pedidos_Show() {
                         </small>
                     </td>
                 </tr>
-                  <?php  if ($_REQUEST['genearreporte']!="Generar") {  ?>
+                <?php if ($_REQUEST['genearreporte'] != "Generar") {  ?>
 
                     <? if ($opcionMenu == 1) { ?>
-                <tr align="center">
-                    <td colspan="11" align="center">
-                        <input type="button" class="btn btn-primary" value="Procesar" onclick="enviar();">
-                        <input type="button" class="btn btn-primary" value="Cancelar" title="Regresa al menú de préstamo y control de documentos" onclick="javascript:regresar();"></center>
-                    </td>
-                </tr>
+                        <tr align="center">
+                            <td colspan="11" align="center">
+                                <input type="button" class="btn btn-primary" value="Procesar" onclick="enviar();">
+                                <input type="button" class="btn btn-primary" value="Cancelar" title="Regresa al menú de préstamo y control de documentos" onclick="javascript:regresar();"></center>
+                            </td>
+                        </tr>
             </table>
-                     <?php } else { #SI el documento se va a devolver
-                if ($opcionMenu == 2) { ?>
+            <?php } else { #SI el documento se va a devolver
+                        if ($opcionMenu == 2) { ?>
                 <tr align="center">
                     <td colspan="11" align="center">
                         <input type="button" class="botones" value="Devolver" onclick="enviar();">
                         <input type="button" class="botones" value="Cancelar" title="Regresa al menú de préstamo y control de documentos" onclick="javascript:regresar();"></center>
                     </td>
                 </tr>
-                    <?php  }
-								if ($opcionMenu == 3) { ?>
+            <?php  }
+                        if ($opcionMenu == 3) { ?>
                 <tr align="center">
                     <td colspan="11" align="center">
                         <input type="button" class="botones" value="Cancelar Pedido" onclick="enviar();">
                     </td>
                 </tr>
-                    <?php  }
-								} }  ?>
-            <?php  if ($_POST['genearreporte']=="Generar") {  ?>
-                <table align="center" class="table table-bordered table-striped"><tr>
-                        <td align="center">
-                            <?
-                            $xsql = serialize ( $sSQL ); // SERIALIZO EL QUERY CON EL QUE SE QUIERE GENERAR EL REPORTE
-                            $_SESSION ['xheader'] = "<center><b>$titulo</b></center><br><br>"; // ENCABEZADO DEL REPORTE
-                            $_SESSION ['xsql'] = $xsql; // SUBO A SESION EL QUERY// CREO LOS LINKS PARA LOS REPORTES
-                            echo "<a href='$ruta_raiz/adodb/adodb-xls.inc.php' target='_blank'><img src='$ruta_raiz/adodb/spreadsheet.png' width='40' heigth='40' border='0'></a>";
-                            ?>
-                        </td>
-                    </tr>
-                </table>
-            <?php  }  ?>
+    <?php  }
+                    }
+                }  ?>
+    <?php if ($_POST['genearreporte'] == "Generar") {  ?>
+        <table align="center" class="table table-bordered table-striped">
+            <tr>
+                <td align="center">
+                    <?
+                    $xsql = serialize($sSQL); // SERIALIZO EL QUERY CON EL QUE SE QUIERE GENERAR EL REPORTE
+                    $_SESSION['xheader'] = "<center><b>$titulo</b></center><br><br>"; // ENCABEZADO DEL REPORTE
+                    $_SESSION['xsql'] = $xsql; // SUBO A SESION EL QUERY// CREO LOS LINKS PARA LOS REPORTES
+                    echo "<a href='$ruta_raiz/adodb/adodb-xls.inc.php' target='_blank'><img src='$ruta_raiz/adodb/spreadsheet.png' width='40' heigth='40' border='0'></a>";
+                    ?>
+                </td>
+            </tr>
+        </table>
+    <?php  }  ?>
 
         </form>
-    <?
+<?
     } //fin if
 } //fin function
 //===============================
 // Pedidos_Show end
 //===============================
 ?>
-
