@@ -58,16 +58,18 @@ $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 function return_bytes($val)
 {
   $val = trim($val);
-  $ultimo = strtolower($val{
-  strlen($val) - 1});
+  $ultimo = strtolower($val[strlen($val) - 1]);
   switch ($ultimo) {
     // El modificador 'G' se encuentra disponible desde PHP 5.1.0
     case 'g':
       $val *= 1024;
+      break;
     case 'm':
       $val *= 1024;
+      break;
     case 'k':
       $val *= 1024;
+      break;
   }
   return $val;
 }
@@ -88,10 +90,12 @@ $sql21       = "SELECT
 
 $plant = $db->conn->Execute($sql21);
 $arrayplantillas = [];
+
 while (!$plant->EOF) {
   $arrayplantillas[] = $plant->fields;
   $plant->MoveNext();
 }
+
 //END::seleccion de plantillas
 
 //Start::divipola departamentos
@@ -102,6 +106,7 @@ $sql22       = "SELECT
 
 $plant = $db->conn->Execute($sql22);
 $arraydepartamentos = [];
+
 while (!$plant->EOF) {
   $arraydepartamentos[] = $plant->fields['DPTO_NOMB'];
   $plant->MoveNext();
@@ -166,47 +171,39 @@ while (!$plant->EOF) {
       opacity: 1;
     }
   </style>
-</head>
-
-<body>
-  <div id="spinner-back"></div>
-  <div id="spinner-front">
-    <img src="https://www.v4software.com/Admin/Tpl/V4admin/Public/image/ajax-loaders/ajax-loader-no-color.gif" /><br>
-    Cargando...
-  </div>
-  <script language="JavaScript" type="text/JavaScript">
+  <script>
     function validar() {
       archDocto = document.formAdjuntarArchivos.archivoPlantilla.value;
-      codserie  = document.getElementsByName("codserie")[0].value;
+      codserie = document.getElementsByName("codserie")[0].value;
       codsubser = document.getElementsByName("tsub")[0].value;
-      codtipo   = document.getElementsByName("tipo")[0].value;
+      codtipo = document.getElementsByName("tipo")[0].value;
       codtipora = document.getElementsByName("tipoRad")[0].value;
 
-      if (codserie == 0 | codsubser == 0 | codtipo == 0 | codtipora == 0){
-        alert ("Falta seleccionar uno de los campos");
+      if (codserie == 0 | codsubser == 0 | codtipo == 0 | codtipora == 0) {
+        alert("Falta seleccionar uno de los campos");
         return false;
       }
 
-      if ( (archDocto.substring(archDocto.length-1-3,archDocto.length)).indexOf(".xls") == -1){
-        alert ("El archivo de datos debe ser .xls");
+      if ((archDocto.substring(archDocto.length - 1 - 3, archDocto.length)).indexOf(".xls") == -1) {
+        alert("El archivo de datos debe ser .xls");
         return false;
       }
 
-      if (document.formAdjuntarArchivos.archivoPlantilla.value.length<1){
-        alert ("Debe ingresar el archivo CSV con los datos");
+      if (document.formAdjuntarArchivos.archivoPlantilla.value.length < 1) {
+        alert("Debe ingresar el archivo CSV con los datos");
         return false;
       }
 
       if (confirm("Tenga cuidado con esta opci\u00F3n ya que se realizar\u00E1n\n" +
-              "cambios irreversibles en el sistema.")) {
-          return true;
+          "cambios irreversibles en el sistema.")) {
+        return true;
       } else {
-          return false;
+        return false;
       }
       return true;
     }
 
-    function cargando(){
+    function cargando() {
       document.getElementById("spinner-back").classList.add("show");
       document.getElementById("spinner-front").classList.add("show");
     }
@@ -215,255 +212,243 @@ while (!$plant->EOF) {
       if (!validar())
         return;
       cargando();
-      document.formAdjuntarArchivos.accion.value="PRUEBA";
+      document.formAdjuntarArchivos.accion.value = "PRUEBA";
       document.formAdjuntarArchivos.submit();
     }
-</script>
+  </script>
+</head>
+
+<body>
+  <div id="spinner-back"></div>
+  <div id="spinner-front">
+    <img src="https://www.v4software.com/Admin/Tpl/V4admin/Public/image/ajax-loaders/ajax-loader-no-color.gif" /><br>
+    Cargando...
+  </div>
 
   <?
   include "tipificar_masivaExcel.php";
   $params = "dependencia=$dependencia&codiTRD=$codiTRD&tipoRad=$tipoRad&depe_codi_territorial=$depe_codi_territorial&usua_nomb=$usua_nomb&depe_nomb=$depe_nomb&usua_doc=$usua_doc&tipo=$tipo&codusuario=$codusuario";
   ?>
-  <form action="adjuntar_masivaExcel.php?<?= $params ?>" method="post" enctype="multipart/form-data" name="formAdjuntarArchivos">
-    <input type=hidden name=<?= session_name() ?> value='<?= session_id() ?>'>
-    <input type=hidden name=pNodo value='<?= $pNodo ?>'>
-    <input type=hidden name=codProceso value='<?= $codProceso ?>'>
-    <input type=hidden name=tipoRad value='<?= $tipoRad ?>'>
-    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo return_bytes(ini_get('upload_max_filesize')); ?>">
-    <input name="accion" type="hidden" id="accion">
-    <div class="col-sm-12"> <!-- widget grid -->
-      <h2></h2>
-      <section id="widget-grid">
-        <!-- row -->
-        <div class="row">
-          <!-- NEW WIDGET START -->
-          <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <!-- Widget ID (each widget will need unique ID)-->
-            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
 
-              <header>
-                <h2>
-                  Adjuntar archivo con combinaci&oacute;n
-                </h2>
-              </header>
-              <!-- widget div-->
-              <div>
-                <!-- widget content -->
-                <div class="widget-body">
-                  <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                      <tr align="center">
-                        <td width="16%" class="titulos2">LISTADO </td>
-                        <td width="84%" height="30" class="listado2">
-                          <div class="alert alert-info" role="alert">
-                            Para evitar el problema de caracteres especiales en el texto plano se deben reemplazar si existen los siguientes caracteres:
-                            <ul>
-                              <li>
-                                ‵ o ´ o “ o ”
-                                reemplazar por
+  <div class="container-fluid">
+    <form action="adjuntar_masivaExcel.php?<?= $params ?>" method="post" enctype="multipart/form-data" name="formAdjuntarArchivos">
 
-                                "
-                              </li>
-                              <li>
-                                °
-                                reemplazar por
-                                o
-                              </li>
-                              <li>
-                                ª
-                                reemplazar por
-                                a
-                              </li>
-                              <li>
-                                –
-                                reemplazar por
-                                -
-                              </li>
-                              <li>
-                                #
-                                reemplazar por
-                                No
-                              </li>
-                              <li>
-                                ┃│ por l
-                              </li>
-                              <li>
-                                ü, Ü
-                                por U
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="alert alert-info" role="alert">
-                            Para salidas el medio de envío es requerido. Evitar dejar vacío, las opciones validas son:
-                            <ul>
-                              <li>
-                                FISICO
-                              </li>
-                              <li>
-                                EMAIL
-                              </li>
-                              <li>
-                                AMBOS
-                              </li>
-                              <li>
-                                <storng>EMAILNC</storng> Envio de email sin certificado electrónico del envío
-                              </li>
-                          </div>
-                          <input name="archivoPlantilla" type="file" value='<?= $archivoPlantilla ?>' class="btn btn-sm btn-primary" id=archivoPlantilla accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                          <br>
-                          <a id="borrarFichero" class="btn btn-danguer"><i class="fa fa-trash" style="font-size: 3rem;" aria-hidden="true"></i>Borrar plantilla para cargar nuevamente</a>
-                        </td>
-                      </tr>
-                      <tr align="center">
-                        <td width="16%" class="titulos2">ANEXOS </td>
-                        <td width="84%" height="30" class="listado2">
-                          <input name="archivoAnexos" type="file" class="btn btn-sm btn-primary" value='<?= $archivoAnexos ?>' id=archivoAnexos accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed">
-                        </td>
-                      </tr>
-                      <tr align="center">
-                        <td width="16%" class="titulos2">PLANTILLA </td>
-                        <td width="84%" height="30" class="listado2">
-                          <select id="select-plantillas" class="form-control">
-                            <option>Seleccione una plantilla...</option>
-                            <?php
-                            foreach ($arrayplantillas as $index => $value) {
-                              echo "<option value=" . $index . ">" . $value['PLAN_NOMBRE'] . "</option>";
-                            }
+      <!-- HIDDEN INPUTS (sin cambios) -->
+      <input type="hidden" name="<?= session_name() ?>" value="<?= session_id() ?>">
+      <input type="hidden" name="pNodo" value="<?= $pNodo ?>">
+      <input type="hidden" name="codProceso" value="<?= $codProceso ?>">
+      <input type="hidden" name="tipoRad" value="<?= $tipoRad ?>">
+      <input type="hidden" name="MAX_FILE_SIZE" value="<?= return_bytes(ini_get('upload_max_filesize')) ?>">
+      <input type="hidden" name="accion" id="accion">
 
-                            ?>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan=2>
-                          <textarea id="texrich" name="respuesta">
-                                <table border="0" cellpadding="1" cellspacing="1" style="width:100%">
-                                  <tbody>
-                                    <tr>
-                                      <td style="width:44%">&nbsp;</td>
-                                      <td style="width:56%">
-                                      <table border="1" cellspacing="0" class="MsoTableGrid" style="border-collapse:collapse; border:1pt solid windowtext; height:117px; width:95%">
-                                        <tbody>
-                                          <tr>
-                                            <td colspan="2">
-                                            <p style="text-align:center"><span style="font-size:11px"><strong>SUPERINTENDENCIA NACIONAL DE SALUD </strong></span></p>
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td colspan="2">
-                                            <p style="text-align:center"><span style="font-size:11px"><strong>Para responder este documento favor citar este n&uacute;mero:</strong></span></p>
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td><strong><span style="font-size:11px">Rad No: </span></strong></td>
-                                            <td><strong><span style="font-size:11px">RAD_S</span> </strong></td>
-                                          </tr>
-                                          <tr>
-                                            <td><span style="font-size:11px">Fecha: </span></td>
-                                            <td><span style="font-size:11px">F_RAD_S</span></td>
-                                          </tr>
-                                          <tr>
-                                            <td><span style="font-size:11px">Expediente</span></td>
-                                            <td>*NUM_EXPEDIENTE*</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-orfeo text-white fw-semibold">
+          <h4 class="fw-bold pb-2">
+            Adjuntar archivo con combinación
+          </h4>
+        </div>
 
-                                  <p>Bogot&aacute;,</p>
-
-                                  <p><strong><span style="font-size:12px"><span style="font-family:Arial,Helvetica,sans-serif"><strong>Se&ntilde;or(a)</strong></span></span></strong></p>
-
-                                  <p><strong>*NOMBRE*&nbsp;*APELLIDO*<br />
-                                  *DIGNATARIO*<br />
-                                  *CARGO*<br />
-                                  *DIR*<br />
-                                  *EMAIL*<br />
-                                  *MUNI_NOMBRE* *DEPTO_NOMBRE* </strong></p>
-
-                                  <p style="text-align:justify;"><strong>Asunto: </strong>*ASUNTO*</p>
-
-                                  <p>&nbsp;</p>
-
-                                    <p style="text-align:justify;">*CONTENIDO*</p>
-
-                                  <p>&nbsp;</p>
-
-                                  <p><br />
-                                  <br />
-                                  <br />
-                                  <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
-
-                                  <p style="text-align:justify">Cordialmente,</p>
-
-                                  <p>${FIRMA}</p>
-
-                                  <p>&nbsp;</p>
-                                  <p>
-                                      <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;">
-                                          Anexos Electrónicos: *ANEXOS*</br>
-                                          *DESC_ANEXOS*<br />
-                                      </span>
-                                      <br>
-                                      &nbsp;
-                                  </p>
-                                  <td style="width:7%">&nbsp;</td>
-                          </textarea>
-                        </td>
-                      </tr>
-                      <tr align="center">
-
-                        <td height="30" colspan="2" class="celdaGris">
-                          <div class="alert alert-info" role="alert">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>
-                            Para habilitar el botón radicar la previsualización no debe contener errores
-                          </div>
-                          <span class="celdaGris"> <span class="e_texto1">
-                              <input type="button" id="previsualizar" class="btn btn-sm btn-default" value="Previsualizar">
-                              <input name="enviaPrueba" type="button" class="btn btn-sm btn-primary" id="envia22" onClick="enviar();" value="Radicar" disabled>
-                            </span></span>
-                        </td>
-                      </tr>
-                      <tr align="center">
-                        <td height="30" colspan="2" class="celdaGris">
-                          <h4>
-                            <font color="red" height='34px'></font>
-                            <h4>
-                              <br /><br /><br />
-                              <div class="alert alert-danger">
-                                <strong>Cuidado !</strong> Esta operaci&oacute;n generar&aacute; un radicado
-                                por cada registro del archivo de origen. Por favor tenga cuidado con esta opci&oacute;n ya que
-                                se realizar&aacute; cambios irreversibles en el sistema.
-                              </div>
-                              <br /><br /><br />
-                              <div class="alert alert-warning" align="left">
-                                <strong>Nota!</strong><small> Campo para la combinación : (Pueden usarse otros adicionales)<br>
-                                  <b>*PAIS_NOMBRE*</b> : Nombre del pais. <br>
-                                  <b>*ASUNTO*</b> : Asunto que tendra el radicado Generado. <br>
-                                  <b>*FOLIOS*</b> : Opcional, Numero de Fólios del radicado. <br>
-                                  <b>*ANEXOS*</b> : Opcional, Numero de Anexos.<br>
-                                  <b>*DESC_ANEXOS*</b> : Opcional, Descripcion de los anexos del radicado.<br>
-                                  <b>*NUM_EXPEDIENTE*</b> : Opcional, Numero de expediente al cual se asocia el radicado generado. <br>
-                                  <b>*EXP_DE_RADICADO*</b> : Opcional, Asocia el radicado generado a el expediente de un radicado indicado en este campo, es de anotar que si el campo *NUM_EXPEDIENTE*,
-                                  contiene ya un n&uacute;mero de Expediente, este campo no se tendrá en cuenta. Adicionalmente si el radicado (*EXP_DE_RADICADO*) indicado se encuentra dos Expedientes el sistema no asocia ninguno, este proceso deberá ser
-                                  realizado mas adelante de manera manual, el sistema indicara los expedientes que contiene el radicado indicado.</samll>
-
-                              </div>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                </div>
+        <div class="card-body">
+          <div class="row g-4 mb-4">
+            <div class="col-12 col-lg-6">
+              <div class="alert alert-info h-100">
+                <h6 class="fw-semibold">Para evitar el problema de caracteres especiales en el texto plano se deben reemplazar si existen los siguientes caracteres:</h6>
+                <ul class="mb-0 small">
+                  <li>‵ ´ “ ” → "</li>
+                  <li>° → o</li>
+                  <li>ª → a</li>
+                  <li>– → -</li>
+                  <li># → No</li>
+                  <li>┃ │ → l</li>
+                  <li>ü, Ü → U</li>
+                </ul>
               </div>
             </div>
-          </article>
+
+            <div class="col-12 col-lg-6">
+              <div class="alert alert-info h-100">
+                <h6 class="fw-semibold">Para salidas el medio de envío es requerido. Evitar dejar vacío, las opciones validas son:</h6>
+                <ul class="mb-0 small">
+                  <li>FISICO</li>
+                  <li>EMAIL</li>
+                  <li>AMBOS</li>
+                  <li><strong>EMAILNC</strong> (Envio de email sin certificado electrónico del envío)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Archivo plantilla (Excel)</label>
+              <input name="archivoPlantilla" type="file"
+                class="form-control"
+                value='<?= $archivoPlantilla ?>'
+                id="archivoPlantilla"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+
+              <a id="borrarFichero" class="btn btn-outline-danger">
+                <i class="fa fa-trash me-1"></i>
+                Borrar plantilla para cargar nuevamente
+              </a>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Archivo de anexos (ZIP)</label>
+              <input name="archivoAnexos" type="file"
+                class="form-control"
+                value='<?= $archivoAnexos ?>'
+                id="archivoAnexos"
+                accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed">
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Plantilla disponible</label>
+            <select id="select-plantillas" class="form-select">
+              <option>Seleccione una plantilla...</option>
+              <?php
+              foreach ($arrayplantillas as $index => $value) {
+                echo "<option value='$index'>{$value['PLAN_NOMBRE']}</option>";
+              }
+              ?>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Contenido del documento</label>
+            <textarea id="texrich" name="respuesta" class="form-control" rows="14">
+              <table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+                  <tbody>
+                      <tr>
+                        <td style="width:44%">&nbsp;</td>
+                        <td style="width:56%">
+                            <table border="1" cellspacing="0" class="MsoTableGrid" style="border-collapse:collapse; border:1pt solid windowtext; height:117px; width:95%">
+                              <tbody>
+                                  <tr>
+                                    <td colspan="2">
+                                        <p style="text-align:center">
+                                        <span style="font-size:11px">
+                                            <strong>SUPERINTENDENCIA NACIONAL DE SALUD </strong>
+                                        </span>
+                                        </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="2">
+                                        <p style="text-align:center">
+                                          <span style="font-size:11px">
+                                              <strong>Para responder este documento favor citar este n&uacute;mero:</strong>
+                                          </span>
+                                        </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td><strong><span style="font-size:11px">Rad No: </span></strong></td>
+                                    <td><strong><span style="font-size:11px">RAD_S</span> </strong></td>
+                                  </tr>
+                                  <tr>
+                                  <td><span style="font-size:11px">Fecha: </span></td>
+                                  <td><span style="font-size:11px">F_RAD_S</span></td>
+                                  </tr>
+                                  <tr>
+                                  <td><span style="font-size:11px">Expediente</span></td>
+                                  <td>*NUM_EXPEDIENTE*</td>
+                                  </tr>
+                              </tbody>
+                            </table>
+                        </td>
+                      </tr>
+                  </tbody>
+              </table>
+
+              <p>Bogot&aacute;,</p>
+
+              <p>
+                <strong>
+                    <span style="font-size:12px">
+                      <span style="font-family:Arial,Helvetica,sans-serif">
+                          <strong>Se&ntilde;or(a)</strong>
+                      </span>
+                    </span>
+                </strong>
+              </p>
+
+              <p>
+                  <strong>
+                    *NOMBRE*&nbsp;*APELLIDO*<br />
+                    *DIGNATARIO*<br />
+                    *CARGO*<br />
+                    *DIR*<br />
+                    *EMAIL*<br />
+                    *MUNI_NOMBRE* *DEPTO_NOMBRE* 
+                  </strong>
+              </p>
+
+              <p style="text-align:justify;"><strong>Asunto: </strong>*ASUNTO*</p>
+              <p>&nbsp;</p>
+              <p style="text-align:justify;">*CONTENIDO*</p>
+              <p>&nbsp;</p>
+              <p><br />
+              <br />
+              <br />
+              <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+
+              <p style="text-align:justify">Cordialmente,</p>
+
+              <p>${FIRMA}</p>
+
+              <p>&nbsp;</p>
+              <p>
+                  <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;">
+                      Anexos Electrónicos: *ANEXOS*</br>
+                      *DESC_ANEXOS*<br />
+                  </span>
+                  <br>
+                  &nbsp;
+              </p>
+              <td style="width:7%">&nbsp;</td>
+            </textarea>
+          </div>
+
+          <div class="alert alert-info d-flex align-items-center mb-4">
+            <i class="fa fa-info-circle me-2"></i>
+            Para habilitar el botón <strong> Radicar</strong>, la previsualización no debe contener errores.
+          </div>
+
+          <div class="d-flex gap-2 mb-4">
+            <input type="button" id="previsualizar" class="btn btn-outline-secondary" value="Previsualizar">
+            <input type="button" name="enviaPrueba" class="btn btn-primary"
+              id="envia22" onClick="enviar();" value="Radicar" disabled>
+          </div>
+
+          <div class="alert alert-danger">
+            <strong>Cuidado:</strong>
+            Esta operación generará un radicado por cada registro del archivo de origen.
+            Por favor tenga cuidado con esta opción ya que
+            se realizará; cambios irreversibles en el sistema.
+          </div>
+
+          <div class="alert alert-warning small">
+            <strong>Nota!</strong><br>
+            <small>
+              Campo para la combinación : (Pueden usarse otros adicionales)<br>
+              <b>*PAIS_NOMBRE*</b> : Nombre del pais. <br>
+              <b>*ASUNTO*</b> : Asunto que tendra el radicado Generado. <br>
+              <b>*FOLIOS*</b> : Opcional, Numero de Fólios del radicado. <br>
+              <b>*ANEXOS*</b> : Opcional, Numero de Anexos.<br>
+              <b>*DESC_ANEXOS*</b> : Opcional, Descripcion de los anexos del radicado.<br>
+              <b>*NUM_EXPEDIENTE*</b> : Opcional, Numero de expediente al cual se asocia el radicado generado. <br>
+              <b>*EXP_DE_RADICADO*</b> : Opcional, Asocia el radicado generado a el expediente de un radicado indicado en este campo, es de anotar que si el campo *NUM_EXPEDIENTE*,
+              contiene ya un n&uacute;mero de Expediente, este campo no se tendrá en cuenta. Adicionalmente si el radicado (*EXP_DE_RADICADO*) indicado se encuentra dos Expedientes el sistema no asocia ninguno, este proceso deberá ser
+              realizado mas adelante de manera manual, el sistema indicara los expedientes que contiene el radicado indicado.
+            </small>
+          </div>
         </div>
-      </section>
-    </div>
-  </form>
+      </div>
+    </form>
+  </div>
+
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -488,6 +473,7 @@ while (!$plant->EOF) {
       </div>
     </div>
   </div>
+
   <script>
     var plantillas = <?php echo json_encode($arrayplantillas) ?>;
     var departamentos = <?php echo json_encode($arraydepartamentos) ?>;
@@ -495,6 +481,7 @@ while (!$plant->EOF) {
 
     CKEDITOR.config.height = '400';
     CKEDITOR.replace('texrich');
+
     $(function() {
       var indice = 0;
       var title = [];
