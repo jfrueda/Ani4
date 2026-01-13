@@ -1371,7 +1371,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     } else {
                         alert('Por favor seleccione el tipo de usuario que desea crear.');
                     }
-
                 });
 
                 $("body").on("keyup", 'input[name$="muni"], input[name$="dep"], input[name$="pais"]', function() {

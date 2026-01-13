@@ -106,7 +106,7 @@ if (
         $buscar_por_exp)
 ) {
     $messEmpty = ('<div class="alert alert-danger alert-dismissible  show" role="alert">
-                        <strong>¡Debe digitar un Dato para realizar la b&uacute;squeda! </strong>
+                        <strong>¡Debe digitar un Dato para realizar la búsqueda! </strong>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>');
 }
@@ -209,18 +209,21 @@ if (
         <form action='NEW.php?<?= session_name() . "=" . trim(session_id()) ?>&dependencia=<?= $dependencia ?>&faxPath=<?= $faxPath ?>' method="post" name="form1">
             <?php if ($Submit) { ?>
                 <div class='row'>
-                    <div id="acciones" class="col-sm-12 col-md-12 col-lg-12">
-                        <div class="well">
-                            <input type='hidden' name='<?= session_name() ?>' value='<?= session_id() ?>'>
-                            <input type=hidden name=ent value='<?= $ent ?>'>
-                            <h4 class="txt-color-blueDark">Se ha encontrado información, desea crear el nuevo radicado como:</h4>
-                            <h6 class="txt-color-blueDark"> Selecciona una opci&oacute;n para copiar los datos y crear un anexo apartir de uno anterior ó crea uno nuevo.</h6>
-                            <input class="btn btn-success btn-sm" name="rad1" type="submit" value="Nuevo (Copia Datos)">
-                            <input class="btn btn-success btn-sm" name="rad2" type="submit" value="Asociado">
+                    <div id="acciones" class="col-sm-12 col-md-12 col-lg-12 py-2">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <input type='hidden' name='<?= session_name() ?>' value='<?= session_id() ?>'>
+                                <input type=hidden name=ent value='<?= $ent ?>'>
+                                <h4 class="txt-color-blueDark">Se ha encontrado información</h4>
+                                <h6 class="txt-color-blueDark"> Selecciona una opci&oacute;n para copiar los datos y crear un anexo apartir de uno anterior ó crear un radicado completamente nuevo.</h6>
+                                <input class="btn btn-success btn-sm" name="rad1" type="submit" value="Nuevo (Copia Datos)">
+                                <input class="btn btn-success btn-sm" name="rad2" type="submit" value="Asociado">
+                            </div>
                         </div>
                     </div>
                 </div>
             <?php } ?>
+
             <?php
             $accion    = "&accion=buscar";
             $variables = "&pnom=" . strtoupper($pnom) . "&papl = " . $papl . "$sapl = " . $sapl . "&numdoc = " . $numdoc . $accion;
@@ -367,13 +370,31 @@ if (
                 $cards   = '';
 
                 if (!$rsCheck && $tpBuscarSel == "ok") {
-                    echo "<center><img src='img_alerta_1.gif' alt='No se encontraron los datos, intente buscar con otro nombre, apellido o No. IDD'>";
-                    echo "<center><font size='3' face='arial' class='etextomenu'><b>No se encontraron datos con las caracteristicas solicitadas</b></font>";
+                    echo "
+                        <div class='alert alert-warning text-center shadow-sm mt-4' role='alert'>
+                            <div class='mb-2'>
+                                <img src='img_alerta_1.gif' alt='Sin resultados'>
+                            </div>
+                            <h5 class='fw-semibold mb-0'>
+                                No se encontraron datos con las características solicitadas
+                            </h5>
+                            <small class='text-muted'>
+                                Intente buscar con otro nombre, apellido o número de identificación
+                            </small>
+                        </div>";
                 } else {
                     if ($tpBuscarSel == "ok") {
-                        echo "<label class='input'>
-                                <input name='radicadopadre' type='radio' value='' title='Radicado No {$nume_radi}'> No tiene padre
-                                </label>";
+                        echo "
+                            <div class='form-check mb-3'>
+                                <input class='form-check-input'
+                                    name='radicadopadre'
+                                    type='radio'
+                                    value=''
+                                    title='Radicado No {$nume_radi}'>
+                                <label class='form-check-label'>
+                                    No tiene padre
+                                </label>
+                            </div>";
                     }
 
                     $cent              = 0;
@@ -464,83 +485,119 @@ if (
 
                         $panel .= "<li class='list-group-item'> $dato </li>";
 
-
                         if ($radicado_anterior != $nume_radi) {
                             $panelH = "
-                                    <input name='radicadopadre'
-                                    type='radio'
-                                    value='{$nume_radi}'
-                                    title='Radicado No {$nume_radi}'>
-                                    Radicado: <strong>$nume_radi</strong> ";
+                                    <div class='form-check'>
+                                        <input class='form-check-input'
+                                            name='radicadopadre'
+                                            type='radio'
+                                            value='{$nume_radi}'
+                                            title='Radicado No {$nume_radi}'
+                                            id='rad_{$nume_radi}'>
+                                        <label class='form-check-label fw-semibold' for='rad_{$nume_radi}'>
+                                            Radicado <span class='badge bg-primary'>$nume_radi</span>
+                                        </label>
+                                    </div>";
 
-
-                            $panel .= "<li class='list-group-item'>
-                                        <strong> Asunto: </strong> $asunto </li>";
+                            $panel .= "
+                                    <li class='list-group-item'>
+                                        <span class='fw-semibold text-secondary'>Asunto:</span><br>
+                                        <span>$asunto</span>
+                                    </li>";
 
                             if ($nume_exp) {
-                                $panel .= "<li class='list-group-item'>
-                                            <strong> Expediente: </strong>  $nume_exp </li>";
+                                $panel .= "
+                                    <li class='list-group-item'>
+                                        <span class='fw-semibold text-secondary'>Expediente:</span>
+                                        <span class='badge bg-success ms-2'>$nume_exp</span>
+                                    </li>";
                             } else {
-                                $panel .= "<li class='list-group-item'>
-                                            <strong> Expediente: </strong> No esta incluido en un expediente </li>";
+                                $panel .= "
+                                    <li class='list-group-item text-muted'>
+                                        <span class='fw-semibold'>Expediente:</span>
+                                        No está incluido en un expediente
+                                    </li>";
                             }
 
                             if ($ent == CIRC_EXTERNA) {
-                                $panel .= "<li class='list-group-item'>
-                                                <p><strong>Destinatarios: </strong> $destinatario</p>
-                                                <p><strong>Asociado: </strong> $asociado</p>
-                                            </li>";
+                                $panel .= "
+                                        <li class='list-group-item'>
+                                            <p class='mb-1'><strong>Destinatarios:</strong> $destinatario</p>
+                                            <p class='mb-0'><strong>Asociado:</strong> $asociado</p>
+                                        </li>";
                             } else {
-                                $panel .= "<li class='list-group-item'>
-                                                <p><strong>Remitente: </strong> $nomb</p>
-                                                <p><strong>Dirección: </strong> $dire</p>
-                                                <p><strong>Telefono: </strong> $tele</p>
-                                                <p><strong>Correo: </strong>  $mail1</p>
-                                                <p><strong>Asociado: </strong> $asociado</p>
-                                            </li>";
+                                $panel .= "
+                                        <li class='list-group-item'>
+                                            <p class='mb-1'><strong>Remitente:</strong> $nomb</p>
+                                            <p class='mb-1'><strong>Dirección:</strong> $dire</p>
+                                            <p class='mb-1'><strong>Teléfono:</strong> $tele</p>
+                                            <p class='mb-1'><strong>Correo:</strong> $mail1</p>
+                                            <p class='mb-0'><strong>Asociado:</strong> $asociado</p>
+                                        </li>";
                             }
 
-                            $panel .= "<li class='list-group-item'>
-                                        <strong> Fecha de Radicación </strong> $fecha </li>";
+                            $panel .= "
+                                    <li class='list-group-item'>
+                                        <span class='fw-semibold text-secondary'>Fecha de radicación:</span>
+                                        <span class='ms-1'>$fecha</span>
+                                    </li>";
 
                             if (!empty(trim($cuentai))) {
-                                $panel .= "<li class='list-group-item'>
-                                            <strong> Referencia: </strong> $cuentai </li>";
+                                $panel .= "
+                                        <li class='list-group-item'>
+                                            <span class='fw-semibold text-secondary'>Referencia:</span>
+                                            <span>$cuentai</span>
+                                        </li>";
                             }
 
                             if (!empty(trim($nombret_us3))) {
-                                $panel .= "<li class='list-group-item'> $nombret_us3 </li>";
+                                $panel .= "
+                                        <li class='list-group-item'>
+                                            <span>$nombret_us3</span>
+                                        </li>";
                             }
 
                             if (!empty($tip_doc_des)) {
-                                $panel .= "<li class='list-group-item'>
-                                            <strong> Tipo de documento: </strong> $tip_doc_des </li>";
+                                $panel .= "
+                                    <li class='list-group-item'>
+                                        <span class='fw-semibold text-secondary'>Tipo de documento:</span>
+                                        <span>$tip_doc_des</span>
+                                    </li>";
                             }
 
                             if ($usua_actu) {
-                                $panel .= "<li class='list-group-item'>
-                                            <strong> Usuario actual:</strong> $usua_actu </li>";
+                                $panel .= "
+                                        <li class='list-group-item'>
+                                            <span class='fw-semibold text-secondary'>Usuario actual:</span>
+                                            <span>$usua_actu</span>
+                                        </li>";
                             }
 
                             if ($depe_actu) {
-                                $panel .= "<li class='list-group-item'>
-                                            <strong> Dependencia Actual:</strong> $depe_actu </li>";
+                                $panel .= "
+                                        <li class='list-group-item'>
+                                            <span class='fw-semibold text-secondary'>Dependencia actual:</span>
+                                            <span>$depe_actu</span>
+                                        </li>";
                             }
 
                             if ($depe_radi) {
-                                $panel .= "<li class='list-group-item'>
-                                            <strong> Dependencia que radicó:</strong> $depe_radi </li>";
+                                $panel .= "
+                                        <li class='list-group-item'>
+                                            <span class='fw-semibold text-secondary'>Dependencia que radicó:</span>
+                                            <span>$depe_radi</span>
+                                        </li>";
                             }
                         }
 
                         $cards .= "
-                                <div class='col-sm-6 col-md-6 col-lg-3'>
-                                    <div class='panel panel-default'>
-                                        <div class='panel-heading'>
+                                <div class='col-sm-6 col-md-6 col-lg-3 mb-4'>
+                                    <div class='card h-100 shadow-sm border-secondary'>
+                                        <div class='card-header bg-light fw-semibold'>
                                             {$panelH}
                                         </div>
-                                        <div class='panel-body'>
-                                            <ul id='dataRad' class='list-group'>
+                                        <div class='card-body p-2'>
+                                            <ul class='list-group list-group-flush small'>
                                                 {$panel}
                                             </ul>
                                         </div>
@@ -553,21 +610,19 @@ if (
                     }
 
                     echo "
-                        <div class='row'>
+                        <div class='row g-3 mt-3'>
                             $cards
-                        </div> ";
+                        </div>";
 
                     if ($cent == 0) {
-                        echo "<div id='alertmessage'>
-                                <div class='alert alert-block alert-info'>
-                                    <a class='close' data-dismiss='alert' href='#'>×</a>
-                                    <h4 class='alert-heading'>¡No se encontraron resultados!</h4>
-                                </div>
-                            </div>";
+                        echo '<div class="alert alert-info alert-dismissible  show" role="alert">
+                                <strong>¡No se encontraron resultados!</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>';
 
                         echo "<script>
-                                var elem = document.getElementById(\"acciones\");
-                                elem.parentNode.removeChild(elem);
+                                var elem = document.getElementById('acciones');
+                                if (elem) elem.parentNode.removeChild(elem);
                             </script>";
                         exit;
                     }
@@ -587,8 +642,8 @@ if (
             echo "<input type='hidden' name='codusuario' value='$codusuario'>";
             echo "<input type='hidden' name='pcodi' value='$pcodi'>";
             echo "<input type='hidden' name='hoj' value='$hoj'>";
-            echo "<input type=hidden name=drde value=$drde>";
-            echo "<input type=hidden name=krd value=$krd>";
+            echo "<input type='hidden' name='drde' value='$drde'>";
+            echo "<input type='hidden' name='krd' value='$krd'>";
             ?>
 
             <!-- JARVIS WIDGETS -->
@@ -615,24 +670,6 @@ if (
             </script>
         </form>
     </div>
-
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script>
-        const {
-            createApp
-        } = Vue;
-
-        createApp({
-            data() {
-                return {
-                    showForm: false
-                };
-            },
-            mounted() {
-                this.showForm = true
-            }
-        }).mount('#app');
-    </script>
 </body>
 
 </html>
