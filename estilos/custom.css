@@ -217,7 +217,11 @@
 }
 
 .active {
-    background-color: #FDC608 !important;
+    background-color: #fdc808 !important;
+    background: linear-gradient(90deg,
+            #fdc808 0%,
+            #fdc8089c 60%,
+            #fdc8083d 100%) !important;
 }
 
 /* Vuejs class */
