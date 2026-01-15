@@ -54,13 +54,13 @@ $db = new ConnectionHandler("$ruta_raiz");
 
 $usuario = new Usuario($db);
 
-$showtable = 'hide';
+$showtable = 'd-none';
 $hidetable = '';
 $showEntrada = '';
-$modificar = 'hide';
+$modificar = 'd-none';
 
 if ($Submit3 == "ModificarDocumentos") {
-    $hidetable = 'hide';
+    $hidetable = 'd-none';
     $modificar = '';
 }
 
@@ -593,21 +593,21 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 </div>
 
                 <!-- ACTIONS -->
-                <div class="row g-3 align-items-center mb-1 d-flex justify-content-center">
+                <div class="row g-3 align-items-center mb-1 mx-2">
                     <div id="showRadicar" class="col-12 col-md-6 <?= $hidetable ?>">
                         <a
                             title="Radicar documento"
-                            class="btn btn-primary btn-lg w-100 radicarNuevo">
+                            class="btn btn-primary btn-lg w-50 radicarNuevo">
                             <i class="fa fa-circle-arrow-up me-2"></i>
                             Radicar documento
                         </a>
                     </div>
 
-                    <div id="showModificar" class="col-12 col-md-6 <?= $modificar ?>">
+                    <div id="showModificar" class="col-12 col-md-6 <?= $modificar ?> d-flex ">
                         <a
                             title="Modificar"
                             id="modificaRad"
-                            class="btn btn-success btn-lg w-100 mb-2">
+                            class="btn btn-success btn-lg w-50">
                             Modificar <?= $nurad ?> <?= $senddata ?>
                         </a>
 
@@ -616,7 +616,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                 href="javascript:void(0);"
                                 onClick="window.open('./stickerWeb/index.php?<?= $varEnvio ?>&alineacion=Center','sticker<?= $nurad ?>','width=450,height=180');"
                                 class="btn btn-link px-0">
-                                Sticker
+                                Sticker |
                             </a>
 
                             <a title="Asociar Imagen"
@@ -654,22 +654,22 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                             <section id="formsearch" class="row g-2 align-items-end mb-3">
                                                 <!-- TIPO USUARIO -->
                                                 <div class="<?= $esNotificacionCircular ? 'col-md-3' : 'col-md-2' ?>">
-                                                    <label class="form-label fw-semibold">Tipo usuario</label>
+                                                    <label for="tipo_usuario" class="form-label fw-semibold">Tipo usuario</label>
                                                     <?php if ($esNotificacionCircular) { ?>
-                                                        <select id="tipo_usuario" class="form-select form-select-sm" disabled>
+                                                        <select id="tipo_usuario" name="tipo_usuario" class="form-select form-select-sm" disabled>
                                                             <option value='4' <?= $circ_int_selected ?>><?= $_name_4 ?></option>
                                                             <option value='5' <?= $circ_ext_selected ?>><?= $_name_5 ?></option>
                                                         </select>
                                                     <?php } else { ?>
-                                                        <select id="tipo_usuario" class="form-select form-select-sm">
+                                                        <select id="tipo_usuario" name="tipo_usuario" class="form-select form-select-sm">
                                                             <option value=''>Seleccionar</option>
                                                             <?php if ($ent != MEMORANDO) { ?>
                                                                 <option value='0' <?= $ciudadano_select ?>>Solicitante</option>
                                                             <?php } ?>
-                                                            <?php if ($_enable_1 == true) { ?>
+                                                            <?php if ($_enable_1) { ?>
                                                                 <option value='1' <?= $esp_select ?>>ESP</option>
                                                             <?php } ?>
-                                                            <?php if ($_enable_2 == true && $ent != MEMORANDO) { ?>
+                                                            <?php if ($_enable_2 && $ent != MEMORANDO) { ?>
                                                                 <option value='2' <?= $entidad_selected ?>><?= $_name_2 ?></option>
                                                             <?php } ?>
                                                             <option value='6' <?= $usuario_selected ?>><?= $_name_6 ?></option>
@@ -688,31 +688,27 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                                                 <?php if ($esNotificacionCircular) { ?>
                                                     <div class="col-md-6">
-                                                        <label class="form-label fw-semibold">Destinatarios</label>
-                                                        <input type="text" id="destinatario_us" pattern="[A-Za-z]"
-                                                            class="form-control form-control-sm"
-                                                            placeholder="Destinatarios">
+                                                        <label for="destinatario_us" class="form-label fw-semibold">Destinatarios</label>
+                                                        <input type="text" id="destinatario_us" name="destinatario_us" pattern="[A-Za-z]" class="form-control form-control-sm" placeholder="Destinatarios">
                                                     </div>
                                                 <?php } else { ?>
                                                     <div class="col-md-2">
-                                                        <label class="form-label fw-semibold">Nombre</label>
-                                                        <input type="text" id="nombre_us" pattern="[A-Za-z]"
-                                                            class="form-control form-control-sm"
-                                                            placeholder="Nombre">
+                                                        <label for="nombre_us" class="form-label fw-semibold">Nombre</label>
+                                                        <input type="text" id="nombre_us" name="nombre_us" pattern="[A-Za-z]" class="form-control form-control-sm" placeholder="Nombre">
                                                     </div>
                                                 <?php } ?>
 
                                                 <?php if (!$esNotificacionCircular) { ?>
                                                     <div class="col-md-2">
-                                                        <label class="form-label fw-semibold">Teléfono</label>
+                                                        <label for="telefono_us" class="form-label fw-semibold">Teléfono</label>
                                                         <input type="text" id="telefono_us" pattern="[0-9]"
-                                                            class="form-control form-control-sm"
+                                                            class="form-control form-control-sm" name="telefono_us"
                                                             placeholder="Teléfono">
                                                     </div>
 
                                                     <div class="col-md-2">
-                                                        <label class="form-label fw-semibold">Correo electrónico</label>
-                                                        <input type="text" id="mail_us"
+                                                        <label for="mail_us" class="form-label fw-semibold">Correo electrónico</label>
+                                                        <input type="text" id="mail_us" name="mail_us"
                                                             pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
                                                             class="form-control form-control-sm"
                                                             placeholder="Correo electrónico">
@@ -748,8 +744,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                             </section>
 
                                             <!-- TABLA -->
-                                            <section id="tableSection" class="card mt-3 <?= $showtable ?>">
+                                            <section id="tableSection" class="card mt-3 py-1 px-1 <?= $showtable ?>">
                                                 <div class="card-body p-0">
+                                                    <i class="fas fa-time"></i>
                                                     <table class="table table-hover table-sm mb-0">
                                                         <tbody id="tableshow">
                                                             <?= $showUsers ?>
@@ -1114,7 +1111,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 nvPublico = document.getElementById('publico'),
                 nvConfidencial = document.getElementById('confidencial'),
                 nvClasificada = document.getElementById('clasificada');
-            cntRes = document.getElementById('cntRes');
+            var cntRes = document.getElementById('cntRes');
 
             idDep.addEventListener("change", (e) => {
                 nvConfidencial.innerHTML = '';
@@ -1141,8 +1138,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 return /\d/.test(String.fromCharCode(keynum));
             }
 
-            $(document).ready(function() {
-
+            document.addEventListener('DOMContentLoaded', function() {
                 var TIPO_RADICADO = '<?= $ent ?>';
 
                 if (TIPO_RADICADO == 1) {
@@ -1153,18 +1149,42 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 var dependencias_clasificadas_trigger = <?= $dependencias_clasificadas_trigger; ?>;
                 var dependencias_clasificadas = [<?= $dependencias_clasificadas; ?>];
 
-                function showAlertModal(message, title = "Alerta") {
-                    $('#alertModalLabel').text(title);
-                    $('#alertModalBody').html(message);
-                    $('#alertModal').modal('show');
+                function showAlertModal(message, title = 'Alerta') {
+                    const modalEl = document.getElementById('alertModal');
+                    const modalTitle = document.getElementById('alertModalLabel');
+                    const modalBody = document.getElementById('alertModalBody');
+
+                    if (!modalEl || !modalTitle || !modalBody) return;
+
+                    modalTitle.textContent = title;
+                    modalBody.innerHTML = message;
+
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
                 }
 
-                if (dependencias_clasificadas_trigger && dependencias_clasificadas.indexOf(dependencia_usuario) != -1) {
-                    $('input[name="nivelSeguridad"]').prop('checked', false);
-                    $('input[name="nivelSeguridad"][value=2]').prop('checked', true);
-                    $('input[name="nivelSeguridad"]').on('click', function(e) {
-                        showAlertModal('El cambio del nivel de seguridad esta restringido para usuarios de las dependencias <?= $dependencias_clasificadas; ?> por politicas de la entidad.');
-                        e.preventDefault();
+                if (dependencias_clasificadas_trigger && dependencias_clasificadas.includes(dependencia_usuario)) {
+                    const radios = document.querySelectorAll('input[name="nivelSeguridad"]');
+                    const radioClasificado = document.querySelector('input[name="nivelSeguridad"][value="2"]');
+
+                    // Desmarcar todos
+                    radios.forEach(radio => {
+                        radio.checked = false;
+                    });
+
+                    // Marcar el nivel clasificado
+                    if (radioClasificado) {
+                        radioClasificado.checked = true;
+                    }
+
+                    // Bloquear cambios
+                    radios.forEach(radio => {
+                        radio.addEventListener('click', (e) => {
+                            showAlertModal(
+                                'El cambio del nivel de seguridad está restringido para usuarios de las dependencias <?= $dependencias_clasificadas; ?> por políticas de la entidad.'
+                            );
+                            e.preventDefault();
+                        });
                     });
                 }
 
@@ -1177,14 +1197,18 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 // DO NOT REMOVE : GLOBAL FUNCTIONS!
                 pageSetUp();
 
-                $('#copyradicar').html($('#showRadicar').clone());
+                const source = document.getElementById('showRadicar');
+                const target = document.getElementById('copyradicar');
+
+                if (source && target) {
+                    target.innerHTML = ''; // Limpia el contenido previo (equivalente a .html())
+                    target.appendChild(source.cloneNode(true)); // true = clonado profundo
+                }
 
                 //Datepicker muestra fecha
                 $('#fecha_gen_doc').datepicker({
                     dateFormat: 'dd-mm-yy',
                     onSelect: function(selectedDate) {
-                        console.log(selectedDate);
-
                         $('#date').datepicker('option', 'maxDate', selectedDate);
                     }
                 });
@@ -1195,14 +1219,46 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                  * servidor. Guardando de esta manera los datos del usuario con
                  * las modificiaciones necesarias
                  */
-                $("body").on("click", '.fa-check', function() {
-                    $('label[name^="inp_"]').addClass('hide');
-                    $('div[name^="div_"]').removeClass('hide');
-                    var iddiv = $(this).parent().attr('name').substring(4);
-                    var tex_nuevo = $('label[name=inp_' + iddiv + ']').find('input').val();
-                    var div_nuevo = $('div[name=div_' + iddiv + ']').clone();
-                    $('div[name=div_' + iddiv + ']').text(tex_nuevo);
-                    $('div[name=div_' + iddiv + ']').append(div_nuevo.children());
+                document.body.addEventListener('click', function(e) {
+                    const target = e.target;
+
+                    if (!target.classList.contains('fa-check')) {
+                        return;
+                    }
+
+                    // Oculta labels inp_*
+                    document.querySelectorAll('label[name^="inp_"]').forEach(el => {
+                        el.classList.add('hide');
+                    });
+
+                    // Muestra divs div_*
+                    document.querySelectorAll('div[name^="div_"]').forEach(el => {
+                        el.classList.remove('hide');
+                    });
+
+                    // Obtiene el id dinámico
+                    const parent = target.parentElement;
+                    if (!parent || !parent.getAttribute('name')) return;
+
+                    const iddiv = parent.getAttribute('name').substring(4);
+
+                    // Obtiene el valor del input
+                    const label = document.querySelector(`label[name="inp_${iddiv}"]`);
+                    const input = label ? label.querySelector('input') : null;
+                    const tex_nuevo = input ? input.value : '';
+
+                    // Clona el div original
+                    const divOriginal = document.querySelector(`div[name="div_${iddiv}"]`);
+                    if (!divOriginal) return;
+
+                    const divClonado = divOriginal.cloneNode(true);
+
+                    // Reemplaza el texto y conserva los hijos
+                    divOriginal.textContent = tex_nuevo;
+
+                    Array.from(divClonado.children).forEach(child => {
+                        divOriginal.appendChild(child);
+                    });
                 });
 
                 /**
@@ -1211,7 +1267,14 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                  * de modificacion duplicado en la parte superior y en la inferior.
                  */
                 <?php if ($modificar != 'hide') { ?>
-                    $('#copyradicar').html($('#showModificar').clone());
+                    const copyRadicar = document.getElementById('copyradicar');
+                    const showModificar = document.getElementById('showModificar');
+
+                    if (copyRadicar && showModificar) {
+                        copyRadicar.innerHTML = '';
+                        copyRadicar.appendChild(showModificar.cloneNode(true));
+                    }
+
                 <?php } ?>
 
                 /**
@@ -1220,25 +1283,45 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                  * servidor. Guardando de esta manera los datos del usuario con
                  * las modificiaciones necesarias
                  */
-                $("body").on("change", '#informar', function() {
-                    var values = $(this).val();
-                    <?php if ($_TIPO_INFORMADO == 1) { ?>
-                        $.post("./ajax_buscarUsuario.php", {
-                            searchUserInDep: values
-                        }).done(
-                            function(data) {
-                                $('#informarUsuario').html(data[0]);
-                            }
-                        );
-                    <?php } else if ($_TIPO_INFORMADO == 2) { ?>
-                        $.post("./ajax_buscarUsuario.php", {
-                            MsearchUserInDep: values
-                        }).done(
-                            function(data) {
-                                $('#showusers').html(data[0]);
-                            }
-                        );
-                    <?php } ?>
+                document.body.addEventListener('change', function(e) {
+                    if (e.target && e.target.id === 'informar') {
+                        const values = e.target.value;
+
+                        <?php if ($_TIPO_INFORMADO == 1) { ?>
+                            fetch('./ajax_buscarUsuario.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: new URLSearchParams({
+                                        searchUserInDep: values
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    const cont = document.getElementById('informarUsuario');
+                                    if (cont) cont.innerHTML = data[0];
+                                });
+
+                        <?php } else if ($_TIPO_INFORMADO == 2) { ?>
+
+                            fetch('./ajax_buscarUsuario.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: new URLSearchParams({
+                                        MsearchUserInDep: values
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    const cont = document.getElementById('showusers');
+                                    if (cont) cont.innerHTML = data[0];
+                                });
+
+                        <?php } ?>
+                    }
                 });
 
                 /**
@@ -1247,61 +1330,115 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                  * el radicado seleccionado.
                  */
                 <?php if ($_TIPO_INFORMADO == 1) { ?>
-                    $("body").on("change", '#informarUsuario', function() {
-                        $('#informarUsuario :selected').each(function(i, selected) {
-                            var newUser = $('.userinfo').last().clone();
-                            var text = $(selected).text();
-                            var value = $(selected).val();
+                    document.body.addEventListener('change', function(e) {
+                        if (e.target && e.target.id === 'informarUsuario') {
 
-                            newUser.removeClass('hide');
-                            newUser.append(text);
-                            newUser.find('input').val($('#informar').val() + '_' + value);
+                            const select = e.target;
+                            const selectedOptions = select.querySelectorAll('option:checked');
+                            const showUsers = document.getElementById('showusers');
+                            const informar = document.getElementById('informar');
 
-                            $('#showusers').append(newUser);
-                        });
+                            selectedOptions.forEach(option => {
+                                const lastUser = document.querySelector('.userinfo:last-of-type');
+                                if (!lastUser) return;
+
+                                const newUser = lastUser.cloneNode(true);
+
+                                newUser.classList.remove('hide');
+                                newUser.append(document.createTextNode(option.text));
+
+                                const input = newUser.querySelector('input');
+                                if (input) {
+                                    input.value = informar.value + '_' + option.value;
+                                }
+
+                                showUsers.appendChild(newUser);
+                            });
+                        }
                     });
                 <?php } ?>
 
-                $("body").on("click", '#accioninfousua', function() {
-                    var text = [];
-                    <?php if ($_TIPO_INFORMADO == 1) { ?>
-                        $('#showusers').find('input').each(function(index, value) {
-                            text.push($(value).val());
-                        });
-                    <?php } else if ($_TIPO_INFORMADO == 2) { ?>
-                        $('#showusers').find('input:checked').each(function(index, value) {
-                            text.push($(value).val());
-                        });
-                    <?php } ?>
-                    var nurad = $('input[name="nurad"]').val();
+                document.body.addEventListener('click', function(e) {
+                    if (e.target && e.target.id === 'accioninfousua') {
 
-                    $.post("./ajax_informarUsuario.php", {
-                        addUser: text,
-                        radicado: nurad
-                    }).done(
-                        function(data) {
-                            $('#showresult').text(data['true']);
-                            $('#showresult').parent().removeClass('hide')
-                        }
-                    );
+                        const text = [];
+                        const showUsers = document.getElementById('showusers');
+
+                        <?php if ($_TIPO_INFORMADO == 1) { ?>
+                            showUsers.querySelectorAll('input').forEach(input => {
+                                text.push(input.value);
+                            });
+                        <?php } elseif ($_TIPO_INFORMADO == 2) { ?>
+                            showUsers.querySelectorAll('input:checked').forEach(input => {
+                                text.push(input.value);
+                            });
+                        <?php } ?>
+
+                        const nuradInput = document.querySelector('input[name="nurad"]');
+                        const nurad = nuradInput ? nuradInput.value : '';
+
+                        fetch('./ajax_informarUsuario.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                                },
+                                body: new URLSearchParams({
+                                    addUser: JSON.stringify(text),
+                                    radicado: nurad
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                const showResult = document.getElementById('showresult');
+                                if (showResult && data.true !== undefined) {
+                                    showResult.textContent = data.true;
+                                    showResult.parentElement.classList.remove('hide');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al informar usuario:', error);
+                            });
+                    }
                 });
 
-                $("body").on("click", '.fa-pencil', function() {
-                    var texto = $(this).parent().attr('name');
-                    $.each($('[name^="inp_' + texto + '"]'), function(index, value) {
-                        $(value).removeClass('hide');
-                    });
+                document.body.addEventListener('click', function(e) {
+                    if (e.target && e.target.classList.contains('fa-pencil')) {
 
-                    $.each($('[name^="div_' + texto + '"]'), function(index, value) {
-                        $(value).addClass('hide');
-                    });
+                        const parent = e.target.parentElement;
+                        if (!parent) return;
+
+                        const texto = parent.getAttribute('name');
+                        if (!texto) return;
+
+                        // Mostrar inputs
+                        document
+                            .querySelectorAll('[name^="inp_' + texto + '"]')
+                            .forEach(el => el.classList.remove('hide'));
+
+                        // Ocultar divs
+                        document
+                            .querySelectorAll('[name^="div_' + texto + '"]')
+                            .forEach(el => el.classList.add('hide'));
+                    }
                 });
 
                 <?php if ($_TIPO_INFORMADO == 1) { ?>
-                    $("body").on("change", '.informarusuarios', function() {
-                        var content = $(this).val();
-                        $('#showusers').append("<label class='radio'><input type='radio' name='radio-inline' checked=''><i></i>" +
-                            content + "</label>");
+                    document.body.addEventListener('change', function(e) {
+                        if (e.target && e.target.classList.contains('informarusuarios')) {
+
+                            const content = e.target.value;
+                            const showUsers = document.getElementById('showusers');
+
+                            const label = document.createElement('label');
+                            label.className = 'radio';
+
+                            label.innerHTML = `
+                                            <input type="radio" name="radio-inline" checked>
+                                            <i></i> ${content}
+                                        `;
+
+                            showUsers.appendChild(label);
+                        }
                     });
                 <?php } ?>
 
@@ -1313,65 +1450,154 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                  * Cuando se carga el usuario de un radicado ya existente en cambio de las dos xx
                  * se muestra el codigo con el cual se guardo.
                  */
-                $("#idnuevo").on("click", function(e) {
+                const btnNuevo = document.getElementById('idnuevo');
+
+                if (!btnNuevo) return;
+
+                btnNuevo.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('entro a presionar el idnuevo');
 
-                    var tipo = $('#tipo_usuario').val();
-                    if (tipo != '') {
-                        if (RADICACION_CIRCULAR) {
-                            var iddata = [{
-                                "CODIGO_DESTINATARIOS": "",
-                                "DESTINATARIOS": "",
-                                "TIPO_CIRCULAR": $('#tipo_usuario').val()
-                            }];
+                    const tipoUsuario = document.getElementById('tipo_usuario').value;
 
-                            $.post("./ajax_buscarUsuario.php", {
-                                addDestinatariosCircular: JSON.stringify(iddata)
-                            }).done(
-                                function(data) {
-                                    $('#tableshow').append(data[0]);
-                                    $('#tableSection').removeClass('hide');
-                                }
-                            );
-
-                            INCREMENTAL1++;
-
-                        } else {
-                            var iddata = [{
-                                "CODIGO": 'XX' + INCREMENTAL1,
-                                "NOMBRE": "",
-                                "TELEF": "",
-                                "EMAIL": "",
-                                "CEDULA": "",
-                                "PAIS": "COLOMBIA",
-                                "PAIS_CODIGO": "170",
-                                "DEP": "D.C.",
-                                "DEP_CODIGO": "11",
-                                "MUNI": "BOGOTA",
-                                "MUNI_CODIGO": "1",
-                                "TIPO": $('#tipo_usuario').val(),
-                                "APELLIDO": "",
-                                "NECESITA_NOTIFICACION": RADICACION_NOTIFICACION,
-                                "TIPO_RADICADO": TIPO_RADICADO,
-                                "CARGO": ""
-                            }];
-
-                            $.post("./ajax_buscarUsuario.php", {
-                                addUser: JSON.stringify(iddata)
-                            }).done(
-                                function(data) {
-                                    $('#tableshow').append(data[0]);
-                                    $('#tableSection').removeClass('hide');
-                                }
-                            );
-
-                            INCREMENTAL1++;
-                        }
-                    } else {
+                    if (!tipoUsuario) {
                         alert('Por favor seleccione el tipo de usuario que desea crear.');
+                        return;
                     }
+
+                    let payload = new FormData();
+
+                    if (RADICACION_CIRCULAR) {
+
+                        const iddata = [{
+                            CODIGO_DESTINATARIOS: "",
+                            DESTINATARIOS: "",
+                            TIPO_CIRCULAR: tipoUsuario
+                        }];
+
+                        payload.append(
+                            'addDestinatariosCircular',
+                            JSON.stringify(iddata)
+                        );
+
+                    } else {
+
+                        const iddata = [{
+                            CODIGO: 'XX' + INCREMENTAL1,
+                            NOMBRE: "",
+                            TELEF: "",
+                            EMAIL: "",
+                            CEDULA: "",
+                            PAIS: "COLOMBIA",
+                            PAIS_CODIGO: "170",
+                            DEP: "D.C.",
+                            DEP_CODIGO: "11",
+                            MUNI: "BOGOTA",
+                            MUNI_CODIGO: "1",
+                            TIPO: tipoUsuario,
+                            APELLIDO: "",
+                            NECESITA_NOTIFICACION: RADICACION_NOTIFICACION,
+                            TIPO_RADICADO: TIPO_RADICADO,
+                            CARGO: ""
+                        }];
+
+                        payload.append(
+                            'addUser',
+                            JSON.stringify(iddata)
+                        );
+                    }
+
+                    fetch('./ajax_buscarUsuario.php', {
+                            method: 'POST',
+                            body: payload
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            const tableShow = document.getElementById('tableshow');
+                            const tableSection = document.getElementById('tableSection');
+
+                            if (data && data[0]) {
+                                const improvedHTML = beautifyUsuarioHTML(data[0]);
+                                tableShow.insertAdjacentHTML('beforeend', improvedHTML);
+                                tableSection.classList.remove('hide');
+                                INCREMENTAL1++;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error en la petición:', error);
+                        });
+
                 });
+
+                /**
+                 * Parsea un string HTML y lo convierte en un DOM manipulable
+                 *
+                 * @param   htmlString    html retornado del back
+                 */
+                function parseHTML(htmlString) {
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = htmlString.trim();
+                    return wrapper;
+                }
+
+                /**
+                 * Formatear la tabla para mejorar la UI
+                 *
+                 * @param   htmlString    html retornado del back
+                 */
+                function beautifyUsuarioHTML(htmlString) {
+                    const dom = parseHTML(htmlString);
+
+                    /* 1️⃣ Tabla principal */
+                    dom.querySelectorAll('table').forEach(table => {
+                        table.classList.add(
+                            'table',
+                            'table-bordered',
+                            'table-sm',
+                            'align-middle',
+                            'mb-3'
+                        );
+                    });
+
+                    /* 2️⃣ Filas como cards visuales */
+                    dom.querySelectorAll('tr.item_usuario').forEach(tr => {
+                        tr.classList.add('border', 'rounded', 'p-2', 'mb-3');
+                    });
+
+                    /* 3️⃣ Inputs Bootstrap */
+                    dom.querySelectorAll('input[type="text"], input[type="email"]').forEach(input => {
+                        input.classList.add('form-control', 'form-control-sm');
+                    });
+
+                    /* 4️⃣ Selects Bootstrap */
+                    dom.querySelectorAll('select').forEach(select => {
+                        select.classList.add('form-select', 'form-select-sm');
+                    });
+
+                    /* 5️⃣ Labels */
+                    dom.querySelectorAll('label').forEach(label => {
+                        label.classList.add('form-label', 'fw-semibold');
+                    });
+
+                    /* 6️⃣ Botón eliminar */
+                    dom.querySelectorAll('button').forEach(btn => {
+                        btn.classList.add('btn', 'btn-outline-danger', 'btn-sm');
+                        btn.innerHTML = '<i class="fa fa-minus" aria-hidden="true"></i>';
+                    });
+
+                    /* 7️⃣ Ocultos */
+                    dom.querySelectorAll('.hide').forEach(el => {
+                        el.classList.add('d-none');
+                        el.classList.remove('hide');
+                    });
+
+                    /* 8️⃣ row-fluid → row */
+                    dom.querySelectorAll('.row-fluid').forEach(el => {
+                        el.classList.add('row');
+                        el.classList.remove('row-fluid');
+                    });
+
+                    return dom.innerHTML;
+                }
 
                 $("body").on("keyup", 'input[name$="muni"], input[name$="dep"], input[name$="pais"]', function() {
                     if ($(this).attr('autocomplete') === undefined) {
@@ -1391,7 +1617,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 function addAutocomple(element) {
                     var accion = $(element).attr('name').split("_")[4];
                     var group = $(element).attr('name').split("_")[2] + "_" + $(element).attr('name').split("_")[3];
-                    console.log(group);
+
                     $(element).autocomplete({
                         source: function(request, response) {
                             if (accion == "muni" && $('input[name$="' + group + '_dep_codigo"]').val() == 0) {
@@ -1411,13 +1637,11 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                     'pais': $('input[name$="' + group + '_pais"]').val()
                                 },
                                 success: function(data) {
-
                                     response($.map(data, function(item) {
                                         return {
                                             label: item.NOMBRE,
                                             id: item.CODIGO
                                         }
-
                                     }));
                                     if (accion == "dep") {
                                         $('input[name$="' + group + '_dep_codigo"]').val('0');
@@ -1428,10 +1652,8 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                         $('input[name$="' + group + '_muni"]').parent().removeClass('state-success').addClass('state-error');
                                     }
 
-
                                     $('.ui-autocomplete-input').removeClass('ui-autocomplete-loading');
                                 }
-
                             });
                         },
                         minLength: 1,
@@ -1467,48 +1689,79 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                 //Deja en blanco los campos de busqueda al seleccionar
                 //un nuevo usuario.
-                $("#tipo_usuario").on('change', function() {
-                    $('#documento_us, #nombre_us, #telefono_us, #mail_us').val("").parent().removeClass('state-success state-error');
-                    $('#resBusqueda').empty();
-                    $('#showAnswer').addClass('hide');
+                document.getElementById('tipo_usuario').addEventListener('change', function() {
+                    const fields = ['documento_us', 'nombre_us', 'telefono_us', 'mail_us'];
+
+                    fields.forEach(id => {
+                        const input = document.getElementById(id);
+                        input.value = '';
+
+                        const parent = input.parentElement;
+                        parent.classList.remove('state-success', 'state-error');
+                    });
+
+                    document.getElementById('resBusqueda').innerHTML = '';
+
+                    document.getElementById('showAnswer').classList.add('d-none');
                 });
 
-                function uppFirs(txt) {
-                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                /* Capitaliza la primera letra de un texto */
+                function uppFirs(txt = '') {
+                    if (!txt) return '';
+                    return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
                 }
 
-                //Valida los campos antes de ser enviados al servidor
+                /**
+                 * Valida los campos antes de ser enviados al servidor
+                 * @objData array de los datos a validar
+                 * @returns boolean true si pasa la validacion, false si no la pasa
+                 */
                 function validate(objData) {
-                    var pass = false;
-                    var min = 3;
-                    var allempty =
-                        alldata = 0;
-                    if (!$.isEmptyObject(objData)) {
+                    let pass = false;
+                    const min = 3;
+                    let allEmpty = 0;
+                    let allData = 0;
 
-                        $.each(objData, function(key, val) {
-                            var valdata = val.value;
-                            alldata++;
-                            if ((valdata.length < min && valdata.length != 0) || /^a-zA-Z0-9áéíóúÁÉÍÓÚÑñ ]+$/.test(valdata)) {
-                                $('#' + objData[key].id).parent().removeClass('state-success').addClass('state-error');
-                                delete objData[key];
-                            } else if (valdata.length == 0) {
-                                $('#' + objData[key].id).parent().removeClass('state-success state-error');
-                                delete objData[key];
-                                allempty++;
-                            } else {
-                                $('#' + objData[key].id).parent().removeClass('state-error').addClass('state-success');
-                                pass = true;
-                            }
-                        });
-
+                    if (!objData || Object.keys(objData).length === 0) {
+                        return false;
                     }
 
-                    if (alldata === allempty) {
-                        $('#resBusqueda').empty();
-                        $('#showAnswer').addClass('hide');
+                    Object.keys(objData).forEach(key => {
+                        const field = objData[key];
+                        const value = field.value || '';
+                        const input = document.getElementById(field.id);
+                        const parent = input?.parentElement;
+
+                        allData++;
+
+                        // ❗ Regex corregida (la original estaba mal)
+                        const invalidChars = !/^[a-zA-Z0-9áéíóúÁÉÍÓÚÑñ\s]+$/.test(value);
+
+                        if ((value.length < min && value.length !== 0) || invalidChars) {
+                            parent?.classList.remove('state-success');
+                            parent?.classList.add('state-error');
+                            delete objData[key];
+
+                        } else if (value.length === 0) {
+                            parent?.classList.remove('state-success', 'state-error');
+                            delete objData[key];
+                            allEmpty++;
+
+                        } else {
+                            parent?.classList.remove('state-error');
+                            parent?.classList.add('state-success');
+                            pass = true;
+                        }
+                    });
+
+                    // Si todos están vacíos
+                    if (allData === allEmpty) {
+                        document.getElementById('resBusqueda').innerHTML = '';
+                        document.getElementById('showAnswer').classList.add('d-none');
                     }
+
                     return pass;
-                };
+                }
 
                 /**
                  * Funcion para retornar los usuarios seleccionados y mostrarlos
@@ -1519,69 +1772,99 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 function passDataToTable(iddata) {
                     ALLDATA[iddata]["NECESITA_NOTIFICACION"] = RADICACION_NOTIFICACION;
                     ALLDATA[iddata]["TIPO_RADICADO"] = TIPO_RADICADO;
-                    var trTable = [ALLDATA[iddata]];
-                    $.post("./ajax_buscarUsuario.php", {
-                        addUser: JSON.stringify(trTable)
-                    }).done(
-                        function(data) {
-                            $('#tableshow').append(data[0]);
-                            $('#tableSection').removeClass('hide');
-                        }
-                    );
+
+                    const trTable = [ALLDATA[iddata]];
+
+                    fetch("./ajax_buscarUsuario.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                            },
+                            body: new URLSearchParams({
+                                addUser: JSON.stringify(trTable)
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            document
+                                .getElementById("tableshow")
+                                .insertAdjacentHTML("beforeend", data[0]);
+
+                            document
+                                .getElementById("tableSection")
+                                .classList.remove("d-none");
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                        });
                 }
 
                 //Modifica respuesta del servidor para presentarla con formato.
                 function formatAnswer(data) {
-                    var dataformat;
-                    var indiv = $('#resBusqueda');
+                    const indiv = document.getElementById('resBusqueda');
+                    indiv.innerHTML = '';
 
-                    indiv.empty();
+                    data.forEach((item, i) => {
+                        const li = document.createElement('li');
+                        indiv.appendChild(li);
 
-                    $.each(data, function(i) {
+                        const nombre = item.NOMBRE ?
+                            item.NOMBRE.replace(/\w\S*/g, uppFirs) :
+                            '';
 
-                        var li = $('<li/>').appendTo(indiv);
-                        var nombre = (data[i].NOMBRE === null) ? '' : data[i].NOMBRE.replace(/\w\S*/g, uppFirs);
-                        var apell = (data[i].APELLIDO === null) ? '' : data[i].APELLIDO.replace(/\w\S*/g, uppFirs);
-                        var telef = data[i].TELEF;
-                        var email = (data[i].EMAIL) ? data[i].EMAIL.toLowerCase() : '';
-                        var cedula = data[i].CEDULA;
-                        var direccion = data[i].DIRECCION;
+                        const apell = item.APELLIDO ?
+                            item.APELLIDO.replace(/\w\S*/g, uppFirs) :
+                            '';
 
-                        var div = $('<div/>')
-                            .addClass('well well-sm')
-                            .html('<div  class="col col-12" >' +
-                                '<h6 class=" text-success semi-bold">' +
-                                cedula +
-                                ' <i title="agregar a ' + nombre + ' ' + apell + '"  class="fa fa-plus-square"></i>' +
-                                '</h6>' +
-                                '</div>' +
-                                '<div class="showdot176" ><b>' + nombre + ' ' + apell + '</b></div>' +
-                                '<div class="showdot176">' + telef + '</div>' +
-                                '<div class="showdot176">' + email + '</div>' +
-                                '<div class="showdot176">' + direccion + '</div>')
-                            .attr('name', 'cod_' + i)
-                            .attr('tabindex', 5)
-                            .on("click", function() {
-                                var codUser = $(this).attr('name').substring(4);
-                                var count = 0;
-                                var datali = $('#showAnswer').children('ul').children('li');
-                                passDataToTable(codUser);
-                                $(this).addClass('hide');
+                        const telef = item.TELEF || '';
+                        const email = item.EMAIL ? item.EMAIL.toLowerCase() : '';
+                        const cedula = item.CEDULA || '';
+                        const direccion = item.DIRECCION || '';
 
-                                datali.each(function() {
-                                    var ishide = $(this).children('div').hasClass("hide");
-                                    if (ishide) {
-                                        count++;
-                                    }
-                                });
+                        const div = document.createElement('div');
+                        div.className = 'col-12 col-md-4';
+                        div.setAttribute('name', 'cod_' + i);
+                        div.setAttribute('tabindex', '5');
 
-                                $('#showAnswer').addClass('hide');
+                        div.innerHTML = `
+                                    <div class="col col-12">
+                                        <h6 class="text-success semi-bold">
+                                            ${cedula}
+                                            <i title="agregar a ${nombre} ${apell}" class="fa fa-plus-square"></i>
+                                        </h6>
+                                    </div>
+                                    <div class="showdot176"><b>${nombre} ${apell}</b></div>
+                                    <div class="showdot176">${telef}</div>
+                                    <div class="showdot176">${email}</div>
+                                    <div class="showdot176">${direccion}</div>
+                                `;
 
-                            })
-                            .appendTo(li);
+                        div.addEventListener('click', function() {
+                            const codUser = this.getAttribute('name').substring(4);
+                            passDataToTable(codUser);
+
+                            this.classList.add('d-none');
+
+                            const datali = document.querySelectorAll('#showAnswer ul li');
+                            let count = 0;
+
+                            datali.forEach(li => {
+                                const childDiv = li.querySelector('div');
+                                if (childDiv && childDiv.classList.contains('d-none')) {
+                                    count++;
+                                }
+                            });
+
+                            document.getElementById('showAnswer').classList.add('d-none');
+                        });
+
+                        li.appendChild(div);
                     });
-                    $('#showAnswer').removeClass('hide');
-                };
+
+                    console.log('llego a showAnswer');
+
+                    document.getElementById('showAnswer').classList.remove('d-none');
+                }
 
                 /**
                  * Funcion para retornar los destinatarios seleccionados y mostrarlos
@@ -1590,146 +1873,232 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                  * @returns inserta html procesado al campo de destinarios seleccionados
                  */
                 function passDestinatariosDataToTable(iddata) {
-                    var trTable = [ALLDATA[iddata]];
-                    $.post("./ajax_buscarUsuario.php", {
-                        addDestinatariosCircular: JSON.stringify(trTable)
-                    }).done(
-                        function(data) {
-                            $('#tableshow').append(data[0]);
-                            $('#tableSection').removeClass('hide');
-                        }
-                    );
+                    const trTable = [ALLDATA[iddata]];
+
+                    fetch('./ajax_buscarUsuario.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                            },
+                            body: new URLSearchParams({
+                                addDestinatariosCircular: JSON.stringify(trTable)
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data || !data[0]) return;
+
+                            document.getElementById('tableshow')
+                                .insertAdjacentHTML('beforeend', data[0]);
+
+                            document.getElementById('tableSection')
+                                .classList.remove('d-none');
+                        })
+                        .catch(error => {
+                            console.error('Error al agregar destinatarios:', error);
+                        });
                 }
 
-                //Modifica respuesta del servidor para presentarla
-                //con formato.
+                // Modifica respuesta del servidor para presentarla con formato.
                 function formatAnswerDestinatario(data) {
-                    var dataformat;
-                    var indiv = $('#resBusqueda');
-                    var boton = "Usar destinatarios";
+                    const indiv = document.getElementById('resBusqueda');
+                    const boton = 'Usar destinatarios';
 
-                    indiv.empty();
+                    indiv.innerHTML = '';
 
-                    $.each(data, function(i) {
-                        var li = $('<li style="display:inline; list-style-type:none;"/>').appendTo(indiv);
-                        var div = $('<div style="width:100%;"/>')
-                            .addClass('well well-sm')
-                            .html('<div  class="col col-12">' +
-                                '<h6 class=" text-success semi-bold">' +
-                                boton +
-                                ' <i class="fa fa-plus-square"></i>' +
-                                '</h6>' +
-                                '</div>' +
-                                '<div><b>' + data[i].DESTINATARIOS + '</b></div>')
-                            .attr('name', 'cod_' + i)
-                            .on("click", function() {
-                                var codUser = $(this).attr('name').substring(4);
-                                var count = 0;
-                                var datali = $('#showAnswer').children('ul').children('li');
-                                passDestinatariosDataToTable(codUser);
-                                $(this).addClass('hide');
+                    data.forEach((item, i) => {
+                        // <li>
+                        const li = document.createElement('li');
+                        li.style.display = 'inline';
+                        li.style.listStyleType = 'none';
 
-                                datali.each(function() {
-                                    var ishide = $(this).children('div').hasClass("hide");
-                                    if (ishide) {
-                                        count++;
-                                    }
-                                });
+                        // <div>
+                        const div = document.createElement('div');
+                        div.style.width = '100%';
+                        div.classList.add('well', 'well-sm');
+                        div.setAttribute('name', 'cod_' + i);
 
-                                $('#showAnswer').addClass('hide');
+                        div.innerHTML = `
+                                    <div class="col-12">
+                                        <h6 class="text-success semi-bold">
+                                            ${boton} <i class="fa fa-plus-square"></i>
+                                        </h6>
+                                    </div>
+                                    <div><b>${item.DESTINATARIOS}</b></div>
+                                `;
 
-                            })
-                            .appendTo(li);
+                        div.addEventListener('click', function() {
+                            const codUser = this.getAttribute('name').substring(4);
+                            const datali = document.querySelectorAll('#showAnswer ul li');
+
+                            passDestinatariosDataToTable(codUser);
+                            this.classList.add('d-none');
+
+                            let count = 0;
+                            datali.forEach(li => {
+                                const childDiv = li.querySelector('div');
+                                if (childDiv && childDiv.classList.contains('d-none')) {
+                                    count++;
+                                }
+                            });
+
+                            document.getElementById('showAnswer').classList.add('d-none');
+                        });
+
+                        li.appendChild(div);
+                        indiv.appendChild(li);
                     });
-                    $('#showAnswer').removeClass('hide');
-                };
+
+                    document.getElementById('showAnswer').classList.remove('d-none');
+                }
 
                 //Autocomplete busqueda de usuarios
-                $("#documento_us, #nombre_us, #telefono_us, #mail_us").on('keyup', function(e) {
-                    var tipo = $('#tipo_usuario').val();
-                    if (tipo == '') {
-                        e.preventDefault();
-                        alert('Por favor seleccione el tipo de usuario que desea buscar.');
-                    }
+                const camposBusqueda = [
+                    'documento_us',
+                    'nombre_us',
+                    'telefono_us',
+                    'mail_us'
+                ];
+
+                camposBusqueda.forEach(id => {
+                    const input = document.getElementById(id);
+
+                    if (!input) return;
+
+                    input.addEventListener('keyup', function(e) {
+                        const tipo = document.getElementById('tipo_usuario')?.value;
+
+                        if (!tipo) {
+                            e.preventDefault();
+                            alert('Por favor seleccione el tipo de usuario que desea buscar.');
+                        }
+                    });
                 });
 
-                $("#idconsulta").on('click', function(e) {
-                    var data = {};
+                document.getElementById('idconsulta').addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    let data = {};
 
                     data.docu = {
-                        value: $("#documento_us").val(),
-                        id: "documento_us"
+                        value: document.getElementById('documento_us').value,
+                        id: 'documento_us'
                     };
                     data.name = {
-                        value: $("#nombre_us").val(),
-                        id: "nombre_us"
+                        value: document.getElementById('nombre_us').value,
+                        id: 'nombre_us'
                     };
                     data.tele = {
-                        value: $("#telefono_us").val(),
-                        id: "telefono_us"
+                        value: document.getElementById('telefono_us').value,
+                        id: 'telefono_us'
                     };
                     data.mail = {
-                        value: $("#mail_us").val(),
-                        id: "mail_us"
+                        value: document.getElementById('mail_us').value,
+                        id: 'mail_us'
                     };
 
                     if (validate(data)) {
-                        data.tdoc = $("#tipo_usuario").val();
-                        $.post("./ajax_buscarUsuario.php", {
-                            search: JSON.stringify(data)
-                        }).done(
-                            function(data) {
-                                ALLDATA = data;
-                                if (data !== null) {
-                                    formatAnswer(data);
+                        data.tdoc = document.getElementById('tipo_usuario').value;
+
+                        fetch('./ajax_buscarUsuario.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: new URLSearchParams({
+                                    search: JSON.stringify(data)
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(responseData => {
+                                ALLDATA = responseData;
+
+                                if (responseData !== null) {
+                                    formatAnswer(responseData);
                                 }
-                            }
-                        );
+                            })
+                            .catch(error => {
+                                console.error('Error en la consulta:', error);
+                            });
                     }
                 });
 
-                $("#destinatario_us").on('keyup', function(e) {
-                    var data = {};
+                /**
+                 * Autocomplete busqueda de destinatarios para circulares
+                 */
+                // const destinatarioInput = document.getElementById('destinatario_us');
+
+                document.body.addEventListener('keyup', function(e) {
+                    const el = e.target;
+
+                    // ⬅️ Validación AQUÍ: solo si el elemento existe y es el correcto
+                    if (!el || el.id !== 'destinatario_us') return;
+
+                    const data = {};
                     data.name = {
-                        value: $("#destinatario_us").val(),
-                        id: "destinatario_us"
+                        value: destinatarioInput.value,
+                        id: 'destinatario_us'
                     };
 
                     if (validate(data)) {
-                        data.tdoc = $("#tipo_usuario").val();
-                        $.post("./ajax_buscarUsuario.php", {
-                            searchDestinatarios: JSON.stringify(data)
-                        }).done(
-                            function(data) {
-                                ALLDATA = data;
-                                if (data !== null) {
-                                    formatAnswerDestinatario(data);
+                        const tipoUsuario = document.getElementById('tipo_usuario');
+                        if (!tipoUsuario) return;
+
+                        data.tdoc = tipoUsuario.value;
+
+                        fetch('./ajax_buscarUsuario.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                                },
+                                body: new URLSearchParams({
+                                    searchDestinatarios: JSON.stringify(data)
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(responseData => {
+                                ALLDATA = responseData;
+
+                                if (responseData !== null) {
+                                    formatAnswerDestinatario(responseData);
                                 }
-                            }
-                        );
+                            })
+                            .catch(error => {
+                                console.error('Error en la búsqueda de destinatarios:', error);
+                            });
                     }
                 });
 
-                //Mostrar validacion del formulario
+                // Mostrar validacion del formulario
                 function mostrarAlert(objAlert) {
-                    var type = objAlert.type;
-                    var message = objAlert.message;
+                    const {
+                        type,
+                        message
+                    } = objAlert;
 
-                    var div = $('<div/>')
-                        .addClass('alert alert-block alert-' + type)
-                        .html(
-                            '<a class="close" data-dismiss="alert" href="#">×</a>' +
-                            '<h4 class="alert-heading">' + message + '</h4>'
-                        ).appendTo('#alertmessage');
-                };
+                    const alertContainer = document.getElementById('alertmessage');
 
+                    const div = document.createElement('div');
+                    div.className = `alert alert-${type} alert-dismissible fade show`;
+                    div.role = 'alert';
+
+                    div.innerHTML = `
+                                <strong>${message}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            `;
+
+                    alertContainer.appendChild(div);
+                }
+
+                // Borrar alertas
                 function borrarAlert() {
-                    $('#alertmessage').empty();
+                    const alertContainer = document.getElementById('alertmessage');
+                    alertContainer.innerHTML = '';
                 }
 
                 //****************************************************************************************//
+                // Validacion de correos electronicos
                 function validarEmail(idxEmail, emailId) {
-
                     const valEmaile = document.getElementById('errormail');
                     let correosValid = [];
                     const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -1797,61 +2166,19 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 }
 
                 //Radicar documento nuevo
-                $('body').on("click", '.radicarNuevo, #modificaRad', EJECUCION, function() {
+                document.body.addEventListener('click', function(e) {
+                    if (!e.target.closest('.radicarNuevo, #modificaRad')) return;
 
-                    var acction = $(this).attr("id");
-                    var pass = true;
-                    var idsession = '<?= $idsession ?>';
+                    if (EJECUCION) return;
 
-                    /* Realizar validaciones antes de enviar el radicado*/
+                    const btn = e.target.closest('.radicarNuevo, #modificaRad');
+                    const acction = btn.id;
+                    let pass = true;
+                    const idsession = '<?= $idsession ?>';
 
-                    $('#alertmessage').empty();
+                    borrarAlert();
 
-                    /*************************************************************************************************************************************************/
-                    // Validaciones Campo de correo eléctronico y VALIDACIONES MEDIO DE RECEPCION
-                    /*************************************************************************************************************************************************/
-                    let medi_recepcion = document.getElementById('mrecep');
-                    let ent = <?= $ent ?>;
-
-                    for (let idxmail = 1; idxmail <= 50; idxmail++) {
-
-                        let emailId = document.getElementById(`id_ema_${idxmail}`);
-                        let direccion = document.getElementById(`id_dir_${idxmail}`);
-
-                        if (emailId && emailId.value) {
-                            let valEmails = eliminarCorreosDuplicados(emailId.value);
-                            emailId.value = valEmails;
-                        }
-
-                        if (emailId) {
-                            //console.log(`id_ema_${idxmail}`);
-                            //console.log(medi_recepcion.value)
-                            let valEmail = emailId.value.split(';');
-
-                            valEmail.forEach((idxEmail, idx) => {
-                                if ((ent == 6 || ent == 7) && (!idxEmail && !direccion.value.trim())) {
-                                    alert('auiuiui');
-                                    idxmail.trim() = (idxmail == 0) ? 1 : idxmail;
-                                    swal({
-                                        title: "Advertencia!",
-                                        text: `Debe digitar el correo electronio o la direccion`,
-                                        icon: "warning",
-                                    })
-                                    mostrarAlert({
-                                        type: 'danger',
-                                        message: `Error el campo direccion o correo electronico del destinatario número ${idxmail} esta vacío y es obligatorio`
-                                    });
-                                    pass = false;
-                                }
-                                if (idxEmail) {
-                                    validarEmail(idxEmail, emailId)
-                                }
-                            })
-
-                        }
-                    }
-
-                    /*********************************************************************************************************************************************** */
+                    // Eliminar correos duplicados
                     function eliminarCorreosDuplicados(correo) {
                         // Divide la cadena en correos separados por ';'
                         let correos = correo.split(';');
@@ -1871,9 +2198,54 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     }
 
                     /*************************************************************************************************************************************************/
+                    // Validaciones Campo de correo eléctronico y VALIDACIONES MEDIO DE RECEPCION
+                    /*************************************************************************************************************************************************/
+                    let medi_recepcion = document.getElementById('mrecep');
+                    let ent = <?= $ent ?>;
+
+                    for (let i = 1; i <= 50; i++) {
+
+                        const emailInput = document.getElementById(`id_ema_${i}`);
+                        const dirInput = document.getElementById(`id_dir_${i}`);
+
+                        if (!emailInput) continue;
+
+                        if (emailInput.value) {
+                            emailInput.value = eliminarCorreosDuplicados(emailInput.value);
+                        }
+
+                        const emails = emailInput.value.split(';');
+
+                        emails.forEach(email => {
+
+                            if ((ent === 6 || ent === 7) && !email && !dirInput.value.trim()) {
+                                swal({
+                                    title: "Advertencia!",
+                                    text: "Debe digitar el correo electronico o la direccion",
+                                    icon: "warning",
+                                });
+
+                                mostrarAlert({
+                                    type: 'danger',
+                                    message: `Error: destinatario No. ${i} sin correo ni dirección`
+                                });
+
+                                pass = false;
+                            }
+
+                            if (email) validarEmail(email, emailInput);
+                        });
+                    }
+
+                    /*************************************************************************************************************************************************/
                     //Folios y Anexos
-                    if (/[A-Za-z]+$/.test($("#nofolios").val()) ||
-                        /[A-Za-z]+$/.test($("#noanexos").val())) {
+                    const nofolios = document.getElementById('nofolios');
+                    const noanexos = document.getElementById('noanexos');
+
+                    if (
+                        (nofolios && /[A-Za-z]+$/.test(nofolios.value)) ||
+                        (noanexos && /[A-Za-z]+$/.test(noanexos.value))
+                    ) {
                         mostrarAlert({
                             type: 'danger',
                             message: 'Escriba un número válido en No de folios o anexos.'
@@ -1882,39 +2254,38 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     }
 
                     //Fecha del radicado
-                    var fechaActual = new Date();
-                    var fecha_doc = $('#fecha_gen_doc').val();
-                    var dias_doc = fecha_doc.substring(0, 2);
-                    var mes_doc = fecha_doc.substring(3, 5);
-                    var ano_doc = fecha_doc.substring(6, 10);
+                    const fecha_doc = document.getElementById('fecha_gen_doc')?.value;
+                    if (fecha_doc) {
+                        const fechaActual = new Date();
+                        const d = fecha_doc.substring(0, 2);
+                        const m = fecha_doc.substring(3, 5);
+                        const y = fecha_doc.substring(6, 10);
+                        const fecha = new Date(y, m - 1, d);
+                        const dias = Math.floor((fechaActual - fecha) / 86400000);
 
-                    var fecha = new Date(ano_doc, mes_doc - 1, dias_doc);
-                    var tiempoRestante = fechaActual.getTime() - fecha.getTime();
-                    var dias = Math.floor(tiempoRestante / (1000 * 60 * 60 * 24));
-
-
-                    if (dias > 960 && dias < 1500) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'El documento tiene fecha anterior a 60 dias!!.'
-                        });
-                        pass = false;
-                    } else if (dias > 1500) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'Verifique la fecha del documento!!'
-                        });
-                        pass = false;
-                    } else if (dias < 0) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'Verifique la fecha del documento !!, es Una fecha Superior a la Del dia de Hoy'
-                        });
-                        pass = false;
-                    };
+                        if (dias > 960 && dias < 1500) {
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'El documento tiene fecha anterior a 60 días.'
+                            });
+                            pass = false;
+                        } else if (dias > 1500) {
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'Verifique la fecha del documento.'
+                            });
+                            pass = false;
+                        } else if (dias < 0) {
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'La fecha es superior a la actual.'
+                            });
+                            pass = false;
+                        }
+                    }
 
                     if (RADICACION_CIRCULAR) {
-                        if ($("#id_destinatario").length === 0) {
+                        if (!document.getElementById('id_destinatario')) {
                             mostrarAlert({
                                 type: 'danger',
                                 message: 'Seleccione un destinatario'
@@ -1922,54 +2293,45 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                             pass = false;
                         }
                     } else {
-                        //Usuarios
-                        if ($('input[name^="usuario"]').length === 0) {
+                        if (!document.querySelector('input[name^="usuario"]')) {
                             mostrarAlert({
                                 type: 'danger',
                                 message: 'Seleccione un usuario'
                             });
                             pass = false;
-                        };
+                        }
                     }
 
                     //Asunto
-                    var asu = $('#asu').val();
-                    var BLOQUEO_ENTRADA = <?= $blockEntrada ? 'true' : 'false' ?>;
+                    const asuInput = document.getElementById('asu');
+                    const BLOQUEO_ENTRADA = <?= $blockEntrada ? 'true' : 'false' ?>;
 
-                    // Solo validar asunto si NO es una modificación de entrada
-                    if (!BLOQUEO_ENTRADA) {
-                        //Tamanao del asunto Constante
-                        var min = 5;
-                        if (asu.length < min) {
+                    if (!BLOQUEO_ENTRADA && asuInput) {
+                        let asu = asuInput.value;
+
+                        if (asu.length < 5) {
                             mostrarAlert({
                                 type: 'danger',
-                                message: 'Asunto no es mayor de ' + min + ' Caracteres. '
+                                message: 'Asunto muy corto.'
                             });
                             pass = false;
-                        } else {
-                            asu = asu.replace(/[^\x20-\x7E]+/g, '');
                         }
 
-                        if (TIPO_RADICADO == 1) {
-                            var max = 510;
-                        } else {
-                            var max = 350;
-                        }
+                        const max = (TIPO_RADICADO == 1) ? 510 : 350;
                         if (asu.length > max) {
                             mostrarAlert({
                                 type: 'danger',
-                                message: 'Asunto no es mayor de ' + max + ' Caracteres. '
+                                message: 'Asunto demasiado largo.'
                             });
                             pass = false;
                         }
-                    };
+                    }
 
                     //Email
-                    var emaile = $('#errormail').val();
-                    if (emaile == 1) {
+                    if (document.getElementById('errormail')?.value == 1) {
                         mostrarAlert({
                             type: 'danger',
-                            message: 'Error en el correo electrónico ingresado. '
+                            message: 'Error en el correo electrónico ingresado.'
                         });
                         pass = false;
                     }
@@ -1977,282 +2339,380 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     //DIRECCION Ò EMAIL EN UN USUARIO NUEVO
                     /******************************************************************************************************/
                     if (!RADICACION_CIRCULAR) {
-                        // Iterar sobre las filas con el atributo name='item_usuario'
-                        $("tr[name='item_usuario']").each(function(index) {
-                            // Selección dinámica de inputs dentro de la fila actual
-                            let apellidoInput = $(this).find("input[id^='id_apellido_']");
-                            let apellido = apellidoInput.val();
-                            let direccion = $(this).find("input[id^='id_dir_']").val();
-                            let email = $(this).find("input[id^='id_ema_']").val();
-                            let nombre = $(this).find("input[id^='id_nombre_']").val();
-                            let municipio = $(this).find("input[id^='id_muni_']").val();
-                            let municipioCod = $(this).find("input[id^='id_muni_cod_']").val();
-                            let departamento = $(this).find("input[id^='id_dep_']").val();
-                            let departamentoCod = $(this).find("input[id^='id_dep_cod_']").val();
-                            let documento = $(this).find("input[id^='id_documen_']").val();
+                        document.querySelectorAll("tr[name='item_usuario']").forEach((tr, index) => {
 
-                            // Validar dirección y correo electrónico
-                            if (!email.trim() && (ent == 1 || ent == 2 || ent == 3) && (medi_recepcion.value == 4)) {
+                            let apellidoInput = tr.querySelector("input[id^='id_apellido_']");
+                            let apellido = apellidoInput?.value || '';
+                            let direccion = tr.querySelector("input[id^='id_dir_']")?.value || '';
+                            let email = tr.querySelector("input[id^='id_ema_']")?.value || '';
+                            let nombre = tr.querySelector("input[id^='id_nombre_']")?.value || '';
+                            let municipio = tr.querySelector("input[id^='id_muni_']")?.value;
+                            let municipioCod = tr.querySelector("input[id^='id_muni_cod_']")?.value;
+                            let departamento = tr.querySelector("input[id^='id_dep_']")?.value;
+                            let departamentoCod = tr.querySelector("input[id^='id_dep_cod_']")?.value;
 
+                            if (!email.trim() && [1, 2, 3].includes(ent) && medi_recepcion.value == 4) {
                                 let textoEmail = ((index + 1) == 1) ? 'El campo correo electrónico esta vacio por favor verificar' : 'Los campos del correo electrónicos estan vacios por favor verificar';
                                 swal({
                                     title: "Advertencia!",
                                     text: textoEmail,
-                                    icon: "warning",
-                                })
+                                    icon: "warning"
+                                });
                                 mostrarAlert({
                                     type: 'danger',
-                                    message: 'El destinatario No. ' + (index + 1) + ' le falta correo electrónico - Por favor digitarlo, es obligatorio'
+                                    message: `Destinatario No. ${index + 1} le falta correo electrónico - Por favor digitarlo, es obligatorio`
                                 });
                                 pass = false;
-
                             }
 
-                            if (!direccion.trim() && (ent == 1 || ent == 2 || ent == 3) && (medi_recepcion.value == 1 || medi_recepcion.value == 2)) {
+                            if (!direccion.trim() && [1, 2, 3].includes(ent) && [1, 2].includes(+medi_recepcion.value)) {
                                 swal({
                                     title: "Advertencia!",
                                     text: "Para el medio de recepción / envio seleccionado el campo dirección es obligatorio y no debe estar vacío!",
-                                    icon: "warning",
-                                })
+                                    icon: "warning"
+                                });
                                 mostrarAlert({
                                     type: 'danger',
-                                    message: 'El destinatario No. ' + (index + 1) + ' le falta Dirección - Si no reporta escribir Desconocida'
+                                    message: `Destinatario No. ${index + 1} le falta Dirección - Si no reporta escribir Desconocida`
                                 });
                                 pass = false;
                             }
 
-                            if ((!email.trim() || !direccion.trim()) && (ent == 1 || ent == 2 || ent == 3) && (medi_recepcion.value == 7)) {
-                                let textoEmail = ((index + 1) == 1) ? 'El campo correo electrónico esta vacio por favor verificar' : 'Los campos del correo electrónicos estan vacios por favor verificar';
-                                swal({
-                                    title: "Advertencia!",
-                                    text: textoEmail,
-                                    icon: "warning",
-                                })
-                                mostrarAlert({
-                                    type: 'danger',
-                                    message: 'El destinatario No. ' + (index + 1) + ' le falta correo electrónico o la dirección - Uno de estos campos es obligatorio por favor digitarlos'
-                                });
-                                pass = false;
-                            }
-
-                            // Validar nombre
                             if (!nombre.trim()) {
                                 mostrarAlert({
                                     type: 'danger',
-                                    message: 'El destinatario No. ' + (index + 1) + ' le falta Nombre - Si no reporta escribir Anónimo'
+                                    message: `Destinatario No. ${index + 1} le falta Nombre - Si no reporta escribir Anónimo`
                                 });
                                 pass = false;
                             }
 
-                            if (apellido.trim() === '' && !apellidoInput.is("[data-role='representante-legal']")) {
+                            if (!apellido.trim() && !apellidoInput?.dataset.role) {
                                 mostrarAlert({
                                     type: 'danger',
-                                    message: 'El destinatario No. ' + (index + 1) + ' le falta Apellido - Si no reporta escribir Anónimo'
+                                    message: `Destinatario No. ${index + 1} le falta Apellido - Si no reporta escribir Anónimo`
                                 });
                                 pass = false;
                             }
 
-                            // Validar municipio
-                            if (!municipio || municipio === '0' || municipioCod === '0') {
+                            if (!municipio || !municipioCod) {
                                 mostrarAlert({
                                     type: 'danger',
-                                    message: 'El destinatario No. ' + (index + 1) + ' le falta el Municipio'
+                                    message: `Destinatario No. ${index + 1} sin municipio`
                                 });
                                 pass = false;
                             }
 
-                            // Validar departamento
-                            if (!departamento || departamento === '0' || departamentoCod === '0') {
+                            if (!departamento || !departamentoCod) {
                                 mostrarAlert({
                                     type: 'danger',
-                                    message: 'El destinatario No. ' + (index + 1) + ' le falta el Departamento'
+                                    message: `Destinatario No. ${index + 1} sin departamento`
                                 });
                                 pass = false;
                             }
                         });
                     }
+
                     /******************************************************************************************************/
                     //GUIA
-                    if ($('#guia').length > 0 && $('#guia').val().length > 20) {
+                    const guia = document.getElementById('guia');
+                    if (guia && guia.value.length > 20) {
                         mostrarAlert({
                             type: 'danger',
-                            message: 'Gu&iacute;a con mas de 20 caracteres'
+                            message: 'Guía con más de 20 caracteres'
                         });
                         pass = false;
                     }
 
                     //REFERENCIA CUENTA_I
-                    if ($('#cuentai').length > 0 && $('#cuentai').val().length > 100) {
+                    const cuentai = document.getElementById('cuentai');
+                    if (cuentai && cuentai.value.length > 0 && cuentai.value.length > 100) {
                         mostrarAlert({
                             type: 'danger',
-                            message: 'Referencia con mas de 100 caracteres'
+                            message: 'SIAD con menos de 13 dígitos'
                         });
                         pass = false;
                     }
 
                     //Dependencia
-                    if (parseInt($('select[name="coddepe"]').val()) === 0) {
+                    const dep = document.querySelector('select[name="coddepe"]');
+                    if (dep && parseInt(dep.value) === 0) {
                         mostrarAlert({
                             type: 'danger',
-                            message: 'Selecciona una dependencia'
+                            message: 'Seleccione una dependencia'
                         });
                         pass = false;
                     }
 
                     //SIAD
-                    if ($('#siad').length > 0 &&
-                        $('#siad').val().length > 0 &&
-                        $('#siad').val().length < 13) {
+                    const siad = document.getElementById('siad');
+                    if (siad && siad.value.length > 0 && siad.value.length < 13) {
                         mostrarAlert({
                             type: 'danger',
-                            message: 'SIAD con menos de 13 d&iacute;gitos'
+                            message: 'SIAD con menos de 13 dígitos'
                         });
                         pass = false;
                     }
 
-                    if (!pass && acction == 'nuevobtnradicar') {
-                        $(".radicarNuevo").show();
+                    if (!pass) {
+                        document.querySelectorAll('.radicarNuevo').forEach(b => b.classList.remove('d-none'));
+                        return;
                     }
 
                     if (pass && !EJECUCION) {
-                        //Dejar alertas en blanco
+
+                        // Limpiar alertas
                         borrarAlert();
                         EJECUCION = true;
-                        var datos = $("form").serialize();
+
+                        // Serializar formulario (equivalente a $("form").serialize())
+                        var form = document.querySelector('form');
+                        var formData = new FormData(form);
+                        var datos = new URLSearchParams(formData).toString();
                         var radicado = '';
+
                         <?php
                         if ($datos) {
-                            echo "datos = datos + '&$javascriptCapDatos;'";
+                            echo "datos = datos + '&$javascriptCapDatos';";
                         }
                         ?>
 
-                        $('#showRadicar').remove();
-                        $('#copyradicar').remove();
+                        // Eliminar elementos
+                        var showRadicar = document.getElementById('showRadicar');
+                        if (showRadicar) showRadicar.remove();
 
+                        var copyRadicar = document.getElementById('copyradicar');
+                        if (copyRadicar) copyRadicar.remove();
+
+                        // Acción modificar
                         if (acction === "modificaRad") {
-                            datos = datos + "&modificar=true";
+                            datos += "&modificar=true";
                         }
 
+                        // Notificación
                         if (RADICACION_NOTIFICACION) {
                             <?php if (!empty($notifica_codi)) { ?>
-                                datos = datos + "&notifica_codi=<?= $notifica_codi ?>";
+                                datos += "&notifica_codi=<?= $notifica_codi ?>";
                             <?php } ?>
                         }
 
-                        //console.log("datos: ", datos); return
-
-                        var jqxhr = $.post("./ajax_radicarNuevo.php", datos, function(data) {
-                            for (var k in data) {
-                                if (data[k].error !== undefined) {
-                                    mostrarAlert({
-                                        type: 'danger',
-                                        message: data[k].error
-                                    });
-                                } else {
-                                    if (acction !== "modificaRad") {
-                                        radicado = data[k].answer;
-                                        $('#modificaRad').append(data[k].answer);
-                                        $('#modificaRad').append("<input type=\"hidden\" name=\"nurad\" value=\"" + data[k].answer + "\" />");
-
-                                        $('#idrad').append(data[k].answer);
-                                    } else {
-                                        mostrarAlert({
-                                            type: 'success',
-                                            message: data[k].answer
-                                        });
-                                    }
-
-                                    $('#showModificar').removeClass('hide');
-                                }
-                            }
-
-                            if (acction !== "modificaRad") {
-                                var contentstiker = $('#skeleton').clone().removeClass('hide')[0].outerHTML.replace(/xxxxxx/g, radicado);
-                                var contentverrad = $('#skeleton8').clone().removeClass('hide')[0].outerHTML.replace(/xxxxxx/g, radicado);
-                                var contentasocia = $('#skeleton9').clone().removeClass('hide')[0].outerHTML.replace(/xxxxxx/g, radicado);
-                                var contenttipifica = $('#skeleton10').clone().removeClass('hide')[0].outerHTML.replace(/xxxxxx/g, radicado);
-                                $('#sticker').html(contentstiker + contentverrad);
-                                $('#asociar').html(contentasocia);
-                                $('#tipificar').html(contenttipifica);
-                            }
-
-                            <? if (isset($uid)) { //El uid representa una radicadion de email, la siguiente linea permite automatizar la radicacion de emails
-                            ?>
-                                window.parent.filed(radicado, <?= $uid ?>);
-                            <? } ?>
-
-                            $("#inforshow").removeClass('hide');
-                            $('#showModificar').removeClass('hide');
-                            $('#copyradicar').html($('#showModificar').clone());
-
-                        }).fail(function(err) {
-                            var errMsg = 'Error de creación/modificación del radicado. Reporte al administrador código http: ' + err.status;
-                            mostrarAlert({
-                                type: 'danger',
-                                message: errMsg
+                        // Envío AJAX nativo (fetch)
+                        fetch("./ajax_radicarNuevo.php", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                                },
+                                body: datos
                             })
-                        })
+                            .then(response => response.json())
+                            .then(data => {
 
-                        EJECUCION = false;
+                                for (var k in data) {
+
+                                    if (data[k].error !== undefined) {
+
+                                        mostrarAlert({
+                                            type: 'danger',
+                                            message: data[k].error
+                                        });
+
+                                    } else {
+
+                                        if (acction !== "modificaRad") {
+
+                                            radicado = data[k].answer;
+
+                                            var modificaRad = document.getElementById('modificaRad');
+                                            modificaRad.insertAdjacentHTML('beforeend', data[k].answer);
+                                            modificaRad.insertAdjacentHTML(
+                                                'beforeend',
+                                                '<input type="hidden" name="nurad" value="' + data[k].answer + '" />'
+                                            );
+
+                                            document.getElementById('idrad').insertAdjacentHTML('beforeend', data[k].answer);
+
+                                        } else {
+
+                                            mostrarAlert({
+                                                type: 'success',
+                                                message: data[k].answer
+                                            });
+
+                                        }
+
+                                        document.getElementById('showModificar').classList.remove('hide');
+                                    }
+                                }
+
+                                if (acction !== "modificaRad") {
+
+                                    var contentstiker = document.getElementById('skeleton')
+                                        .cloneNode(true);
+                                    contentstiker.classList.remove('hide');
+                                    contentstiker = contentstiker.outerHTML.replace(/xxxxxx/g, radicado);
+
+                                    var contentverrad = document.getElementById('skeleton8')
+                                        .cloneNode(true);
+                                    contentverrad.classList.remove('hide');
+                                    contentverrad = contentverrad.outerHTML.replace(/xxxxxx/g, radicado);
+
+                                    var contentasocia = document.getElementById('skeleton9')
+                                        .cloneNode(true);
+                                    contentasocia.classList.remove('hide');
+                                    contentasocia = contentasocia.outerHTML.replace(/xxxxxx/g, radicado);
+
+                                    var contenttipifica = document.getElementById('skeleton10')
+                                        .cloneNode(true);
+                                    contenttipifica.classList.remove('hide');
+                                    contenttipifica = contenttipifica.outerHTML.replace(/xxxxxx/g, radicado);
+
+                                    document.getElementById('sticker').innerHTML = contentstiker + contentverrad;
+                                    document.getElementById('asociar').innerHTML = contentasocia;
+                                    document.getElementById('tipificar').innerHTML = contenttipifica;
+                                }
+
+                                <?php if (isset($uid)) { ?>
+                                    window.parent.filed(radicado, <?= $uid ?>);
+                                <?php } ?>
+
+                                document.getElementById('inforshow').classList.remove('hide');
+                                document.getElementById('showModificar').classList.remove('hide');
+
+                                var copy = document.getElementById('copyradicar');
+                                if (copy) {
+                                    copy.innerHTML = document.getElementById('showModificar').cloneNode(true).outerHTML;
+                                }
+
+                            })
+                            .catch(err => {
+                                var errMsg = 'Error de creación/modificación del radicado. Reporte al administrador código http: ' + err.status;
+                                mostrarAlert({
+                                    type: 'danger',
+                                    message: errMsg
+                                });
+                            })
+                            .finally(() => {
+                                EJECUCION = false;
+                            });
                     }
                 });
 
-                $('body').on('keypress', '*[data-rel="solo-text"]', function(event) {
-                    var regex = /^[a-zA-ZáÁéÉíÍóÓúÚñÑ ]+$/;
-                    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-                    if (!regex.test(key)) {
-                        event.preventDefault();
-                        return false;
+                // SOLO TEXTO (delegación en body)
+                document.body.addEventListener('keypress', function(event) {
+                    var target = event.target;
+
+                    if (target.matches('*[data-rel="solo-text"]')) {
+                        var regex = /^[a-zA-ZáÁéÉíÍóÓúÚñÑ ]+$/;
+                        var charCode = event.charCode || event.which;
+                        var key = String.fromCharCode(charCode);
+
+                        if (!regex.test(key)) {
+                            event.preventDefault();
+                            return false;
+                        }
                     }
                 });
 
-                $('body').on('click', '*[data-rel="remove"]', function(e) {
-                    $(this).parent('tr.item_usuario').remove();
-                });
+                // REMOVER FILA POR data-rel="remove"
+                document.body.addEventListener('click', function(event) {
+                    var target = event.target;
 
-                //Eliminar usuarios y borrar el campo de seleccionados
-                //si no existe ningun usuario
-                $("body").on("click", ".search-table-icon", function() {
-                    $(this).closest('.item_usuario').remove();
-                });
-
-                //No permitir escribir sino numeros
-
-                $('#asu').on('input', function(e) {
-                    let textoAsunto = '';
-                    if (TIPO_RADICADO >= 4) {
-                        textoAsunto = '* Asunto / ep&iacute;grafe ';
-                    } else {
-                        textoAsunto = '* Asunto ';
-                    }
-                    textoAsunto = textoAsunto + $('#asu').val().length + "/" + e.target.maxLength;
-                    $("#lbAsunto").empty();
-                    $("#lbAsunto").append(textoAsunto);
-                });
-
-                $('#documento_us').keydown(function(e) {
-                    var key = e.keyCode;
-                    if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) ||
-                            (key >= 48 && key <= 57) || (key >= 96 && key <= 105) ||
-                            (key == 9)) || (key == 81) || (key == 225) || (key == 16)) {
-                        e.preventDefault();
+                    if (target.matches('*[data-rel="remove"]')) {
+                        var tr = target.closest('tr.item_usuario');
+                        if (tr) tr.remove();
                     }
                 });
 
-                $('body').on('paste', '[data-rel="solo-text"], [id^="id_telefono"], [id^="id_dir"],' +
-                    '#asu, #ane, #telefono_us, #mail_us',
-                    function(event) {
-                        event.preventDefault();
-                        var regex = /[^a-zA-Z0-9áÁéÉíÍóÓúÚñÑ!@#$%^&*()_+\-=\[\]{}|;:,.<>¿?/\\'"\s]/g;
-                        if ($(this).is('[data-rel="solo-text"]'))
-                            regex = /[^a-zA-ZáÁéÉíÍóÓúÚñÑ ]/g;
-                        var paste = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
-                        paste = paste.replace(regex, '').replace(/\s+/g, ' ').trim();
-                        this.setRangeText(paste, this.selectionStart, this.selectionEnd, "end");
+                // ELIMINAR USUARIO DESDE ICONO DE BÚSQUEDA
+                document.body.addEventListener('click', function(event) {
+                    var target = event.target;
+
+                    if (target.matches('.search-table-icon')) {
+                        var item = target.closest('.item_usuario');
+                        if (item) item.remove();
+                    }
+                });
+
+                // CONTADOR DE ASUNTO
+                var asu = document.getElementById('asu');
+                if (asu) {
+                    asu.addEventListener('input', function(e) {
+                        var textoAsunto = '';
+
+                        if (TIPO_RADICADO >= 4) {
+                            textoAsunto = '* Asunto / ep&iacute;grafe ';
+                        } else {
+                            textoAsunto = '* Asunto ';
+                        }
+
+                        textoAsunto += asu.value.length + "/" + e.target.maxLength;
+
+                        var lbAsunto = document.getElementById('lbAsunto');
+                        if (lbAsunto) {
+                            lbAsunto.innerHTML = textoAsunto;
+                        }
                     });
-            });
+                }
 
-            document.addEventListener("DOMContentLoaded", function() {
+                // SOLO NÚMEROS EN documento_us
+                var documentoUs = document.getElementById('documento_us');
+                if (documentoUs) {
+                    documentoUs.addEventListener('keydown', function(e) {
+                        var key = e.keyCode;
+
+                        if (
+                            !(
+                                key === 8 || // backspace
+                                key === 9 || // tab
+                                key === 32 || // space
+                                key === 46 || // delete
+                                (key >= 35 && key <= 40) || // arrows/home/end
+                                (key >= 48 && key <= 57) || // numbers
+                                (key >= 96 && key <= 105) // numpad
+                            ) ||
+                            key === 81 || // Q
+                            key === 225 || // AltGr
+                            key === 16 // Shift
+                        ) {
+                            e.preventDefault();
+                        }
+                    });
+                }
+
+                // CONTROL DE PEGADO (PASTE)
+                document.body.addEventListener('paste', function(event) {
+                    var target = event.target;
+
+                    if (
+                        target.matches('[data-rel="solo-text"]') ||
+                        target.matches('[id^="id_telefono"]') ||
+                        target.matches('[id^="id_dir"]') ||
+                        target.matches('#asu, #ane, #telefono_us, #mail_us')
+                    ) {
+                        event.preventDefault();
+
+                        var regex = /[^a-zA-Z0-9áÁéÉíÍóÓúÚñÑ!@#$%^&*()_+\-=\[\]{}|;:,.<>¿?/\\'"\s]/g;
+
+                        if (target.matches('[data-rel="solo-text"]')) {
+                            regex = /[^a-zA-ZáÁéÉíÍóÓúÚñÑ ]/g;
+                        }
+
+                        var clipboardData = event.clipboardData || window.clipboardData;
+                        var paste = clipboardData.getData('text');
+
+                        paste = paste
+                            .replace(regex, '')
+                            .replace(/\s+/g, ' ')
+                            .trim();
+
+                        target.setRangeText(
+                            paste,
+                            target.selectionStart,
+                            target.selectionEnd,
+                            'end'
+                        );
+                    }
+                });
+
                 const select = document.querySelector("select[name='empTrans']");
                 if (select) {
                     select.classList.add("form-select");
