@@ -1467,7 +1467,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     let payload = new FormData();
 
                     if (RADICACION_CIRCULAR) {
-
                         const iddata = [{
                             CODIGO_DESTINATARIOS: "",
                             DESTINATARIOS: "",
@@ -1478,9 +1477,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                             'addDestinatariosCircular',
                             JSON.stringify(iddata)
                         );
-
                     } else {
-
                         const iddata = [{
                             CODIGO: 'XX' + INCREMENTAL1,
                             NOMBRE: "",
@@ -1517,8 +1514,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                             if (data && data[0]) {
                                 const improvedHTML = beautifyUsuarioHTML(data[0]);
-                                tableShow.insertAdjacentHTML('beforeend', improvedHTML);
-                                tableSection.classList.remove('hide');
+                                // tableShow.insertAdjacentHTML('beforeend', improvedHTML);
+                                tableShow.append(improvedHTML);
+                                tableSection.classList.remove('d-none');
                                 INCREMENTAL1++;
                             }
                         })
@@ -1545,7 +1543,10 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                  * @param   htmlString    html retornado del back
                  */
                 function beautifyUsuarioHTML(htmlString) {
-                    const dom = parseHTML(htmlString);
+                    // const dom = parseHTML(htmlString);
+                    const template = document.createElement('template');
+                    template.innerHTML = htmlString.trim();
+                    const dom = template.content;
 
                     /* 1️⃣ Tabla principal */
                     dom.querySelectorAll('table').forEach(table => {
@@ -1581,6 +1582,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     /* 6️⃣ Botón eliminar */
                     dom.querySelectorAll('button').forEach(btn => {
                         btn.classList.add('btn', 'btn-outline-danger', 'btn-sm');
+                        btn.setAttribute('data-rel', 'remove');
                         btn.innerHTML = '<i class="fa fa-minus" aria-hidden="true"></i>';
                     });
 
@@ -1596,7 +1598,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         el.classList.remove('row-fluid');
                     });
 
-                    return dom.innerHTML;
+                    return dom;
                 }
 
                 $("body").on("keyup", 'input[name$="muni"], input[name$="dep"], input[name$="pais"]', function() {
@@ -1786,13 +1788,11 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         })
                         .then(response => response.json())
                         .then(data => {
-                            document
-                                .getElementById("tableshow")
-                                .insertAdjacentHTML("beforeend", data[0]);
+                            const improvedHTML = beautifyUsuarioHTML(data[0]);
 
-                            document
-                                .getElementById("tableSection")
-                                .classList.remove("d-none");
+                            // document.getElementById("tableshow").insertAdjacentHTML("beforeend", data[0]);
+                            document.getElementById("tableshow").append(improvedHTML);
+                            document.getElementById("tableSection").classList.remove("d-none");
                         })
                         .catch(error => {
                             console.error("Error:", error);
@@ -1808,13 +1808,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         const li = document.createElement('li');
                         indiv.appendChild(li);
 
-                        const nombre = item.NOMBRE ?
-                            item.NOMBRE.replace(/\w\S*/g, uppFirs) :
-                            '';
+                        const nombre = item.NOMBRE ? item.NOMBRE.replace(/\w\S*/g, uppFirs) : '';
 
-                        const apell = item.APELLIDO ?
-                            item.APELLIDO.replace(/\w\S*/g, uppFirs) :
-                            '';
+                        const apell = item.APELLIDO ? item.APELLIDO.replace(/\w\S*/g, uppFirs) : '';
 
                         const telef = item.TELEF || '';
                         const email = item.EMAIL ? item.EMAIL.toLowerCase() : '';
@@ -1860,8 +1856,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                         li.appendChild(div);
                     });
-
-                    console.log('llego a showAnswer');
 
                     document.getElementById('showAnswer').classList.remove('d-none');
                 }
@@ -2615,6 +2609,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 // REMOVER FILA POR data-rel="remove"
                 document.body.addEventListener('click', function(event) {
                     var target = event.target;
+                    console.log(target);
 
                     if (target.matches('*[data-rel="remove"]')) {
                         var tr = target.closest('tr.item_usuario');
