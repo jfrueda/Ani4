@@ -219,11 +219,9 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
 
                 <!-- Right side buttons -->
                 <div class="d-flex">
-                    <a class="btn btn-warning btn-sm text-dark fw-semibold"
-                        href="#" onclick="$('#crearExpedienteform').show(); cancelarCrearExp()"
-                        data-bs-toggle="modal" data-bs-target="#crearExpModal">
+                    <button type="button" class="btn btn-warning fw-semibold" onclick="$('#crearExpedienteform').show(); cancelarCrearExp()" data-bs-toggle="modal" data-bs-target="#crearExpModal">
                         <i class="bi bi-plus-circle me-1"></i> Crear
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -706,212 +704,212 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
 
     <?php
     /**
-     * Operaciones de expedientes como  crear, incluir, se utiliza la function parent para pode r  ejecutarlo.
+     * Operaciones de expedientes como  crear, incluir, se utiliza la function parent para poder  ejecutarlo.
+     * Creación de expediente
      */
-    /* * Creación de expediente* */
     ?>
-    <div id="crearExpModal" class="modal fade" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content cajabase">
-                <div class="modal-header  bg-orfeo" style='color:#fff   ;  padding: 10px 5px 0px 5px;' id='tituloExpmodaltt' name='tituloExpmodaltt'>
-                    <span id='tituloExpmodal'> CREACION EXPEDIENTE VIRTUAL </span>
+    <div id="crearExpModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow-lg">
+                <!-- HEADER -->
+                <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold mb-0" id="tituloExpmodal">
+                        CREACIÓN EXPEDIENTE VIRTUAL
+                    </h5>
+
                     <?php if ($_SESSION['CREATEEXPEXT'] == 1) { ?>
-                        <div class="switchToggle" id='switchdato'>
-                            <input type="checkbox" id="switch" name='switch' onchange='tpexpcrea()'>
-                            <label for="switch">Toggle</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="switch" name="switch" onchange="tpexpcrea()">
+                            <label class="form-check-label text-white" for="switch">Modo avanzado</label>
                         </div>
                     <?php } ?>
                 </div>
+
+                <!-- BODY -->
                 <div class="modal-body">
-                    <div name='dataformCrearExp' id='dataformCrearExp'>
-                        <form action="#" id='formModRadanex' class="form-group " name="formExpinicial" style='margin: 0px' method="post" enctype="multipart/form-data">
-                            <div class='form-group'>
-                                <div class="text-primary ">
-                                    APLICAR DE LA TRD DEL EXPEDIENTE
-                                </div>
-                                <div class="input-group  ">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width: 175px">Dependencia</span>
-                                    </div>
-                                    <?php echo $optionDep; ?>
+                    <div id="dataformCrearExp" name="dataformCrearExp">
+                        <form id="formModRadanex" name="formExpinicial" method="post" enctype="multipart/form-data">
 
-                                    <div class='with-errors text-danger pull-right' id='error-coddepe'></div>
-                                </div>
-                                <div class="input-group  ">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width: 175px">Serie</span>
-                                    </div>
+                            <!-- SECCIÓN TRD -->
+                            <div class="mb-4">
+                                <span class="badge bg-info mb-2">Aplicar TRD del expediente</span>
 
-                                    <select name="selSerie" id="selSerie" onChange='' class='custom-select required text-uppercase'>
+                                <div class="mb-3 input-group">
+                                    <span class="input-group-text w-25">Dependencia</span>
+                                    <?= $optionDep; ?>
+                                </div>
+
+                                <div class="mb-3 input-group">
+                                    <span class="input-group-text w-25">Serie</span>
+                                    <select name="selSerie" id="selSerie" class="form-select text-uppercase">
                                         <option value="0">-- Seleccione --</option>
-                                        <?php echo $optionSSd; ?>
+                                        <?= $optionSSd; ?>
                                     </select>
                                 </div>
-                                <div class="input-group  ">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width: 175px">Subserie</span>
-                                    </div>
-                                    <select id="selSubSerie" name='selSubSerie' onchange='' class='custom-select required text-uppercase'>
-                                        <option value='0' data-cla='' id='cla0'>--- Seleccione ---</option>
+
+                                <div class="mb-3 input-group">
+                                    <span class="input-group-text w-25">Subserie</span>
+                                    <select id="selSubSerie" name="selSubSerie" class="form-select text-uppercase">
+                                        <option value="0">--- Seleccione ---</option>
                                     </select>
                                 </div>
-                                <div class="input-group  ">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width: 175px">Seguridad Inicial</span>
-                                    </div>
-                                    <select name="idseguridad" id="idseguridad" class='custom-select required text-uppercase'>
+
+                                <div class="mb-3 input-group">
+                                    <span class="input-group-text w-25">Seguridad Inicial</span>
+                                    <select name="idseguridad" id="idseguridad" class="form-select text-uppercase">
                                         <option value="0" class='text-success'>Pública</option>
                                         <option value="1">Pública reservada (solo la dependencia)</option>
                                         <option value="2">Pública clasificada (usuario que proyectó, jefe y usuario actual)</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group ">
-                                <div class="text-primary ">
-                                    DATOS DEL EXPEDIENTE
-                                </div>
-                                <div class="input-group">
-                                    <select name='anoExp' id='anoExp' class='custom-select' onchange='fn_numExp()'>
+
+                            <!-- SECCIÓN DATOS -->
+                            <div class="mb-4">
+                                <span class="badge bg-secondary mb-2">Datos del expediente</span>
+
+                                <div class="input-group mb-3">
+                                    <select name="anoExp" id="anoExp" class="form-select" onchange="fn_numExp()">
                                         <?php
-                                        $seleted = "selected='selected'";
-                                        for ($index = date('Y'); $index >= 2020; $index--) {
-                                            echo "<option value='$index'  $seleted >$index</option>";
-                                            $seleted = '';
+                                        $seleted = "selected";
+                                        for ($i = date('Y'); $i >= 2020; $i--) {
+                                            echo "<option value='$i' $seleted>$i</option>";
+                                            $seleted = "";
                                         }
                                         ?>
                                     </select>
-                                    <input type='text' name='depExp' id='depExp' readonly="readonly" value='<?php echo $dependenciaC; ?>' maxlength="3" size="3" class='form-control text-center'>
-                                    <input type='text' name='numsrb' readonly="readonly" id='numsrb' value='00000' maxlength="4" size="4" class='form-control text-center'>
-                                    <input type='text' name='consecutivoExp' readonly="readonly" id='consecutivoExp' value='000001' maxlength="6" size=6 class='form-control text-center'>
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">E</span>
-                                    </div>
+
+                                    <input type="text" id="depExp" name="depExp" class="form-control text-center" readonly value="<?= $dependenciaC ?>">
+                                    <input type="text" id="numsrb" name="numsrb" class="form-control text-center" readonly value="00000">
+                                    <input type="text" id="consecutivoExp" name="consecutivoExp" class="form-control text-center" readonly value="000001">
+
+                                    <span class="input-group-text">E</span>
                                 </div>
-                            </div>
-                            <div class="form-group ">
-                                <div class="col-sm-12 h6">
-                                    <div class='alert alert-warning'>El consecutivo "000X" temporal y puede cambiar al momento de crear el expediente. <strong id='dt_num_exp'>20180000100001E</strong> </div>
+
+                                <div class="alert alert-warning small">
+                                    El consecutivo "000X" temporal y puede cambiar al momento de crear el expediente.
+                                    <strong id="dt_num_exp">20180000100001E</strong>
                                 </div>
-                                <div class="input-group  ">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width: 175px"><?= $paramsExp[1] ? $paramsExp[1] : "Nombre Expediente"; ?></span>
-                                    </div>
-                                    <input type="text" id='exptilulo' name='exptilulo' class='form-control'>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text w-25">
+                                        <?= $paramsExp[1] ?: 'Nombre Expediente'; ?>
+                                    </span>
+                                    <input type="text" id="exptilulo" name="exptilulo" class="form-control">
                                 </div>
-                                <div id='optionextatrib' name='optionextatrib' style='display:block'>
-                                    <div class="input-group  ">
-                                        <div class="input-group-prepend" <?= $paramsExp[2] ? '' : "style='display:none'"; ?>>
-                                            <span class="input-group-text" style="width: 175px"><?= $paramsExp[2] ? $paramsExp[2] : "Descriptor 1"; ?></span>
-                                        </div>
-                                        <input type="text" id='param2' name='param2' class='form-control'>
-                                    </div>
-                                    <div class="input-group  " <?= $paramsExp[3] ? '' : "style='display:none'"; ?>>
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" style="width: 175px"><?= $paramsExp[3] ? $paramsExp[3] : "Descriptor 2"; ?></span>
-                                        </div>
-                                        <input type="text" id='param3' name='param3' class='form-control'>
-                                    </div>
-                                    <div class="input-group  " <?= $paramsExp[4] ? '' : "style='display:none'"; ?>>
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" style="width: 175px"><?= $paramsExp[4] ? $paramsExp[4] : "Descriptor 3"; ?></span>
-                                        </div>
-                                        <input type="text" id='param4' name='param4' class='form-control'>
-                                    </div>
-                                    <div class="input-group  " <?= $paramsExp[5] ? '' : "style='display:none'"; ?>>
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" style="width: 175px"><?= $paramsExp[5] ? $paramsExp[5] : "Descriptor 4"; ?></span>
-                                        </div>
-                                        <input type="text" id='param5' name='param5' class='form-control'>
-                                    </div>
+
+                                <!-- CAMPOS DINÁMICOS -->
+                                <div id="optionextatrib" name="optionextatrib>
+                                <?php for ($i = 2; $i <= 5; $i++) {
+                                    if ($paramsExp[$i]) { ?>
+                                        <div class=" input-group mb-3">
+                                    <span class="input-group-text w-25"><?= $paramsExp[$i] ?></span>
+                                    <input type="text" id="param<?= $i ?>" name="param<?= $i ?>" class="form-control">
+                            <?php }
+                                } ?>
                                 </div>
-                                <div class="input-group  ">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width: 175px">Fecha de Inicio</span>
-                                    </div>
-                                    <input type='date' value='<?php echo date("Y-m-d"); ?>' name='fechaExp' id='fechaExp' class='form-control' style='width: 200px '>
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><?php echo " < " . date("d/m/Y"); ?></span>
-                                    </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text w-25">Fecha de inicio</span>
+                                    <input type="date" id="fechaExp" name="fechaExp" class="form-control" value="<?= date('Y-m-d') ?>">
                                 </div>
-                                <div class="input-group  ">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width: 175px">Responsable</span>
-                                    </div>
-                                    <select name="selUsuario" id="selUsuario" class='custom-select required text-uppercase'>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text w-25">Responsable</span>
+                                    <select name="selUsuario" id="selUsuario" class="form-select">
                                         <option value="0">-- Seleccione --</option>
                                     </select>
                                 </div>
-                                <div class='with-errors text-danger pull-right' id='error-crearexp'></div>
                             </div>
                         </form>
                     </div>
-                    <input type="hidden" name='accion' value='crearConfirmar'>
-                    <div id="numExpL" style='display:none'>
-                    </div>
-                    <div class='row'>
-                    </div>
 
-                    <div name='confCrea' id='confCrea' style='display:none'>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <div class="alert alert-warning">
-                                    <strong>ESTA SEGURO DE CREAR EL EXPEDIENTE </strong> <span id='titleexp'></span> ?
-                                    <br>
-                                    con la siguiente información:
-                                </div>
-                                <table border="0" width="100%" align="center" class="listadoC" cellspacing="1" cellpadding="0">
-                                    <tbody>
-                                        <tr align="center" class="titulos2">
-                                            <th height="25" class="titulos2" colspan="2">APLICACION DE LA TRD EL EXPEDIENTE</th>
-                                        </tr>
-                                        <tr>
-                                            <td><label>TITULO</label></td>
-                                            <td id="txt-titulo" class="form-control"> </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label>SERIE</label></td>
-                                            <td id="txt-serie" class="form-control"> </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label>SUBSERIE</label></td>
-                                            <td id="txt-subserie" class="form-control"></td>
-                                        </tr>
-                                        <tr id="tr-extEntidad">
-                                            <td><label>ENTIDAD</label></td>
-                                            <td id="txt-extEntidad" class="form-control"></td>
-                                        </tr>
-                                        <tr id="tr-extasunto">
-                                            <td><label>ASUNTO</label></td>
-                                            <td id="txt-extasunto" class="form-control"></td>
-                                        </tr>
-                                        <tr id="tr-extobservacion">
-                                            <td><label>OBSERVACION</label></td>
-                                            <td id="txt-extobservacion" class="form-control"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label>FECHA DE INICIO</label></td>
-                                            <td class="form-control" id="txt-fechini"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label>SEGURIDAD</label></td>
-                                            <td class="form-control" id="txt-seguridad"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><label>RESPONSABLE</label></td>
-                                            <td class="form-control" id="txt-resp"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <input type="hidden" name='accion' value='crearConfirmar'>
+                    <div id="numExpL" style='display:none'></div>
+                    <div class='row'></div>
+
+
+                    <div name="confCrea" id="confCrea" style="display:none">
+                        <div class="mb-4">
+                            <!-- ALERTA PRINCIPAL -->
+                            <div class="alert alert-warning border-start border-4 border-warning">
+                                <h6 class="fw-bold mb-1">
+                                    ¿Está seguro de crear el expediente
+                                    <span class="text-primary" id="titleexp"></span>?
+                                </h6>
+                                <small class="text-muted">
+                                    Revise cuidadosamente la información antes de continuar.
+                                </small>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="alert alert-danger">
-                                    <strong>Nota: </strong> No se podrá modificar el número del expediente una vez haya sido creado.
+
+                            <!-- CARD RESUMEN -->
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-header bg-light fw-semibold">
+                                    Aplicación de la TRD del expediente
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered align-middle mb-0">
+                                        <tbody>
+
+                                            <tr>
+                                                <th class="w-25 text-muted">Título</th>
+                                                <td id="txt-titulo"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="text-muted">Serie</th>
+                                                <td id="txt-serie"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="text-muted">Subserie</th>
+                                                <td id="txt-subserie"></td>
+                                            </tr>
+
+                                            <tr id="tr-extEntidad">
+                                                <th class="text-muted">Entidad</th>
+                                                <td id="txt-extEntidad"></td>
+                                            </tr>
+
+                                            <tr id="tr-extasunto">
+                                                <th class="text-muted">Asunto</th>
+                                                <td id="txt-extasunto"></td>
+                                            </tr>
+
+                                            <tr id="tr-extobservacion">
+                                                <th class="text-muted">Observación</th>
+                                                <td id="txt-extobservacion"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="text-muted">Fecha de inicio</th>
+                                                <td id="txt-fechini"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="text-muted">Seguridad</th>
+                                                <td id="txt-seguridad"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="text-muted">Responsable</th>
+                                                <td id="txt-resp"></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class='row'>
+
+                            <!-- ALERTA FINAL -->
+                            <div class="alert alert-danger border-start border-4 border-danger mb-0">
+                                <strong>Nota:</strong>
+                                Una vez creado el expediente, <u>no se podrá modificar</u> el número asignado.
                             </div>
                         </div>
                     </div>
+
                     <div name='creacionconfi' id='creacionconfi' style='display:none'>
                         <div class="form-group">
                         </div>
@@ -923,10 +921,9 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                 <div class="modal-footer">
                     <input name="btnConfCrea" type="button" onclick='crearEA();' class="btn btn-warning " style='display: none' id='btnConfCrea' value=" Confirmación Creación Expediente ">
                     <input type="button" value="Crear Expediente" id='btnRcera' class='btn btn-warning btn-crearExp'>
-                    <!--   <input type="submit"  value="Radicar" id='btnRadicar' class='btn btn-success'>-->
-                    <button type="button" class="btn btn-danger " data-dismiss="modal" style='display: none' id='btnradcerrartx' onclick="regresar()">Cerrar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick='cancelarCrearExp()' id='btnRadcancelartx'>Cancelar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick='location.reload()' style='display: none' id='btnRadcancelartxslir'>Salir</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="regresar()" style='display: none' id='btnradcerrartx'>Cerrar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick='cancelarCrearExp()' id='btnRadcancelartx'>Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick='location.reload()' style='display: none' id='btnRadcancelartxslir'>Salir</button>
                 </div>
             </div>
         </div>
@@ -997,6 +994,7 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
         document.addEventListener('DOMContentLoaded', function() {
             const depSelect = document.getElementById('bsq_dep');
             const herrDep = document.querySelector("select[name='herr_dep']");
+            const dep = document.querySelector("select[name='dependenciaExp']");
 
             if (depSelect) {
                 depSelect.classList.remove('custom-select');
@@ -1006,6 +1004,11 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
             if (herrDep) {
                 herrDep.classList.remove('custom-select');
                 herrDep.classList.add('form-select');
+            }
+
+            if (dep) {
+                dep.classList.remove('custom-select');
+                dep.classList.add('form-select');
             }
         });
     </script>
