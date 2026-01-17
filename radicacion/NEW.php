@@ -543,6 +543,16 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
         .inbox-download-list li>*:first-child {
             width: 250px;
         }
+
+        .sticky-top-custom {
+            position: sticky;
+            top: 10px;
+            /* distancia desde arriba */
+            z-index: 1020;
+            /* encima del contenido */
+            background: #fff;
+            /* evita transparencias */
+        }
     </style>
 </head>
 
@@ -565,7 +575,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
             </div>
 
             <!-- FORM CONTENT -->
-            <div class="card shadow-sm my-3">
+            <div class="card shadow-sm my-3 sticky-top-custom">
                 <div class="card-body">
                     <div class="row align-items-end g-3">
                         <!-- FECHA ACTUAL -->
@@ -766,14 +776,12 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 </div>
             <?php } ?>
 
-
             <div class="row my-3">
                 <div class="col-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <fieldset>
                                 <div class="row g-3">
-
                                     <!-- ASUNTO -->
                                     <div class="col-md-3">
                                         <div class="mb-2">
@@ -930,7 +938,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                             </div>
                                         </div>
                                     <?php } ?>
-
                                 </div>
                             </fieldset>
 
@@ -965,7 +972,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                             <fieldset>
                                 <div class="row g-3 <?= $modificar ?>" id="inforshow">
-
                                     <div class="col-md-3">
                                         <label class="form-label fw-semibold">Dependencia</label>
                                         <?= $depselectInf ?>
@@ -1018,7 +1024,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     <div class="modal-body" id="alertModalBody">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
                     </div>
                 </div>
             </div>
@@ -1077,8 +1083,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
             <a title="Asociar imagen"
                 id="skeleton9"
                 href="javascript:void(0);"
-                onclick="window.open('../uploadFiles/uploadFileRadicado.php?<?= $idsession ?>&busqRadicados=xxxxxx&Buscar=Buscar&alineacion=Center',
-            'busqRadicados=xxxxxx','menubar=0,resizable=0,scrollbars=0,width=550,height=280,toolbar=0,location=0');"
+                onclick="window.open('../uploadFiles/uploadFileRadicado.php?<?= $idsession ?>&busqRadicados=xxxxxx&Buscar=Buscar&alineacion=Center', 'busqRadicados=xxxxxx','menubar=0,resizable=0,scrollbars=0,width=550,height=280,toolbar=0,location=0');"
                 class="btn btn-outline-success btn-sm d-flex align-items-center gap-1 hide"
                 data-bs-toggle="tooltip">
                 <i class="fa fa-image"></i>
@@ -1089,8 +1094,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
             <a title="Tipificar documento"
                 id="skeleton10"
                 href="javascript:void(0);"
-                onclick="window.open('../radicacion/tipificar_documento.php?nurad=xxxxxx&ind_ProcAnex=N&codusua=<?= $codusua ?>&coddepe=<?= $coddepe ?>&codusuario=<?= $codusua ?>&dependencia=<?= $coddepe ?>&tsub=0&codserie=0',
-            'busqRadicados=<?= $nurad ?>','menubar=0,resizable=0,scrollbars=0,width=650,height=480,toolbar=0,location=0');"
+                onclick="window.open('../radicacion/tipificar_documento.php?nurad=xxxxxx&ind_ProcAnex=N&codusua=<?= $codusua ?>&coddepe=<?= $coddepe ?>&codusuario=<?= $codusua ?>&dependencia=<?= $coddepe ?>&tsub=0&codserie=0', 'busqRadicados=<?= $nurad ?>','menubar=0,resizable=0,scrollbars=0,width=650,height=480,toolbar=0,location=0');"
                 class="btn btn-outline-warning btn-sm d-flex align-items-center gap-1 hide"
                 data-bs-toggle="tooltip">
                 <i class="fa fa-tags"></i>
@@ -2073,7 +2077,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     const alertContainer = document.getElementById('alertmessage');
 
                     const div = document.createElement('div');
-                    div.className = `alert alert-${type} alert-dismissible fade show`;
+                    div.className = `alert alert-${type} alert-dismissible `;
                     div.role = 'alert';
 
                     div.innerHTML = `
@@ -2093,6 +2097,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 //****************************************************************************************//
                 // Validacion de correos electronicos
                 function validarEmail(idxEmail, emailId) {
+                    console.log('validarEmail');
+                    console.log(idxEmail, emailId);
+                    
                     const valEmaile = document.getElementById('errormail');
                     let correosValid = [];
                     const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -2174,6 +2181,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                     // Eliminar correos duplicados
                     function eliminarCorreosDuplicados(correo) {
+                        console.log('eliminarCorreosDuplicados');
+                        console.log(correo);
+                        
                         // Divide la cadena en correos separados por ';'
                         let correos = correo.split(';');
                         // Usa un Set para almacenar solo correos únicos
@@ -2208,10 +2218,13 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                             emailInput.value = eliminarCorreosDuplicados(emailInput.value);
                         }
 
+                        console.log('emailInput', emailInput.value);
+                        
                         const emails = emailInput.value.split(';');
 
-                        emails.forEach(email => {
+                        console.log('emails', emails);
 
+                        emails.forEach(email => {
                             if ((ent === 6 || ent === 7) && !email && !dirInput.value.trim()) {
                                 swal({
                                     title: "Advertencia!",
@@ -2227,7 +2240,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                 pass = false;
                             }
 
-                            if (email) validarEmail(email, emailInput);
+                            if (email) {
+                                validarEmail(email, emailInput)
+                            };
                         });
                     }
 
@@ -2235,6 +2250,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     //Folios y Anexos
                     const nofolios = document.getElementById('nofolios');
                     const noanexos = document.getElementById('noanexos');
+
+                    console.log('nofolios', nofolios);
+                    console.log('noanexos', noanexos);
 
                     if (
                         (nofolios && /[A-Za-z]+$/.test(nofolios.value)) ||
@@ -2249,6 +2267,8 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                     //Fecha del radicado
                     const fecha_doc = document.getElementById('fecha_gen_doc')?.value;
+                    console.log('fecha_doc', fecha_doc);
+
                     if (fecha_doc) {
                         const fechaActual = new Date();
                         const d = fecha_doc.substring(0, 2);
@@ -2278,6 +2298,8 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         }
                     }
 
+                    console.log('RADICACION_CIRCULAR', RADICACION_CIRCULAR);
+                
                     if (RADICACION_CIRCULAR) {
                         if (!document.getElementById('id_destinatario')) {
                             mostrarAlert({
@@ -2453,7 +2475,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     }
 
                     if (pass && !EJECUCION) {
-
+                        console.log('pass & EJECUTION');
+                        console.log(pass, EJECUCION);
+                        
                         // Limpiar alertas
                         borrarAlert();
                         EJECUCION = true;
@@ -2469,6 +2493,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                             echo "datos = datos + '&$javascriptCapDatos';";
                         }
                         ?>
+
+                        console.log("datos");
+                        console.log(datos);
 
                         // Eliminar elementos
                         var showRadicar = document.getElementById('showRadicar');
@@ -2499,20 +2526,17 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                             })
                             .then(response => response.json())
                             .then(data => {
-
+                                console.log('response server');
+                                console.log(data);
+                                
                                 for (var k in data) {
-
                                     if (data[k].error !== undefined) {
-
                                         mostrarAlert({
                                             type: 'danger',
                                             message: data[k].error
                                         });
-
                                     } else {
-
                                         if (acction !== "modificaRad") {
-
                                             radicado = data[k].answer;
 
                                             var modificaRad = document.getElementById('modificaRad');
@@ -2523,39 +2547,32 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                             );
 
                                             document.getElementById('idrad').insertAdjacentHTML('beforeend', data[k].answer);
-
                                         } else {
-
                                             mostrarAlert({
                                                 type: 'success',
                                                 message: data[k].answer
                                             });
-
                                         }
 
-                                        document.getElementById('showModificar').classList.remove('hide');
+                                        document.getElementById('showModificar').classList.remove('d-none');
                                     }
                                 }
 
                                 if (acction !== "modificaRad") {
 
-                                    var contentstiker = document.getElementById('skeleton')
-                                        .cloneNode(true);
+                                    var contentstiker = document.getElementById('skeleton').cloneNode(true);
                                     contentstiker.classList.remove('hide');
                                     contentstiker = contentstiker.outerHTML.replace(/xxxxxx/g, radicado);
 
-                                    var contentverrad = document.getElementById('skeleton8')
-                                        .cloneNode(true);
+                                    var contentverrad = document.getElementById('skeleton8').cloneNode(true);
                                     contentverrad.classList.remove('hide');
                                     contentverrad = contentverrad.outerHTML.replace(/xxxxxx/g, radicado);
 
-                                    var contentasocia = document.getElementById('skeleton9')
-                                        .cloneNode(true);
+                                    var contentasocia = document.getElementById('skeleton9').cloneNode(true);
                                     contentasocia.classList.remove('hide');
                                     contentasocia = contentasocia.outerHTML.replace(/xxxxxx/g, radicado);
 
-                                    var contenttipifica = document.getElementById('skeleton10')
-                                        .cloneNode(true);
+                                    var contenttipifica = document.getElementById('skeleton10').cloneNode(true);
                                     contenttipifica.classList.remove('hide');
                                     contenttipifica = contenttipifica.outerHTML.replace(/xxxxxx/g, radicado);
 
@@ -2569,15 +2586,17 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                 <?php } ?>
 
                                 document.getElementById('inforshow').classList.remove('hide');
-                                document.getElementById('showModificar').classList.remove('hide');
+                                document.getElementById('showModificar').classList.remove('d-none');
 
                                 var copy = document.getElementById('copyradicar');
                                 if (copy) {
                                     copy.innerHTML = document.getElementById('showModificar').cloneNode(true).outerHTML;
                                 }
-
                             })
                             .catch(err => {
+                                console.log("err server");
+                                console.log(err);
+                                
                                 var errMsg = 'Error de creación/modificación del radicado. Reporte al administrador código http: ' + err.status;
                                 mostrarAlert({
                                     type: 'danger',
