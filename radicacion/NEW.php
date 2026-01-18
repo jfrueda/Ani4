@@ -2099,7 +2099,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 function validarEmail(idxEmail, emailId) {
                     console.log('validarEmail');
                     console.log(idxEmail, emailId);
-                    
+
                     const valEmaile = document.getElementById('errormail');
                     let correosValid = [];
                     const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -2183,7 +2183,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     function eliminarCorreosDuplicados(correo) {
                         console.log('eliminarCorreosDuplicados');
                         console.log(correo);
-                        
+
                         // Divide la cadena en correos separados por ';'
                         let correos = correo.split(';');
                         // Usa un Set para almacenar solo correos únicos
@@ -2219,7 +2219,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         }
 
                         console.log('emailInput', emailInput.value);
-                        
+
                         const emails = emailInput.value.split(';');
 
                         console.log('emails', emails);
@@ -2269,11 +2269,17 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     const fecha_doc = document.getElementById('fecha_gen_doc')?.value;
                     console.log('fecha_doc', fecha_doc);
 
-                    if (fecha_doc) {
+                    const fechaFormateada = fecha_doc ?
+                        fecha_doc.split('-').reverse().join('-') :
+                        null;
+
+                    console.log('fechaFormateada', fechaFormateada);
+
+                    if (fechaFormateada) {
                         const fechaActual = new Date();
-                        const d = fecha_doc.substring(0, 2);
-                        const m = fecha_doc.substring(3, 5);
-                        const y = fecha_doc.substring(6, 10);
+                        const d = fechaFormateada.substring(0, 2);
+                        const m = fechaFormateada.substring(3, 5);
+                        const y = fechaFormateada.substring(6, 10);
                         const fecha = new Date(y, m - 1, d);
                         const dias = Math.floor((fechaActual - fecha) / 86400000);
 
@@ -2299,7 +2305,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     }
 
                     console.log('RADICACION_CIRCULAR', RADICACION_CIRCULAR);
-                
+
                     if (RADICACION_CIRCULAR) {
                         if (!document.getElementById('id_destinatario')) {
                             mostrarAlert({
@@ -2477,7 +2483,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     if (pass && !EJECUCION) {
                         console.log('pass & EJECUTION');
                         console.log(pass, EJECUCION);
-                        
+
                         // Limpiar alertas
                         borrarAlert();
                         EJECUCION = true;
@@ -2485,8 +2491,24 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         // Serializar formulario (equivalente a $("form").serialize())
                         var form = document.querySelector('form');
                         var formData = new FormData(form);
+
+                        /* Obtener fecha original YYYY-MM-DD */
+                        var fechaISO = formData.get('fecha_gen_doc');
+
+                        /* Formatear a DD-MM-YYYY */
+                        if (fechaISO) {
+                            var partes = fechaISO.split('-'); // [YYYY, MM, DD]
+                            var newFecha = partes[2] + '-' + partes[1] + '-' + partes[0];
+
+                            /* Reemplazar valor en el FormData */
+                            formData.set('fecha_gen_doc', newFecha);
+                        }
+
                         var datos = new URLSearchParams(formData).toString();
                         var radicado = '';
+
+                        console.log(datos);
+                        
 
                         <?php
                         if ($datos) {
@@ -2528,7 +2550,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                             .then(data => {
                                 console.log('response server');
                                 console.log(data);
-                                
+
                                 for (var k in data) {
                                     if (data[k].error !== undefined) {
                                         mostrarAlert({
@@ -2596,7 +2618,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                             .catch(err => {
                                 console.log("err server");
                                 console.log(err);
-                                
+
                                 var errMsg = 'Error de creación/modificación del radicado. Reporte al administrador código http: ' + err.status;
                                 mostrarAlert({
                                     type: 'danger',
