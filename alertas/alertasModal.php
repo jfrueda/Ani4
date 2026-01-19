@@ -1,11 +1,11 @@
 <?php
-    session_start();
-    // Establish database connection
-    $db = new ConnectionHandler("$ruta_raiz");
+session_start();
+// Establish database connection
+$db = new ConnectionHandler("$ruta_raiz");
 
-    // Consultar las alertas disponibles que no han sido leídas por el usuario
-    $currentDate = date('Y-m-d');
-    $sqlalertas = "SELECT a.* FROM alertas a 
+// Consultar las alertas disponibles que no han sido leídas por el usuario
+$currentDate = date('Y-m-d');
+$sqlalertas = "SELECT a.* FROM alertas a 
                    LEFT JOIN alerta_leida al ON a.id = al.notificacion_id 
                    AND (al.usua_codi = $codusuario 
                    OR al.usua_doc = '$usua_doc')
@@ -14,28 +14,28 @@
                    AND (a.depe_codi = $dependencia
                    OR a.depe_codi IS NULL)
                    AND al.id IS NULL";
-                   
-    $resultalertas = $db->conn->query($sqlalertas);
 
-    // Verificar si existen alertas activas no leídas
-    $alertas = [];
-    if ($resultalertas) {
-        while ($row = $resultalertas->fetchRow()) {
-            $alertas[] = $row;
-            // Insertar registro de alerta leída
-            try {
-                $sqlInsert = "INSERT INTO alerta_leida (notificacion_id, usua_codi, usua_doc) 
+$resultalertas = $db->conn->query($sqlalertas);
+
+// Verificar si existen alertas activas no leídas
+$alertas = [];
+if ($resultalertas) {
+    while ($row = $resultalertas->fetchRow()) {
+        $alertas[] = $row;
+        // Insertar registro de alerta leída
+        try {
+            $sqlInsert = "INSERT INTO alerta_leida (notificacion_id, usua_codi, usua_doc) 
                              VALUES ({$row['ID']}, $codusuario, '$usua_doc')";
-                $db->conn->Execute($sqlInsert);
-            } catch (Exception $e) {
-                continue;
-            }
+            $db->conn->Execute($sqlInsert);
+        } catch (Exception $e) {
+            continue;
         }
-    } else {
-        echo "Error fetching records: " . $db->conn->ErrorMsg();
     }
+} else {
+    echo "Error fetching records: " . $db->conn->ErrorMsg();
+}
 
-    $db->conn->close();
+$db->conn->close();
 ?>
 <script src="include/vue/vue.js"></script>
 <style>
@@ -103,18 +103,18 @@
                 </div>
                 <div class="modal-body">
                     <!-- Mostrar la alerta actual -->
-                      <!-- Show HTML if present, otherwise show text and image -->
-                      <div v-if="alertas[currentAlertIndex].HTML && alertas[currentAlertIndex].HTML.trim() !== ''" v-html="decodeHtml(alertas[currentAlertIndex].HTML)"></div>
-                        <template v-else>
-                            <h5 class="alert-heading">{{ alertas[currentAlertIndex].TEXTO }}</h5>
-                            <hr>
-                        </template>
-                        <img v-if="alertas[currentAlertIndex].IMAGENBASE64" 
-                                :src="'data:image;base64,' + alertas[currentAlertIndex].IMAGENBASE64" 
-                                :width="isImageEnlarged ? '100%' : '50%'" 
-                                alt="Imagen Alerta" 
-                                class="img-fluid"
-                                @click="toggleImageSize" />
+                    <!-- Show HTML if present, otherwise show text and image -->
+                    <div v-if="alertas[currentAlertIndex].HTML && alertas[currentAlertIndex].HTML.trim() !== ''" v-html="decodeHtml(alertas[currentAlertIndex].HTML)"></div>
+                    <template v-else>
+                        <h5 class="alert-heading">{{ alertas[currentAlertIndex].TEXTO }}</h5>
+                        <hr>
+                    </template>
+                    <img v-if="alertas[currentAlertIndex].IMAGENBASE64"
+                        :src="'data:image;base64,' + alertas[currentAlertIndex].IMAGENBASE64"
+                        :width="isImageEnlarged ? '100%' : '50%'"
+                        alt="Imagen Alerta"
+                        class="img-fluid"
+                        @click="toggleImageSize" />
                 </div>
                 <div class="modal-footer">
                     <!-- Si hay más de una alerta, mostrar el botón "Next" -->
@@ -136,7 +136,7 @@
             alertas: <?php echo json_encode($alertas); ?>,
             currentAlertIndex: 0,
             isCloseDisabled: true,
-            isImageEnlarged: false 
+            isImageEnlarged: false
         },
         methods: {
             nextAlert() {
@@ -162,12 +162,14 @@
             }
         },
         mounted() {
-            // Mostrar el modal automáticamente cuando haya alertas
-            $('#alertasModal').modal({
-                show: true,
-                backdrop: 'static',
-                keyboard: false
-            });
+            if (this.alertas.length > 0) {
+                // Mostrar el modal automáticamente cuando haya alertas
+                $('#alertasModal').modal({
+                    show: true,
+                    backdrop: 'static',
+                    keyboard: false
+                });
+            }
 
             // Deshabilitar el botón Cerrar por 5 segundos
             setTimeout(() => {

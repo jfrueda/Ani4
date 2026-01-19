@@ -733,12 +733,10 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                             <!-- SECCIÓN TRD -->
                             <div class="mb-4">
                                 <span class="badge bg-info mb-2">Aplicar TRD del expediente</span>
-
                                 <div class="mb-3 input-group">
                                     <span class="input-group-text w-25">Dependencia</span>
                                     <?= $optionDep; ?>
                                 </div>
-
                                 <div class="mb-3 input-group">
                                     <span class="input-group-text w-25">Serie</span>
                                     <select name="selSerie" id="selSerie" class="form-select text-uppercase">
@@ -746,14 +744,12 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                                         <?= $optionSSd; ?>
                                     </select>
                                 </div>
-
                                 <div class="mb-3 input-group">
                                     <span class="input-group-text w-25">Subserie</span>
                                     <select id="selSubSerie" name="selSubSerie" class="form-select text-uppercase">
                                         <option value="0">--- Seleccione ---</option>
                                     </select>
                                 </div>
-
                                 <div class="mb-3 input-group">
                                     <span class="input-group-text w-25">Seguridad Inicial</span>
                                     <select name="idseguridad" id="idseguridad" class="form-select text-uppercase">
@@ -778,11 +774,9 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                                         }
                                         ?>
                                     </select>
-
                                     <input type="text" id="depExp" name="depExp" class="form-control text-center" readonly value="<?= $dependenciaC ?>">
                                     <input type="text" id="numsrb" name="numsrb" class="form-control text-center" readonly value="00000">
                                     <input type="text" id="consecutivoExp" name="consecutivoExp" class="form-control text-center" readonly value="000001">
-
                                     <span class="input-group-text">E</span>
                                 </div>
 
@@ -827,7 +821,6 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                     <input type="hidden" name='accion' value='crearConfirmar'>
                     <div id="numExpL" style='display:none'></div>
                     <div class='row'></div>
-
 
                     <div name="confCrea" id="confCrea" style="display:none">
                         <div class="mb-4">
@@ -960,7 +953,6 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                     </div>
                     <div id='respodatox'></div>
                 </div>
-
                 <div class="modal-footer">
                     <input type="button" value="Asociar responsable" id='btnRcera' class='btn btn-warning btn-crearExpOLD' onclick='crearExpOLD () '>
                     <button type="button" class="btn btn-danger" data-dismiss="modal" id='btnRadcancelartxslir'>Salir</button>
@@ -984,10 +976,34 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
     <script type="text/javascript" src="../js/JsApp/exp.js?<?= uniqid('h'); ?>"></script>
     <script type="text/javascript" src="../js/JsApp/plugin_herramientas.js?<?= uniqid('h'); ?>"></script>
     <script>
-        <? echo $contab == 1 ? "  $('#resulEstdatos').hide(); $('#busqueda').show(); " : " listar('mi');"; ?>
-        $("#depExp").val($("#dependenciaExp").val());
+        <?php
+        echo $contab == 1
+            ? "
+            document.getElementById('resulEstdatos')?.style.display = 'none';
+            document.getElementById('busqueda')?.style.display = 'block';
+            "
+            : "
+            listar('mi');
+            ";
+        ?>
+
+        /* Equivalente a .val() */
+        var dependenciaExp = document.getElementById('dependenciaExp');
+        var depExp = document.getElementById('depExp');
+
+        if (dependenciaExp && depExp) {
+            depExp.value = dependenciaExp.value;
+        }
+
+        /* Llamadas existentes */
         series();
-        $("#selSubSerie").empty();
+
+        /* Equivalente a .empty() */
+        var selSubSerie = document.getElementById('selSubSerie');
+        if (selSubSerie) {
+            selSubSerie.innerHTML = '';
+        }
+
         usuario();
     </script>
     <script>
