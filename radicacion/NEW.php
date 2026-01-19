@@ -568,7 +568,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     <h4 class="mb-0">
                         Radicación <?= $nomEntidad ?> <?= $tRadicacionDesc ?>
                     </h4>
-                    <p class="mb-0">
+                    <p class="mb-0" id="idrad">
                         <?= $nurad ?> <?= $encabezado ?>
                     </p>
                 </div>
@@ -623,6 +623,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                         <div class="d-flex justify-content-between">
                             <a title="Sticker"
+                                id="sticker"
                                 href="javascript:void(0);"
                                 onClick="window.open('./stickerWeb/index.php?<?= $varEnvio ?>&alineacion=Center','sticker<?= $nurad ?>','width=450,height=180');"
                                 class="btn btn-link px-0">
@@ -630,6 +631,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                             </a>
 
                             <a title="Asociar Imagen"
+                                id="asociar"
                                 href="javascript:void(0);"
                                 onClick="window.open('../uploadFiles/uploadFileRadicado.php?busqRadicados=<?= $nurad ?>&Buscar=Buscar&<?= $varEnvio ?>','asociar<?= $nurad ?>','width=550,height=280');"
                                 class="btn btn-link px-0">
@@ -2518,6 +2520,8 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                         console.log("datos");
                         console.log(datos);
+                        console.log("acction");
+                        console.log(acction);
 
                         // Eliminar elementos
                         var showRadicar = document.getElementById('showRadicar');
@@ -2560,6 +2564,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                     } else {
                                         if (acction !== "modificaRad") {
                                             radicado = data[k].answer;
+
+                                            console.log('radicado');
+                                            console.log(radicado);
 
                                             var modificaRad = document.getElementById('modificaRad');
                                             modificaRad.insertAdjacentHTML('beforeend', data[k].answer);
