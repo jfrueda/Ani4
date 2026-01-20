@@ -33,40 +33,6 @@ $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&nurad=$nur
 <head>
 	<?php include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 	<link rel="stylesheet" type="text/css" href="../js/spiffyCal/spiffyCal_v2_1.css">
-	<script language="JavaScript" src="../js/spiffyCal/spiffyCal_v2_1.js"></script>
-	<script language="JavaScript" src="../js/formchek.js"></script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			function regresar() {
-				document.adm_serie.submit();
-			}
-
-			function val_datos() {
-				bandera = true;
-				err_msg = '';
-
-				if (!isNonnegativeInteger(document.getElementById('codserieI').value, false)) {
-					err_msg = err_msg + 'Digite numeros Codigo.\n';
-					bandera = false;
-				}
-
-				if (isWhitespace(document.getElementById('detaserie').value)) {
-					err_msg = err_msg + 'Digite Descripcion.\n';
-					bandera = false;
-				}
-
-				if (dateAvailable.getSelectedDate() > dateAvailable2.getSelectedDate()) {
-					if (isWhitespace(document.getElementById('detaserie').value)) {
-						err_msg = err_msg + 'Escoja correctamente las fechas.\n';
-						bandera = false;
-					}
-				}
-
-				if (!bandera) alert(err_msg);
-				return bandera;
-			}
-		});
-	</script>
 </head>
 
 <body bgcolor="#FFFFFF">
@@ -94,14 +60,16 @@ $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&nurad=$nur
 							<div class="card-body">
 								<div class="row g-4">
 									<!-- ID -->
-									<!-- <div class="col-md-3">
-								<label class="form-label fw-semibold">ID</label>
-								<div class="form-control bg-light"><?= $idSerieGrb ?></div>
-								<input type="hidden"
-									id="idSerieGrb"
-									name="idSerieGrb"
-									value="<?= $idSerieGrb ?>">
-							</div> -->
+									<div class="col-12 col-md-3">
+										<label class="form-label fw-semibold">ID</label>
+										<h5 id="idSerieGrbLabel" name="idSerieGrbLabel">
+											<?= $idSerieGrbLabel ?>
+										</h5>
+										<input type="hidden"
+											id="idSerieGrb"
+											name="idSerieGrb"
+											value="<?= $idSerieGrb ?>">
+									</div>
 
 									<!-- Código -->
 									<div class="col-12 col-md-3">
@@ -152,32 +120,10 @@ $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&nurad=$nur
 									<!-- Botones -->
 									<div class="col-12 mt-4">
 										<div class="d-flex flex-wrap gap-2 justify-content-center">
-											<button type="submit"
-												name="buscar_serie"
-												class="btn btn-primary px-4">
-												<i class="bi bi-search me-1"></i> Buscar
-											</button>
-
-											<button type="submit"
-												name="insertar_serie"
-												onclick="return val_datos();"
-												class="btn btn-success px-4">
-												<i class="bi bi-plus-circle me-1"></i> Insertar
-											</button>
-
-											<button type="submit"
-												name="actua_serie"
-												onclick="return val_datos();"
-												class="btn btn-info px-4">
-												<i class="bi bi-pencil-square me-1"></i> Modificar
-											</button>
-
-											<button type="reset"
-												id="envia22"
-												name="aceptar"
-												class="btn btn-danger px-4">
-												<i class="bi bi-x-circle me-1"></i> Cancelar
-											</button>
+											<input type="submit" name="buscar_serie" value="Buscar" class="btn btn-primary px-4">
+											<input type="submit" name="insertar_serie" value="Insertar" onclick="val_datos()" class="btn btn-success px-4">
+											<input type="submit" name="actua_serie" value="Modificar" onclick="val_datos()" class="btn btn-info px-4">
+											<input type="reset" id="envia22" name="aceptar" value="Cancelar" class="btn btn-danger px-4">
 										</div>
 									</div>
 								</div>
@@ -214,8 +160,7 @@ $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&nurad=$nur
 								if ($radiNumero != '') {
 									$mensaje_err = "<HR><center><B><FONT COLOR=RED>LA SERIE <$detaserie > YA EXISTE. <BR>  VERIFIQUE LA INFORMACION E INTENTE DE NUEVO</FONT></B></center><HR>";
 								} else {
-									$query = "insert into SGD_SRD_SERIESRD(SGD_SRD_CODIGO   , SGD_SRD_DESCRIP,SGD_SRD_FECHINI,SGD_SRD_FECHFIN )
-					VALUES ($codserieI,'$detaserie'    ," . $sqlFechaD . "," . $sqlFechaH . ")";
+									$query = "insert into SGD_SRD_SERIESRD(SGD_SRD_CODIGO   , SGD_SRD_DESCRIP,SGD_SRD_FECHINI,SGD_SRD_FECHFIN ) VALUES ($codserieI,'$detaserie'    ," . $sqlFechaD . "," . $sqlFechaH . ")";
 									$rsIN = $db->conn->query($query);
 									$codserieI = 0;
 									$detaserie = '';
@@ -239,8 +184,8 @@ $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&nurad=$nur
 								$mensaje_err = "<HR><center><B><FONT COLOR=RED>EL CODIGO < $codserieI > NO EXISTE. <BR>  VERIFIQUE LA INFORMACI&Oacute;N E INTENTE DE NUEVO</FONT></B></center><HR>";
 							} else {
 								$isqlB = "select * from sgd_srd_seriesrd
-							where sgd_srd_descrip = '$detaserie'
-							and sgd_srd_codigo != $codserieI";
+											where sgd_srd_descrip = '$detaserie'
+											and sgd_srd_codigo != $codserieI";
 								$rs = $db->query($isqlB); # Executa la busqueda y obtiene el registro a actualizar.
 								$radiNumero = $rs->fields["SGD_SRD_CODIGO"];
 								$idSerieAct = $rs->fields["ID"];
@@ -250,10 +195,9 @@ $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&nurad=$nur
 								if ($radiNumero != '' && $idSerieGrb != $idSerieAct) {
 									$mensaje_err = "<HR><center><B><FONT COLOR=RED>LA SERIE <$detaserie > YA EXISTE. <BR>  VERIFIQUE LA INFORMACI&Oacute;N E INTENTE DE NUEVO</FONT></B></center><HR>";
 								} else {
-
 									$isqlB = "select * from sgd_srd_seriesrd
-								where sgd_srd_codigo = $codserieI
-								AND SGD_SRD_FECHFIN>='$fecha_busq'";
+												where sgd_srd_codigo = $codserieI
+												AND SGD_SRD_FECHFIN>='$fecha_busq'";
 									$rs = $db->query($isqlB); # Executa la busqueda y obtiene el registro a actualizar.
 									$radiNumero = $rs->fields["SGD_SRD_CODIGO"];
 									$idSerieAct = $rs->fields["ID"];
@@ -263,25 +207,26 @@ $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&nurad=$nur
 										$mensaje_err = "<HR><center><B><FONT COLOR=RED>La serie <$detaserie > ya EXISTE y esta activa entre fechas ($srdOldFechIni a $srdOldFechFin), <br>La fecha de la nueva serie es ($fecha_busq a $fecha_busq2). <BR>  VERIFIQUE LA INFORMACI&Oacute;N E INTENTE DE NUEVO</FONT></B></center><HR>";
 									} else {
 										$isqlUp =	"update sgd_srd_seriesrd
-						set SGD_SRD_DESCRIP= '$detaserie',
-						sgd_srd_codigo = $codserieI,
-						SGD_SRD_FECHINI=$sqlFechaD,
-						SGD_SRD_FECHFIN =$sqlFechaH
-						where id = $idSerieGrb";
+														set SGD_SRD_DESCRIP= '$detaserie',
+														sgd_srd_codigo = $codserieI,
+														SGD_SRD_FECHINI=$sqlFechaD,
+														SGD_SRD_FECHFIN =$sqlFechaH
+														where id = $idSerieGrb";
+
 										$rsUp = $db->query($isqlUp);
 
 										// Si cambia el codigo de serie este debe cambiarse en la tabla subseries y en la matriz.
 										if ($srdCodigo != $codserieI) {
 											$isqlUp =	"update sgd_sbrd_subserierd
-											set sgd_srd_codigo = $codserieI
-											where sgd_srd_id = $idSerieGrb";
+															set sgd_srd_codigo = $codserieI
+															where sgd_srd_id = $idSerieGrb";
 											$rsUp = $db->query($isqlUp);
 
 											echo "Se modificaron los codigos de las series en las tablas de subseries(sbrd).";
 
 											$isqlUp =	"update sgd_mrd_matrird
-											set sgd_srd_codigo = $codserieI
-											where sgd_srd_id = $idSerieGrb";
+															set sgd_srd_codigo = $codserieI
+															where sgd_srd_id = $idSerieGrb";
 											$rsUp = $db->query($isqlUp);
 
 											echo "Se modificaron los codigos de las series en las tabla de matriz de relacion (mrd)s.";
@@ -309,6 +254,40 @@ $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&nurad=$nur
 		</Transition>
 	</div>
 
+	<script language="JavaScript" src="../js/spiffyCal/spiffyCal_v2_1.js"></script>
+	<script language="JavaScript" src="../js/formchek.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			function regresar() {
+				document.adm_serie.submit();
+			}
+
+			function val_datos() {
+				bandera = true;
+				err_msg = '';
+
+				if (!isNonnegativeInteger(document.getElementById('codserieI').value, false)) {
+					err_msg = err_msg + 'Digite numeros Codigo.\n';
+					bandera = false;
+				}
+
+				if (isWhitespace(document.getElementById('detaserie').value)) {
+					err_msg = err_msg + 'Digite Descripcion.\n';
+					bandera = false;
+				}
+
+				if (dateAvailable.getSelectedDate() > dateAvailable2.getSelectedDate()) {
+					if (isWhitespace(document.getElementById('detaserie').value)) {
+						err_msg = err_msg + 'Escoja correctamente las fechas.\n';
+						bandera = false;
+					}
+				}
+
+				if (!bandera) alert(err_msg);
+				return bandera;
+			}
+		});
+	</script>
 	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 	<script>
 		const {

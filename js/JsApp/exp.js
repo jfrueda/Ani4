@@ -2,15 +2,17 @@ function listar(tp) {
     console.log('listar');
     $("#selTipoDoc").empty();
     $("#tpacc").val(tp);
-    
-    /*   $("#selTipoDoc" ).empty();
-       $("#selTipoDoc" ).append('<option value="0">-- Selecione --</option>');*/
+
+    /**
+     * $("#selTipoDoc" ).empty();
+     * $("#selTipoDoc" ).append('<option value="0">-- Selecione --</option>');
+    */
     campos = new Array();
     campos['codigo'] = 'codserie';
     campos['nombre'] = 'descrip';
     $('#busqueda').hide();
     $('#resulEstdatos2').hide();
-    
+
     $('#resulEstdatos').show();
     selectSB = 'selTipoDoc';
     //   cargarselect(data, 'selTipoDoc', campos);
@@ -20,13 +22,13 @@ function listar(tp) {
     var usua_doc = $("#usua_doc").val();
     var anoDep = $("#anoDep").val();
     var search = $("#mysearch").val();
-    
 
     parent.$('#processing-modal').modal('show');
+
     axios({
         method: 'post',
         baseURL: 'exp-rest.php',
-        data: 'fn=listar&usua=' + usuario + '&depe=' + depe + '&usuaid=' + usaid + '&doc=' + usua_doc + '&tp=' + tp+"&anoDep="+anoDep+'&search='+search
+        data: 'fn=listar&usua=' + usuario + '&depe=' + depe + '&usuaid=' + usaid + '&doc=' + usua_doc + '&tp=' + tp + "&anoDep=" + anoDep + '&search=' + search
     })
         .then(function (response) {
             console.log('1');
@@ -44,25 +46,22 @@ function listar(tp) {
                 depe = value['DEPE'];
                 creador = value['CREADOR'];
                 titulo = value['TITULO'];
-                estado2 = value['ESTADO']==2?'Anulado':value['ESTADO']==1?'Cerrado':'Abierto';
-                indice_electronico = value['INDICE_ELECTRONICO'] ? '<a class="btn btn-xs btn-danger" title="Descargar indice electrónico" href="exp-indice-pdf.php?exp='+codigo+'"><i class="fa fa-file" aria-hidden="true"></i></a>' : '';
-                indice_electronico_excel = '<a class="btn btn-xs btn-success" title="Descargar indice electrónico XML" href="exp-indice-xls.php?exp='+codigo+'"><i class="fa fa-file" aria-hidden="true"></i></a>';
-                indice_electronico_xml = '<a class="btn btn-xs" title="Descargar indice electrónico XML" href="exp-indice-xml.php?exp='+codigo+'"><i class="fa fa-file" aria-hidden="true"></i></a>';
-                if (tp == 'ie')
-                {
-                    indice_electronico += ' '+indice_electronico_excel+' '+indice_electronico_xml;
+                estado2 = value['ESTADO'] == 2 ? 'Anulado' : value['ESTADO'] == 1 ? 'Cerrado' : 'Abierto';
+                indice_electronico = value['INDICE_ELECTRONICO'] ? '<a class="btn btn-xs btn-danger" title="Descargar indice electrónico" href="exp-indice-pdf.php?exp=' + codigo + '"><i class="fa fa-file" aria-hidden="true"></i></a>' : '';
+                indice_electronico_excel = '<a class="btn btn-xs btn-success" title="Descargar indice electrónico XML" href="exp-indice-xls.php?exp=' + codigo + '"><i class="fa fa-file" aria-hidden="true"></i></a>';
+                indice_electronico_xml = '<a class="btn btn-xs" title="Descargar indice electrónico XML" href="exp-indice-xml.php?exp=' + codigo + '"><i class="fa fa-file" aria-hidden="true"></i></a>';
+                if (tp == 'ie') {
+                    indice_electronico += ' ' + indice_electronico_excel + ' ' + indice_electronico_xml;
                 }
-                $styleEspe3cial=value['ESTADO']==2?'table-danger':value['ESTADO']==1?'table-warning':''
+                $styleEspe3cial = value['ESTADO'] == 2 ? 'table-danger' : value['ESTADO'] == 1 ? 'table-warning' : ''
                 //   console.log('<tr> <td class = "text-right" > ' +' </td><td class = "text-right" > ' + codigo + ' </td><td >' + fech +'</td><td class = "text-right">' + titulo +'</td><td class = "text-right">' + responsable +'</td><td class="text-center" >' + creador +'</td><td class="text-center" >' + estado2 +'</td></tr>');
                 btnA = '<button class="btn btn-xs btn-success btn-expediente" type="button" data-toggle="tooltip"  data-placement="top" data-exp="' + codigo + '" title="Ver detalles" ><i class="fa fa-folder-o"></i></button> ';
                 //btnToS = '<button class="btn btn-xs btn-success btn-rp1detXLS" data-rep="3" data-toggle="modal" data-target="DetEsta"  data-tit="' + Medio +'" data-btns="'+codigo+'" '+datosbtnextra+' data-id='+codigo+'  data-btns=2 type="button" ><i class="fa fa-table" data-toggle="tooltip"  data-placement="top"  title="Descargar detalles en excel"></i></button> <div id="detXLST" class="float-right"></div>';
-                $('#tb_listaexp').append('<tr class="'+$styleEspe3cial+'"> <td class = "text-left" > ' + btnA + ' </td><td class = "text-center" > ' + codigo + ' </td><td class = "text-center">' + fech + '</td><td class = "text-left">' + titulo + '</td><td class = "text-right">' + responsable + '</td><td class="text-center" >' + creador + '</td><td class="text-center" >' + estado2 + '</td><td class="text-center">'+indice_electronico+'</td></tr>');
+                $('#tb_listaexp').append('<tr class="' + $styleEspe3cial + '"> <td class = "text-left" > ' + btnA + ' </td><td class = "text-center" > ' + codigo + ' </td><td class = "text-center">' + fech + '</td><td class = "text-left">' + titulo + '</td><td class = "text-right">' + responsable + '</td><td class="text-center" >' + creador + '</td><td class="text-center" >' + estado2 + '</td><td class="text-center">' + indice_electronico + '</td></tr>');
             });
             setTimeout(function () {
                 parent.$('#processing-modal').modal('hide');
             }, 2000);
-
-
         })
         .catch(function (error) {
             parent.$('#processing-modal').modal('hide');
@@ -72,20 +71,16 @@ function listar(tp) {
             }
             //toastr.error(data.message, 'Error al Modificar ');
         });
-
-
 }
 
 $("#tb_listaexp").on("click", '.btn-expediente', function () {
     exp = $(this).data('exp');
     location.href = "verExp.php?exp=" + exp;
-
 });
 
 $("#tb_bsq_listaexp").on("click", '.btn-expediente', function () {
     exp = $(this).data('exp');
     location.href = "verExp.php?exp=" + exp;
-
 });
 
 $(function () {
@@ -113,8 +108,7 @@ function configurarPaginacion(pagina_actual, total_registros, page_size = 100) {
     total_paginas = Math.ceil(total_registros / page_size);
     var paginador = '';
 
-    if (total_paginas <= 1)
-    {
+    if (total_paginas <= 1) {
         paginador = '';
     } else {
         // Lógica para determinar los límites de los botones de paginación
@@ -129,13 +123,13 @@ function configurarPaginacion(pagina_actual, total_registros, page_size = 100) {
         }
 
         paginador += '<button class="pagina btn btn-sm btn-outline-primary" data-page=1><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>';
-       for (let i = inicio; i <= fin; i++) {
+        for (let i = inicio; i <= fin; i++) {
             if (i >= 1 && i <= total_paginas && i !== pagina_actual) {
                 paginador += `<button class="pagina btn btn-sm btn-outline-primary" style="margin-left:5px;" data-page=${i}>${i}</button>`;
             } else if (i === pagina_actual) {
                 paginador += `<button class="pagina btn btn-sm btn-primary" style="margin-left:5px;" data-page=${i}><strong>${i}</strong></button>`;
             }
-        } 
+        }
         paginador += `<button class="pagina btn btn-sm btn-outline-primary" style="margin-left:5px;" data-page=${total_paginas}><i class="fa fa-angle-double-right" aria-hidden="true"></i></button>`;
         paginador += `<input id="numero_de_pagina_destino" type="number" value="${pagina_actual}" style="width:50px; margin-left:5px; line-height: 25px;" min=1 max=${total_paginas}> <button class="btn btn-sm disabled"> / ${total_paginas}</button> <button id="ir_a_pagina" class="btn btn-sm btn-outline-primary"> Ir </button>`;
     }
@@ -143,32 +137,30 @@ function configurarPaginacion(pagina_actual, total_registros, page_size = 100) {
     $('#paginador').html(paginador);
 }
 
-function cargarTablaE()
-{
+function cargarTablaE() {
     $('#processing-modal').modal('hide');
-    
+
 }
 
 function cargartabla(tp, filtro = 'ORrad', orden = 'desc', busq = 0) {
     $("#tb_listaexp").show();
-    if(tp != '' && tp != this.tp) {
+    if (tp != '' && tp != this.tp) {
         $('#tb_listaexp').attr('data-page', '1');
     }
 
-    if(tp == '') {
+    if (tp == '') {
         tp = this.tp;
     } else {
         this.tp = tp;
     }
-    
+
     console.log('cargartabla', tp, $('#tb_listaexp').attr('data-page'));
     var url = "../core/?exp/dtexp";
     $('#btnSearchTb').show();
     $('#Historico').hide();
-    
+
     $('#processing-modal').modal('show');
-    if (tp == 'E')
-    {
+    if (tp == 'E') {
         $('#btnSearchTb').hide();
     }
     //$('#imageproceso').show();
@@ -187,7 +179,7 @@ function cargartabla(tp, filtro = 'ORrad', orden = 'desc', busq = 0) {
     }
 
     numexp = $('#numExp').val();
-    segperm= $('#premseg').val();
+    segperm = $('#premseg').val();
     $('#tb_listaexp tbody').empty();
     axios({
         method: 'post',
@@ -196,13 +188,13 @@ function cargartabla(tp, filtro = 'ORrad', orden = 'desc', busq = 0) {
     })
         .then(function (response) {
             console.log('2');
-        //    console.log(value['FISICO']);
+            //    console.log(value['FISICO']);
             datos = response.data;
             configurarPaginacion(datos.data.pagActal, datos.data.total, datos.data.page_size);
-           // console.log(datos.data.dtexp);
+            // console.log(datos.data.dtexp);
             $("#tb_listaexp tbody").empty();
             $.each(datos.data.dtexp, function (index, value) {
-              //  console.log(value['FISICO']);
+                //  console.log(value['FISICO']);
                 // console.log(value['NUM']);
                 var numra = value['RADICA'];
                 var tipo = value['TIPO'];
@@ -211,43 +203,41 @@ function cargartabla(tp, filtro = 'ORrad', orden = 'desc', busq = 0) {
                 var permiso_radicado = value['PERMISO_RADICADO'];
                 asunto = value['ASUNTO'];
                 tpdocc = value['TPDOC'];
-                checkedtp = '<input type="checkbox" id="chks[]" value="' + numra + '" data-tipo="'+ tipo +'" data-path="'+ path +'">';
-                  carpeta =value['CARPETA']? value['CARPETA']:'';
-                  fisico = value['FISICO'] ? value['FISICO']:'FISICO';
-                  subexp = value['SUBEXPB']?value['SUBEXPB']:'';
-              
-                colortp = ''; dtanu = ''; btneconte = ''; tpordeoda = subexp = aligntext = tpordeoda = srbdd = btnview = btnedit = '';
-                
-                //   console.log('<tr> <td class = "text-right" > ' +' </td><td class = "text-right" > ' + codigo + ' </td><td >' + fech +'</td><td class = "text-right">' + titulo +'</td><td class = "text-right">' + responsable +'</td><td class="text-center" >' + creador +'</td><td class="text-center" >' + estado2 +'</td></tr>');
-                if(segperm!=1 && segperm!=4){
-                    if(segperm==3){
-                        if(value['TIPO']=='radi')
-                        btnedit = '<a class="btn btn-xs btn-danger float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="modificaDoc(\'' + value['TIPO'] + '\',\'' + value['RADICA'] + '\',\'\');" data-toggle="modal" data-target="#ModalOperDoc"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
-                        if(value['TIPO']=='aexp')
-                        btnedit = '<a class="btn btn-xs btn-danger float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="modificaDoc(\'' + value['TIPO'] + '\',\'' + numexp + '\',\'' + value['RADICA'] + '\');" data-toggle="modal" data-target="#ModalOperDoc"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
-                     //   else
-                     //btnedit = '<a class="btn btn-xs btn-danger float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="modificaDoc(\'' + value['TIPO'] + '\',\'' + numexp + '\',\'' + value['RADICA'] + '\');" data-toggle="modal" data-target="#ModalOperDoc"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
-                        if(value['RADICA']===null)
-                            btnedit = '<a class="btn btn-xs btn-warning float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="window.open(\'anexov1.php?p=' + value['PATH'] + '&a='+value['ASUNTO']+'\');"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
+                checkedtp = '<input type="checkbox" id="chks[]" value="' + numra + '" data-tipo="' + tipo + '" data-path="' + path + '">';
+                carpeta = value['CARPETA'] ? value['CARPETA'] : '';
+                fisico = value['FISICO'] ? value['FISICO'] : 'FISICO';
+                subexp = value['SUBEXPB'] ? value['SUBEXPB'] : '';
 
-                     }
-                    if (permiso_radicado == '0')
-                    {
+                colortp = ''; dtanu = ''; btneconte = ''; tpordeoda = subexp = aligntext = tpordeoda = srbdd = btnview = btnedit = '';
+
+                //   console.log('<tr> <td class = "text-right" > ' +' </td><td class = "text-right" > ' + codigo + ' </td><td >' + fech +'</td><td class = "text-right">' + titulo +'</td><td class = "text-right">' + responsable +'</td><td class="text-center" >' + creador +'</td><td class="text-center" >' + estado2 +'</td></tr>');
+                if (segperm != 1 && segperm != 4) {
+                    if (segperm == 3) {
+                        if (value['TIPO'] == 'radi')
+                            btnedit = '<a class="btn btn-xs btn-danger float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="modificaDoc(\'' + value['TIPO'] + '\',\'' + value['RADICA'] + '\',\'\');" data-toggle="modal" data-target="#ModalOperDoc"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
+                        if (value['TIPO'] == 'aexp')
+                            btnedit = '<a class="btn btn-xs btn-danger float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="modificaDoc(\'' + value['TIPO'] + '\',\'' + numexp + '\',\'' + value['RADICA'] + '\');" data-toggle="modal" data-target="#ModalOperDoc"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
+                        //   else
+                        //btnedit = '<a class="btn btn-xs btn-danger float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="modificaDoc(\'' + value['TIPO'] + '\',\'' + numexp + '\',\'' + value['RADICA'] + '\');" data-toggle="modal" data-target="#ModalOperDoc"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
+                        if (value['RADICA'] === null)
+                            btnedit = '<a class="btn btn-xs btn-warning float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="window.open(\'anexov1.php?p=' + value['PATH'] + '&a=' + value['ASUNTO'] + '\');"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
+
+                    }
+                    if (permiso_radicado == '0') {
                         btnview = '<a class="btn btn-danger btn-xs float-right" href="javascript:alert(\'No tiene permiso para acceder\');"><i class="fa fa-eye" aria-hidden="true"></i></a>';
                     } else {
-                        btnview = '<a class="btn btn-xs btn-success float-right btn-visorimage" data-toggle="modal" data-target="ModalviewImg2"  href="#s" data-toggle2="tooltip" data-original-title="Ver " data-tp="' + value['TIPO'] + '" data-link="' + value['PATH'] + '" data-rad="' + value['RADICA'] + '" alt="Ver imagen ' + value['RADICA'] + '"  onclick=\'visorimagex("' + value['RADICA'] + '" ,"' + value['TIPO'] + '" ,"' + value['PATH'] + '","'+numexp+'" )\'><i class="fa fa-eye" aria-hidden="true"></i></a >';
+                        btnview = '<a class="btn btn-xs btn-success float-right btn-visorimage" data-toggle="modal" data-target="ModalviewImg2"  href="#s" data-toggle2="tooltip" data-original-title="Ver " data-tp="' + value['TIPO'] + '" data-link="' + value['PATH'] + '" data-rad="' + value['RADICA'] + '" alt="Ver imagen ' + value['RADICA'] + '"  onclick=\'visorimagex("' + value['RADICA'] + '" ,"' + value['TIPO'] + '" ,"' + value['PATH'] + '","' + numexp + '" )\'><i class="fa fa-eye" aria-hidden="true"></i></a >';
                     }
 
-                    if(value['TIPO']!='aexp' && value['TIPO']!='aexpe')
-                        
-                    if (permiso_radicado == '0')
-                    {
-                        btneconte = '<a class="btn btn-danger btn-xs float-right" href="javascript:alert(\'No tiene permiso para acceder\');"><i class="fa fa-list" aria-hidden="true"></i></a>';
-                    } else {
-                        btneconte ='<a class="btn btn-xs btn-primary float-right btn-visorimage" data-toggle="modal" data-target="ModalviewImg2"  href="#s" data-toggle2="tooltip" data-original-title="Ver " data-tp="' + value['TIPO'] + '" data-link="' + value['PATH'] + '" data-rad="' + value['RADICA'] + '" alt="Ver imagen ' + value['RADICA'] + '"  onclick=\'verRad("' + value['RADICA'] + '" ,"' + value['TIPO'] + '", "'+value['KEY']+'" )\'><i class="fa fa-list" aria-hidden="true"></i></a >';
-                    }
+                    if (value['TIPO'] != 'aexp' && value['TIPO'] != 'aexpe')
+
+                        if (permiso_radicado == '0') {
+                            btneconte = '<a class="btn btn-danger btn-xs float-right" href="javascript:alert(\'No tiene permiso para acceder\');"><i class="fa fa-list" aria-hidden="true"></i></a>';
+                        } else {
+                            btneconte = '<a class="btn btn-xs btn-primary float-right btn-visorimage" data-toggle="modal" data-target="ModalviewImg2"  href="#s" data-toggle2="tooltip" data-original-title="Ver " data-tp="' + value['TIPO'] + '" data-link="' + value['PATH'] + '" data-rad="' + value['RADICA'] + '" alt="Ver imagen ' + value['RADICA'] + '"  onclick=\'verRad("' + value['RADICA'] + '" ,"' + value['TIPO'] + '", "' + value['KEY'] + '" )\'><i class="fa fa-list" aria-hidden="true"></i></a >';
+                        }
                 }
-               // if(value['PATH']==NULL) btnview='';
+                // if(value['PATH']==NULL) btnview='';
                 /*         <a href="#" class="btn btn-success btn-xs btn-visorimage" data-toggle="modal" data-target="DetEsta" contador="6" data-link="../bodega/2021/7010/docs/20217010113394100001.pdf" data-rad="202170101133941">                          <i class="fa fa-eye"></i>
                 </a>*/
                 //   btnview += '<a class="btn btn-xs btn-info float-right"  href="#s" data-toggle2="tooltip" data-original-title="Ver en pest'aña" alt="Ver imagen pestaña' + value['RADICA'] + '" onclick="visorimageIT2(\'' + value['PATH'] + '\',\'' + value['SUBSTR'] + '\',\''+value['RADICA']+'\',\'e\');" ><i class="fa fa-window-maximize"></i></a >';
@@ -269,20 +259,19 @@ function cargartabla(tp, filtro = 'ORrad', orden = 'desc', busq = 0) {
                     tpdocc = value['TPDOC'];
                     radsal = value['RASAL'];
                     var anextxt = value['ANEX'].substr(16);
-                    if(radsal && radsal!=numra)  var anextxt =radsal+'  ('+value['ANEX'].substr(16)+')';
+                    if (radsal && radsal != numra) var anextxt = radsal + '  (' + value['ANEX'].substr(16) + ')';
                     subexp = value['SUBEXPB'];
                     colortp = ''; dtanu = ''; btneconte = ''; tpordeoda = subexp = aligntext = tpordeoda = srbdd = btnview = btnedit = '';
                     colortp = ' table-default ';
                     //   console.log('<tr> <td class = "text-right" > ' +' </td><td class = "text-right" > ' + codigo + ' </td><td >' + fech +'</td><td class = "text-right">' + titulo +'</td><td class = "text-right">' + responsable +'</td><td class="text-center" >' + creador +'</td><td class="text-center" >' + estado2 +'</td></tr>');
-                       //btnedit = '<a class="btn btn-xs btn-danger float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="modificaDoc(\'' + value['TIPO'] + '\',\'' + value['RADICA'] + '\',\'\');" data-toggle="modal" data-target="#ModalOperDoc"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
-                                       
-                       btnview = '<a class="btn btn-xs btn-success float-right" href="#s" data-toggle2="tooltip" data-original-title="Ver en pestaña" alt="Ver imagen en pestaña ' + value['ANEX'] + '" onclick="visorimageIT2(\'' + value['PATH'] + '\',\'' + value['SUBSTR'] + '\',\''+value['ANEX']+'\',\'i\');" ><i class="fa fa-eye" aria-hidden="true"></i></a >';
-                       btnview+= '<a class="btn btn-xs btn-info float-right"    href="#s" data-toggle2="tooltip" data-original-title="Ver en pestaña" alt="Ver imagen en pestaña ' + value['ANEX'] + '" onclick="visorimageIT2(\'' + value['PATH'] + '\',\'' + value['SUBSTR'] + '\',\''+value['RADICA']+'\',\'e\');" ><i class="fa fa-window-maximize"></i></a >';
-                    if (permiso_radicado == '0')
-                    {
+                    //btnedit = '<a class="btn btn-xs btn-danger float-right" data-toggle2="tooltip" data-original-title="Modificar "  alt="Gestionar ' + value['RADICA'] + '" href="#" onclick="modificaDoc(\'' + value['TIPO'] + '\',\'' + value['RADICA'] + '\',\'\');" data-toggle="modal" data-target="#ModalOperDoc"><i class="fa fa-pencil" aria-hidden="true"></i></a >';
+
+                    btnview = '<a class="btn btn-xs btn-success float-right" href="#s" data-toggle2="tooltip" data-original-title="Ver en pestaña" alt="Ver imagen en pestaña ' + value['ANEX'] + '" onclick="visorimageIT2(\'' + value['PATH'] + '\',\'' + value['SUBSTR'] + '\',\'' + value['ANEX'] + '\',\'i\');" ><i class="fa fa-eye" aria-hidden="true"></i></a >';
+                    btnview += '<a class="btn btn-xs btn-info float-right"    href="#s" data-toggle2="tooltip" data-original-title="Ver en pestaña" alt="Ver imagen en pestaña ' + value['ANEX'] + '" onclick="visorimageIT2(\'' + value['PATH'] + '\',\'' + value['SUBSTR'] + '\',\'' + value['RADICA'] + '\',\'e\');" ><i class="fa fa-window-maximize"></i></a >';
+                    if (permiso_radicado == '0') {
                         btnview = '<a class="btn btn-danger btn-xs float-right" href="javascript:alert(\'No tiene permiso para acceder\');"><i class="fa fa-eye" aria-hidden="true"></i></a>';
                     } else {
-                        btnview = '<a class="btn btn-xs btn-success float-right btn-visorimage" data-toggle="modal" data-target="ModalviewImg2"  href="#s" data-toggle2="tooltip" data-original-title="Ver " data-tp="' + value['TIPO'] + '" data-link="' + value['PATH'] + '" data-rad="' + value['RADICA'] + '" alt="Ver imagen ' + value['RADICA'] + '"  onclick=\'visorimagex("' + value['RADICA'] + '" ,"' + value['TIPO'] + '" ,"' + value['PATH'] + '","'+numexp+'" )\'><i class="fa fa-eye" aria-hidden="true"></i></a >';
+                        btnview = '<a class="btn btn-xs btn-success float-right btn-visorimage" data-toggle="modal" data-target="ModalviewImg2"  href="#s" data-toggle2="tooltip" data-original-title="Ver " data-tp="' + value['TIPO'] + '" data-link="' + value['PATH'] + '" data-rad="' + value['RADICA'] + '" alt="Ver imagen ' + value['RADICA'] + '"  onclick=\'visorimagex("' + value['RADICA'] + '" ,"' + value['TIPO'] + '" ,"' + value['PATH'] + '","' + numexp + '" )\'><i class="fa fa-eye" aria-hidden="true"></i></a >';
                     }
                     htmlf = '<tr ' + dtanu + ' class=" ' + colortp + ' " style="font-size:11px"><td>' + btnview + btnedit + btneconte + '</td><td></td><td style="text-align: right;">' + anextxt + '</td><td style="text-align: center">' + value['FECHA'] + '</td><td style="text-align: center" >' + srbdd + '</td><td style="text-align: center" id="divSubTP' + anex + '">' + tpdocc + '</td><td id="divAnexExpAsunto' + anex + '">' + asunto + '</td><td>' + remite + '</td><td id="divSubExp' + numra + '"> ' + subexp + '</td></tr>';
                     $('#tb_listaexp').append(htmlf);
@@ -296,15 +285,15 @@ function cargartabla(tp, filtro = 'ORrad', orden = 'desc', busq = 0) {
             $('#processing-modal').modal('hide');
             //toastr.error(data.message, 'Error al Modificar ');
         })
-        .finally(function() {
+        .finally(function () {
             console.log('finally ');
             $('#processing-modal').modal('hide');
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#processing-modal').modal('hide');
             }, 2000)
         });
-        $('#processing-modal').modal('hide');
 
+    $('#processing-modal').modal('hide');
 }
 
 function cargartablaHisto(tphist = 'tb_listaHistoexp') {
@@ -354,8 +343,6 @@ function cargartablaHisto(tphist = 'tb_listaHistoexp') {
             setTimeout(function () {
                 parent.$('#processing-modal').modal('hide');
             }, 2000);
-
-
         })
         .catch(function (error) {
             if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
@@ -364,46 +351,22 @@ function cargartablaHisto(tphist = 'tb_listaHistoexp') {
             $('#processing-modal').modal('hide');
             //toastr.error(data.message, 'Error al Modificar ');
         })
-        .finally(function() {
+        .finally(function () {
             console.log('finally ');
             $('#processing-modal').modal('hide');
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#processing-modal').modal('hide');
             }, 2000)
         });
-        $('#processing-modal').modal('hide');
-    /*var ante = '';
-    $.ajax({
-        url: url,
-        type: "POST",
-        data: m_data,
-        dataType: "JSON",
-        processData: false,
-        contentType: false,
-        success: function (data) {
 
-            $.each(data.dtexp, function (index, value) {
-                $('#' + tphist).append('<tr  style="font-size:11px"><td>' + value['DEPE'] + '</td><td>' + value['FECHA'] + '</td><td >' + value['TRASN'] + '</td><td >' + value['USUARIO'] + '</td><td >' + value['RADICADO'] + '</td><td >' + value['HIST_OBSERVA'] + '</td></tr>');
-            });
-            $('#imageprocesohist').hide();
-            $('#btnSearchTbH').show();
-            $('#' + tphist).show();
-            // window.location.href = data.href;
-
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            $('#imageprocesohist').hide();
-            //                $('#listUser').html('');
-            //              alert('Se lista');
-
-        }
-    });*/
+    $('#processing-modal').modal('hide');
 }
 
 function modificaDoc(tipo, radicado, anexo) {
     $('#tituloOperDoc').html('Modificar info ' + radicado + anexo);
     $('#tpdocAnexomod').hide();
     $('#tpdocAsuntomod').hide();
+
     if (tipo == 'aexp') {
         $('#tpdocAnexomod').show();
         $('#tpdocAsuntomod').show();
@@ -414,12 +377,12 @@ function modificaDoc(tipo, radicado, anexo) {
         $('#aexpasunto').val($('#divAnexExpAsunto' + anexo).text().toUpperCase().trim());
         $('#tpdocMD').val($('select[name="tpdocMD"] option:contains(' + Tpexp + ')').val());
         //$('#tpdocMD option:contains(Acta)')
-    }
-    else {
+    } else {
         Rcap = $('#divCarp' + radicado).text();
         Sbexp = $('#divSubExp' + radicado).text();
         FsExp = $('#divFisico' + radicado).text().toUpperCase();
     }
+
     $('#tipooc').val(tipo);
     $('#numerpDoc').val(radicado);
     $('#numerAexp').val(anexo);
@@ -446,17 +409,17 @@ $(function () {
         series();
         $("#selSubSerie").empty();
         usuario();
-        if($(this).data('dependencias-clasificadas-trigger') == true) {
+        if ($(this).data('dependencias-clasificadas-trigger') == true) {
             var dependencias = $(this).data('dependencias-clasificadas').split(',');
             if (dependencias.includes($(this).val())) {
                 $('#idseguridad').html('<option value="2">Pública clasificada (usuario que proyectó, jefe y usuario actual)</option>');
             }
-        } else if(['95000', '95001', '1400'].includes($(this).val())) {
+        } else if (['95000', '95001', '1400'].includes($(this).val())) {
             $('#idseguridad').html('<option value="1">Pública reservada (solo la dependencia)</option>');
         } else {
-            $('#idseguridad').html('<option value="0">Pública</option>'+
-                                '<option value="1">Pública reservada (solo la dependencia)</option>'+
-                                '<option value="2">Pública clasificada (usuario que proyectó, jefe y usuario actual)</option>'
+            $('#idseguridad').html('<option value="0">Pública</option>' +
+                '<option value="1">Pública reservada (solo la dependencia)</option>' +
+                '<option value="2">Pública clasificada (usuario que proyectó, jefe y usuario actual)</option>'
             );
         }
     });
@@ -471,9 +434,9 @@ $(function () {
         if (ser[1] < 10) sertxt = '0' + ser[1]; else sertxt = ser[1];
         if (sub[1] < 10) subtxt = '0' + sub[1]; else subtxt = sub[1];
         $("#numsrb").val(sertxt + subtxt);
-        deope= $('#dependenciaExp').val();
-        if(deope.length==3)
-        deope='00'+$('#dependenciaExp').val();
+        deope = $('#dependenciaExp').val();
+        if (deope.length == 3)
+            deope = '00' + $('#dependenciaExp').val();
         $('#depExp').val(deope);
     });
     $('#bsq_dep').change(function () {
@@ -492,13 +455,13 @@ $(function () {
         usuario2();
     })
 
-    $('#paginador').delegate('.pagina', 'click', function(e) {
+    $('#paginador').delegate('.pagina', 'click', function (e) {
         $('#tb_listaexp').attr('data-page', $(this).data('page'));
         console.log($('#tb_listaexp').attr('data-page'));
         cargartabla('');
     });
 
-    $('#paginador').delegate('#ir_a_pagina', 'click', function(e) {
+    $('#paginador').delegate('#ir_a_pagina', 'click', function (e) {
         var min = 1;
         var max = $('#numero_de_pagina_destino').attr('max');
         var pagina = $('#numero_de_pagina_destino').val() * 1;
@@ -510,8 +473,7 @@ $(function () {
         }
     });
 
-    $('#btnsearch').on('click', function()
-    {
+    $('#btnsearch').on('click', function () {
         var search = $('#mysearch').val();
         $('#tb_listaexp').attr('data-search', search);
         $('#tb_listaexp').attr('data-page', '1');
@@ -671,10 +633,10 @@ function usuario4() {
             //  console.log(data);
             $("#" + selectIDu).empty();
             //$("#" + selectIDu).append('<option value="0">-- Selecione --</option>');
-            
-            
+
+
             //data.data['a']['NOMB']=' TODOS';
-          //  data.data['a']['COD']='0';
+            //  data.data['a']['COD']='0';
             campos = new Array();
             campos['codigo'] = 'COD';
             campos['nombre'] = 'NOMB';
@@ -755,144 +717,204 @@ function cargarselect2(vector, campo, campos, tipo = 1) {
             $("#" + campo).append('<option  value="' + value[campos['codigo']] + '">' + value[campos['nombre']] + '</option>');
     });
 
-    if(campo == 'herr_respSegUsuaDoc')
-    {
+    if (campo == 'herr_respSegUsuaDoc') {
         //$('#herr_respSegUsuaDoc').selectpicker('refresh');
     }
     // console.log('acabo');
 
 }
 
-$(function () {
-    $('.btn-crearExp').click(function () {
-        var creaExpstatus = validaExpJQ();
-        if (creaExpstatus) {
-            save_method = 'Confirmar';
-            //  $('#resultRadanex').html('<img src="../imagenes/loadingAnimation.gif">');
-            $('#btnRcera').hide(); //change button text
-            $('#btnRadcancelartx').show();//attr('disabled', true); //set button disable 
-            $('#dataformCrearExp').hide();
-            $('#btnRadcancelartxslir').hide();
-            $('#switchdato').hide();
-            //$('#switch').hide();
-            $('#tr-extasunto').hide();
-            $('#tr-extobservacion').hide();
-            $('#tr-extEntidad').hide();
-            if ($('#switch').is(':checked')) {
-                $('#tr-extasunto').show();
-                $('#tr-extobservacion').show();
-                $('#tr-extEntidad').show();
+document.addEventListener('DOMContentLoaded', function () {
+
+    const btnCrearExp = document.querySelector('.btn-crearExp');
+    const btnCancelar = document.getElementById('btnRadcancelartx');
+
+    btnCrearExp.addEventListener('click', function () {
+
+        const creaExpstatus = validaExpJQ(); // se mantiene tal cual
+
+        if (!creaExpstatus) return;
+
+        save_method = 'Confirmar';
+
+        const btnRcera = document.getElementById('btnRcera');
+        if (btnRcera) document.getElementById('btnRcera').style.display = 'none';
+
+        const btnRadcancelartx = document.getElementById('btnRadcancelartx');
+        if (btnRadcancelartx) document.getElementById('btnRadcancelartx').style.display = 'block';
+
+        const dataformCrearExp = document.getElementById('dataformCrearExp');
+        if (dataformCrearExp) document.getElementById('dataformCrearExp').style.display = 'none';
+
+        const btnRadcancelartxslir = document.getElementById('btnRadcancelartxslir');
+        if (btnRadcancelartxslir) document.getElementById('btnRadcancelartxslir').style.display = 'none';
+
+        const switchdato = document.getElementById('switchdato');
+        if (switchdato) document.getElementById('switchdato').style.display = 'none';
+
+        const trextasunto = document.getElementById('trextasunto');
+        if (trextasunto) document.getElementById('tr-extasunto').style.display = 'none';
+
+        const trextobservacion = document.getElementById('trextobservacion');
+        if (trextobservacion) document.getElementById('tr-extobservacion').style.display = 'none';
+
+        const trextentidad = document.getElementById('trextentidad');
+        if (trextentidad) document.getElementById('tr-extEntidad').style.display = 'none';
+
+        const checkedSwitch = document.getElementById('switch');
+        if (checkedSwitch) {
+            if (document.getElementById('switch').checked) {
+                document.getElementById('tr-extasunto').style.display = '';
+                document.getElementById('tr-extobservacion').style.display = '';
+                document.getElementById('tr-extEntidad').style.display = '';
             }
-            $('#btnConfCrea').show();
-            $('#confCrea').show();
-            $('#creacionconfi').hide();
-            //   $("#confirmaCreacion2").attr('class', 'modal fade in');
-            sbrd = $('#selSubSerie').val();
-            //subserie = document.getElementById('sbrd').value;
-            // codserie = document.getElementById('serie').value;
-            anoExp = $('#anoExp').val();
-            depExp = $('#dependenciaExp').val();
-            codserie = $('#selSerie').val();
-            url = "../core/?exp/ajax";
-            var m_data = new FormData();
-            axios({
-                method: 'post',
-                baseURL: '../expediente/exp-rest.php',
-                data: 'fn=crearConfirmar&depExp=' + depExp + '&serie=' + codserie + '&subserie=' + sbrd + '&anoExp=' + anoExp
-            })
-                .then(function (response) {
-                    console.log('4');
-                    //  console.log(response);
-                    data = response.data.data;
-                    //console.log(data);
-                    // console.log(data.numexp);
-                    $('#titleexp').html(data.numexp);
-
-                    $('#txt-extasunto').html($('#extasunto').val());
-                    $('#txt-extobservacion').html($('#extobservacion').val());
-                    $('#txt-extEntidad').html($('#extEntidad').val());
-                    $('#txt-titulo').html($('#exptilulo').val());
-                    $('#txt-seguridad').html($('select[name="idseguridad"] option:selected').text());
-                    $('#txt-serie').html($('select[name="selSerie"] option:selected').text());
-                    $('#txt-subserie').html($('select[name="selSubSerie"] option:selected').text());
-
-                    $('#txt-fechini').html($('#fechaExp').val());
-                    $('#txt-resp').html($('select[name="selUsuario"] option:selected').text());
-                    $('#animationload').hide();
-                })
-                .catch(function (error) {
-                    $('#animationload').hide();
-                    if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
-                        $(this).showError('Error en petición', 'Estado del error: ' + error.response.status + '. Mensaje: ' + error.response.data.error);
-                    }
-                    //toastr.error(data.message, 'Error al Modificar ');
-                });
-
         }
 
-    });
-    $('#btnRadcancelartx').click(function () {
-        save_method = 'Confirmar';
-        $('#switchdato').show();
-        $('#switch').prop('checked', false);
-        $('#btnRadcancelartxslir').hide();
-        //  $('#resultRadanex').html('<img src="../imagenes/loadingAnimation.gif">');
-        $('#btnRcera').show(); //change button text
-        $('#btnRadcancelartx').show();//attr('disabled', true); //set button disable 
-        $('#dataformCrearExp').show();
-        $('#btnConfCrea').hide();
-        $('#confCrea').hide();
-        $('#creacionconfi').hide();
-        $('#selSerie').val(0);
-        $('#selSubSerie').val(0);
-        $('#exptilulo').val('');
-        $('#selUsuario').val(0);
-        $('#extasunto').val('');
-        $('#extobservacion').val('');
-        $('#extEntidad').val(0);
-        tpexpcrea();
+        document.getElementById('btnConfCrea').style.display = 'block';
+        document.getElementById('confCrea').style.display = 'block';
+        document.getElementById('creacionconfi').style.display = 'none';
 
+        const sbrd = document.getElementById('selSubSerie').value;
+        const anoExp = document.getElementById('anoExp').value;
+        const depExp = document.getElementById('dependenciaExp').value;
+        const codserie = document.getElementById('selSerie').value;
+
+        axios({
+            method: 'post',
+            baseURL: '../expediente/exp-rest.php',
+            data: `fn=crearConfirmar&depExp=${depExp}&serie=${codserie}&subserie=${sbrd}&anoExp=${anoExp}`
+        })
+            .then(function (response) {
+                console.log(response?.data);
+
+                const data = response.data.data;
+
+                document.getElementById('titleexp').innerHTML = data.numexp;
+                document.getElementById('txt-extasunto').innerHTML = document.getElementById('extasunto') ? document.getElementById('extasunto').value : '';
+                document.getElementById('txt-extobservacion').innerHTML = document.getElementById('extobservacion') ? document.getElementById('extobservacion').value : '';
+                document.getElementById('txt-extEntidad').innerHTML = document.getElementById('extEntidad') ? document.getElementById('extEntidad').value : '';
+                document.getElementById('txt-titulo').innerHTML = document.getElementById('exptilulo') ? document.getElementById('exptilulo').value : '';
+                document.getElementById('txt-seguridad').innerHTML = document.querySelector('select[name="idseguridad"] option:checked').textContent;
+                document.getElementById('txt-serie').innerHTML = document.querySelector('select[name="selSerie"] option:checked').textContent;
+                document.getElementById('txt-subserie').innerHTML = document.querySelector('select[name="selSubSerie"] option:checked').textContent;
+                document.getElementById('txt-fechini').innerHTML = document.getElementById('fechaExp').value;
+                document.getElementById('txt-resp').innerHTML = document.querySelector('select[name="selUsuario"] option:checked').textContent;
+
+                const animationload = document.getElementById('animationload');
+                if (animationload) {
+                    document.getElementById('animationload').style.display = 'none';
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                const animationload = document.getElementById('animationload');
+                if (animationload) {
+                    document.getElementById('animationload').style.display = 'none';
+                }
+
+                if (error?.response) {
+                    showError(
+                        'Error en petición',
+                        `Estado del error: ${error.response.status}. Mensaje: ${error.response.data.error}`
+                    );
+                }
+            });
+    });
+
+    btnCancelar.addEventListener('click', function () {
+
+        save_method = 'Confirmar';
+
+        document.getElementById('switchdato').style.display = '';
+        document.getElementById('switch').checked = false;
+        document.getElementById('btnRadcancelartxslir').style.display = 'none';
+
+        document.getElementById('btnRcera').style.display = '';
+        document.getElementById('btnRadcancelartx').style.display = '';
+        document.getElementById('dataformCrearExp').style.display = '';
+        document.getElementById('btnConfCrea').style.display = 'none';
+        document.getElementById('confCrea').style.display = 'none';
+        document.getElementById('creacionconfi').style.display = 'none';
+
+        document.getElementById('selSerie').value = 0;
+        document.getElementById('selSubSerie').value = 0;
+        document.getElementById('exptilulo').value = '';
+        document.getElementById('selUsuario').value = 0;
+        document.getElementById('extasunto').value = '';
+        document.getElementById('extobservacion').value = '';
+        document.getElementById('extEntidad').value = 0;
+
+        tpexpcrea();
     });
 });
 
-function cancelarCrearExp() {
-
-}
+function cancelarCrearExp() { }
 
 function validaExpJQ() {
-    var ok = true;
-    $('#error-codserie').html('');
-    $('#error-sbrd').html('');
-    $('#error-exptilulo').html('');
-    $('#error-usuaDocExp').html('');
-    $("#selSerie").removeClass("alert-danger")
-    $("#selSubSerie").removeClass("alert-danger")
-    $("#selUsuario").removeClass("alert-danger")
-    $("#exptilulo").removeClass("alert-danger")
-    $("#dependenciaExp").removeClass("alert-danger")
-    if ($('#dependenciaExp').val() == 0) {
-        $("#dependenciaExp").addClass("alert-danger");
+    let ok = true;
+
+    // Limpiar mensajes de error
+    if (document.getElementById('error-codserie'))
+        document.getElementById('error-codserie').innerHTML = '';
+
+    if (document.getElementById('error-sbrd'))
+        document.getElementById('error-sbrd').innerHTML = '';
+
+    if (document.getElementById('error-exptilulo'))
+        document.getElementById('error-exptilulo').innerHTML = '';
+
+    if (document.getElementById('error-usuaDocExp'))
+        document.getElementById('error-usuaDocExp').innerHTML = '';
+
+    if (document.getElementById('error-crearexp'))
+        document.getElementById('error-crearexp').innerHTML = '';
+
+    // Inputs
+    const dependenciaExp = document.getElementById('dependenciaExp');
+    const selSerie = document.getElementById('selSerie');
+    const selSubSerie = document.getElementById('selSubSerie');
+    const selUsuario = document.getElementById('selUsuario');
+    const exptilulo = document.getElementById('exptilulo');
+
+    // Quitar clases de error
+    dependenciaExp.classList.remove('alert-danger');
+    selSerie.classList.remove('alert-danger');
+    selSubSerie.classList.remove('alert-danger');
+    selUsuario.classList.remove('alert-danger');
+    exptilulo.classList.remove('alert-danger');
+
+    // Validaciones
+    if (dependenciaExp.value == 0) {
+        dependenciaExp.classList.add('alert-danger');
         ok = false;
     }
-    if ($('#selSerie').val() == 0) {
-        $("#selSerie").addClass("alert-danger");
+
+    if (selSerie.value == 0) {
+        selSerie.classList.add('alert-danger');
         ok = false;
     }
-    if ($('#selSubSerie').val() === '0' || !$('#selSubSerie').val()) {
-        $("#selSubSerie").addClass("alert-danger");
+
+    if (selSubSerie.value === '0' || !selSubSerie.value) {
+        selSubSerie.classList.add('alert-danger');
         ok = false;
     }
-    if ($('#selUsuario').val() === '0') {
-        $("#selUsuario").addClass("alert-danger");
+
+    if (selUsuario.value === '0') {
+        selUsuario.classList.add('alert-danger');
         ok = false;
     }
-    if ($('#exptilulo').val() == "") {
-        $("#exptilulo").addClass("alert-danger");
+
+    if (exptilulo.value.trim() === '') {
+        exptilulo.classList.add('alert-danger');
         ok = false;
     }
+
     if (!ok) {
-        $('#error-crearexp').html(" Diligenciar los campos pendientes ");
+        if (document.getElementById('error-crearexp')) {
+            document.getElementById('error-crearexp').innerHTML = ' Diligenciar los campos pendientes ';
+        }
     }
+
     return ok;
 }
 
@@ -916,10 +938,10 @@ function crearEA() {
     respo = $('#selUsuario').val();
     seguridad = $('#idseguridad').val();
     dt1 = $('#exptilulo').val();
-    dt2 = $('#param2').val()?$('#param2').val():'';
-    dt3 = $('#param3').val()?$('#param3').val():'';
-    dt4 = $('#param4').val()?$('#param4').val():'';
-    dt5 = $('#param5').val()?$('#param5').val():'';
+    dt2 = $('#param2').val() ? $('#param2').val() : '';
+    dt3 = $('#param3').val() ? $('#param3').val() : '';
+    dt4 = $('#param4').val() ? $('#param4').val() : '';
+    dt5 = $('#param5').val() ? $('#param5').val() : '';
 
     axios({
         method: 'post',
@@ -932,9 +954,9 @@ function crearEA() {
             data = response.data;
             //  console.log(data);
             $('#titleexp').html(data.numexp);
-            respotxt = $( "#usuaDocExp option:selected" ).text();
+            respotxt = $("#usuaDocExp option:selected").text();
             btnExp = '<a class="btn btn-xs btn-primary float-right" data-toggle2="tooltip" data-original-title="ver Expedientes "  alt="ver Expediente" href="../expediente/verExp.php?exp=' + data.data.numexp + '" ><i class="fa fa-folder" aria-hidden="true"></i></a >';
-            $('#creacionconfi').html('<div class="alert alert-success"> Expediente ' + data.data.numexp + ' Creado ' + btnExp + '(responsable: '+respotxt+' ) (titulo:'+dt1+' )</div>');
+            $('#creacionconfi').html('<div class="alert alert-success"> Expediente ' + data.data.numexp + ' Creado ' + btnExp + '(responsable: ' + respotxt + ' ) (titulo:' + dt1 + ' )</div>');
             $('#animationload').hide();
         })
         .catch(function (error) {
@@ -1027,11 +1049,11 @@ function saveSeg() {
     usuario = $('#selUsuario').val(); //funcion de usuario
     tpseg = $('#seltiposeg').val();
     var Exp = $('#numexp').val();
-   /* if (usuario == '0') {
-        $('#diverrorsave').html('<i class="fa fa-close" style="color: red";font-size: 35px;></i> Se debe selecionar usuario ');
-        return false;
-    }
-*/
+    /* if (usuario == '0') {
+         $('#diverrorsave').html('<i class="fa fa-close" style="color: red";font-size: 35px;></i> Se debe selecionar usuario ');
+         return false;
+     }
+ */
     if (usuario == '999999') {
         usuario = 0;
     }
@@ -1152,29 +1174,29 @@ $(function () {
         $('#bsq_nume_radi').val('');
         $('#bsq_nomexpe').val('');
         $('#bsq_dep').val(0);
-     });
-     $('.btn-o-limpia-herr').click(function () {
+    });
+    $('.btn-o-limpia-herr').click(function () {
         $('#herr_usuaDoc').val(0);
         $('#herr_nume_expe').val('');
         $('#herr_nume_radi').val('');
         $('#herr_nomexpe').val('');
         $('#herr_dep').val(0);
-     });
-     $('.btn-o-limpia2').click(function () {
-         $('#bsq_nume_expe').val('');
-         $('#bsq_nomexpe').val('');    
-     });
-     $('#btn-addv1expediente').click(function () {
+    });
+    $('.btn-o-limpia2').click(function () {
+        $('#bsq_nume_expe').val('');
+        $('#bsq_nomexpe').val('');
+    });
+    $('#btn-addv1expediente').click(function () {
         $('#AddCrearExpModal').show();
     });
 
-    $('#seleccionar_todos_seguridad').on('click', function(e) {
+    $('#seleccionar_todos_seguridad').on('click', function (e) {
         $('#herr_respSegUsuaDoc option').prop('selected', true);
     });
-    $('#cancelar_seleccion_seguridad').on('click', function(e) {
+    $('#cancelar_seleccion_seguridad').on('click', function (e) {
         $('#herr_respSegUsuaDoc option').prop('selected', false);
     });
-    
+
 
     $('.btn-o-bsq').click(function () {
         numExp = $('#bsq_nume_expe').val();
@@ -1182,18 +1204,18 @@ $(function () {
         parametro = $('#bsq_nomexpe').val();
         depe = $('#bsq_dep').val();
         usuar = $('#bsq_usuaDoc').val();
-     //   parent.$('#processing-modal').modal('show');
-     $('#resulEstdatos2').show();
+        //   parent.$('#processing-modal').modal('show');
+        $('#resulEstdatos2').show();
         axios({
             method: 'post',
             baseURL: '../expediente/exp-rest.php',
-            data: 'fn=bsqexp&numExp=' + numExp + '&radicado=' + radicado+ '&parametro=' + parametro+ '&depe=' + depe+ '&usuar=' + usuar
-        })  
+            data: 'fn=bsqexp&numExp=' + numExp + '&radicado=' + radicado + '&parametro=' + parametro + '&depe=' + depe + '&usuar=' + usuar
+        })
             .then(function (response) {
                 console.log('9');
-              //  console.log(response);
+                //  console.log(response);
                 datos = response.data;
-               // console.log(data);
+                // console.log(data);
                 $("#tb_bsq_listaexp tbody").empty();
                 parent.$('#processing-modal').modal('hide');
                 $.each(datos.data, function (index, value) {
@@ -1204,13 +1226,13 @@ $(function () {
                     depe = value['DEPE'];
                     creador = value['CREADOR'];
                     titulo = value['TITULO'];
-                  //  estado2 = value['ESTADO'];
+                    //  estado2 = value['ESTADO'];
                     param2 = value['PARAM2'];
                     param3 = value['PARAM3'];
                     param4 = value['PARAM4'];
                     param5 = value['PARAM5'];
                     //estado2 = value['ESTADO']==1?'Anulado':value['ESTADO']==2?'Cerrado':'Abierto';
-                    switch(value['ESTADO']) {
+                    switch (value['ESTADO']) {
                         case '1':
                         case '3':
                             estado2 = 'Cerrado';
@@ -1220,47 +1242,47 @@ $(function () {
                             break;
                         default:
                             estado2 = 'Abierto';
-                            break; 
+                            break;
                     }
-                    btnbsq='';
+                    btnbsq = '';
                     //   console.log('<tr> <td class = "text-right" > ' +' </td><td class = "text-right" > ' + codigo + ' </td><td >' + fech +'</td><td class = "text-right">' + titulo +'</td><td class = "text-right">' + responsable +'</td><td class="text-center" >' + creador +'</td><td class="text-center" >' + estado2 +'</td></tr>');
                     btnA = '<button class="btn btn-xs btn-success btn-expediente" type="button" data-toggle="tooltip"  data-placement="top" data-exp="' + codigo + '" title="Ver detalles" ><i class="fa fa-folder-o"></i></button> ';
-                    if(param2)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param2 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param3)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param3 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param4)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param4 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param5)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param5 +'"  ><i class="fa fa-info"></i></button> ';
-                  
+                    if (param2)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param2 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param3)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param3 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param4)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param4 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param5)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param5 + '"  ><i class="fa fa-info"></i></button> ';
+
                     //btnToS = '<button class="btn btn-xs btn-success btn-rp1detXLS" data-rep="3" data-toggle="modal" data-target="DetEsta"  data-tit="' + Medio +'" data-btns="'+codigo+'" '+datosbtnextra+' data-id='+codigo+'  data-btns=2 type="button" ><i class="fa fa-table" data-toggle="tooltip"  data-placement="top"  title="Descargar detalles en excel"></i></button> <div id="detXLST" class="float-right"></div>';
-                    $('#tb_bsq_listaexp').append('<tr> <td class = "text-left" > ' + btnA + ' </td><td class = "text-center" > ' + codigo + ' </td><td class = "text-center">' + fech + '</td><td class = "text-left">' + titulo +btnbsq+ '</td><td class = "text-right">' + responsable + '</td><td class="text-center" >' + creador + '</td><td class="text-center" >' + estado2 + '</td></tr>');
+                    $('#tb_bsq_listaexp').append('<tr> <td class = "text-left" > ' + btnA + ' </td><td class = "text-center" > ' + codigo + ' </td><td class = "text-center">' + fech + '</td><td class = "text-left">' + titulo + btnbsq + '</td><td class = "text-right">' + responsable + '</td><td class="text-center" >' + creador + '</td><td class="text-center" >' + estado2 + '</td></tr>');
                 });
                 setTimeout(function () {
                     parent.$('#processing-modal').modal('hide');
                 }, 2000);
-                $(function () { $('[data-toggle="tooltip"]').tooltip()})
-    
+                $(function () { $('[data-toggle="tooltip"]').tooltip() })
+
             })
             .catch(function (error) {
                 parent.$('#processing-modal').modal('hide');
                 $('#processing-modal').modal('hide');
-            //    if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
-            //        $(this).showError('Error en petición', 'Estado del error: ' + data.response.status + '. Mensaje: ' + data.response.data.error);
-           //     }
+                //    if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
+                //        $(this).showError('Error en petición', 'Estado del error: ' + data.response.status + '. Mensaje: ' + data.response.data.error);
+                //     }
                 //toastr.error(data.message, 'Error al Modificar ');
             });
-    
+
 
     });
 
-    $('#check_uncheck').on('click', function(e) {
+    $('#check_uncheck').on('click', function (e) {
         var old = $(this).attr('data-status');
         var status = old == 1 ? 0 : 1;
         $(this).attr('data-status', status);
 
-        if(status == 1) {
+        if (status == 1) {
             $(this).find('.fa-check-square-o').show();
             $(this).find('.fa-square-o').hide();
             $('input[name="expediente[]"]').prop('checked', true);
@@ -1270,25 +1292,25 @@ $(function () {
             $('input[name="expediente[]"]').prop('checked', false);
         }
     });
-    
+
     $('.herr-o-bsq').click(function () {
         numExp = $('#herr_nume_expe').val();
         radicado = $('#herr_nume_radi').val();
         parametro = $('#herr_nomexpe').val();
         depe = $('#herr_dep').val();
         usuar = $('#herr_usuaDoc').val();
-     //   parent.$('#processing-modal').modal('show');
-     $('#resulEstdatos2').show();
+        //   parent.$('#processing-modal').modal('show');
+        $('#resulEstdatos2').show();
         axios({
             method: 'post',
             baseURL: '../expediente/exp-rest.php',
-            data: 'fn=bsqexp&numExp=' + numExp + '&radicado=' + radicado+ '&parametro=' + parametro+ '&depe=' + depe+ '&usuar=' + usuar
-        })  
+            data: 'fn=bsqexp&numExp=' + numExp + '&radicado=' + radicado + '&parametro=' + parametro + '&depe=' + depe + '&usuar=' + usuar
+        })
             .then(function (response) {
                 console.log('9');
-              //  console.log(response);
+                //  console.log(response);
                 datos = response.data;
-               // console.log(data);
+                // console.log(data);
                 $("#tb_bsq_listaexp tbody").empty();
                 parent.$('#processing-modal').modal('hide');
                 $.each(datos.data, function (index, value) {
@@ -1299,39 +1321,39 @@ $(function () {
                     depe = value['DEPE'];
                     creador = value['CREADOR'];
                     titulo = value['TITULO'];
-                  //  estado2 = value['ESTADO'];
+                    //  estado2 = value['ESTADO'];
                     param2 = value['PARAM2'];
                     param3 = value['PARAM3'];
                     param4 = value['PARAM4'];
                     param5 = value['PARAM5'];
-                    estado2 = value['ESTADO']==1?'Anulado':value['ESTADO']==2?'Cerrado':'Abierto';
-                    btnbsq='';
+                    estado2 = value['ESTADO'] == 1 ? 'Anulado' : value['ESTADO'] == 2 ? 'Cerrado' : 'Abierto';
+                    btnbsq = '';
                     //   console.log('<tr> <td class = "text-right" > ' +' </td><td class = "text-right" > ' + codigo + ' </td><td >' + fech +'</td><td class = "text-right">' + titulo +'</td><td class = "text-right">' + responsable +'</td><td class="text-center" >' + creador +'</td><td class="text-center" >' + estado2 +'</td></tr>');
                     btnA = '<button class="btn btn-xs btn-success btn-expediente" type="button" data-toggle="tooltip"  data-placement="top" data-exp="' + codigo + '" title="Ver detalles" ><i class="fa fa-folder-o"></i></button> ';
-                    if(param2)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param2 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param3)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param3 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param4)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param4 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param5)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param5 +'"  ><i class="fa fa-info"></i></button> ';
-                  
+                    if (param2)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param2 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param3)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param3 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param4)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param4 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param5)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param5 + '"  ><i class="fa fa-info"></i></button> ';
+
                     //btnToS = '<button class="btn btn-xs btn-success btn-rp1detXLS" data-rep="3" data-toggle="modal" data-target="DetEsta"  data-tit="' + Medio +'" data-btns="'+codigo+'" '+datosbtnextra+' data-id='+codigo+'  data-btns=2 type="button" ><i class="fa fa-table" data-toggle="tooltip"  data-placement="top"  title="Descargar detalles en excel"></i></button> <div id="detXLST" class="float-right"></div>';
-                    $('#tb_bsq_listaexp').append('<tr> <td class = "text-left" > ' + btnA + ' </td><td class = "text-center" > ' + codigo + ' </td><td class = "text-center">' + fech + '</td><td class = "text-left">' + titulo +btnbsq+ '</td><td class = "text-right">' + responsable + '</td><td class="text-center" >' + creador + '</td><td class="text-center" >' + estado2 + '</td></tr>');
+                    $('#tb_bsq_listaexp').append('<tr> <td class = "text-left" > ' + btnA + ' </td><td class = "text-center" > ' + codigo + ' </td><td class = "text-center">' + fech + '</td><td class = "text-left">' + titulo + btnbsq + '</td><td class = "text-right">' + responsable + '</td><td class="text-center" >' + creador + '</td><td class="text-center" >' + estado2 + '</td></tr>');
                 });
                 setTimeout(function () {
                     parent.$('#processing-modal').modal('hide');
                 }, 2000);
-                $(function () { $('[data-toggle="tooltip"]').tooltip()})
-    
+                $(function () { $('[data-toggle="tooltip"]').tooltip() })
+
             })
             .catch(function (error) {
                 parent.$('#processing-modal').modal('hide');
                 $('#processing-modal').modal('hide');
-            //    if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
-            //        $(this).showError('Error en petición', 'Estado del error: ' + data.response.status + '. Mensaje: ' + data.response.data.error);
-           //     }
+                //    if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
+                //        $(this).showError('Error en petición', 'Estado del error: ' + data.response.status + '. Mensaje: ' + data.response.data.error);
+                //     }
                 //toastr.error(data.message, 'Error al Modificar ');
             });
     });
@@ -1339,18 +1361,18 @@ $(function () {
     $('.btn-o-bsqV1').click(function () {
         numExp = $('#bsq_nume_expe2').val();
         parametro = $('#bsq_nomexpe2').val();
-     //   parent.$('#processing-modal').modal('show');
-     $('#resulEstdatos2').show();
+        //   parent.$('#processing-modal').modal('show');
+        $('#resulEstdatos2').show();
         axios({
             method: 'post',
             baseURL: '../expediente/exp-rest.php',
             data: 'fn=bsqexpV1&numExp=' + numExp + '&parametro=' + parametro
-        })  
+        })
             .then(function (response) {
                 console.log('10');
-              //  console.log(response);
+                //  console.log(response);
                 datos = response.data;
-               // console.log(data);
+                // console.log(data);
                 $("#tb_bsq_listaexp tbody").empty();
                 parent.$('#processing-modal').modal('hide');
                 $.each(datos.data, function (index, value) {
@@ -1361,47 +1383,47 @@ $(function () {
                     depe = value['DEPE'];
                     creador = value['CREADOR'];
                     titulo = value['TITULO'];
-                  //  estado2 = value['ESTADO'];
+                    //  estado2 = value['ESTADO'];
                     param2 = value['PARAM2'];
                     param3 = value['PARAM3'];
                     param4 = value['PARAM4'];
                     param5 = value['PARAM5'];
-                    estado2 = value['ESTADO']==1?'Anulado':value['ESTADO']==2?'Cerrado':'Abierto';
-                    btnbsq='';
+                    estado2 = value['ESTADO'] == 1 ? 'Anulado' : value['ESTADO'] == 2 ? 'Cerrado' : 'Abierto';
+                    btnbsq = '';
                     respoQAgo2 = value['respNew'];
                     //   console.log('<tr> <td class = "text-right" > ' +' </td><td class = "text-right" > ' + codigo + ' </td><td >' + fech +'</td><td class = "text-right">' + titulo +'</td><td class = "text-right">' + responsable +'</td><td class="text-center" >' + creador +'</td><td class="text-center" >' + estado2 +'</td></tr>');
-                    btnA ='';
-                    if(!respoQAgo2)
-                    btnA = '<button type="button" class="btn btn-xs  btn-primary btn-bbaaold" onclick="addexpOld(' +"'"+ codigo +"'" + ')" data-toggle="modal" data-id="' + codigo + '" data-target="#AddCrearExpModal"><i class="fa fa-plus"></i></button>';
-    /*'<button class="btn btn-xs btn-success btn-addv1expediente" id="btn-addv1expediente" type="button" data-toggle="tooltip"  data-placement="top" data-exp="' + codigo
-     + '" title="Asociar" data-toggle="modal" data-target="#AddCrearExpModal" ><i class="fa fa-plus"></i></button> ';*/
-                    if(param2)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param2 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param3)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param3 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param4)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param4 +'"  ><i class="fa fa-info"></i></button> ';
-                    if(param5)
-                    btnbsq   += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="'+ param5 +'"  ><i class="fa fa-info"></i></button> ';
-                  
+                    btnA = '';
+                    if (!respoQAgo2)
+                        btnA = '<button type="button" class="btn btn-xs  btn-primary btn-bbaaold" onclick="addexpOld(' + "'" + codigo + "'" + ')" data-toggle="modal" data-id="' + codigo + '" data-target="#AddCrearExpModal"><i class="fa fa-plus"></i></button>';
+                    /*'<button class="btn btn-xs btn-success btn-addv1expediente" id="btn-addv1expediente" type="button" data-toggle="tooltip"  data-placement="top" data-exp="' + codigo
+                     + '" title="Asociar" data-toggle="modal" data-target="#AddCrearExpModal" ><i class="fa fa-plus"></i></button> ';*/
+                    if (param2)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param2 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param3)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param3 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param4)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param4 + '"  ><i class="fa fa-info"></i></button> ';
+                    if (param5)
+                        btnbsq += '<button class="btn btn-xs btn-primary float-right " type="button" data-toggle="tooltip"  data-placement="top" data-original-title="' + param5 + '"  ><i class="fa fa-info"></i></button> ';
+
                     //btnToS = '<button class="btn btn-xs btn-success btn-rp1detXLS" data-rep="3" data-toggle="modal" data-target="DetEsta"  data-tit="' + Medio +'" data-btns="'+codigo+'" '+datosbtnextra+' data-id='+codigo+'  data-btns=2 type="button" ><i class="fa fa-table" data-toggle="tooltip"  data-placement="top"  title="Descargar detalles en excel"></i></button> <div id="detXLST" class="float-right"></div>';
-                    $('#tb_bsq_listaexp').append('<tr> <td class = "text-left" > ' + btnA + ' </td><td class = "text-center" > ' + codigo + ' </td><td class = "text-center">' + fech + '</td><td class = "text-left">' + titulo +btnbsq+ '</td><td class = "text-right">' + responsable + '</td><td class="text-center" >' + creador + '</td><td class="text-center" >' + estado2 + '</td><td class="text-center" >' + respoQAgo2 + '</td></tr>');
+                    $('#tb_bsq_listaexp').append('<tr> <td class = "text-left" > ' + btnA + ' </td><td class = "text-center" > ' + codigo + ' </td><td class = "text-center">' + fech + '</td><td class = "text-left">' + titulo + btnbsq + '</td><td class = "text-right">' + responsable + '</td><td class="text-center" >' + creador + '</td><td class="text-center" >' + estado2 + '</td><td class="text-center" >' + respoQAgo2 + '</td></tr>');
                 });
                 setTimeout(function () {
                     parent.$('#processing-modal').modal('hide');
                 }, 2000);
-                $(function () { $('[data-toggle="tooltip"]').tooltip()})
-    
+                $(function () { $('[data-toggle="tooltip"]').tooltip() })
+
             })
             .catch(function (error) {
                 parent.$('#processing-modal').modal('hide');
                 $('#processing-modal').modal('hide');
-            //    if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
-            //        $(this).showError('Error en petición', 'Estado del error: ' + data.response.status + '. Mensaje: ' + data.response.data.error);
-           //     }
+                //    if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
+                //        $(this).showError('Error en petición', 'Estado del error: ' + data.response.status + '. Mensaje: ' + data.response.data.error);
+                //     }
                 //toastr.error(data.message, 'Error al Modificar ');
             });
-    
+
 
     })
 
@@ -1413,23 +1435,19 @@ function usuarioBSQ(formulario) {
     var activo = '';
     var campo_codigo = 'USUA_DOC';
 
-    if (formulario == 'bsq')
-    {
+    if (formulario == 'bsq') {
         selectIDu = 'bsq_usuaDoc';
         depe = $("#bsq_dep").val();
         activo = $("#bsq_dep").val() ? '1' : '0';
-    } else if (formulario == 'herr') 
-    {
+    } else if (formulario == 'herr') {
         selectIDu = 'herr_usuaDoc'
         depe = $("#herr_dep").val();
         activo = $("#herr_dep").val() ? '1' : '0';
-    } else if (formulario == 'herr-resp') 
-    {
+    } else if (formulario == 'herr-resp') {
         selectIDu = 'herr_respUsuaDoc'
         depe = $("#herr_dep_resp").val();
         activo = $("#herr_dep_resp").val() ? '1' : '0';
-    } else if (formulario == 'herr-resp-seg') 
-    {
+    } else if (formulario == 'herr-resp-seg') {
         selectIDu = 'herr_respSegUsuaDoc'
         depe = $("#herr_dep_seg_resp").val();
         activo = $("#herr_dep_seg_resp").val() ? '1' : '0';
@@ -1448,8 +1466,7 @@ function usuarioBSQ(formulario) {
             data = response.data;
             //  console.log(data);
             $("#" + selectIDu).empty();
-            if(selectIDu != 'herr_respUsuaDoc' && selectIDu != 'herr_respSegUsuaDoc')
-            {
+            if (selectIDu != 'herr_respUsuaDoc' && selectIDu != 'herr_respSegUsuaDoc') {
                 $("#" + selectIDu).append('<option value="0">-- Selecione --</option>');
             }
 
@@ -1468,170 +1485,171 @@ function usuarioBSQ(formulario) {
             //toastr.error(data.message, 'Error al Modificar ');
         });
 }
+
 function addoption(optionfun) {
     var Exp = $('#numexp').val();
     $('#txaccAdm').html('');
-     $('#opertitulo-error').html('');
-     vard=Array();
-     datasen='';
+    $('#opertitulo-error').html('');
+    vard = Array();
+    datasen = '';
     switch (optionfun) {
-            case "SGD_SEXP_PAREXP1":
-            vard['tp']='param';
-            vard['txt']='txt-title';
+        case "SGD_SEXP_PAREXP1":
+            vard['tp'] = 'param';
+            vard['txt'] = 'txt-title';
             titulo = $('#SGD_SEXP_PAREXP1').val();
             tituloOld = $('#txt-title').text();
             if (titulo == tituloOld || !titulo) {
-                  $('#opertitulo-error').html('Debe colocar un tiltulo o titulo diferente');
+                $('#opertitulo-error').html('Debe colocar un tiltulo o titulo diferente');
                 return false;
             }
-            datasen='fn=modMeta&cambio='+titulo+'&camp=SGD_SEXP_PAREXP1';
+            datasen = 'fn=modMeta&cambio=' + titulo + '&camp=SGD_SEXP_PAREXP1';
             break;
-            case "SGD_SEXP_PAREXP2":
-                vard['tp']='param';
-                vard['txt']='txt-param2';
-                titulo = $('#SGD_SEXP_PAREXP2').val();
-                tituloOld = $('#txt-param2').text();
-                if (titulo == tituloOld) {
-                        $('#opertitulo-error').html('Debe colocar un texto diferente');
-                    return false;
-                }
-                datasen='fn=modMeta&cambio='+ titulo+'&camp=SGD_SEXP_PAREXP2';
+        case "SGD_SEXP_PAREXP2":
+            vard['tp'] = 'param';
+            vard['txt'] = 'txt-param2';
+            titulo = $('#SGD_SEXP_PAREXP2').val();
+            tituloOld = $('#txt-param2').text();
+            if (titulo == tituloOld) {
+                $('#opertitulo-error').html('Debe colocar un texto diferente');
+                return false;
+            }
+            datasen = 'fn=modMeta&cambio=' + titulo + '&camp=SGD_SEXP_PAREXP2';
             break;
-            case "SGD_SEXP_PAREXP3":
-                vard['tp']='param';
-                vard['txt']='txt-param3';
-                titulo = $('#SGD_SEXP_PAREXP3').val();
-                tituloOld = $('#txt-param3').text();
-                if (titulo == tituloOld) {
-                        $('#opertitulo-error').html('Debe colocar un texto diferente');
-                    return false;
-                }
-                datasen='fn=modMeta&cambio='+ titulo+'&camp=SGD_SEXP_PAREXP3';
-             break;
-            case "SGD_SEXP_PAREXP4":  
-            vard['tp']='param';
-            vard['txt']='txt-param4';    
-                titulo = $('#SGD_SEXP_PAREXP4').val();
-                tituloOld = $('#txt-param4').text();
-                if (titulo == tituloOld) {
-                        $('#opertitulo-error').html('Debe colocar un texto diferente');
-                    return false;
-                }
-                datasen='fn=modMeta&cambio='+ titulo+'&camp=SGD_SEXP_PAREXP4';
+        case "SGD_SEXP_PAREXP3":
+            vard['tp'] = 'param';
+            vard['txt'] = 'txt-param3';
+            titulo = $('#SGD_SEXP_PAREXP3').val();
+            tituloOld = $('#txt-param3').text();
+            if (titulo == tituloOld) {
+                $('#opertitulo-error').html('Debe colocar un texto diferente');
+                return false;
+            }
+            datasen = 'fn=modMeta&cambio=' + titulo + '&camp=SGD_SEXP_PAREXP3';
             break;
-            case "SGD_SEXP_PAREXP5":
-                vard['tp']='param';
-                 vard['txt']='txt-param5';
-                titulo = $('#SGD_SEXP_PAREXP5').val();
-                tituloOld = $('#txt-param5').text();
-                if (titulo == tituloOld) {
-                        $('#opertitulo-error').html('Debe colocar un texto diferente');
-                    return false;
-                }
-                datasen='fn=modMeta&cambio='+ titulo+'&camp=SGD_SEXP_PAREXP5';
+        case "SGD_SEXP_PAREXP4":
+            vard['tp'] = 'param';
+            vard['txt'] = 'txt-param4';
+            titulo = $('#SGD_SEXP_PAREXP4').val();
+            tituloOld = $('#txt-param4').text();
+            if (titulo == tituloOld) {
+                $('#opertitulo-error').html('Debe colocar un texto diferente');
+                return false;
+            }
+            datasen = 'fn=modMeta&cambio=' + titulo + '&camp=SGD_SEXP_PAREXP4';
             break;
-          case"responsable":  
-          vard['tp']='responsable';
-          vard['txt']='txt-Responsa';             
-                respo = $('#usuaDocExp').val();
-                respotxt = $( "#usuaDocExp option:selected" ).text();
-                depesa= $('#dependenciaResp').val();
-                datasen='fn=modMeta&camp=USUA_DOC_RESPONSABLE&cambio='+respo+'&depeexp'+depesa;
-              //  console.log(respotxt);
+        case "SGD_SEXP_PAREXP5":
+            vard['tp'] = 'param';
+            vard['txt'] = 'txt-param5';
+            titulo = $('#SGD_SEXP_PAREXP5').val();
+            tituloOld = $('#txt-param5').text();
+            if (titulo == tituloOld) {
+                $('#opertitulo-error').html('Debe colocar un texto diferente');
+                return false;
+            }
+            datasen = 'fn=modMeta&cambio=' + titulo + '&camp=SGD_SEXP_PAREXP5';
             break;
-            case"fisico":  
-            vard['tp']='fisico';             
-                radicado=$('#numerpDoc').val();
-                titulo = $('#operFisicoMasi').val();
-                datasen='fn=modRad&cambio='+ titulo+'&camp=sgd_exp_ufisica&rad='+radicado;
+        case "responsable":
+            vard['tp'] = 'responsable';
+            vard['txt'] = 'txt-Responsa';
+            respo = $('#usuaDocExp').val();
+            respotxt = $("#usuaDocExp option:selected").text();
+            depesa = $('#dependenciaResp').val();
+            datasen = 'fn=modMeta&camp=USUA_DOC_RESPONSABLE&cambio=' + respo + '&depeexp' + depesa;
+            //  console.log(respotxt);
             break;
-            case"carpeta":    
-            vard['tp']='carpeta';             
-                radicado=$('#numerpDoc').val();
-                titulo = $('#operCarpi').val();
-                datasen='fn=modRad&cambio='+ titulo+'&camp=sgd_exp_carpeta&rad='+radicado;
+        case "fisico":
+            vard['tp'] = 'fisico';
+            radicado = $('#numerpDoc').val();
+            titulo = $('#operFisicoMasi').val();
+            datasen = 'fn=modRad&cambio=' + titulo + '&camp=sgd_exp_ufisica&rad=' + radicado;
             break;
-            case"subexp":   
-            vard['tp']='subexp';             
-                radicado=$('#numerpDoc').val();
-                titulo = $('#operaddsubei').val();
-                datasen='fn=modRad&cambio='+ titulo+'&camp=sgd_exp_subexpediente&rad='+radicado;
-            break               ;
+        case "carpeta":
+            vard['tp'] = 'carpeta';
+            radicado = $('#numerpDoc').val();
+            titulo = $('#operCarpi').val();
+            datasen = 'fn=modRad&cambio=' + titulo + '&camp=sgd_exp_carpeta&rad=' + radicado;
+            break;
+        case "subexp":
+            vard['tp'] = 'subexp';
+            radicado = $('#numerpDoc').val();
+            titulo = $('#operaddsubei').val();
+            datasen = 'fn=modRad&cambio=' + titulo + '&camp=sgd_exp_subexpediente&rad=' + radicado;
+            break;
 
-       /* case"Seguridad":
-                    m_data.append('accion', 'cambiarSeguridad');
-                    m_data.append('seg', $('#ExpSeguridad').val());
-                    
-                    respo = $('#ExpSeguridad').val();
-                    datasen='fn=modMeta&cambio='+ titulo;
-                    break;?*/
+        /* case"Seguridad":
+                     m_data.append('accion', 'cambiarSeguridad');
+                     m_data.append('seg', $('#ExpSeguridad').val());
+                     
+                     respo = $('#ExpSeguridad').val();
+                     datasen='fn=modMeta&cambio='+ titulo;
+                     break;?*/
     }
-    if(!datasen) return true;
+    if (!datasen) return true;
     axios({
         method: 'post',
         baseURL: '../expediente/exp-rest.php',
-        data: datasen+'&exp='+Exp
+        data: datasen + '&exp=' + Exp
     })
         .then(function (response) {
             console.log('11');
             // console.log(response);
             data = response.data;
-             // console.log(data);
+            // console.log(data);
             // console.log(respotxt);
             switch (vard['tp']) {
                 case "param":
-                   // console.log(respotxt);
-                        $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
-                       // $('#txaccI').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
-                        
-                        $('#opertituloOld').val(titulo);
-                        $('#'+ vard['txt']).html(titulo);
-                        
-                 break;
-                 case"responsable":  
-       //   alert();
-                       $('#txaccAdm').html('<div class="alert alert-success">Se cambio el responsable del expediente: ' + respotxt + ' </div>');
-                       // $('#txaccI').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
-                       /// console.log(respotxt);
-                        $('#opertituloOld').val(respotxt);
-                        $('#'+ vard['txt']).html(respotxt);
-                   break;
-                 case "fisico":
-                  //  $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
-                  console.log('fisico');
+                    // console.log(respotxt);
+                    $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
+                    // $('#txaccI').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
+
+                    $('#opertituloOld').val(titulo);
+                    $('#' + vard['txt']).html(titulo);
+
+                    break;
+                case "responsable":
+                    //   alert();
+                    $('#txaccAdm').html('<div class="alert alert-success">Se cambio el responsable del expediente: ' + respotxt + ' </div>');
+                    // $('#txaccI').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
+                    /// console.log(respotxt);
+                    $('#opertituloOld').val(respotxt);
+                    $('#' + vard['txt']).html(respotxt);
+                    break;
+                case "fisico":
+                    //  $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
+                    console.log('fisico');
                     $('#txaccI').html('<div class="alert alert-success">Se asigno a la Fisico de expediente: ' + titulo + ' </div>');
-                    
-                 //   $('#opertituloOld').val(titulo);
-                    $('#divFisico'+ radicado).html(titulo);
-                    
-             break;
-             case "carpeta":
-                  //  $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
-                  console.log('carpeta');
+
+                    //   $('#opertituloOld').val(titulo);
+                    $('#divFisico' + radicado).html(titulo);
+
+                    break;
+                case "carpeta":
+                    //  $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
+                    console.log('carpeta');
                     $('#txaccI').html('<div class="alert alert-success">Se asigno a la Carpeta de expediente: ' + titulo + ' </div>');
-                    
-                 //   $('#opertituloOld').val(titulo);
-                    $('#divCarpeta'+ radicado).html(titulo);
-                    
-             break;
-             case "subexp":
-                  //  $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
-                  console.log('subexp');
+
+                    //   $('#opertituloOld').val(titulo);
+                    $('#divCarpeta' + radicado).html(titulo);
+
+                    break;
+                case "subexp":
+                    //  $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
+                    console.log('subexp');
                     $('#txaccI').html('<div class="alert alert-success">Se asigno a la Subexpediente de expediente: ' + titulo + ' </div>');
-                    
-                 //   $('#opertituloOld').val(titulo);
-                    $('#divSubExp'+ radicado).html(titulo);
-                    
-             break;
+
+                    //   $('#opertituloOld').val(titulo);
+                    $('#divSubExp' + radicado).html(titulo);
+
+                    break;
             };
-           /* $("#" + selectIDu).empty();
-            $("#" + selectIDu).append('<option value="0">-- Selecione --</option>');
-            campos = new Array();
-            campos['codigo'] = 'USUA_DOC';
-            campos['nombre'] = 'NOMB';
-            console.log('prueba');
-            cargarselect2(data.data, selectIDu, campos, 2);
-            $('#animationload').hide();*/
+            /* $("#" + selectIDu).empty();
+             $("#" + selectIDu).append('<option value="0">-- Selecione --</option>');
+             campos = new Array();
+             campos['codigo'] = 'USUA_DOC';
+             campos['nombre'] = 'NOMB';
+             console.log('prueba');
+             cargarselect2(data.data, selectIDu, campos, 2);
+             $('#animationload').hide();*/
         })
         .catch(function (error) {
             $('#animationload').hide();
@@ -1640,55 +1658,56 @@ function addoption(optionfun) {
             }
             //toastr.error(data.message, 'Error al Modificar ');
         });
- /*   m_data.append('exp', '<?= $expdata['SGD_EXP_NUMERO']; ?>');
-            var url = "../core/?exp/dtexp";
-            $.ajax({
-            url: url,
-                    type: "POST",
-                    data: m_data,
-                    dataType: "JSON",
-                    processData: false,
-                    contentType: false,
-                    success: function (data)
-                    {
-                    switch (optionfun) {
-                    case "titulo":
-                            $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
-                            $('#opertituloOld').val(titulo);
-                            $('#txt-title').html(titulo);
-                            
-                     break;
-                     case "Seguridad":
-                        txtseg='PUBLICA';
-                        if($('#ExpSeguridad').val()==1)
-                            txtseg='PRIVADA';
-                        $('#txaccAdm').html('<div class="alert alert-success">Se modifico la seguridad: ' + txtseg + ' </div>');
-                            //$('#opertituloOld').val($('#ExpSeguridad').val());
-                        $('#txt-seguridadExped').html(txtseg);
-                            
-                     break;
-                   case"responsable":
-                            if (data.dt == 'Ok') {
-                    $('#txaccAdm').html('<div class="alert alert-success">Se módifico el  responsable del Expediente </div>');
-                            $('#txt-Rsponsa').html($('select[name="usuaDocExp"] option:selected').text());
-                    } else
-                            $('#txaccAdm').html('<div class="alert alert-danger">No se realizo la acción</div>');
-                            break;
-                    }
-
-                    },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                    $('#' + txacc).html('<div class="alert alert-danger">No se Realizo la transacción </div>');
-                            //   $('#diverrorsave').html('<i class="fa fa-close" style="color: red";font-size: 35px;></i> No se realizo la acción');
-                    }
-            });*/
+    /*   m_data.append('exp', '<?= $expdata['SGD_EXP_NUMERO']; ?>');
+               var url = "../core/?exp/dtexp";
+               $.ajax({
+               url: url,
+                       type: "POST",
+                       data: m_data,
+                       dataType: "JSON",
+                       processData: false,
+                       contentType: false,
+                       success: function (data)
+                       {
+                       switch (optionfun) {
+                       case "titulo":
+                               $('#txaccAdm').html('<div class="alert alert-success">Se asigno a la Nombre de expediente: ' + titulo + ' </div>');
+                               $('#opertituloOld').val(titulo);
+                               $('#txt-title').html(titulo);
+                               
+                        break;
+                        case "Seguridad":
+                           txtseg='PUBLICA';
+                           if($('#ExpSeguridad').val()==1)
+                               txtseg='PRIVADA';
+                           $('#txaccAdm').html('<div class="alert alert-success">Se modifico la seguridad: ' + txtseg + ' </div>');
+                               //$('#opertituloOld').val($('#ExpSeguridad').val());
+                           $('#txt-seguridadExped').html(txtseg);
+                               
+                        break;
+                      case"responsable":
+                               if (data.dt == 'Ok') {
+                       $('#txaccAdm').html('<div class="alert alert-success">Se módifico el  responsable del Expediente </div>');
+                               $('#txt-Rsponsa').html($('select[name="usuaDocExp"] option:selected').text());
+                       } else
+                               $('#txaccAdm').html('<div class="alert alert-danger">No se realizo la acción</div>');
+                               break;
+                       }
+   
+                       },
+                       error: function (jqXHR, textStatus, errorThrown)
+                       {
+                       $('#' + txacc).html('<div class="alert alert-danger">No se Realizo la transacción </div>');
+                               //   $('#diverrorsave').html('<i class="fa fa-close" style="color: red";font-size: 35px;></i> No se realizo la acción');
+                       }
+               });*/
 }
+
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     $('#modalInfo').on('show.bs.modal', function (e) {
-        var request = $.get('propiedades.php?expediente='+$(this).data('expediente'));
-        request.done(function(data) {
+        var request = $.get('propiedades.php?expediente=' + $(this).data('expediente'));
+        request.done(function (data) {
             $('#modalInfo #anexos_expediente').text(data['anexos_expediente']);
             $('#modalInfo #radicados_expediente').text(data['radicados_expediente']);
             $('#modalInfo #borradores_expediente').text(data['borradores_expediente']);
@@ -1701,34 +1720,32 @@ $(function () {
     });
 });
 
-  $('#myTab a').on('click', function (event) {
+$('#myTab a').on('click', function (event) {
     event.preventDefault()
     $(this).tab('show')
-  })
+})
 
- 
-  $(".modal-header-andje").on("click", '.btn-op-setting', function () {
-   $('#SGD_SEXP_PAREXP1').val($('#txt-title').text());
-   $('#SGD_SEXP_PAREXP2').val($('#txt-param2').text());
-   $('#SGD_SEXP_PAREXP3').val($('#txt-param3').text());
-   $('#SGD_SEXP_PAREXP4').val($('#txt-param4').text());
-   $('#SGD_SEXP_PAREXP5').val($('#txt-param5').text());
-   
+$(".modal-header-andje").on("click", '.btn-op-setting', function () {
+    $('#SGD_SEXP_PAREXP1').val($('#txt-title').text());
+    $('#SGD_SEXP_PAREXP2').val($('#txt-param2').text());
+    $('#SGD_SEXP_PAREXP3').val($('#txt-param3').text());
+    $('#SGD_SEXP_PAREXP4').val($('#txt-param4').text());
+    $('#SGD_SEXP_PAREXP5').val($('#txt-param5').text());
+
 });
-
 
 function usuario3(depe) {
     selectIDu = 'usuaDocExp'
-    usuados=$("#UCRESPONSABLE").val();
-;    //var depe = $("#dependenciaExp").val();
+    usuados = $("#UCRESPONSABLE").val();
+    ;    //var depe = $("#dependenciaExp").val();
     //var activo = $("#dependenciaExp").val() ? '1' : '0';
-   // var tpUs = $("#CHKselUsuario").is(':checked') ? '1' : '0';
- //   $('#animationload').show();
+    // var tpUs = $("#CHKselUsuario").is(':checked') ? '1' : '0';
+    //   $('#animationload').show();
     //console.log('fn=usuarios&depe='+depe+'&tpus='+tpUs);
     axios({
         method: 'post',
         baseURL: '../core/rest-est.php',
-        data: 'fn=usuarios&depe=' + depe 
+        data: 'fn=usuarios&depe=' + depe
     })
         .then(function (response) {
             // console.log(response);
@@ -1739,8 +1756,8 @@ function usuario3(depe) {
             campos = new Array();
             campos['codigo'] = 'USUA_DOC';
             campos['nombre'] = 'NOMB';
-           // console.log(usuados);
-            
+            // console.log(usuados);
+
             cargarselect2(data.data, selectIDu, campos, 2);
             $("#" + selectIDu).val(usuados);
             $('#animationload').hide();
@@ -1757,90 +1774,87 @@ function usuario3(depe) {
 }
 
 function filtrobtn(xls) {
-    if(xls==0)
-    listar($("#tpacc").val())
-    else{
-         $("#tb_listaexp").table2excel({
-                exclude: ".noExl",
-                name: "Excel Lista Expediente",
-                filename:"ListaExpediente"
-               
-            }); 
+    if (xls == 0)
+        listar($("#tpacc").val())
+    else {
+        $("#tb_listaexp").table2excel({
+            exclude: ".noExl",
+            name: "Excel Lista Expediente",
+            filename: "ListaExpediente"
+
+        });
     }
 }
 
-
-function uploadAnexos(){
+function uploadAnexos() {
     $('#boton_cargar_anexos_expediente').prop('disabled', true);
     var formData = new FormData();
     var imagefile = document.querySelector('#archFile');
     //$('#operAnexo-error').html('Debe colocar un tiltulo diferente');
     $('#operAnexo-error').html('');
     $('#operAnexo-msg').html('');
-    msq='';
-    if(!$('#descriop').val()) msq='Debe colocar una descripción';
-    if(!$('#tpDocAnex').val()) msq='Debe selecionar un tipo de documento';
-    if(!imagefile.files[0]) msq='Debe selecionar un archivo';
-   
-    if(msq){
+    msq = '';
+    if (!$('#descriop').val()) msq = 'Debe colocar una descripción';
+    if (!$('#tpDocAnex').val()) msq = 'Debe selecionar un tipo de documento';
+    if (!imagefile.files[0]) msq = 'Debe selecionar un archivo';
+
+    if (msq) {
         $('#operAnexo-error').html(msq);
         return false;
     }
     formData.append("image", imagefile.files[0]);
-    formData.append("exp",  $('#numexp').val());
+    formData.append("exp", $('#numexp').val());
     formData.append("tpDocAnex", $('#tpDocAnex').val());
     formData.append("descriop", $('#descriop').val());
     formData.append("fn", "uploadAnex");
     parent.$('#processing-modal').modal('show');
     axios.post('../expediente/exp-rest.php', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data'
         }
-    }) .then(function (response) {
+    }).then(function (response) {
         console.log('12');
         // console.log(response);
         data = response.data;
-         // console.log(data);
-         if(data.success){
-         $('#operAnexo-msg').html('Se creo el anexo '+data.conse+' del expediente '+ $('#numexp').val() );
-         }
-         else  $('#operAnexo-msg').html('No Se creo el anexo, No se puede cargar el documento ' );
-        cargartabla('S');
-        setTimeout(function(){$('#processing-modal').modal('hide');}, 2000);
-        $('#boton_cargar_anexos_expediente').prop('disabled', false);
-        parent.$('#processing-modal').modal('hide');
-        $('#ModaladdAnex').modal('hide');
-        
-    })
-    .catch(function (error) {
-        parent.$('#processing-modal').modal('hide');
-        $('#boton_cargar_anexos_expediente').prop('disabled', false);
-        $('#ModaladdAnex').modal('hide');
-        
-        if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
-            $(this).showError('Error en petición', 'Estado del error: ' + error.response.status + '. Mensaje: ' + error.response.data.error);
+        // console.log(data);
+        if (data.success) {
+            $('#operAnexo-msg').html('Se creo el anexo ' + data.conse + ' del expediente ' + $('#numexp').val());
         }
-        //toastr.error(data.message, 'Error al Modificar ');
-    });
+        else $('#operAnexo-msg').html('No Se creo el anexo, No se puede cargar el documento ');
+        cargartabla('S');
+        setTimeout(function () { $('#processing-modal').modal('hide'); }, 2000);
+        $('#boton_cargar_anexos_expediente').prop('disabled', false);
+        parent.$('#processing-modal').modal('hide');
+        $('#ModaladdAnex').modal('hide');
+
+    })
+        .catch(function (error) {
+            parent.$('#processing-modal').modal('hide');
+            $('#boton_cargar_anexos_expediente').prop('disabled', false);
+            $('#ModaladdAnex').modal('hide');
+
+            if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
+                $(this).showError('Error en petición', 'Estado del error: ' + error.response.status + '. Mensaje: ' + error.response.data.error);
+            }
+            //toastr.error(data.message, 'Error al Modificar ');
+        });
 
 }
 
-
-$(function() {
-    $('#generar_indice_electronico').on('click', function(e)
-    {
+$(function () {
+    $('#generar_indice_electronico').on('click', function (e) {
         $('#generar_indice_electronico').prop('disabled', true);
         var request = $.get($(this).data('rel'));
-        request.done( function() {
+        request.done(function () {
             console.log('done');
             window.location.reload();
         });
 
-        request.fail(function(xhr, status, error) {
+        request.fail(function (xhr, status, error) {
             console.log('fail', status, error);
         })
 
-        request.always(function() {
+        request.always(function () {
             console.log('always');
         });
     });

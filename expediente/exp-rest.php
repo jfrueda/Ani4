@@ -1,4 +1,5 @@
 <?php
+
 /** */
 session_start();
 //set_time_limit(1200);
@@ -46,6 +47,7 @@ $db = new ConnectionHandler($ruta_raiz);
 //print_r($_POST);
 $expClass = new expediente($ruta_raiz);
 $datos = array();
+
 switch ($fn) {
     case 'OldExp':
         $datos = $expClass->crearOld($exp, $usua, $depe);
@@ -54,13 +56,15 @@ switch ($fn) {
         $data['expdata'] = $dataExp;
         $data['success'] = true;
         $datos = $data;
+
         break;
     case 'listar':
-        $datos = $expClass->listar($tp, $usua_doc, $usua, $depe,$anoDep,$search);
+        $datos = $expClass->listar($tp, $usua_doc, $usua, $depe, $anoDep, $search);
+
         break;
     case 'bsqexp':
         // pendiente validacion
-        $datos = $expClass->bsqlistar($tp,$numExp, $radicado, $parametro, $usuar, $depe);
+        $datos = $expClass->bsqlistar($tp, $numExp, $radicado, $parametro, $usuar, $depe);
 
         break;
     case 'bsqexp_paginado':
@@ -70,6 +74,7 @@ switch ($fn) {
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($datos);
         exit;
+
         break;
     case 'bsqexpV1':
         // pendiente validacion
@@ -78,17 +83,15 @@ switch ($fn) {
         break;
     case 'listaDtExp':
         $expediente = $expClass->consultarExp($exp);
-        if ($atp == 'A')
-        {
+        if ($atp == 'A') {
             $datos = $expClass->listar_anexos($exp, $filtro, $orden, $atp, $page, $wbsq, $page_size, $search);
-        } else if ($atp == 'R') {
+        } elseif ($atp == 'R') {
             $datos = $expClass->listar_radicados($exp, $filtro, $orden, $atp, $page, $wbsq, $page_size, $search);
         } else {
             $datos = $expClass->listardtexp($exp, $filtro, $orden, $atp, $page, $wbsq, $page_size, $search);
         }
 
-        foreach($datos['datos'] as $key => $radicado) 
-        {
+        foreach ($datos['datos'] as $key => $radicado) {
             $seguridadRadicado = $radicado['SEGURIDAD'];
             $aRADI_DEPE_ACTU = $radicado['DEPE_ACTU'];
             $aRADI_USUA_ACTU = $radicado['USUA_ACTU'];
@@ -98,16 +101,16 @@ switch ($fn) {
             if ($radicado['TIPO'] == 'radi') {
                 $permiso_radicado = $r->validarSeguridadExpediente($radicado['RADICA'], $expediente, $_SESSION);
                 $datos['datos'][$key]['PERMISO_RADICADO'] = $permiso_radicado ? 1 : 0;
-                $datos['datos'][$key]['KEY'] = $permiso_radicado ? encrypt_decrypt('encrypt', $exp.'|'.$radicado['RADICA'], $radi_pass) : '';
+                $datos['datos'][$key]['KEY'] = $permiso_radicado ? encrypt_decrypt('encrypt', $exp . '|' . $radicado['RADICA'], $radi_pass) : '';
             }
-            
+
             $datos['datos'][$key]['add'] = [
                 'usua_cod' => $_SESSION["codusuario"],
                 'usua_depe' => $_SESSION["dependencia"],
                 'jefe' => $_SESSION["USUA_JEFE_DE_GRUPO"]
             ];
         }
-        
+
         //   print_r($datos);
         $data['anexos'] = $datos['anexos'];
         $data['numRad'] = $datos['numRad'];
@@ -134,67 +137,69 @@ switch ($fn) {
         $datos['dtexp'] = $daots;
         $datos['success'] = true;
         break;
+
     case 'crearConfirmar':
         //print_r($_POST);
         $codiSRD = $_POST['serie'];
         $codiSBRD = $_POST['subserie'];
         $dependencia = $_POST['depExp'];
         $anoExp = $_POST['anoExp'];
-        $seguridad=$_POST['seguridad'];
+        $seguridad = $_POST['seguridad'];
         $daots = $expClass->numExp($dependencia, $codiSRD, $codiSBRD, $anoExp);
- 
 
         $datos['numexp'] = $daots;
         $datos['success'] = true;
-        break;
 
+        break;
     case 'listaSeguridadExp':
         $daots = $expClass->aclExpediente($_POST['exp']);
         //   print_r($daots);
         $resp['dtexp'] = $daots;
         $resp['success'] = true;
+
         break;
-     case 'uploadAnex':
-        $noExpediente=$_POST['exp'];
-        $id=time();
-        $exts=$expClass->getTpAnex();
+    case 'uploadAnex':
+        $noExpediente = $_POST['exp'];
+        $id = time();
+        $exts = $expClass->getTpAnex();
         $size = return_bytes($_FILES['image']['size']);
         $path_nomb     = $_FILES['image']['name'];
         $ext      = pathinfo($path_nomb, PATHINFO_EXTENSION);
-        $anextipo = array_search(strtolower('.'.$ext), $exts);
-        $namefile2 = $noExpediente.'_'.strtotime("now") . '.'  . $ext;
-        $namefile=$_FILES['image']['name'];
-        $tmp_name=$_FILES['image']['tmp_name'];
+        $anextipo = array_search(strtolower('.' . $ext), $exts);
+        $namefile2 = $noExpediente . '_' . strtotime("now") . '.'  . $ext;
+        $namefile = $_FILES['image']['name'];
+        $tmp_name = $_FILES['image']['tmp_name'];
         $cons = $expClass->consAnexNumeExpe($_POST['exp']);
-        $depe_dir = substr($noExpediente,4,$_SESSION['digitosDependencia']);
+        $depe_dir = substr($noExpediente, 4, $_SESSION['digitosDependencia']);
         //echo strlen($noExpediente);
-        if(strlen($noExpediente)==18)
-             $depe_dir=substr($noExpediente,4,4);
-        $uploadDir = "$ruta_raiz/bodega/".substr($noExpediente,0,4)."/".$depe_dir."/docs/";
-        
-      $full_path=$uploadDir.$namefile2;
-        if(!file_exists($uploadDir))
-            mkdir($uploadDir, 0777, true);
-            //echo $uploadDir;
-            $vtrd=$_POST['vtrd']?$_POST['vtrd']:1;
-            $tpdco=$_POST['tpDocAnex']!='undefined'?$_POST['tpDocAnex']:0;
-          // echo"$tmp_name, $full_path";
-        if (move_uploaded_file($tmp_name, $full_path)){
-            $hashs=hash_file('sha256',$full_path);
-            $anex=$expClass->creaanexo($noExpediente,$cons['con'],$id,$anextipo,$size,$krd,"{$_POST['descriop']}",$namefile2,$hashs,$path,'VIRTUAL','','',$tpdco,$vtrd);
-          // print_r($_POST);
-            // print_r($_FILES);
-            hist($expClass,$noExpediente,array($cons['con']), $usua_depe, $usua_codi,'INCLUIR ANEXO DE EXPEDIENTE', 91, 0);
-            $resp['conse'] = $cons['con'];
-             $resp['num'] = $namefile2 ;
-             $resp['success'] = true;
+        if (strlen($noExpediente) == 18) {
+            $depe_dir = substr($noExpediente, 4, 4);
         }
-        else{
+
+        $uploadDir = "$ruta_raiz/bodega/" . substr($noExpediente, 0, 4) . "/" . $depe_dir . "/docs/";
+
+        $full_path = $uploadDir . $namefile2;
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        //echo $uploadDir;
+        $vtrd = $_POST['vtrd'] ? $_POST['vtrd'] : 1;
+        $tpdco = $_POST['tpDocAnex'] != 'undefined' ? $_POST['tpDocAnex'] : 0;
+        // echo"$tmp_name, $full_path";
+        if (move_uploaded_file($tmp_name, $full_path)) {
+            $hashs = hash_file('sha256', $full_path);
+            $anex = $expClass->creaanexo($noExpediente, $cons['con'], $id, $anextipo, $size, $krd, "{$_POST['descriop']}", $namefile2, $hashs, $path, 'VIRTUAL', '', '', $tpdco, $vtrd);
+            // print_r($_POST);
+            // print_r($_FILES);
+            hist($expClass, $noExpediente, array($cons['con']), $usua_depe, $usua_codi, 'INCLUIR ANEXO DE EXPEDIENTE', 91, 0);
+            $resp['conse'] = $cons['con'];
+            $resp['num'] = $namefile2;
+            $resp['success'] = true;
+        } else {
             $resp['success'] = false;
         }
 
-         
-            break;
+        break;
     case 'crear':
         $codiSRD = $_POST['serie'];
         $codiSBRD = $_POST['subserie'];
@@ -215,21 +220,26 @@ switch ($fn) {
         // crear seguridad
         $expClass->cambiarSeguridad($numExp2, $seg);
 
-        if($seguridad==1) {  
-            $expClass->addAclExp($numExp2 , $dependencia,0, 3);
-            $expClass->addAclExp($numExp2 , 0, 0, 0);
+        if ($seguridad == 1) {
+            $expClass->addAclExp($numExp2, $dependencia, 0, 3);
+            $expClass->addAclExp($numExp2, 0, 0, 0);
         }
-        if($seguridad==2) { 
-            $expClass->addAclExp($numExp2 , $dependencia,$expClass->jefe($dependencia), 3);
-            $expClass->addAclExp($numExp2 , $dependencia,$expClass->responsable($numExp2), 3);
-            $expClass->addAclExp($numExp2 , $dependencia,$expClass->creador($numExp2), 3);
-            $expClass->addAclExp($numExp2 , 0, 0, 0);  
+
+        if ($seguridad == 2) {
+            $expClass->addAclExp($numExp2, $dependencia, $expClass->jefe($dependencia), 3);
+            $expClass->addAclExp($numExp2, $dependencia, $expClass->responsable($numExp2), 3);
+            $expClass->addAclExp($numExp2, $dependencia, $expClass->creador($numExp2), 3);
+            $expClass->addAclExp($numExp2, 0, 0, 0);
         }
-        if($codiSRD==16){  $expClass->addAclExp($numExp2 , 94000,0, 3);}
-                
+
+        if ($codiSRD == 16) {
+            $expClass->addAclExp($numExp2, 94000, 0, 3);
+        }
+
         //  $m = $this->acladd($numExp, $dependencia, $respo, 3);
         $datos['numexp'] = $numExp2; //$this->numExp($dependencia, $codiSRD, $codiSBRD, $anoExp);
         $datos['success'] = $numExp == 0 ? false : true;
+
         break;
     case 'Excluir':
         // echo 1;
@@ -240,16 +250,16 @@ switch ($fn) {
         $anexarray = explode(',', $_POST['listAnex']);
         $numExpediente = $_POST['exp'];
 
-        if($_POST['listRad']){
+        if ($_POST['listRad']) {
             $expClass->ExcluirExpR($numExpediente, $_POST['listRad']);
-            hist($expClass,$numExpediente,$radarray, $usua_depe, $usua_codi,'EXCLUIR RADICADO DE EXPEDIENTE', 52, 0);
+            hist($expClass, $numExpediente, $radarray, $usua_depe, $usua_codi, 'EXCLUIR RADICADO DE EXPEDIENTE', 52, 0);
         }
-        if($_POST['listAnex']){
+        
+        if ($_POST['listAnex']) {
             $expClass->ExcluirExpAnexo($numExpediente, $_POST['listAnex']);
             /* historico */
-            hist($expClass,$numExpediente,$anexarray, $usua_depe, $usua_codi,'EXCLUIR ANEXO DE EXPEDIENTE', 77, 0);
-
-        }          
+            hist($expClass, $numExpediente, $anexarray, $usua_depe, $usua_codi, 'EXCLUIR ANEXO DE EXPEDIENTE', 77, 0);
+        }
         $datos['numexp'] = $numExp2; //$this->numExp($dependencia, $codiSRD, $codiSBRD, $anoExp);
         $datos['success'] =  true;
         break;
@@ -262,12 +272,11 @@ switch ($fn) {
         $data['radicados'] = $expClass->valExpAnu($numExp);
 
         $rad = '';
-        $i=0;
+        $i = 0;
         if ($datos1['ERROR'] != 'No se encontro radicados en el Expediente') {
             foreach ($datos1 as $key => $value) {
                 $estado1 = '';
-                if ($value['RADI_DEPE_ACTU'] == 999)
-                {
+                if ($value['RADI_DEPE_ACTU'] == 999) {
                     continue;
                 }
                 if ($value['RADI_DEPE_ACTU'] != 999) {
@@ -300,7 +309,7 @@ switch ($fn) {
 
     case 'cambiarEst':
         //   echo 1;
-        
+
         $codigoFldExp = 0;
         $numExpediente = $_POST['exp'];
         $oldEst = $_POST['estado'];
@@ -313,7 +322,7 @@ switch ($fn) {
             $tipoTx = 59;
             $nomEstado = 'Abierto';
 
-            if($indice_electronico == '1') {
+            if ($indice_electronico == '1') {
                 $ttr_codigo = $db->conn->getOne("SELECT sgd_ttr_codigo FROM sgd_ttr_transaccion WHERE sgd_ttr_descrip = 'Indice electrónico eliminado por reapertura de expediente'");
                 $expClass->insertarHistoricoExp($numExpediente, '0', $usua_depe, $usua_codi, 'Indice electrónico eliminado', $ttr_codigo, $codigoFldExp);
             }
@@ -332,11 +341,11 @@ switch ($fn) {
         if ($estado == 0 and $oldEst == 2) {
             $observacion = 'Se Desanula el Expediente ';
             $tipoTx = 72;
-            $nomEstado = 'Abierto'; 
+            $nomEstado = 'Abierto';
         }
         $radicados = array();
-        $expClass->insertarHistoricoExp($numExpediente,$radicados, $usua_depe, $usua_codi, $observacion, $tipoTx, $codigoFldExp);
-                $data['success'] = true;
+        $expClass->insertarHistoricoExp($numExpediente, $radicados, $usua_depe, $usua_codi, $observacion, $tipoTx, $codigoFldExp);
+        $data['success'] = true;
         break;
 
 
@@ -344,102 +353,102 @@ switch ($fn) {
         //   print_r($_POST);
         $resp['estadoOper'] = 'old';
         $code = $expClass->valacldExp($_POST['exp'], $_POST['depe'], $_POST['usuario']);
-        
-        
+
+
         if (!$code) {
             $resp['estadoOper'] = 'new';
             $expClass->addAclExp($_POST['exp'], $_POST['depe'], $_POST['usuario'], $_POST['tpseg']); // $_POST['selsegact']
             $code = $expClass->valacldExp($_POST['exp'], $_POST['depe'], $_POST['usuario'], $_POST['tpseg']);
         }
-        $rad =explode(',',$_POST['listRad']);
-        hist($expClass,$numExpediente,$rad, $usua_depe, $usua_codi,'Modificacion de Seguridad ()', 110, 0);
-        
+        $rad = explode(',', $_POST['listRad']);
+        hist($expClass, $numExpediente, $rad, $usua_depe, $usua_codi, 'Modificacion de Seguridad ()', 110, 0);
+
         $resp['codigo'] = $code;
         $resp['success'] = true;
         break;
     case 'modSeguridadexp':
-        $expClass->aclmod($_POST['aclid'],$_POST['tpseg']);
+        $expClass->aclmod($_POST['aclid'], $_POST['tpseg']);
         $datos['success'] = true;
-        $rad =explode(',',$_POST['listRad']);
-        hist($expClass,$numExpediente,$rad, $usua_depe, $usua_codi,'Modificacion de Seguridad ()', 110, 0);
+        $rad = explode(',', $_POST['listRad']);
+        hist($expClass, $numExpediente, $rad, $usua_depe, $usua_codi, 'Modificacion de Seguridad ()', 110, 0);
         break;
     case 'modMeta':
-        $expClass->modExp($exp,$camp,$cambio,$codusuario,$dependencia);
+        $expClass->modExp($exp, $camp, $cambio, $codusuario, $dependencia);
         $datos['success'] = true;
-        break;            
-        case 'modRad':
-        $expClass->modradExp($exp,$rad,$camp,$cambio);
+        break;
+    case 'modRad':
+        $expClass->modradExp($exp, $rad, $camp, $cambio);
         $datos['success'] = true;
-        break;     
-        case 'fisico':
+        break;
+    case 'fisico':
         // print_r($_POST);
         $numExpediente = $_POST['exp'];
         //  $rads = explode(',', $_POST['listRad']);
         //$expanexs = explode(',', $_POST['listAnex']);
-        $fisico=$_POST['fisico'];
+        $fisico = $_POST['fisico'];
         $expClass->fisicoexp($numExpediente, $fisico,  $_POST['listRad'], $_POST['listAnex']);
-        $rad =explode(',',$_POST['listRad']);
-        $this->hist($expClass,$numExpediente,$rad, $usua_depe, $usua_codi,'Modificacion de Fisico', 110, 0);
-        
+        $rad = explode(',', $_POST['listRad']);
+        $this->hist($expClass, $numExpediente, $rad, $usua_depe, $usua_codi, 'Modificacion de Fisico', 110, 0);
+
         $data['expantfisico'] = true;
         $data['success'] = true;
-        break;  
+        break;
     case 'subexp':
         //print_r($_POST);
         $numExpediente = $_POST['exp'];
         //  $rads = explode(',', $_POST['listRad']);
         //    $expanexs = explode(',', $_POST['listAnex']); 
-        $expClass->modSubExp($numExpediente, $_POST['subexp'] , $_POST['listRad'], $_POST['listAnex']);
+        $expClass->modSubExp($numExpediente, $_POST['subexp'], $_POST['listRad'], $_POST['listAnex']);
         $data['success'] = true;
-        $rad =explode(',',$_POST['listRad']);
-        $this->hist($expClass,$numExpediente,$rad, $usua_depe, $usua_codi,'Modificacion de sub Expediente', 110, 0);    
-        break; 
+        $rad = explode(',', $_POST['listRad']);
+        $this->hist($expClass, $numExpediente, $rad, $usua_depe, $usua_codi, 'Modificacion de sub Expediente', 110, 0);
+        break;
     case 'carpeta':
         //print_r($_POST);
         $numExpediente = $_POST['exp'];
         //  $rads = explode(',', $_POST['listRad']);
         //    $expanexs = explode(',', $_POST['listAnex']); 
-        $expClass->modCarp($numExpediente, $_POST['carpeta'] , $_POST['listRad'], $_POST['listAnex']);
-        $rad =explode(',',$_POST['listRad']);
-        hist($expClass,$numExpediente,$rad, $usua_depe, $usua_codi,'Modificacion de carpeta', 110, 0);
+        $expClass->modCarp($numExpediente, $_POST['carpeta'], $_POST['listRad'], $_POST['listAnex']);
+        $rad = explode(',', $_POST['listRad']);
+        hist($expClass, $numExpediente, $rad, $usua_depe, $usua_codi, 'Modificacion de carpeta', 110, 0);
         $data['success'] = true;
         break;
     case 'cambioResponsable':
         $result = $expClass->cambiarResponsableMasiva($expedientes, $_POST['usua_doc'], $codusuario, $dependencia);
         header('Content-Type: application/json; charset=utf-8');
-        if($result)
-            $datos=['status' => 'success'];
-        else 
-            $datos=['status' => 'fail'];
+        if ($result)
+            $datos = ['status' => 'success'];
+        else
+            $datos = ['status' => 'fail'];
         break;
     case 'cambiarPermisosMasivo':
         $result = $expClass->cambiarPermisosMasivo($expedientes, $_POST['depe_codi'], $_POST['usua_codi'], $_POST['permisos']);
-        
+
         header('Content-Type: application/json; charset=utf-8');
-        
-        if($result)
-            $datos=['status' => 'success'];
-        else 
-            $datos=['status' => 'fail'];
-    
+
+        if ($result)
+            $datos = ['status' => 'success'];
+        else
+            $datos = ['status' => 'fail'];
+
         break;
     case 'validarEstadoExpediente':
         $result = $expClass->validarEstadoExpediente($_POST['expediente'], $_POST['estado']);
         header('Content-Type: application/json; charset=utf-8');
-        if($result == '1') {
+        if ($result == '1') {
             $expediente = $expClass->consultarExp($_POST['expediente']);
-            $datos=['status' => 'success', 'expediente' => $expediente];
-        } else  {
-            $datos=['status' => 'fail'];
+            $datos = ['status' => 'success', 'expediente' => $expediente];
+        } else {
+            $datos = ['status' => 'fail'];
         }
         break;
     case 'incluirEnExpediente':
         $result = $expClass->incluirRadicadosEnExpediente($_POST['expediente'], $_POST['radicados_seleccionados'], $codusuario, $dependencia);
         header('Content-Type: application/json; charset=utf-8');
-        if($result)
-            $datos=['status' => 'success'];
-        else 
-            $datos=['status' => 'fail'];
+        if ($result)
+            $datos = ['status' => 'success'];
+        else
+            $datos = ['status' => 'fail'];
         break;
     case 'restaurarSeguridadExpediente':
         $expediente = $_POST['expediente'];
@@ -449,22 +458,20 @@ switch ($fn) {
         $detalle_nivel = 'PÚBLICA';
         $expClass->cambiarSeguridad($_POST['expediente'], $nivel);
 
-        if($nivel==1)
-        {  
+        if ($nivel == 1) {
             $detalle_nivel = 'PÚBLICA RESERVADA';
             $expClass->addAclExp($expediente, $dependencia, 0, 3);
             $expClass->addAclExp($expediente, 0, 0, 0);
         }
-        if($nivel==2)
-        { 
+        if ($nivel == 2) {
             $detalle_nivel = 'PÚBLICA CLASIFICADA';
             $expClass->addAclExp($expediente, $dependencia, $expClass->jefe($dependencia), 3);
             $expClass->addAclExp($expediente, $dependencia, $expClass->responsable($expediente), 3);
             $expClass->addAclExp($expediente, $dependencia, $expClass->creador($expediente), 3);
-            $expClass->addAclExp($expediente, 0 ,0, 0);  
+            $expClass->addAclExp($expediente, 0, 0, 0);
         }
-        hist($expClass,$expediente, [], $usua_depe, $usua_codi,'RESTAURACIÓN DE NIVEL DE SEGURIDAD A: '.$detalle_nivel, 60, 0);
-        $datos=['status' => 'success'];
+        hist($expClass, $expediente, [], $usua_depe, $usua_codi, 'RESTAURACIÓN DE NIVEL DE SEGURIDAD A: ' . $detalle_nivel, 60, 0);
+        $datos = ['status' => 'success'];
         break;
     default:
         $db->conn->Disconnect();
@@ -481,17 +488,23 @@ echo json_encode($resp);
  * @param char $var
  * @return numeric
  */
-function return_bytes($val){
+function return_bytes($val)
+{
     $val = trim($val);
-    $ultimo = strtolower($val{strlen($val)-1});
-    switch($ultimo){
+    $ultimo = strtolower($val{
+        strlen($val) - 1});
+    switch ($ultimo) {
         // El modificador 'G' se encuentra disponible desde PHP 5.1.0
-    case 'g':	$val *= 1024;
-    case 'm':	$val *= 1024;
-    case 'k':	$val *= 1024;
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
     }
     return $val;
 }
-function hist($expClass,$numExpediente,$radicados= array(), $usua_depe, $usua_codi, $observacion, $tipoTx, $codigoFldExp){
-        $expClass->insertarHistoricoExp($numExpediente,$radicados, $usua_depe, $usua_codi, $observacion, $tipoTx, $codigoFldExp);
+function hist($expClass, $numExpediente, $radicados = array(), $usua_depe, $usua_codi, $observacion, $tipoTx, $codigoFldExp)
+{
+    $expClass->insertarHistoricoExp($numExpediente, $radicados, $usua_depe, $usua_codi, $observacion, $tipoTx, $codigoFldExp);
 }
