@@ -52,7 +52,7 @@ if (!$fecha_busq2)  $fecha_busq2 = $date_result;
 				<!-- Selección de Serie -->
 				<div class="row g-3 mb-4">
 					<div class="col-md-3">
-						<label class="form-label fw-semibold">Código Serie</label>
+						<label for="idserie" class="form-label fw-semibold">Código Serie</label>
 					</div>
 
 					<div class="col-md-9">
@@ -60,10 +60,10 @@ if (!$fecha_busq2)  $fecha_busq2 = $date_result;
 						if (!$codserie) $codserie = 0;
 						if (!$id_serie) $id_serie = 0;
 
-						if ($codserie != 0 and $id_serie == 0) {
+						if ($codserie != 0 && $id_serie == 0) {
 							$queryIDSerie = "select id from sgd_srd_seriesrd
-                                         where sgd_srd_estado = '1'
-                                         and sgd_srd_codigo = $codserie";
+												where sgd_srd_estado = '1'
+												and sgd_srd_codigo = $codserie";
 							$rsID = $db->conn->query($queryIDSerie);
 							$id_serie = $rsID->fields["ID"];
 						}
@@ -96,14 +96,12 @@ if (!$fecha_busq2)  $fecha_busq2 = $date_result;
 						);
 						?>
 
-						<input name="idserie" type="text" size="20" class="form-control mt-2 tex_area"
-							value="<?= $id_serie ?>">
+						<input name="idserie" type="text" size="20" class="form-control mt-2 tex_area" value="<?= $id_serie ?>">
 					</div>
 
 					<?php if ($_POST['actua_subserie']) { ?>
 						<div class="col-12 text-end">
-							<input type="submit" name="modi_subserie" value="Grabar Modificación"
-								class="btn btn-warning">
+							<input type="submit" name="modi_subserie" value="Grabar Modificación" class="btn btn-warning">
 						</div>
 					<?php } ?>
 				</div>
@@ -113,12 +111,12 @@ if (!$fecha_busq2)  $fecha_busq2 = $date_result;
 				<!-- Código Subserie / Descripción -->
 				<div class="row g-3 mb-4">
 					<div class="col-md-3">
-						<label class="form-label fw-semibold">Código Subserie</label>
+						<label for="tsub" class="form-label fw-semibold">Código Subserie</label>
 						<input name="tsub" type="text" size="20" class="form-control tex_area" value="<?= $tsub ?>">
 					</div>
 
 					<div class="col-md-9">
-						<label class="form-label fw-semibold">Descripción</label>
+						<label for="detasub" class="form-label fw-semibold">Descripción</label>
 						<input name="detasub" type="text" size="75" class="form-control tex_area" value="<?= $detasub ?>">
 					</div>
 				</div>
@@ -126,25 +124,27 @@ if (!$fecha_busq2)  $fecha_busq2 = $date_result;
 				<!-- Fechas -->
 				<div class="row g-3 mb-4">
 					<div class="col-md-6">
-						<label class="form-label fw-semibold">Fecha Desde</label>
-						<div class="border rounded p-2 bg-light">
-							<script language="javascript">
-								dateAvailable.dateFormat = "yyyy-MM-dd";
-								dateAvailable.date = "<?= $fecha_busq ?>";
-								dateAvailable.writeControl();
-							</script>
-						</div>
+						<label for="fecha_busq" class="form-label fw-semibold">
+							Fecha Desde
+						</label>
+						<input
+							type="date"
+							class="form-control"
+							id="fecha_busq"
+							name="fecha_busq"
+							value="<?= htmlspecialchars($fecha_busq ?? '') ?>">
 					</div>
 
 					<div class="col-md-6">
-						<label class="form-label fw-semibold">Fecha Hasta</label>
-						<div class="border rounded p-2 bg-light">
-							<script language="javascript">
-								dateAvailable2.dateFormat = "yyyy-MM-dd";
-								dateAvailable2.date = "<?= $fecha_busq2 ?>";
-								dateAvailable2.writeControl();
-							</script>
-						</div>
+						<label for="fecha_busq2" class="form-label fw-semibold">
+							Fecha Hasta
+						</label>
+						<input
+							type="date"
+							class="form-control"
+							id="fecha_busq2"
+							name="fecha_busq2"
+							value="<?= htmlspecialchars($fecha_busq2 ?? '') ?>">
 					</div>
 				</div>
 
@@ -189,7 +189,7 @@ if (!$fecha_busq2)  $fecha_busq2 = $date_result;
 					<label class="form-label fw-semibold">Observaciones</label>
 					<textarea name="asu" cols="70" rows="2" class="form-control tex_area"><?= trim($asu) ?></textarea>
 				</div>
-				
+
 				<!-- BOTONES -->
 				<div class="text-center mt-3">
 					<input type="submit" name="buscar_subserie" value="Buscar" class="btn btn-primary me-2">
