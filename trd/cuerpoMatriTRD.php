@@ -183,7 +183,7 @@ if ($orden_cambio == 1) {
 //Cargar las dependencias y generar el selector de forma dinamica
 //con las librerias de adodb
 $sqlConcat = $db->conn->Concat($db->conn->substr . "($conversion,1,5) ", "'-'", $db->conn->substr . "(depe_nomb,1,30) ");
-$sql       = "select $sqlConcat ,depe_codi from dependencia where depe_codi >= 10000 and depe_estado = 1 order by depe_codi";
+$sql       = "select $sqlConcat ,depe_codi from dependencia where  depe_estado = 1 order by depe_codi";
 $rsDep     = $db->conn->Execute($sql);
 if (!$depeBuscada) $depeBuscada = $dependencia;
 $selecDepe = $rsDep->GetMenu2("coddepe", "$coddepe", false, false, 0, " onChange='submit();' class='select'");

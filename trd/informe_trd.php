@@ -82,7 +82,7 @@ $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 
 						$sqlD = "select $sqlConcat ,depe_codi 
                             from dependencia 
-                            where depe_codi >= 10000 and depe_estado = 1
+                            where  depe_estado = 1
                             order by depe_codi";
 
 						$rsDep = $db->conn->Execute($sqlD);

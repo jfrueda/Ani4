@@ -61,7 +61,7 @@ $query  = "
     FROM
     DEPENDENCIA d
     where
-        d.depe_estado = '1' and (d.depe_codi >= 10000  $whereDep)
+        d.depe_estado = '1' and ( $whereDep)
     ORDER BY d.DEPE_CODI, d.DEPE_NOMB";
 
 $rs1 = $db->conn->Execute($query);

@@ -1318,7 +1318,7 @@ foreach ($rs as $key => $value)
                 <?php
 				$query ="SELECT DEPE_CODI||' - '||DEPE_NOMB as DEPE_NOMB, DEPE_CODI
 					from DEPENDENCIA
-					where depe_estado=1 and depe_codi >= 10000 
+					where depe_estado=1 
 					ORDER BY 1";
 					$rs=$db->conn->Execute($query);
 					$varQuery = $query;

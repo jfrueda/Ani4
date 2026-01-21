@@ -147,7 +147,7 @@ switch ($fn) {
         case 'depe':
             $sqlConcat = $db->conn->Concat("depe_codi ", "' - '", " lower(depe_nomb)");
             if ($usua_perm_estadistica > 1 || $tpd==9) {
-                $sql = "select $sqlConcat nomb ,depe_codi id from dependencia where depe_estado = 1 and depe_codi >= 10000  order by depe_codi";
+                $sql = "select $sqlConcat nomb ,depe_codi id from dependencia where depe_estado = 1  order by depe_codi";
             } else {
                 $sql = "select $sqlConcat nomb,depe_codi id from dependencia where DEPE_CODI=$dependencia order by depe_codi"; 
             }

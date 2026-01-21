@@ -59,6 +59,15 @@ $where_fecha = "";
 			$valCambio = '0';
 		}
 
+		// Debug: Mostrar la consulta SQL y el número de filas
+		echo "<!-- Debug: SQL = $sql -->";
+		$rsDep = $db->conn->Execute($sql);
+		if (!$rsDep) {
+			echo "<!-- Debug: Error in query: " . $db->conn->ErrorMsg() . " -->";
+		} else {
+			echo "<!-- Debug: Rows in rsDep = " . $rsDep->RecordCount() . " -->";
+		}
+
 		if ($desactivar_trda) {
 			if ($idSerie != 0) {
 				$var_where = " and sgd_srd_id = '$idSerie'";
@@ -137,7 +146,7 @@ $where_fecha = "";
 
 					$sql = "select $sqlConcat ,depe_codi 
 				            from dependencia 
-				            where depe_codi >= 10000 and depe_estado=1
+				            where  depe_estado=1
 				            order by depe_codi";
 
 					$rsDep = $db->conn->Execute($sql);

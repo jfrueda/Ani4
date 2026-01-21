@@ -277,7 +277,7 @@ $objUsuario = new Usuario($db);
 
 											if ($usua_perm_estadistica > 1) {
 												$sql = "select $sqlConcat ,depe_codi from dependencia
-                                            where depe_estado = 1 and depe_codi >= 10000
+                                            where depe_estado = 1
                                             order by depe_codi";
 												$rsDep = $db->conn->Execute($sql);
 												print $rsDep->GetMenu2(
