@@ -286,92 +286,6 @@ $dependencias = $db->conn->getAll('SELECT * FROM dependencia WHERE depe_estado =
             //     $('#envios').DataTable().ajax.reload();
             // });
 
-            $('#envios').DataTable({
-                "pageLength": 10,
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    "url": "table.php",
-                    "type": "POST",
-                    "data": function(d) {
-                        d.dependencia = $('#dependencia').val();
-                        d.usuario = $('#usuario').val();
-                        d.radicados = $('#radicados').val();
-                    }
-                },
-                "searching": false,
-                "order": [],
-                "columnDefs": [{
-                        "orderable": true,
-                        "targets": [0, 1, 2]
-                    }, // Allow ordering on RADICADO_SALIDA and RADICADO_PADRE
-                    {
-                        "orderable": false,
-                        "targets": "_all"
-                    } // Disable ordering on all other columns
-                ],
-                "columns": [{
-                        "data": "RADICADO_SALIDA"
-                    },
-                    {
-                        "data": "RADICADO_PADRE"
-                    },
-                    {
-                        "data": "FECHA_RADICADO"
-                    },
-                    {
-                        "data": "DESCRIPCION"
-                    },
-                    {
-                        "data": "FECHA_IMPRESION"
-                    },
-                    {
-                        "data": "GENERADO_POR"
-                    },
-                    {
-                        "data": "CERTIFICADO"
-                    },
-                    {
-                        "data": "EMAILS",
-                        "render": function(data, type, row) {
-                            return data ? data.split(';').join('<br>') : '';
-                        }
-                    },
-                    {
-                        "data": null,
-                        "render": function(data, type, row) {
-                            let json = JSON.parse(row.REGISTRO || '[]');
-                            if (json && Array.isArray(json)) {
-                                let hasError = json.some(item => item.status == 'error');
-                                if (hasError && row.ESTADO == 1 && row.DEVUELTO == 'f') {
-                                    return `<button class='registro btn btn-default' data-id='${row.ID}' data-log='${JSON.stringify(json)}'>
-                                        <span class="glyphicon glyphicon-exclamation-sign"></span>
-                                    </button>`;
-                                }
-                            }
-
-                            return `<button class='enviar btn btn-default' data-id='${row.ID}' disabled>
-                                <span class="glyphicon glyphicon-ban-circle"></span>
-                            </button>`;
-                        }
-                    },
-                    {
-                        "data": null,
-                        "render": function(data, type, row) {
-                            let json = JSON.parse(row.REGISTRO || '[]');
-                            let hasError = false;
-                            if (json && Array.isArray(json)) {
-                                hasError = json.some(item => item.status == 'error') && row.ESTADO == 1 && row.DEVUELTO == 'f';
-                            }
-
-                            return `<button class='enviar btn ${hasError ? 'btn-warning' : 'btn-primary'}' data-id='${row.ID}'>
-                                <span class="glyphicon glyphicon-send"></span>
-                            </button>`;
-                        }
-                    }
-                ]
-            });
-
             // $('body').on('click', '.registro', function() {
             //     var logData = $(this).data('log');
             //     var logTableBody = $('#errorLogTableBody');
@@ -540,6 +454,92 @@ $dependencias = $db->conn->getAll('SELECT * FROM dependencia WHERE depe_estado =
         });
 
         document.addEventListener("DOMContentLoaded", function() {
+
+            $('#envios').DataTable({
+                "pageLength": 10,
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "table.php",
+                    "type": "POST",
+                    "data": function(d) {
+                        d.dependencia = $('#dependencia').val();
+                        d.usuario = $('#usuario').val();
+                        d.radicados = $('#radicados').val();
+                    }
+                },
+                "searching": false,
+                "order": [],
+                "columnDefs": [{
+                        "orderable": true,
+                        "targets": [0, 1, 2]
+                    }, // Allow ordering on RADICADO_SALIDA and RADICADO_PADRE
+                    {
+                        "orderable": false,
+                        "targets": "_all"
+                    } // Disable ordering on all other columns
+                ],
+                "columns": [{
+                        "data": "RADICADO_SALIDA"
+                    },
+                    {
+                        "data": "RADICADO_PADRE"
+                    },
+                    {
+                        "data": "FECHA_RADICADO"
+                    },
+                    {
+                        "data": "DESCRIPCION"
+                    },
+                    {
+                        "data": "FECHA_IMPRESION"
+                    },
+                    {
+                        "data": "GENERADO_POR"
+                    },
+                    {
+                        "data": "CERTIFICADO"
+                    },
+                    {
+                        "data": "EMAILS",
+                        "render": function(data, type, row) {
+                            return data ? data.split(';').join('<br>') : '';
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            let json = JSON.parse(row.REGISTRO || '[]');
+                            if (json && Array.isArray(json)) {
+                                let hasError = json.some(item => item.status == 'error');
+                                if (hasError && row.ESTADO == 1 && row.DEVUELTO == 'f') {
+                                    return `<button class='registro btn btn-default' data-id='${row.ID}' data-log='${JSON.stringify(json)}'>
+                                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                    </button>`;
+                                }
+                            }
+
+                            return `<button class='enviar btn btn-default' data-id='${row.ID}' disabled>
+                                <span class="glyphicon glyphicon-ban-circle"></span>
+                            </button>`;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            let json = JSON.parse(row.REGISTRO || '[]');
+                            let hasError = false;
+                            if (json && Array.isArray(json)) {
+                                hasError = json.some(item => item.status == 'error') && row.ESTADO == 1 && row.DEVUELTO == 'f';
+                            }
+
+                            return `<button class='enviar btn ${hasError ? 'btn-warning' : 'btn-primary'}' data-id='${row.ID}'>
+                                <span class="glyphicon glyphicon-send"></span>
+                            </button>`;
+                        }
+                    }
+                ]
+            });
 
             function reloadDataTable() {
                 let table = new DataTable('#envios');
