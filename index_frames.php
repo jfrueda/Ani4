@@ -11,22 +11,22 @@
  *
  * @copyleft
  * Desarrollos tomados de Orfeo version qeu Inicia en la SuperServicios año 2003
-
-OrfeoGPL Models are the data definition of OrfeoGPL Information System
-Copyright (C) 2010 Correlibre.org.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * OrfeoGPL Models are the data definition of OrfeoGPL Information System
+ * Copyright (C) 2010 Correlibre.org.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 session_start();
@@ -41,7 +41,7 @@ if (!$_SESSION['dependencia'] || $_GET['close']) {
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/processConfig.php";
 require_once "include/tx/Menus.php";
-require_once($ruta_raiz . "/constanciaEjecutoria/tx/constanciaEjecutoria.php");
+require_once $ruta_raiz . "/constanciaEjecutoria/tx/constanciaEjecutoria.php";
 $db = new ConnectionHandler($ruta_raiz);
 $menuObject = new Menus($db);
 $constancia = new ConstanciaEjecutoria($db);
@@ -75,18 +75,17 @@ $phpsession     = "c=$fechah&";
 $ruta_raiz      = ".";
 $sqlFechaHoy    = $db->conn->DBTimeStamp(time());
 
-
 if (
     $_SESSION["usua_perm_envios"]    >= 1 /*|| $_SESSION["usua_perm_adminflujos"]== 1*/
     || $_SESSION["usua_perm_modifica"]  >= 1 || $_SESSION["usua_perm_intergapps"] == 1
-    || $_SESSION["usua_perm_impresion"] >= 1 || ($_SESSION["usua_perm_anu"] == 3 or $_SESSION["usua_perm_anu"] == 1)
+    || $_SESSION["usua_perm_impresion"] >= 1 || ($_SESSION["usua_perm_anu"] == 3 || $_SESSION["usua_perm_anu"] == 1)
     || $_SESSION["usua_perm_trd"]       == 1 || $_SESSION["usua_admin_archivo"]   >= 1
     || $_SESSION["usua_perm_prestamo"]  == 1 || $_SESSION["usua_perm_dev"]        == 1
 ) {
     $menuAcciones = 1;
     $acciones     = array();
 
-    if ($_SESSION["usua_perm_anu"] == 3 or $_SESSION["usua_perm_anu"] == 1) {
+    if ($_SESSION["usua_perm_anu"] == 3 || $_SESSION["usua_perm_anu"] == 1) {
         $anulacion = array(
             'subMenu' => 0,
             'url' => "anulacion/cuerpo_anulacion.php?$phpsession&tpAnulacion=1&fechah=$fechah",
@@ -104,7 +103,6 @@ if (
         $acciones['envios'] = $envios;
     }
 
-
     if ($_SESSION["usua_perm_adminasig"] >= 1) {
         $asignar = array(
             'subMenu' => 0,
@@ -114,7 +112,6 @@ if (
         $acciones['asignar'] = $asignar;
     }
 
-
     if ($_SESSION["usua_perm_admin_email_masive"] >= 1) {
         $asignar = array(
             'subMenu' => 0,
@@ -123,7 +120,6 @@ if (
         );
         $acciones['masiveEmail'] = $asignar;
     }
-
 
     if ($_SESSION["usua_perm_trd"] >= 1) {
         $sub = array(
@@ -173,6 +169,7 @@ if (
         );
         $acciones["enviar"] = $enviar;
     }
+
     if ($_SESSION["usua_perm_modifica"] >= 1) {
         $modificacion = array(
             'subMenu' => 0,
@@ -181,6 +178,7 @@ if (
         );
         $acciones["modificacion"] = $modificacion;
     }
+
     if ($_SESSION["usua_perm_prestamo"] == 1) {
         $sub = array(
             "prestamoDocumentos" => array(
@@ -235,7 +233,7 @@ if (
                 'nombre' => "1. Archivo ($num_exp)"
             )
         );
-        if ($_SESSION["usua_admin_archivo"] != 3 and $_SESSION["usua_admin_archivo"] != 4) {
+        if ($_SESSION["usua_admin_archivo"] != 3 && $_SESSION["usua_admin_archivo"] != 4) {
             $sub["busquedaAvanzada"] = array(
                 'subMenu' => 0,
                 'url' => "archivo/busqueda_archivo.php?$phpsession&dep_sel=$dep_sel&fechah=$fechah&$orno&adodb_next_page&nomcarpeta&tipo_archivo=$tipo_archivo&carpeta",
@@ -247,7 +245,7 @@ if (
             'url' => "archivo/reporte_archivo.php?$phpsession&adodb_next_page&nomcarpeta&fechah=$fechah&$orno&carpeta&tipo=1",
             'nombre' => '3. Reporte por Radicados Archivados'
         );
-        if ($_SESSION["usua_admin_archivo"] != 3 and $_SESSION["usua_admin_archivo"] != 4) {
+        if ($_SESSION["usua_admin_archivo"] != 3 && $_SESSION["usua_admin_archivo"] != 4) {
             $sub["cambioColeccion"] = array(
                 'subMenu' => 0,
                 'url' => "archivo/inventario.php?$phpsession&fechah=$fechah&$orno&adodb_next_page&nomcarpeta&carpeta&tipo=2",
@@ -284,7 +282,7 @@ if (
             'url' => "archivo/busqueda_Fondo_Gestion.php?$phpsession&krd=$krd&fechah=$fechah&$orno&adodb_next_page",
             'nombre' => '10.Busqueda Archivo Fondo Gestion'
         );
-        if ($_SESSION["usua_admin_archivo"] == 3 or $_SESSION["usua_admin_archivo"] == 5) {
+        if ($_SESSION["usua_admin_archivo"] == 3 || $_SESSION["usua_admin_archivo"] == 5) {
             $sub["insertarCentral"] = array(
                 'subMenu' => 0,
                 'url' => "archivo/insertar_central.php?$phpsession&krd=$krd&fechah=$fechah&$orno&adodb_next_page",
@@ -298,7 +296,7 @@ if (
                 'nombre' => '12.Insertar Archivo Fondo Gestion'
             );
         }
-        if ($_SESSION["usua_admin_archivo"] == 2 or $_SESSION["usua_admin_archivo"] == 5) {
+        if ($_SESSION["usua_admin_archivo"] == 2 || $_SESSION["usua_admin_archivo"] == 5) {
             $sub["administracionEdificios"] = array(
                 'subMenu' => 0,
                 'url' => "archivo/adminEdificio.php?$phpsession&krd=$krd&fechah=$fechah&$orno&adodb_next_page",
@@ -322,10 +320,6 @@ if (
         );
         $acciones['PazSalvo'] = $pazSalvo;
     }
-
-
-
-
 
     //Menu para funcionarios del grupo de notificaciones que administrar constancia ejecutoria
     $esRolRevisor = $constancia->esRolRevisor($dependencia, $codusuario);
@@ -530,6 +524,7 @@ $usuario = array(
 
 $rs = $menuObject->getUsers($_SESSION["usua_email"]);
 $i = 1;
+
 while (!$rs->EOF) {
     $cambioKrd = $rs->fields["USUA_LOGIN"];
     $cambioUsuaCodi = $rs->fields["USUA_CODI"];
@@ -638,7 +633,6 @@ if ($_SESSION["USUA_PRAD_TP7"]) {
 }
 
 if ($_SESSION["USUA_PRAD_TP4"] || $_SESSION["USUA_PRAD_TP5"] || $_SESSION["USUA_PRAD_TP6"] || $_SESSION["USUA_PRAD_TP7"]) {
-
     $esRolProyector = $constancia->esRolProyector($dependencia, $codusuario);
     if ($esRolProyector) {
         $sub["notificacionConstancia"] = array(
@@ -650,13 +644,11 @@ if ($_SESSION["USUA_PRAD_TP4"] || $_SESSION["USUA_PRAD_TP5"] || $_SESSION["USUA_
     $radicacion["notificaciones"] = array('subMenu' => 1, 'url' => "#", 'nombre' => 'Notificaciones', 'sub' => $sub);
 }
 
-
 if ($_SESSION["USUA_PRAD_TP8"]) {
     $menuRadicacion = 1;
     $enlace7   = "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=8&depende=$dependencia";
     $radicacion["radica8"] = array('subMenu' => 0, 'url' => "$enlace7", 'nombre' => "$tpDescRad[7]");
 }
-
 
 if ($_SESSION["usua_perm_owncloud"] >= 1) {
     $menuRadicacion = 1;
@@ -686,6 +678,7 @@ if ($_SESSION["PERM_DESCARGAEXP"] >= 1) {
     $menuRadicacion = 1;
     $radicacion["descargaExpediente"] = array('subMenu' => 0, 'url' => "expediente/expedienteDownload.php", 'nombre' => 'Descargar Expediente');
 }
+
 if ($_SESSION["usuaPermRadEmail"] >= 1) {
     $menuRadicacion = 1;
     $radicacion["email"] = array('subMenu' => 0, 'url' => "radiMail/index.php", 'nombre' => 'e-Mail');
@@ -722,6 +715,7 @@ if ($_SESSION['usua_perm_scor'] == '1') {
         'nombre' => 'Consulta Supercor'
     );
 }
+
 if (isset($superargo1)) {
     $sub["consultaSuperargo"] = array(
         'subMenu' => 0,
@@ -729,6 +723,7 @@ if (isset($superargo1)) {
         'nombre' => 'Consulta Superargo 1'
     );
 }
+
 $bandejas["consultas"] = array('subMenu' => 1, 'url' => "#", 'nombre' => 'Consultas', 'sub' => $sub);
 $bandejas["estadisticas"] = array(
     'subMenu' => 0,
@@ -751,6 +746,7 @@ if ($_SESSION["USUA_JEFE_DE_GRUPO"] || $_SESSION["USUA_TRAMITADOR"]) {
 } else {
     $mostrarCarpetaJefe = false;
 }
+
 function getFirstNumber($input)
 {
     // Use regular expression to find the first number
@@ -759,6 +755,7 @@ function getFirstNumber($input)
     }
     return null;
 }
+
 function getSecondNumber($input)
 {
     // Use regular expression to find all numbers
@@ -784,7 +781,7 @@ foreach ($bandejasGenerales as $key => $value) {
         'nombre' => "$value",
         'id' => "carpetap_$key"
     );
-};
+}
 
 //VoBo se encuentra incluido en el foreach
 $cont = $bandeja->getContadorInformados($codusuario, $dependencia);
@@ -817,7 +814,6 @@ $bandejas["expedientes"] = array(
     'nombre' => 'Expedientes'
 );
 
-
 $sql_rol = "SELECT autg_id FROM autm_membresias WHERE autg_id=37 AND autu_id=" . $_SESSION['usua_id'];
 $rs_rol = $db->conn->query($sql_rol);
 if ($rs_rol->fields['AUTG_ID'] == 37) {
@@ -831,9 +827,7 @@ if ($rs_rol->fields['AUTG_ID'] == 37) {
 //Carpetas personales, si el usuario tiene el
 //permiso usua_carp_personales mostrar en el menu
 //la opción para crearlas y administrarlas
-
 if ($_SESSION["USUA_CARP_PERSONALES"]) {
-
     $sub = array(
         'nuevaCarpeta' => array(
             'subMenu' => 0,
@@ -913,6 +907,7 @@ for ($i = 0; $i < count($datos); $i++) {
         }
     }
 }
+
 foreach ($rad as $key => $value) {
     if (isset($value['GENERAL'])) {
         $con_general += $value['GENERAL'];
@@ -926,7 +921,6 @@ $newElement = array(
 );
 
 $bandejas = array_merge(array('general' => $newElement), $bandejas);
-
 
 $valor = $acciones;
 $acciones = array('nombre' => 'Acciones', 'menu' => $valor);
@@ -953,7 +947,6 @@ $menus = array(
 $urlCargaValores = "\"include/tx/json/getRegistrosCarpetaGen.php?codUsuario=$codusuario&depeCodi=$dependencia&carpetaPer=\"";
 
 try {
-
     $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
     $commitDate = trim(exec('git log --pretty="%ci" -n1 HEAD'));
 
@@ -963,8 +956,7 @@ try {
     error_log("No se encontro versionamiento! " . $e->getMessage(), 0);
 }
 
-
-include(SMARTY_DIR . 'Smarty.class.php');
+include SMARTY_DIR . 'Smarty.class.php';
 $smarty = new Smarty;
 $smarty->template_dir = "./themes/$theme";
 $smarty->compile_dir = $CONTENT_PATH . '/tmp/';
@@ -986,10 +978,18 @@ $smarty->assign("lastCommit", $lastCommit);
 $smarty->assign("entidad_largo", $entidad_largo);
 $smarty->assign("logoEntidad", './bodega/sys_img/logo.png');
 $smarty->assign("favicon", './bodega' . $favicon);
-if ($menuAcciones) $smarty->assign("acciones", $acciones);
-if ($menuAdministracion) $smarty->assign("administracion", $administracion);
-if ($menuRadicacion) $smarty->assign("radicacion", $radicacion);
-if ($menuBandejas) $smarty->assign("bandejas", $bandejas);
+if ($menuAcciones) {
+    $smarty->assign("acciones", $acciones);
+}
+if ($menuAdministracion) {
+    $smarty->assign("administracion", $administracion);
+}
+if ($menuRadicacion) {
+    $smarty->assign("radicacion", $radicacion);
+}
+if ($menuBandejas) {
+    $smarty->assign("bandejas", $bandejas);
+}
 $smarty->assign("opciones", $opciones);
 $smarty->assign("usuario", $usuario);
 $smarty->assign("menus", $menus);
