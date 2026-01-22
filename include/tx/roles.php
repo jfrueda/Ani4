@@ -392,8 +392,7 @@ class Roles {
                         depe_codi || ' ' ||  depe_nomb as depe_nomb,
                         depe_codi
                       FROM
-                        dependencia
-                        where  (depe_codi< 1000 or depe_codi> 9999)  
+                        dependencia 
                       order by depe_nomb  ";
 
         $depe = $this->db->conn->query($sql_depe);

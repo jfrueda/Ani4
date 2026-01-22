@@ -30,7 +30,7 @@ include_once "$ruta_raiz/include/Smarty/libs/Smarty.class.php";
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/include/tx/roles.php";
 include $ruta_raiz . "/config.php";
-include $ruta_raiz . "/htmlheader.inc.php";
+include $ruta_raiz."/htmlheader-old.inc.php";
 
 $smarty = new Smarty;
 
