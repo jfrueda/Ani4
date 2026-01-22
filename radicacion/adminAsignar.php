@@ -53,7 +53,7 @@ $tx = new Tx($db);
 $esadmin = $_SESSION['usua_admin_sistema'];
 $whereDep = '';
 if ($esadmin) {
-  $whereDep = 'or d.depe_codi in (900,999)';
+  $whereDep = ' d.depe_codi in (900,999)';
 }
 $query  = "
     SELECT d.DEPE_CODI || ' - ' || d.DEPE_NOMB,
