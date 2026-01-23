@@ -2,7 +2,6 @@
 
 include_once($ruta_raiz . "/include/tx/Historico.php");
 include_once($ruta_raiz . "/class_control/Param_admin.php");
-require_once "$ruta_raiz/include/class/MemoMultiple.class.php";
 
 class Tx extends Historico {
 	/** Aggregations: */
@@ -228,15 +227,7 @@ class Tx extends Historico {
 				return "YA_INFORMADO";
 			}
 
-			// Validar si el usuario destino ya es destinatario del memo múltiple
-            if (
-                class_exists('MemoMultiple') &&
-                MemoMultiple::isMemoMultiple($this->db, $radNum) &&
-                MemoMultiple::isDestinatario($this->db, $radNum, null, $codUsDestino, $depDestino)
-            ) {
-                return "YA_DESTINATARIO";
-            }
-			
+
 
 			if ($SendMail == true && !empty($emailUsuaDest)) {
 				//LLENO LAS VARIABLES NECESARIAS PARA INFORMAR
@@ -347,14 +338,6 @@ class Tx extends Historico {
 				// Ya fue informado, retornar valor especial
 				return "YA_INFORMADO";
 			}
-			// Validar si el usuario destino ya es destinatario del memo múltiple
-            if (
-                class_exists('MemoMultiple') &&
-                MemoMultiple::isMemoMultiple($this->db, $radNum) &&
-                MemoMultiple::isDestinatario($this->db, $radNum, null, $codUsDestino, $depDestino)
-            ) {
-                return "YA_DESTINATARIO";
-            }
 
 
 			if ($SendMail == true && !empty($emailUsuaDest)) {

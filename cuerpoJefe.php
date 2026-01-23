@@ -66,8 +66,7 @@ if (!$db) $db = new ConnectionHandler($ruta_raiz);
 $db->conn->debug = false;
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 
-// Incluir las clases para manejar memorandos múltiples y jefes de área
-include_once("$ruta_raiz/include/class/MemoMultiple.class.php");
+// Incluir las clases para manejar jefes de área
 include_once("$ruta_raiz/include/class/JefeArea.class.php");
 
 $sqlFecha = $db->conn->SQLDate("Y-m-d H:i A", "b.RADI_FECH_RADI");
