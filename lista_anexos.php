@@ -161,16 +161,7 @@ if($rsAnexoSalida){
   $tieneAnexoSalida = $rsAnexoSalida->fields["NANEXOS"];
 }
 
-//Start::Validar si el memorando tienen al usuarrio
-$iSqlMemorandoMultiple= "SELECT count(*) EXISTE FROM SGD_DIR_DRECCIONES WHERE radi_nume_radi='$verrad' AND  SGD_DIR_DOC = '$usua_doc' and radi_nume_radi::text like '%3'";
-$rsMemorandoMultiple = $db->conn->query($iSqlMemorandoMultiple);
-$tieneAsignacion = 0;
-if ($rsMemorandoMultiple) {
-    if($rsMemorandoMultiple->fields["EXISTE"] > 0){
-        $tieneAsignacion = true;
-    }
-}
-//End::Validar si el memorando tienen al usuarrio
+
 
 // case eliminado. No se entiende para qu se realiza.
 $fechaYmdJ = date("Ymdhms"); 

@@ -791,15 +791,7 @@ $bandejas["informados"] = array(
     'nombre' => "Informados ($cont)"
 );
 
-//VoBo se encuentra incluido en el foreach
-$cont = $bandeja->getContadorTramiteConjunto($codusuario, $dependencia);
-$bandejas["bandeja_18"] = array(
-    'subMenu' => 0,
-    'url' => "\"bandejaconjuntos.php?$phpsession&mostrar_opc_envio=1&orderNo=2&carpeta=18&nomcarpeta=Informados&orderTipo=desc&adodb_next_page=1\"",
-    'nombre' => "Memorando Multiple ($cont)"
-);
 
-//tramite conjunto se encuentra comentado en la versión actual
 $data     = "Ultimas Transacciones del Usuario";
 
 $bandejas["transacciones"] = array(
@@ -857,30 +849,11 @@ if ($_SESSION["USUA_CARP_PERSONALES"]) {
 }
 
 $sql = "SELECT c.carp_desc,
-				COUNT(*) ,
-				COUNT(CASE WHEN r.carp_per IN (0, 1) THEN 1 END) AS General,
-    			COUNT(CASE WHEN r.carp_per = 0 THEN 1 END) AS Radicados,
-				COUNT(DISTINCT CASE WHEN CAST(r.radi_nume_radi AS text) LIKE '30%' THEN r.radi_nume_radi END) AS Borradores,
-				(select COUNT(*) as TOTAL
-								from radicado b
-								WHERE b.radi_nume_radi is not null
-								and b.SGD_EANU_CODIGO is null
-								and radi_nume_radi::text LIKE '%3'
-								and (b.is_borrador is false or  b.radi_firma  is true)
-								and (
-								SELECT count(*)
-								FROM SGD_DIR_DRECCIONES
-								WHERE SGD_DIR_DRECCIONES.radi_nume_radi=b.radi_nume_radi  ) > 1
-									and b.radi_depe_actu not in ('999')
-									and (
-									SELECT count(*)
-									FROM SGD_DIR_DRECCIONES
-									WHERE SGD_DIR_DRECCIONES.radi_nume_radi=b.radi_nume_radi AND sgd_doc_fun = '{$usua_doc}' ) > 0
-									and (
-										SELECT count(t.*) 
-											FROM hist_eventos t
-											WHERE radi_nume_radi =  b.radi_nume_radi and usua_doc = '{$usua_doc}'  and sgd_ttr_codigo = '13'
-										) = 0) memoNormal
+					COUNT(*) ,
+					COUNT(CASE WHEN r.carp_per IN (0, 1) THEN 1 END) AS General,
+    				COUNT(CASE WHEN r.carp_per = 0 THEN 1 END) AS Radicados,
+					COUNT(CASE WHEN r.carp_per = 3 THEN 1 END) AS memoNormal,
+					COUNT(DISTINCT CASE WHEN CAST(r.radi_nume_radi AS text) LIKE '30%' THEN r.radi_nume_radi END) AS Borradores
 
 			FROM radicado r INNER JOIN carpeta c ON r.carp_codi  = c.carp_codi
 			WHERE r.radi_usua_actu = '{$codusuario}' AND r.radi_depe_actu = '{$dependencia}' 
@@ -897,13 +870,14 @@ foreach ($rs as $value) {
 
 $rad = [];
 $borr = [];
+$memo_normal_total = 0;
 
 for ($i = 0; $i < count($datos); $i++) {
     for ($j = 0; $j < count($datos[$i]); $j++) {
         if ($j == 1) {
             $rad[] = $datos[$i];
             $borr[] = $datos[$i]['BORRADORES'];
-            $memMultNorm[] = $datos[$i]['MEMONORMAL'];
+            $memo_normal_total += isset($datos[$i]['MEMONORMAL']) ? (int)$datos[$i]['MEMONORMAL'] : 0;
         }
     }
 }
@@ -917,7 +891,7 @@ foreach ($rad as $key => $value) {
 $newElement = array(
     'subMenu' => 0,
     'url' => "cuerpo.php?$phpsession$fechah&nomcarpeta=General&carpeta=9999&tipo_carpt=0",
-    'nombre' => "General y Masivas (" . ($con_general + (isset($memMultNorm) ?  max($memMultNorm) : 0)) . ")"
+    'nombre' => "General y Masivas (" . ($con_general + $memo_normal_total) . ")"
 );
 
 $bandejas = array_merge(array('general' => $newElement), $bandejas);

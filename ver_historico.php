@@ -101,28 +101,7 @@ $dependencia_rad = $rs->fields["DEPE_NOMB"];
         $objDep->Dependencia_codigo($depe_codi);
         $destinatarios = '';
 
-        //Start::Validar multiples destinatarios
-        $arr = str_split($verrad); // convert string to an array
-        if ($codTransac == 2 && end($arr) == 3) {
-          $multiSql = "
-                SELECT 
-                    string_agg(DISTINCT CONCAT(SGD_DIR_DRECCIONES.sgd_dir_nombre,'(',SGD_DIR_DRECCIONES.sgd_dir_direccion,')'), ',') as destinatarios,
-                    COUNT(*) as cantidad
-                FROM
-                    SGD_DIR_DRECCIONES
-                WHERE
-                    radi_nume_radi = '$verrad'
-                GROUP BY radi_nume_radi
-                HAVING COUNT(*) > 1";
-
-          $rsMultiple = $db->conn->Execute($multiSql);
-
-          if (!empty($rsMultiple->fields["DESTINATARIOS"])) {
-            $destinatarios = 'Destinatarios: ' . $rsMultiple->fields["DESTINATARIOS"];
-          }
-        }
-        //End::Validar si el memorando tienen al usuarrio
-
+        
 
         if ($carpeta == $numdata) {
           $imagen = "usuarios.gif";
