@@ -71,34 +71,7 @@ switch($db->driver)
 
         //End::Busqueda por fecha
 	   $whereFiltro = str_replace("b.radi_nume_radi","cast(b.radi_nume_radi as varchar(20))",$whereFiltro);
-		//Start::Relacionado multiple ususario
 		$sentido ='and d.sgd_dir_tipo=1';
-		if($carpeta == 0 || $carpeta == 9999){
-			$whereCarpeta2 = "AND b.sgd_trad_codigo = 3";
-			$sentido = "";
-			$relacionados = '
-			'.$radicados_in.'
-			b.radi_nume_radi is not null and
-            b.SGD_EANU_CODIGO is null and
-			d.SGD_DIR_DOC = \''.$usua_doc.'\' and
-			a.ANEX_ESTADO >= 3 and 
-			(SELECT count(*) FROM SGD_DIR_DRECCIONES WHERE SGD_DIR_DRECCIONES.radi_nume_radi=b.radi_nume_radi) > 1 
-			AND (
-				SELECT COUNT(*) 
-				FROM hist_eventos t 
-				WHERE t.radi_nume_radi = b.radi_nume_radi 
-				  AND (
-					(t.usua_codi = '.$codusuario.' AND t.depe_codi = '.$dependencia.') 
-					OR t.usua_doc = \''.$usua_doc.'\'
-				  ) 
-				  AND t.sgd_ttr_codigo in (9,13)
-			) = 0
-            '.$fecha.'
-			'.$whereCarpeta2.'
-			'.$sqlAgendado.'
-			'.$limitOci8;
-	  	}
-		//End::Relacionado multiple ususario
 		//	$redondeo="date_part('days', radi_fech_radi-".$db->conn->sysTimeStamp.")+floor(c.sgd_tpr_termino * 7/5)+(select count(1) from sgd_noh_nohabiles where NOH_FECHA between radi_fech_radi and ".$db->conn->sysTimeStamp.")";
         if($db->driver=="oci8") {
             $fechaT = "((radi_fech_radi-".$db->conn->sysTimeStamp.")+(c.sgd_tpr_termino))";
@@ -199,13 +172,9 @@ switch($db->driver)
         	'.$limitOci8 .'
         	'.$fecha.'
 			'.$medio_recepcion;
-        $isql = $isql1.'
-            order by b.RADI_FECH_RADI desc, '.$order . ' ' .$orderTipo. ', b.RADI_NUME_RADI desc'
-            . ' ' . $limitPsql . ' ' ;
-			
-        if ($relacionados) {
-          $isql = "($isql1) union all ($isql0 where $relacionados) order by 3 DESC, 1 desc $limitPsql";
-        }
+		$isql = $isql1.'
+        order by b.RADI_FECH_RADI desc, '.$order . ' ' .$orderTipo. ', b.RADI_NUME_RADI desc'
+        . ' ' . $limitPsql . ' ' ;
         //$db->conn->debug = true;
         break;
 	   
