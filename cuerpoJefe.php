@@ -394,72 +394,10 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                 $mrec_desc             = $rs->fields["RADI_MREC_DESC"];
 
                                                 if ($aux === $rs->fields["HID_RADI_NUME_RADI"])
-                                                    goto siguiente;
+                                                    continue;
                                                 //  $radiLeido             = $rs->fields["HID_RADI_LEIDO"];
                                                 $radianulado       = $rs->fields["HID_EANU_CODIGO"];
                                                 //Datos obtenidos para pintar los radicados
-                                                //Start::multiple
-                                                $es_multiple = false;
-                                                $es_multiple_radicado = false;
-                                                $iSqlMemorandoMultipleCuerpo = "SELECT 
-                                            count(*)	as TOTAL,
-                                            string_agg(DISTINCT SGD_DIR_DRECCIONES.sgd_dir_nombre, ',') AS DESTINATARIOS,
-                                            (SELECT count(*) FROM ANEXOS WHERE ANEXOS.radi_nume_salida ='$numeroRadicado' AND ANEX_ESTADO >= 2 ) AS RADICADO 
-                                        FROM
-                                            SGD_DIR_DRECCIONES 
-                                        WHERE
-                                            radi_nume_radi = '$numeroRadicado' 
-                                            AND radi_nume_radi::text LIKE'%3' ";
-
-                                                $iSqlMemorandoMultipleFinalizado = "
-                                            SELECT count(t.*) as TOTAL
-                                            FROM hist_eventos t
-                                            WHERE radi_nume_radi =  '$numeroRadicado' and usua_doc = '$documentoUsuario' and sgd_ttr_codigo = '13'";
-
-                                                $rsMemorandoMultipleCuerpo = $db->conn->query($iSqlMemorandoMultipleCuerpo);
-                                                $rsMemorandoMultipleFinalizado = $db->conn->query($iSqlMemorandoMultipleFinalizado);
-                                                $tieneAsignacion = 0;
-                                                if ($rsMemorandoMultipleCuerpo) {
-
-                                                    if ($rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1 && $rs->fields["RADI_USUA_ACTU"] != $codusuario) {
-                                                        $iSqlMemorandoMultipleFinalizadoPropio = "
-                                                        SELECT count(t.*) as TOTAL
-                                                        FROM hist_eventos t
-                                                        WHERE radi_nume_radi =  '$numeroRadicado' and usua_doc = '$documentoUsuario' and sgd_ttr_codigo = '9'";
-                                                        $rsMemorandoMultipleFinalizadopropio = $db->conn->query($iSqlMemorandoMultipleFinalizadoPropio);
-                                                        if ($rsMemorandoMultipleFinalizadopropio) {
-                                                            if ($rsMemorandoMultipleFinalizadopropio->fields["TOTAL"] > 0) {
-                                                                goto siguiente;
-                                                            }
-                                                        }
-                                                    }
-                                                    if ($rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1 && $rs->fields["RADI_USUA_ACTU"] == $codusuario) {
-                                                        $remitenteRadicado = "Varios destinatarios";
-                                                        $es_multiple = true;
-                                                        if ($rsMemorandoMultipleCuerpo->fields["RADICADO"] > 0) {
-                                                            $es_multiple_radicado = true;
-                                                            //goto siguiente;
-                                                        }
-                                                    }
-                                                    if ($rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-                                                        $remitenteRadicado = "Varios destinatarios";
-                                                        $es_multiple = true;
-                                                        if ($rsMemorandoMultipleCuerpo->fields["RADICADO"] > 0) {
-                                                            $es_multiple_radicado = true;
-                                                            //goto siguiente;
-                                                        }
-                                                    }
-                                                    if ($rsMemorandoMultipleFinalizado) {
-                                                        if ($rsMemorandoMultipleFinalizado->fields["TOTAL"] > 0 && $rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-                                                            goto siguiente;
-                                                        }
-                                                    }
-
-                                                    if ($rs->fields["RADI_USUA_ACTU"] == $codusuario && $rs->fields["HID_CARP_CODI"] == 12 && $carpeta != 12 && $rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-                                                        goto siguiente;
-                                                    }
-                                                }
-                                                //End::multiple
 
                                                 //Start::expediente
                                                 $iSqlexpTot = "select * from sgd_exp_expediente where radi_nume_radi in ($numeroRadicado) limit 1;";
@@ -745,7 +683,6 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                                                 </tr>
                                             <?php
-                                                siguiente:
                                                 $aux = $rs->fields["HID_RADI_NUME_RADI"];
                                                 $rs->MoveNext();
                                             }

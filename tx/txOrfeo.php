@@ -13,62 +13,11 @@ $rad_asun_res = isset($rad_asun_res) ? $rad_asun_res : '';
 $rad_asun_res   = preg_replace($pattern, ' ', $rad_asun_res);
 if (!$mostrar_opc_envio) $mostrar_opc_envio = 0;
 
-//Start::Validar si el memorando tienen al usuario
-if (isset($numrad)) {
-  $iSqlMemorandoMultipleCuerpo = "SELECT 
-                  count(*)  as TOTAL,
-                  string_agg(DISTINCT SGD_DIR_DRECCIONES.sgd_dir_nombre, ',') AS DESTINATARIOS,
-                  (SELECT count(*) FROM ANEXOS WHERE ANEXOS.radi_nume_salida ='$numrad' AND ANEX_ESTADO >= 2 ) AS RADICADO 
-              FROM
-                  SGD_DIR_DRECCIONES 
-              WHERE
-                  radi_nume_radi = '$numrad' 
-                  AND radi_nume_radi::text LIKE'%3' ";
 
-  $iSqlMemorandoMultiple = "SELECT count(*) EXISTE FROM SGD_DIR_DRECCIONES WHERE radi_nume_radi = '$numrad' AND  SGD_DIR_DOC = '$usua_doc' and radi_nume_radi::text like '%3'";
-  $rsMemorandoMultiple = $db->conn->query($iSqlMemorandoMultiple);
-  $rsMemorandoMultipleCuerpo = $db->conn->query($iSqlMemorandoMultipleCuerpo);
-  $tieneAsignacion = 0;
-  if ($rsMemorandoMultiple) {
-    if ($rsMemorandoMultiple->fields["EXISTE"] > 0 && $rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-      $tieneAsignacion = true;
-    }
-  }
-}
 
 // validar si es tramitador
 if (isset($numrad) && $_SESSION["USUA_TRAMITADOR"] && !$tieneAsignacion) {
-  // Obtener datos del jefe usando la nueva clase estática
-  $rs_jefe = JefeArea::getRecordSetJefe($db, $dependencia);
-  $iSqlMemorandoMultipleCuerpo = "SELECT 
-                  count(*)  as TOTAL,
-                  string_agg(DISTINCT SGD_DIR_DRECCIONES.sgd_dir_nombre, ',') AS DESTINATARIOS,
-                  (SELECT count(*) FROM ANEXOS WHERE ANEXOS.radi_nume_salida ='$numrad' AND ANEX_ESTADO >= 2 ) AS RADICADO 
-              FROM
-                  SGD_DIR_DRECCIONES 
-              WHERE
-                  radi_nume_radi = '$numrad' 
-                  AND radi_nume_radi::text LIKE'%3' ";
-
-  $iSqlMemorandoMultipleFinalizado = "
-            SELECT count(t.*) as TOTAL
-            FROM hist_eventos t
-            WHERE radi_nume_radi =  '$numeroRadicado' and ((usua_codi = '" . $rs_jefe->fields['USUA_CODI'] . "' and depe_codi = '$dependencia') or usua_doc = '" . $rs_jefe->fields['USUA_DOC'] . "') and sgd_ttr_codigo = '13'";
-
-  $iSqlMemorandoMultiple = "SELECT count(*) EXISTE FROM SGD_DIR_DRECCIONES WHERE radi_nume_radi = '$numrad' AND  SGD_DIR_DOC = '" . $rs_jefe->fields['USUA_DOC'] . "' and radi_nume_radi::text like '%3'";
-  $rsMemorandoMultiple = $db->conn->query($iSqlMemorandoMultiple);
-  $rsMemorandoMultipleCuerpo = $db->conn->query($iSqlMemorandoMultipleCuerpo);
   $tieneAsignacion = 0;
-  if ($rsMemorandoMultiple) {
-    if ($rsMemorandoMultiple->fields["EXISTE"] > 0 && $rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-      $tieneAsignacion = true;
-    }
-  }
-  if ($rsMemorandoMultipleFinalizado) {
-    if ($rsMemorandoMultipleFinalizado->fields["TOTAL"] > 0 && $rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-      $tieneAsignacion = 0;
-    }
-  }
 }
 
 $nombreCarpeta = $_GET["nomcarpeta"];
