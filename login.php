@@ -212,7 +212,6 @@ if ($logoEntidad) {
                   </span>
                 </span>
               </div>
-              <img class="imgPie" src="<?= $leftSection ?>" alt="">
             </div>
           </div>
         </div>

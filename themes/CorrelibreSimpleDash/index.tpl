@@ -197,23 +197,21 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end" style="max-height: 300px; overflow-y: auto;">
-
                             <!--{foreach from=$usuario.menu item=menu key=val}-->
-                            <!-- Salir separador -->
-                            <!--{if $val == 'salir'}-->
-                            <li><hr class="dropdown-divider"></li>
-                            <!--{/if}-->
+								<!-- Salir separador -->
+								<!--{if $val == 'salir'}-->
+									<li><hr class="dropdown-divider"></li>
+								<!--{/if}-->
 
-                            <li>
-                                <a class="dropdown-item" href=<!--{$menu.url}--> target="mainFrame">
-                                    <!-- Íconos según acción -->
-                                    <!--{if $val == 'salir'}--><i class="fa fa-power-off me-2"></i><!--{/if}-->
-                                    <!--{if $val == 'cambioDeClave'}--><i class="fa fa-key me-2"></i><!--{/if}-->
-                                    <!--{if $val == 'perfil'}--><i class="fa fa-user me-2"></i><!--{/if}-->
-                                    <!--{$menu.nombre}-->
-                                </a>
-                            </li>
-
+								<li>
+									<a class="dropdown-item" href=<!--{$menu.url}--> >
+										<!-- Íconos según acción -->
+										<!--{if $val == 'salir'}--><i class="fa fa-power-off me-2"></i><!--{/if}-->
+										<!--{if $val == 'cambioDeClave'}--><i class="fa fa-key me-2"></i><!--{/if}-->
+										<!--{if $val == 'perfil'}--><i class="fa fa-user me-2"></i><!--{/if}-->
+										<!--{$menu.nombre}-->
+									</a>
+								</li>
                             <!--{/foreach}-->
                         </ul>
                     </li>
@@ -458,6 +456,5 @@
 			}
 		});
 	</script>
-
 </body>
 </html>

@@ -37,7 +37,6 @@ README
 *.tpl.php
 instalacion/qsql.php
 include/apiCerticamara/resources/CRL/log/*
-estilos/login.css
 uploadFiles/owncloud/log/*
 adodb/kint-master
 img/IK.banerPDF.jpg
