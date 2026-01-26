@@ -413,11 +413,8 @@ label.checkbox input {
 .imgPie {
 	display: block;
 	margin: 20px auto 0 auto;
-	/* centrado y con pequeño margen arriba */
 	width: 80px;
-	/* tamaño pequeño, puedes ajustar */
 	opacity: 0.8;
-	/* opcional: estilo suave */
 }
 
 /* Social Login */
