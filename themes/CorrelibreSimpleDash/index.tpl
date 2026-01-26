@@ -28,7 +28,8 @@
         }
 
         #imageLoad {
-            background: url('imagenes/reload.gif') no-repeat center center;
+            background: url('bodega/sys_img/logo.png') no-repeat center center;
+            background-size: contain;
             height: 256px;
             width: 256px;
             position: absolute;

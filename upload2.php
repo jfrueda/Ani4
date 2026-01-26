@@ -3,6 +3,7 @@ session_start();
 $ruta_raiz = ".";
 require_once($ruta_raiz."/vendor/autoload.php");
 
+
 if (!$_SESSION['dependencia'])
   header ("Location: $ruta_raiz/cerrar_session.php");
 

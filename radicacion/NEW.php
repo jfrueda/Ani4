@@ -44,6 +44,12 @@ if (!$_SESSION['dependencia'])
 foreach ($_GET as $key => $valor) ${$key} = $valor;
 foreach ($_POST as $key => $valor) ${$key} = $valor;
 
+if (!empty($fecha_gen_doc)) {
+    $fecha_gen_doc = date('Y-m-d', strtotime(str_replace('/', '-', $fecha_gen_doc)));
+} else {
+    $fecha_gen_doc = date('Y-m-d');
+}
+
 /**  Fin variables de session de Radicacion de Mail. **/
 include_once("$ruta_raiz/include/db/ConnectionHandler.php");
 include_once("$ruta_raiz/include/tx/usuario.php");
@@ -73,7 +79,6 @@ $hora = date('H:i:s');
 $fechaf = $date . $mdate . $adate . $hora;
 $dependencia = $_SESSION["dependencia"];
 $ADODB_COUNTRECS = true;
-$fecha_gen_doc = date('Y-m-d');
 $coddepe = $dependencia;
 $codusua = $_SESSION["codusuario"];
 //valor necesario para crear enlaces de los distintos elementos
@@ -164,26 +169,30 @@ if ($rad0) {
 }
 
 //CARGAR INFORMACION SI SE TRAE DE UN ANEXO O COPIA DE DATOS
-if ($radicadopadre) {
+$radi_a_buscar = !empty($radicadopadre) ? $radicadopadre : (isset($cuentai) && is_numeric($cuentai) && strlen($cuentai) >= 14 ? $cuentai : null);
+
+if ($radi_a_buscar) {
 
     $query = "SELECT
           a.*
           FROM
           RADICADO A
           WHERE
-          A.RADI_NUME_RADI = $radicadopadre";
+          A.RADI_NUME_RADI = $radi_a_buscar";
 
     $rs = $db->conn->query($query);
 
     if (!$rs->EOF) {
         $asu = $rs->fields["RA_ASUN"];
         $ane = $rs->fields["RADI_DESC_ANEX"];
-        $cuentai = $rs->fields["RADI_CUENTAI"];
+        $cuentai = !empty($rs->fields["RADI_CUENTAI"]) ? $rs->fields["RADI_CUENTAI"] : $rs->fields["RADI_NUME_RADI"];
         $tdoc = $rs->fields["TDOC_CODI"];
         $med = $rs->fields["MREC_CODI"];
         $coddepe = $rs->fields["RADI_DEPE_ACTU"];
         $codusuarioActu = $rs->fields["RADI_USUA_RADI"];
         $radi_fecha = $rs->fields["RADI_FECH_RADI"];
+        $fecha_temp = !empty($rs->fields["RADI_FECH_OFIC"]) ? $rs->fields["RADI_FECH_OFIC"] : $rs->fields["RADI_FECH_RADI"];
+        $fecha_gen_doc = date('Y-m-d', strtotime($fecha_temp));
         $guia = $rs->fields["RADI_NUME_GUIA"];
         $empTrans = $rs->fields["EMP_TRANSPORTADORA"];
         $radi_dato_001 = $rs->fields["RADI_DATO_001"]; //Campo de uso general
@@ -192,7 +201,7 @@ if ($radicadopadre) {
 
     if (!$esNotificacionCircular) {
         //Filtro por el tipo de usuario
-        $result = $usuario->usuarioPorRadicado($radicadopadre, $esNotificacion);
+        $result = $usuario->usuarioPorRadicado($radi_a_buscar, $esNotificacion);
 
         if ($result) {
             $usuario_nuevo = true;
@@ -203,7 +212,7 @@ if ($radicadopadre) {
 
     //Informacion sobre Notificaciones
     if ($esNotificacion) {
-        $infoNotificacion = $notificacion->cargarNotificacionAntigua($radicadopadre);
+        $infoNotificacion = $notificacion->cargarNotificacionAntigua($radi_a_buscar);
         $notifica_codi = ""; // Es un nuevo radicado
         $medio_pub = $infoNotificacion["med_public"];
         $caracter_adtvo = $infoNotificacion["caracter_adtvo"];
@@ -211,7 +220,7 @@ if ($radicadopadre) {
         $prioridad_prestablecido = $infoNotificacion["prioridad"] === "t" ? 1 : 0;
 
         if ($esNotificacionCircular) {
-            $result = $notificacion->destinatariosPorRadicado($radicadopadre);
+            $result = $notificacion->destinatariosPorRadicado($radi_a_buscar);
 
             if ($result) {
                 $showUsers = $notificacion->agregarDestinatarios($result, true);
@@ -243,7 +252,7 @@ if ($nurad) {
         $coddepe        = $rs->fields["RADI_DEPE_ACTU"];
         $codusuarioActu = $rs->fields["RADI_USUA_RADI"];
         $radi_fecha     = $rs->fields["RADI_FECH_RADI"];
-        $fecha_gen_doc  = $rs->fields["RADI_FECH_OFIC"];
+        $fecha_gen_doc  = !empty($rs->fields["RADI_FECH_OFIC"]) ? $rs->fields["RADI_FECH_OFIC"] : $rs->fields["RADI_FECH_RADI"];
         $guia           = $rs->fields["RADI_NUME_GUIA"];
         $empTrans       = $rs->fields["EMP_TRANSPORTADORA"];
         $numFolio       = $rs->fields["RADI_NUME_FOLIO"];
@@ -260,8 +269,7 @@ if ($nurad) {
     list($adate, $mdate, $ddate) = explode('-', date_format($date1, 'Y-m-d'));
 
     if ($fecha_gen_doc) {
-        list($adate1, $mdate1, $ddate1) = explode('-', substr($fecha_gen_doc, 0, 10));
-        $fecha_gen_doc = "$ddate1-$mdate1-$adate1";
+        $fecha_gen_doc = date('Y-m-d', strtotime($fecha_gen_doc));
     }
 
     $ent = substr($nurad, -1);
@@ -444,6 +452,11 @@ $showEntrada = "
                     type='text'
                     maxlength='100'
                     value='{$cuentai}'>
+            </section>
+            
+            <section class='col-12 col-md-2 mb-3'>
+                <label class='form-label fw-semibold'>Fecha Referencia</label>
+                <input type='date' class='form-control' id='fecha_gen_doc' name='fecha_gen_doc' value='{$fecha_gen_doc}' required>
             </section>";
 
 if ($ent == 2) {
@@ -457,6 +470,11 @@ if ($ent == 2) {
                         type='text'
                         maxlength='100'
                         value='{$cuentai}'>
+                </section>
+
+                <section class='col-12 col-md-2 mb-3'>
+                    <label class='form-label fw-semibold'>Fecha Referencia</label>
+                    <input type='date' class='form-control' id='fecha_gen_doc' name='fecha_gen_doc' value='{$fecha_gen_doc}' required>
                 </section>
 
                 <section class='col-12 col-md-2 mb-3'>
@@ -488,6 +506,11 @@ if ($ent == 2) {
                     type='text'
                     maxlength='100'
                     value='{$cuentai}'>
+            </section>
+            
+            <section class='col-12 col-md-2 mb-3'>
+                <label class='form-label fw-semibold'>Fecha Referencia</label>
+                <input type='date' class='form-control' id='fecha_gen_doc' name='fecha_gen_doc' value='{$fecha_gen_doc}' required>
             </section>";
 }
 
@@ -589,16 +612,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         <!-- ENTRADAS DINÁMICAS -->
                         <?= $showEntrada ?>
 
-                        <!-- FECHA DOCUMENTO -->
-                        <section class="col-12 col-md-2 mb-3">
-                            <label class="form-label fw-semibold">Fecha Doc</label>
-                            <input
-                                type="date"
-                                class="form-control"
-                                id="fecha_gen_doc"
-                                name="fecha_gen_doc"
-                                value="<?= $fecha_gen_doc ?>">
-                        </section>
                     </div>
                 </div>
 

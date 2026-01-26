@@ -5,7 +5,6 @@ $ruta_raiz = "..";
 if (!$_SESSION['dependencia'])
   header ("Location: $ruta_raiz/cerrar_session.php");
 include "$ruta_raiz/include/tx/sanitize.php";
-require_once "$ruta_raiz/include/class/MemoMultiple.class.php";
 foreach ($_GET  as $key => $valor)   ${$key} = $valor;
 foreach ($_POST as $key => $valor)   ${$key} = $valor;
 
@@ -127,18 +126,6 @@ switch ($codTx){
 		$depsel = explode('-',$usCodSelect);
 		$usCodSelect = $depsel[1];
 		$depsel = $depsel[0];
-		require_once "$ruta_raiz/include/class/MemoMultiple.class.php";
-		foreach($radicadosSel as $rad){
-			if (
-				MemoMultiple::isMemoMultiple($db, $rad) &&
-				MemoMultiple::isDestinatario($db, $rad, null,$usCodSelect, $depsel) 
-			) {
-			 	echo "<div class='alert alert-danger' style='margin:2em;'><b>Error:</b> No se puede reasignar, el usuario de destino ya está dentro de los destinatarios del memo múltiple.<br>Radicado: <b>$rad</b></div>";
-             	exit;
-			}
-		}	
-
-		
 		if($EnviaraV=="VoBo"){
 			$codTx=16;
 			$carp_codi=11;
@@ -198,18 +185,7 @@ switch ($codTx){
 	case 13:
 		$nombTx = "Archivo de Documentos";
 		
-		if(is_array($radicadosSel) && isset($radicadosSel[0]) && $_SESSION["USUA_TRAMITADOR"]) {
-			$esMultiple = MemoMultiple::isMemoMultiple($db, $radicadosSel[0]);
-			$esDestinatario = MemoMultiple::isDestinatario($db, $radicadosSel[0], JefeArea::getDocumentoJefe($db));
-			$codusuarioJefeArea = JefeArea::getCodigoJefe($db, $dependencia = $dependencia);
-			if($esMultiple && $esDestinatario) {
-				$usCodDestino = $rs->archivar($radicadosSel, $krd, $dependencia, $codusuarioJefeArea, $observa.' Accion realizada por tramitador '.$_SESSION['usua_nomb']);
-			}else{
-				$usCodDestino = $rs->archivar($radicadosSel, $krd, $dependencia, $codusuario, $observa);
-			}
-		} else {
-			$usCodDestino = $rs->archivar($radicadosSel, $krd, $dependencia, $codusuario, $observa);
-		}
+		$usCodDestino = $rs->archivar($radicadosSel, $krd, $dependencia, $codusuario, $observa);
 		break;
 
 	case 14:

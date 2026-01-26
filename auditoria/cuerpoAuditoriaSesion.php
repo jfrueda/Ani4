@@ -42,7 +42,7 @@ include "./envios/paEncabeza.php";
 ?>
 <body onLoad="window_onload();" class="waitMe_body" >
     <div class="waitMe_container img" style="background:rgba(255,255,255,0.7)">
-      <div style="background:url('../imagenes/reload.gif')"></div>
+      <div style="background:url('../bodega/sys_img/logo.png') no-repeat center center; background-size: contain; width: 256px; height: 256px; position: absolute; left: 50%; top: 50%; margin: -128px 0 0 -128px;"></div>
     </div>
 <script src="https://unpkg.com/notie"></script>
 <?
@@ -246,7 +246,7 @@ if ($swLog==1)
               effect: 'img', // Use the progress bar effect
               text: '',             // No text
               bg: "rgba(255,255,255,0.7)",  // Semi-transparent white background
-              source: "../imagenes/reload.gif",           // No additional source
+              source: "../bodega/sys_img/logo.png",           // No additional source
               onClose: function() {} // Callback when closed
           });
       }

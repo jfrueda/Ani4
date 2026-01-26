@@ -2,7 +2,6 @@
 
 include_once($ruta_raiz . "/include/tx/Historico.php");
 include_once($ruta_raiz . "/class_control/Param_admin.php");
-require_once "$ruta_raiz/include/class/MemoMultiple.class.php";
 
 class Tx extends Historico {
 	/** Aggregations: */
@@ -228,15 +227,7 @@ class Tx extends Historico {
 				return "YA_INFORMADO";
 			}
 
-			// Validar si el usuario destino ya es destinatario del memo múltiple
-            if (
-                class_exists('MemoMultiple') &&
-                MemoMultiple::isMemoMultiple($this->db, $radNum) &&
-                MemoMultiple::isDestinatario($this->db, $radNum, null, $codUsDestino, $depDestino)
-            ) {
-                return "YA_DESTINATARIO";
-            }
-			
+
 
 			if ($SendMail == true && !empty($emailUsuaDest)) {
 				//LLENO LAS VARIABLES NECESARIAS PARA INFORMAR
@@ -347,14 +338,6 @@ class Tx extends Historico {
 				// Ya fue informado, retornar valor especial
 				return "YA_INFORMADO";
 			}
-			// Validar si el usuario destino ya es destinatario del memo múltiple
-            if (
-                class_exists('MemoMultiple') &&
-                MemoMultiple::isMemoMultiple($this->db, $radNum) &&
-                MemoMultiple::isDestinatario($this->db, $radNum, null, $codUsDestino, $depDestino)
-            ) {
-                return "YA_DESTINATARIO";
-            }
 
 
 			if ($SendMail == true && !empty($emailUsuaDest)) {
@@ -742,38 +725,6 @@ class Tx extends Historico {
 			$whereNivel = ",CODI_NIVEL=$usNivel";
 		}
 
-
-		//Start::multiple
-		if(count($radicados) ==1){
-			
-			$es_multiple = false;
-			$es_multiple_radicado = false;
-			$iSqlMemorandoMultipleCuerpo= "SELECT 
-				count(*)	as TOTAL,
-				string_agg(DISTINCT SGD_DIR_DRECCIONES.sgd_dir_nombre, ',') AS DESTINATARIOS,
-				(SELECT count(*) FROM ANEXOS WHERE ANEXOS.radi_nume_salida::text ='$radicados[0]' AND ANEX_ESTADO >= 2 ) AS RADICADO 
-			FROM
-				SGD_DIR_DRECCIONES 
-			WHERE
-				radi_nume_radi = '$radicados[0]' 
-				AND radi_nume_radi::text LIKE'%3' ";
-			
-			$rsMemorandoMultipleCuerpo = $this->db->conn->query($iSqlMemorandoMultipleCuerpo);
-			$tieneAsignacion = 0;
-			if ($rsMemorandoMultipleCuerpo) {
-				if($rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1){
-					$remitenteRadicado = $rsMemorandoMultipleCuerpo->fields["DESTINATARIOS"];
-					$es_multiple = true;
-					if($rsMemorandoMultipleCuerpo->fields["RADICADO"]>0){
-						$es_multiple_radicado = true;
-						//goto siguiente;
-					}
-				}
-			}
-		}
-	
-	 	//End::multiple
-
 		$radicadosIn = join(",", $radicados);
 		$proccarp = "Reasignar";
 		$carp_per = 0;
@@ -781,11 +732,7 @@ class Tx extends Historico {
 		if ($valUsuarioActual == true ) {
 			$whereValUsuarioActual = "AND  radi_depe_actu=$depOrigen AND radi_usua_actu=$codUsOrigen";
 		}
-		//Start::mulitple
-		if ($es_multiple) {
-			$whereValUsuarioActual = "";
-		}
-		//End::multiple
+		
 		$isql = "update radicado
 				set
 				  RADI_USU_ANTE='$loginOrigen'
@@ -840,38 +787,6 @@ class Tx extends Historico {
 			$whereNivel = ",CODI_NIVEL=$usNivel";
 		}
 
-
-		//Start::multiple
-		if(count($radicados) ==1){
-			
-			$es_multiple = false;
-			$es_multiple_radicado = false;
-			$iSqlMemorandoMultipleCuerpo= "SELECT 
-				count(*)	as TOTAL,
-				string_agg(DISTINCT SGD_DIR_DRECCIONES.sgd_dir_nombre, ',') AS DESTINATARIOS,
-				(SELECT count(*) FROM ANEXOS WHERE ANEXOS.radi_nume_salida::text ='$radicados[0]' AND ANEX_ESTADO >= 2 ) AS RADICADO 
-			FROM
-				SGD_DIR_DRECCIONES 
-			WHERE
-				radi_nume_radi = '$radicados[0]' 
-				AND radi_nume_radi::text LIKE'%3' ";
-			
-			$rsMemorandoMultipleCuerpo = $this->db->conn->query($iSqlMemorandoMultipleCuerpo);
-			$tieneAsignacion = 0;
-			if ($rsMemorandoMultipleCuerpo) {
-				if($rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1){
-					$remitenteRadicado = $rsMemorandoMultipleCuerpo->fields["DESTINATARIOS"];
-					$es_multiple = true;
-					if($rsMemorandoMultipleCuerpo->fields["RADICADO"]>0){
-						$es_multiple_radicado = true;
-						//goto siguiente;
-					}
-				}
-			}
-		}
-	
-	 	//End::multiple
-
 		$radicadosIn = join(",", $radicados);
 		$proccarp = "Reasignar";
 		$carp_per = 0;
@@ -879,11 +794,8 @@ class Tx extends Historico {
 		if ($valUsuarioActual == true ) {
 			$whereValUsuarioActual = "AND  radi_depe_actu=$depOrigen AND radi_usua_actu=$codUsOrigen";
 		}
-		//Start::mulitple
-		if ($es_multiple) {
-			$whereValUsuarioActual = "";
-		}
-		//End::multiple
+		
+
 		$isql = "update radicado
 				set
 				  RADI_USU_ANTE='$loginOrigen'

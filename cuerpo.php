@@ -423,72 +423,10 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                             $radi_depe_actu        = $rs->fields['RADI_DEPE_ACTU'];
 
                                                             if ($aux === $rs->fields["HID_RADI_NUME_RADI"])
-                                                                goto siguiente;
+                                                                
                                                             //  $radiLeido             = $rs->fields["HID_RADI_LEIDO"];
                                                             $radianulado       = $rs->fields["HID_EANU_CODIGO"];
                                                             //Datos obtenidos para pintar los radicados
-                                                            //Start::multiple
-                                                            $es_multiple = false;
-                                                            $es_multiple_radicado = false;
-                                                            $iSqlMemorandoMultipleCuerpo = "SELECT 
-                                                                                    count(*)	as TOTAL,
-                                                                                    string_agg(DISTINCT SGD_DIR_DRECCIONES.sgd_dir_nombre, ', ') AS DESTINATARIOS,
-                                                                                    (SELECT count(*) FROM ANEXOS WHERE ANEXOS.radi_nume_salida ='$numeroRadicado' AND ANEX_ESTADO >= 2 ) AS RADICADO 
-                                                                                FROM
-                                                                                    SGD_DIR_DRECCIONES 
-                                                                                WHERE
-                                                                                    radi_nume_radi = '$numeroRadicado' 
-                                                                                    AND radi_nume_radi::text LIKE'%3' ";
-
-                                                            $iSqlMemorandoMultipleFinalizado = "
-                                                                                    SELECT count(t.*) as TOTAL
-                                                                                    FROM hist_eventos t
-                                                                                    WHERE radi_nume_radi =  '$numeroRadicado' and ((usua_codi = '$codusuario' and depe_codi = '$dependencia') or usua_doc = '$usua_doc') and sgd_ttr_codigo = '13'";
-                                                            $rsMemorandoMultipleCuerpo = $db->conn->query($iSqlMemorandoMultipleCuerpo);
-                                                            $rsMemorandoMultipleFinalizado = $db->conn->query($iSqlMemorandoMultipleFinalizado);
-                                                            $tieneAsignacion = 0;
-                                                            if ($rsMemorandoMultipleCuerpo) {
-
-                                                                if ($rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1 && $rs->fields["RADI_USUA_ACTU"] != $codusuario) {
-                                                                    $iSqlMemorandoMultipleFinalizadoPropio = "
-                                                                                                SELECT count(t.*) as TOTAL
-                                                                                                FROM hist_eventos t
-                                                                                                WHERE radi_nume_radi =  '$numeroRadicado' and ((usua_codi = '$codusuario' and depe_codi = '$dependencia') or usua_doc = '$usua_doc') and sgd_ttr_codigo = '9'";
-                                                                    $rsMemorandoMultipleFinalizadopropio = $db->conn->query($iSqlMemorandoMultipleFinalizadoPropio);
-                                                                    if ($rsMemorandoMultipleFinalizadopropio) {
-                                                                        if ($rsMemorandoMultipleFinalizadopropio->fields["TOTAL"] > 0) {
-                                                                            goto siguiente;
-                                                                        }
-                                                                    }
-                                                                }
-                                                                if ($rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1 && $rs->fields["RADI_USUA_ACTU"] == $codusuario) {
-
-                                                                    $remitenteRadicado = $rsMemorandoMultipleCuerpo->fields["DESTINATARIOS"];
-                                                                    $es_multiple = true;
-                                                                    if ($rsMemorandoMultipleCuerpo->fields["RADICADO"] > 0) {
-                                                                        $es_multiple_radicado = true;
-                                                                        //goto siguiente;
-                                                                    }
-                                                                }
-                                                                if ($rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-                                                                    $remitenteRadicado = $rsMemorandoMultipleCuerpo->fields["DESTINATARIOS"];
-                                                                    $es_multiple = true;
-                                                                    if ($rsMemorandoMultipleCuerpo->fields["RADICADO"] > 0) {
-                                                                        $es_multiple_radicado = true;
-                                                                        //goto siguiente;
-                                                                    }
-                                                                }
-                                                                if ($rsMemorandoMultipleFinalizado) {
-                                                                    if ($rsMemorandoMultipleFinalizado->fields["TOTAL"] > 0 && $rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-                                                                        goto siguiente;
-                                                                    }
-                                                                }
-
-                                                                if ($rs->fields["RADI_USUA_ACTU"] == $codusuario && $rs->fields["HID_CARP_CODI"] == 12 && $carpeta != 12 && $rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-                                                                    goto siguiente;
-                                                                }
-                                                            }
-                                                            //End::multiple
 
                                                             //Start::expediente
                                                             $iSqlexpTot = "select * from sgd_exp_expediente where radi_nume_radi in ($numeroRadicado) limit 1;";
@@ -593,7 +531,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                                 $radiPath = "/" . $radiPath;
                                                             }
 
-                                                            $linkVerRadicado = "./verradicado.php?verrad=$numeroRadicado&depe_actu=$radi_depe_actu&usuacodi=$usuaCodi&tieneAsignacion=$es_multiple_radicado";
+                                                            $linkVerRadicado = "./verradicado.php?verrad=$numeroRadicado&depe_actu=$radi_depe_actu&usuacodi=$usuaCodi&tieneAsignacion=0";
                                                             $linkImagen = "$ruta_raiz/bodega" . $radiPath;
                                                             $contadorImagenes++;
 
@@ -609,83 +547,70 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                             <tr <?= $anexEstadoEstilo ?> class="<?= $leido ?> ">
                                                                 <td class="inbox-table-icon sorting_1 ">
                                                                     <div>
-                                                                        <?php
-                                                                        if ($es_multiple_radicado == false) {
-                                                                        ?>
-                                                                            <label class="checkbox">
-                                                                                <input id="<?= $numeroRadicado ?>" name="checkValue[<?= $numeroRadicado ?>]" value="CHKANULAR" type="checkbox">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                                <i></i>
-                                                                                <?php
-                                                                                $iSqlEstadoAnexos = null;
-                                                                                $anex_estado = null;
-                                                                                $envio_estado = null;
-                                                                                $img_estado = null;
-                                                                                $anex_estado = $rs->fields["ANEX_ESTADO"];
-                                                                                $envio_estado = $rs->fields["SGD_DEVE_CODIGO"];
+                                                                        <label class="checkbox">
+                                                                            <input id="<?= $numeroRadicado ?>" name="checkValue[<?= $numeroRadicado ?>]" value="CHKANULAR" type="checkbox">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                            <i></i>
+                                                                            <?php
+                                                                            $iSqlEstadoAnexos = null;
+                                                                            $anex_estado = null;
+                                                                            $envio_estado = null;
+                                                                            $img_estado = null;
+                                                                            $anex_estado = $rs->fields["ANEX_ESTADO"];
+                                                                            $envio_estado = $rs->fields["SGD_DEVE_CODIGO"];
 
-                                                                                if ($anex_estado == '4') {
-                                                                                    $img_estado = "<img src='./bodega/sys_img/enviado.png' width=15 title='Archivo Enviado. . .'>";
-                                                                                }
+                                                                            if ($anex_estado == '4') {
+                                                                                $img_estado = "<img src='./bodega/sys_img/enviado.png' width=15 title='Archivo Enviado. . .'>";
+                                                                            }
 
-                                                                                if ($envio_estado <> 0 && $anex_estado == '2') {
-                                                                                    $img_estado = "<img src='./bodega/sys_img/devuelto.png' width=15 title='Archivo devuelto. . .'>";
-                                                                                }
+                                                                            if ($envio_estado <> 0 && $anex_estado == '2') {
+                                                                                $img_estado = "<img src='./bodega/sys_img/devuelto.png' width=15 title='Archivo devuelto. . .'>";
+                                                                            }
 
-                                                                                if ($envio_estado <> 0 && $anex_estado == '3') {
-                                                                                    $img_estado = "<img src='./bodega/sys_img/devuelto.png' width=15 title='Archivo devuelto. . .'>";
-                                                                                }
+                                                                            if ($envio_estado <> 0 && $anex_estado == '3') {
+                                                                                $img_estado = "<img src='./bodega/sys_img/devuelto.png' width=15 title='Archivo devuelto. . .'>";
+                                                                            }
 
-                                                                                $ultimoDigito = str_split($numeroRadicado);
-                                                                                if (end($ultimoDigito) == '2') {
-                                                                                    //Start::enviado en entradas
-                                                                                    $iSqlEntradaConteo = "
+                                                                            $ultimoDigito = str_split($numeroRadicado);
+                                                                            if (end($ultimoDigito) == '2') {
+                                                                                //Start::enviado en entradas
+                                                                                $iSqlEntradaConteo = "
                                                                                         SELECT count(a.*) as TOTAL
                                                                                         FROM anexos a
                                                                                         WHERE 
                                                                                         anex_radi_nume =  '$numeroRadicado'
                                                                                         and a.radi_nume_salida::text like '%1'
                                                                                         and a.sgd_deve_codigo != 0 and  a.anex_estado in(2,3)";
-                                                                                    $rsEntradaConteo = $db->conn->query($iSqlEntradaConteo);
+                                                                                $rsEntradaConteo = $db->conn->query($iSqlEntradaConteo);
 
-                                                                                    //End::enviado en entradas
-                                                                                    //Start::enviado en entradas
-                                                                                    $iSqlEntradaConteoEnviados = "
+                                                                                //End::enviado en entradas
+                                                                                //Start::enviado en entradas
+                                                                                $iSqlEntradaConteoEnviados = "
                                                                                         SELECT count(a.*) as TOTAL
                                                                                         FROM anexos  a
                                                                                         WHERE
                                                                                         anex_radi_nume =  '$numeroRadicado'
                                                                                         and a.radi_nume_salida::text like '%1' 
                                                                                         and anex_estado = 4";
-                                                                                    $rsEntradaConteoEnviados = $db->conn->query($iSqlEntradaConteoEnviados);
+                                                                                $rsEntradaConteoEnviados = $db->conn->query($iSqlEntradaConteoEnviados);
 
-                                                                                    $iSqlEntradaConteoTotal = "
+                                                                                $iSqlEntradaConteoTotal = "
                                                                                             SELECT count(a.*) as TOTAL
                                                                                             FROM anexos  a
                                                                                             WHERE
                                                                                             anex_radi_nume =  '$numeroRadicado'
                                                                                             and a.radi_nume_salida::text like '%1' 
                                                                                             and anex_estado >= 2";
-                                                                                    $rsEntradaConteoTotal = $db->conn->query($iSqlEntradaConteoTotal);
-                                                                                    $img_estado = '';
-                                                                                    $img_estado .=  "<img src='./bodega/sys_img/enviado.png' width=15 title='Enviados . . .'> <span class='enviossalida' >" . $rsEntradaConteoEnviados->fields['TOTAL'] . "</span>";
-                                                                                    $img_estado .=  "<img src='./bodega/sys_img/devuelto.png' width=15 title='Devueltos . . .'> <span class='enviossalida' >" . $rsEntradaConteo->fields['TOTAL'] . "</span>";
-                                                                                    $img_estado .=  "<img src='./bodega/sys_img/bandejasalida.svg' width=15 title='Total salidas. . .'> <span class='enviossalida' >" . $rsEntradaConteoTotal->fields['TOTAL'] . "</span>";
+                                                                                $rsEntradaConteoTotal = $db->conn->query($iSqlEntradaConteoTotal);
+                                                                                $img_estado = '';
+                                                                                $img_estado .=  "<img src='./bodega/sys_img/enviado.png' width=15 title='Enviados . . .'> <span class='enviossalida' >" . $rsEntradaConteoEnviados->fields['TOTAL'] . "</span>";
+                                                                                $img_estado .=  "<img src='./bodega/sys_img/devuelto.png' width=15 title='Devueltos . . .'> <span class='enviossalida' >" . $rsEntradaConteo->fields['TOTAL'] . "</span>";
+                                                                                $img_estado .=  "<img src='./bodega/sys_img/bandejasalida.svg' width=15 title='Total salidas. . .'> <span class='enviossalida' >" . $rsEntradaConteoTotal->fields['TOTAL'] . "</span>";
 
-                                                                                    //End::enviado en entradas
-                                                                                }
-                                                                                ?>
-                                                                            </label>
-                                                                        <?php
-                                                                        } else {
-                                                                        ?>
-                                                                            <div class="checkbox" data-toggle="tooltip" data-placement="top" title="Solo lectura trámite conjunto">
-                                                                                <i></i>
-                                                                                </label>
-
-                                                                            <?php
-                                                                        }
+                                                                                //End::enviado en entradas
+                                                                            }
                                                                             ?>
-                                                                            </div>
+                                                                        </label>
+                                                                    </div>
                                                                 </td>
                                                                 <?php
                                                                 $fechasymd = date('ymdhis');
@@ -776,7 +701,6 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                                                             </tr>
                                                         <?php
-                                                            siguiente:
                                                             $aux = $rs->fields["HID_RADI_NUME_RADI"];
                                                             $rs->MoveNext();
                                                         }
