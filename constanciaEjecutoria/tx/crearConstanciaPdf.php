@@ -16,7 +16,7 @@ class ConstanciaPDF extends TCPDF {
             <tr>
                 <td style="text-align:center;width:25%" rowspan="3">
                 <div><br />
-                <img src="'.$_SESSION['ABSOL_PATH'].'/bodega/sys_img/Logo-Supersalud-2024.jpg" style="width:80px" /></div>
+                <img src="'.$_SESSION['ABSOL_PATH'].'/bodega/sys_img/logo.png" style="width:80px" /></div>
                 </td>
                 <td style="text-align:center;width:50%;line-height: 15px"><strong>GOBIERNO Y GESTI&Oacute;N DE DATOS E<br />
                 INFORMACI&Oacute;N</strong></td>

@@ -20,7 +20,7 @@
                 <tr>
                     <td rowspan="3" style="width:118.8pt">
                         <div style="text-align:center">
-                            <br><img src="'.$_SESSION['ABSOL_PATH'].'/bodega/sys_img/Logo-Supersalud-2024.jpg" width="95px" />
+                            <br><img src="'.$_SESSION['ABSOL_PATH'].'/bodega/sys_img/logo.png" width="95px" />
                         </div> 
                     </td>
                     <td style="width:216.95pt">

@@ -80,12 +80,12 @@ if($idPlantilla == 0) {
         //Page header
         public function Header() {
           // Logos
-          $this->Image('../bodega/sys_img/Logo-Supersalud-2024.jpg',
+          $this->Image('../bodega/sys_img/logo.png',
                       93,
                       3,
                       33,
                       22,
-                      'jpg',
+                      'png',
                       '',
                       'T',
                       false,
@@ -104,22 +104,15 @@ if($idPlantilla == 0) {
         public function Footer() {
           // Position at 15 mm from bottom
           $tbl = '
-          <table style="width:100%">
-              <tr>
-                <td colspan="3" width:80% ><img src="'.dirname(__DIR__, 1).'/bodega/sys_img/FooterUpLine.PNG"/></td>
-              </tr>
+            <table style="width:100%">
               <tr>
                 <td style="width:6%"></td>
                 <td style="width:74%">
                     <br>
                     Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages() . '<br>
-                    Carrera 68 A N.º 24 B - 10, Torre 3 - Pisos 4, 9 y 10 | PBX +57 601 744 2000 • Bogotá D.C.<br>
-                    www.supersalud.gov.co<br>
-                    DIFT17
-                </td>
-                <td style="width:2%"><img src="../bodega/sys_img/FooterSideLine.PNG"/></td>
-                <td style="width:18%" align="center">
-                    
+                    Carrera 11 N.° 101-80 • PBX: (571) 650 00 00, ext. 1001, 1002 y 1003<br>
+                    unimilitar.edu.co.<br>
+                    Bogotá D. C. –Colombia-Sur América
                 </td>
               </tr>
             </table>';

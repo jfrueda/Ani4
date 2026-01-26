@@ -27,7 +27,7 @@
           {
             
               if($this->page == 1) {    
-                  $this->Image('../bodega/sys_img/Logo-Supersalud-2024.jpg', 25, 2, 25, 18, 'JPG');
+                  $this->Image('../bodega/sys_img/logo.png', 25, 2, 25, 18, 'JPG');
                   $this->SetLineStyle( array( 'width' => 0.2, 'color' => array(0,0,0)));
                   $this->RoundedRect(20, 20, $this->getPageWidth() -40, $this->getPageHeight() - 40, 5);
               } else {

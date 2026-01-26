@@ -273,7 +273,7 @@ $tema = isset($_SESSION['tema']) ? $_SESSION['tema'] : 'claro';
 			<div id="SNSHeader-brand" class="row justify-content-between">
 				<div class="col-4" style="text-align:left;">
 					<a href="http://www.supersalud.gov.co/" target="_blank">
-						<img alt="Supersalud logo" src="./images/Logo-Supersalud-2024.svg"  style="height: 60px;" align="center">
+						<img alt="Supersalud logo" src="./images/logo.png.svg"  style="height: 60px;" align="center">
 					</a>
 				</div>
 			</div>

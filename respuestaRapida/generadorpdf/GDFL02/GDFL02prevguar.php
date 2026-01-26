@@ -8,7 +8,7 @@
               <tbody>
                   <tr>
                       <td rowspan="3">
-                      <div><img src="'.$_SESSION['ABSOL_PATH'].'/bodega/sys_img/Logo-Supersalud-2024.jpg" style="width:100px" /></div>
+                      <div><img src="'.$_SESSION['ABSOL_PATH'].'/bodega/sys_img/logo.png" style="width:100px" /></div>
                       </td>
                       <td>
                       <div>GESTI&Oacute;N JUR&Iacute;DICA</div>
