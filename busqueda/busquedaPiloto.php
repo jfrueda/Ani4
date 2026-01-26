@@ -135,7 +135,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             effect: 'img', // Use the progress bar effect
             text: '', // No text
             bg: "rgba(255,255,255,0.7)", // Semi-transparent white background
-            source: "../imagenes/reload.gif", // No additional source
+            source: "../bodega/sys_img/logo.png", // No additional source
             onClose: function() {} // Callback when closed
         });
     }
@@ -261,7 +261,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 
 <body onLoad='document.getElementById("cajarad").focus();' class="waitMe_body" style="margin-bottom: 30px;">
     <div class="waitMe_container img" style="background:rgba(255,255,255,0.7)">
-        <div style="background:url('../imagenes/reload.gif')"></div>
+        <div style="background:url('../bodega/sys_img/logo.png') no-repeat center center; background-size: contain; width: 256px; height: 256px; position: absolute; left: 50%; top: 50%; margin: -128px 0 0 -128px;"></div>
     </div>
     <header class="page-title txt-color-blueDark"> </header>
     <?php Search_show() ?>
