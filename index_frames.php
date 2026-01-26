@@ -588,61 +588,7 @@ if ($_SESSION["USUA_PRAD_TP3"]) {
     $radicacion["radica3"] = array('subMenu' => 0, 'url' => "$enlace1", 'nombre' => "$tpDescRad[2]");
 }
 
-#Menu de Notificaciones
-$menuRadicacion = 1;
-$sub = array();
 
-if ($_SESSION["USUA_PRAD_TP4"]) {
-    if ($tpDescRad[3]) {
-        $sub["notificacionCircInt"] = array(
-            'subMenu' => 0,
-            'url' => "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=4&depende=$dependencia",
-            'nombre' => "$tpDescRad[3]"
-        );
-    }
-}
-
-if ($_SESSION["USUA_PRAD_TP5"]) {
-    if ($tpDescRad[4]) {
-        $sub["notificacionCircExt"] = array(
-            'subMenu' => 0,
-            'url' => "radicacion/chequear.php?$phpsession&primera=1&ent=5&depende=$dependencia",
-            'nombre' => "$tpDescRad[4]"
-        );
-    }
-}
-
-if ($_SESSION["USUA_PRAD_TP6"]) {
-    if ($tpDescRad[5]) {
-        $sub["notificacionResolucion"] = array(
-            'subMenu' => 0,
-            'url' => "radicacion/chequear.php?$phpsession&primera=1&ent=6&depende=$dependencia",
-            'nombre' => "$tpDescRad[5]"
-        );
-    }
-}
-
-if ($_SESSION["USUA_PRAD_TP7"]) {
-    if ($tpDescRad[6]) {
-        $sub["notificacionAuto"] = array(
-            'subMenu' => 0,
-            'url' => "radicacion/chequear.php?$phpsession&primera=1&ent=7&depende=$dependencia",
-            'nombre' => "$tpDescRad[6]"
-        );
-    }
-}
-
-if ($_SESSION["USUA_PRAD_TP4"] || $_SESSION["USUA_PRAD_TP5"] || $_SESSION["USUA_PRAD_TP6"] || $_SESSION["USUA_PRAD_TP7"]) {
-    $esRolProyector = $constancia->esRolProyector($dependencia, $codusuario);
-    if ($esRolProyector) {
-        $sub["notificacionConstancia"] = array(
-            'subMenu' => 0,
-            'url' => "constanciaEjecutoria/solicitud.php?$phpsession&primera=1&depende=$dependencia",
-            'nombre' => "Solicitud Constancia Ejecutoria"
-        );
-    }
-    $radicacion["notificaciones"] = array('subMenu' => 1, 'url' => "#", 'nombre' => 'Notificaciones', 'sub' => $sub);
-}
 
 if ($_SESSION["USUA_PRAD_TP8"]) {
     $menuRadicacion = 1;
