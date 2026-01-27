@@ -2,7 +2,7 @@
 if (!$ruta_raiz)   $ruta_raiz = "..";
 
 // Incluir clases comunes
-include_once("$ruta_raiz/include/class/JefeArea.class.php");
+include_once "$ruta_raiz/include/class/JefeArea.class.php";
 
 $permArchi     = $_SESSION["permArchi"];
 $permVobo      = $_SESSION["permVobo"];
@@ -11,9 +11,9 @@ $permRespuesta = $_SESSION["usua_perm_respuesta"];
 $pattern     = '/[^\w:()áéíóúÁÉÍÓÚ=#°,.ñÑ]+/';
 $rad_asun_res = isset($rad_asun_res) ? $rad_asun_res : '';
 $rad_asun_res   = preg_replace($pattern, ' ', $rad_asun_res);
-if (!$mostrar_opc_envio) $mostrar_opc_envio = 0;
-
-
+if (!$mostrar_opc_envio) {
+  $mostrar_opc_envio = 0;
+}
 
 // validar si es tramitador
 if (isset($numrad) && $_SESSION["USUA_TRAMITADOR"] && !$tieneAsignacion) {
@@ -26,6 +26,8 @@ $nombreCarpeta = $_GET["nomcarpeta"];
 
 <script language="javascript">
   function markAll() {
+    console.log('entro');
+
     if (document.form1.elements.checkAll.checked) {
       for (i = 2; i < document.form1.elements.length; i++)
         document.form1.elements[i].checked = 1;
@@ -505,16 +507,15 @@ if (($mostrar_opc_envio == 0) || ($_SESSION['codusuario'] == $radi_usua_actu && 
   if ($controlAgenda == 1) {
     //Si el esta consultando la carpeta de documentos agendados entonces muestra el boton de sacar de la agenda
     if ($agendado) {
-      echo ("<input name='Submit2' type='button' class='btn btn-primary' value=' Sacar de La Agenda &gt;&gt;' onClick='txNoAgendar();'>");
+      echo "<input name='Submit2' type='button' class='btn btn-primary' value=' Sacar de La Agenda &gt;&gt;' onClick='txNoAgendar();'>";
     } else {
-      echo (" ");
+      echo " ";
     }
   }
 
   if (!$agendado) {
     if ($_SESSION['depe_codi_padre'] || $_SESSION["USUA_JEFE_DE_GRUPO"]) {
       if (!empty($permVobo) && $permVobo != 0) { ?>
-
         <a href="#" onmouseout="MM_swapImgRestore()" onclick="seleccionBarra = 14;vistoBueno();" onmouseover="MM_swapImage('Image12','','<?= $ruta_raiz ?>/imagenes/internas/overVobo.gif',1)"></a>
       <? }
     }
@@ -530,9 +531,9 @@ if (($mostrar_opc_envio == 0) || ($_SESSION['codusuario'] == $radi_usua_actu && 
     }
   }
 }
+
 /* Final de opcion de enviar para carpetas que no son 11 y 0(VoBo)
 /* si esta en la Carpeta de Visto Bueno no muesta las opciones de reenviar */
-
 //var_dump($_SESSION); //Depuracion. Borrar.
 
 if (($_SESSION["USUA_JEFE_DE_GRUPO"] || $_SESSION["USUA_TRAMITADOR"]) &&
@@ -543,16 +544,14 @@ if (($_SESSION["USUA_JEFE_DE_GRUPO"] || $_SESSION["USUA_TRAMITADOR"]) &&
   $mostrarMoverCarpeta = false;
 }
 
-if ((($mostrar_opc_envio == 0) || ($_SESSION['codusuario'] == $radi_usua_actu && $_SESSION['dependencia'] == $radi_depe_actu))) {
+if (($mostrar_opc_envio == 0) || ($_SESSION['codusuario'] == $radi_usua_actu && $_SESSION['dependencia'] == $radi_depe_actu)) {
   $row1 = array();
   // Combo en el que se muestran las dependencias, en el caso  de que el usuario escoja reasignar.
   $dependencianomb = substr($dependencianomb, 0, 35);
   $subDependencia = $db->conn->substr . "(d.depe_codi||' '||d.depe_nomb,0,80)";
 
   if (
-    $_SESSION["USUA_JEFE_DE_GRUPO"] or
-    $_SESSION["usuario_reasignacion"] or
-    $_SESSION["usuario_reasigna_jefes"]
+    $_SESSION["USUA_JEFE_DE_GRUPO"] || $_SESSION["usuario_reasignacion"] || $_SESSION["usuario_reasigna_jefes"]
   ) {
     $whereReasignar = "where d.depe_estado = 1";
   } else {
@@ -575,9 +574,9 @@ if ((($mostrar_opc_envio == 0) || ($_SESSION['codusuario'] == $radi_usua_actu &&
   $rs  = $db->query($sql);
   //$db->conn->debug = false;
 
-  echo "<label class='form-select'>";
+  echo "<label class=''>";
   if ($rs && !$rs->EOF) {
-    $depencia = $rs->GetMenu2('depsel', 0, "0: -- Escoja una Dependencia --", false, 0, " id='depsel' class='form-select' ");
+    $depencia = $rs->GetMenu2('depsel', 0, "0: -- Escoja una Dependencia --", false, 0, " id='depsel' class='form-select form-select-sm' ");
   }
   echo "</label>";
 
@@ -604,8 +603,8 @@ if ((($mostrar_opc_envio == 0) || ($_SESSION['codusuario'] == $radi_usua_actu &&
 			and depe_codi = $dependencia
 			order by orden, carp_codi";
   $rs = $db->conn->Execute($sql);
-  $sCarpeta  =  "<div><label class='form-select'>";
-  $sCarpeta .= $rs->GetMenu2('carpSel', 1, "0:-- Seleccione una Carpeta --", false, 0, " id='carpper' class='form-select' ");
+  $sCarpeta  =  "<div><label>";
+  $sCarpeta .= $rs->GetMenu2('carpSel', 1, "0:-- Seleccione una Carpeta --", false, 0, " id='carpper' class='form-select form-select-sm' ");
   $sCarpeta .= "</label></div>";
 
   // Fin de Muestra de Carpetas personales
@@ -619,14 +618,14 @@ if ((($mostrar_opc_envio == 0) || ($_SESSION['codusuario'] == $radi_usua_actu &&
 
 if ($tieneAsignacion) { ?>
   <div>
-    <label class="form-select">
-      <select id="AccionCaliope" name="AccionCaliope" size="1" aria-controls="dt_basic" class="form-select">
+    <label class="">
+      <select id="AccionCaliope" name="AccionCaliope" size="1" aria-controls="dt_basic" class="form-select form-select-sm">
         <option value="9" selected="selected">Escoja una accion...</option>
         <option value="18">Enviar a ...</option>
         <option value="13">Finalizar Tramite...</option>
       </select>
     </label>
-    <label class="form-select"> <?= $depencia ?> </label>
+    <label class=""> <?= $depencia ?> </label>
   </div>
 <?php }
 echo $sCarpeta = isset($sCarpeta) ? $sCarpeta : '';
@@ -652,8 +651,8 @@ function puedeTramitar($depe_actu, $dependencia, $codusuario, $usuacodi)
 }
 
 $opciones_listado_accion = '<div>
-                              <label class="form-select">
-                                <select class="form-select" title="Seleccione una accion a realizar con el radicado" id="AccionCaliope" name="AccionCaliope" size="1" aria-controls="dt_basic">
+                              <label class="">
+                                <select class="form-select form-select-sm" title="Seleccione una accion a realizar con el radicado" id="AccionCaliope" name="AccionCaliope" size="1" aria-controls="dt_basic">
                                   <option value="0" selected="selected">Escoja una accion...</option>
                                   <option value="9" >Enviar a...</option>
                                   <option value="14">Enviar a Visto Bueno.</option>';
@@ -671,8 +670,8 @@ $opciones_listado_accion .= '<option value="8" >a Informar...</option>
                           <!--  <option value="14">Agendar...</option> -->
                           </select>
                         </label>
-                        <label class="form-select" > ' . (isset($depencia) ? $depencia : '') . ' </label>
-                        <label id="lbDependenciaMsx" style="display: none;font-weight: bold; background-color: #ffc055;"> </label>
+                        <label class="" > ' . (isset($depencia) ? $depencia : '') . ' </label>
+                        <label id="lbDependenciaMsx" style="display: none;font-weight: bold; background-color: #ffc055; padding: .3rem;"> </label>
                     </div>';
 if (
   isset($verradPermisos) &&

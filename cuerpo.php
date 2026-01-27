@@ -277,7 +277,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                         <div class="actions smart-form" style="position: absolute !important; top: 147; z-index: 1; left: 28px;">
                                             <?php
                                             $controlAgenda = 1;
-                                            if (($carpeta == 11 and !$_SESSION["USUA_JEFE_DE_GRUPO"]) and !$tipo_carp and $codusuario != 1) {
+                                            if (($carpeta == 11 && !$_SESSION["USUA_JEFE_DE_GRUPO"]) && !$tipo_carp && $codusuario != 1) {
                                             } else { ?>
                                             <?php include "./tx/txOrfeo.php";
                                             }
@@ -289,14 +289,9 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                 <div class="row g-3 align-items-end">
                                                     <!-- Página -->
                                                     <div class="col-md-3">
-                                                        <label class="form-label fw-semibold">Página</label>
+                                                        <label for="resultados_aux" class="form-label fw-semibold">Página</label>
                                                         <div class="input-group">
-                                                            <input
-                                                                type="number"
-                                                                class="form-control"
-                                                                max="1000" min="0"
-                                                                value="<?= $_SESSION['resultados'] ?>"
-                                                                name="resultados_aux" id="resultados_aux">
+                                                            <input type="number" class="form-control" max="1000" min="0" value="<?= $_SESSION['resultados'] ?>" name="resultados_aux" id="resultados_aux">
                                                             <span class="input-group-text bg-white">
                                                                 de&nbsp;<span id="total_bandeja" class="fw-bold"></span>
                                                             </span>
@@ -398,8 +393,9 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                                                         $rs = $db->conn->Execute($isql);
 
-                                                        if (!empty($isqlconteo))
+                                                        if (!empty($isqlconteo)) {
                                                             $rs_conteo = $db->conn->Execute($isqlconteo);
+                                                        }
 
                                                         include_once "$ruta_raiz/tx/diasHabiles.php";
                                                         $a = new FechaHabil($db);
@@ -475,7 +471,7 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                                                             //Debo calcular los dias del radicado antes
                                                             if ($diasRadicado != "") {
-                                                                if ($diasRadicado == "-" or $diasRadicado == "N/A ó termino no definido") {
+                                                                if ($diasRadicado == "-" || $diasRadicado == "N/A ó termino no definido") {
                                                                     #No se pintan.
                                                                 } else {
                                                                     if ($diasRadicado <= 0) {
@@ -483,7 +479,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                                         $ColorAlerta2 =  "style='color:#FE2E2E;cursor:help'";
                                                                         $MensajeAlerta2 = "Vencido";
                                                                     } else {
-                                                                        if ($diasRadicado > 0 and $diasRadicado <= 3) {
+                                                                        if ($diasRadicado > 0 && $diasRadicado <= 3) {
                                                                             $TipoAlerta2 = "class='fa fa-circle'";
                                                                             $ColorAlerta2 =  "style='color:#8A2908;cursor:help'";
                                                                             $MensajeAlerta2 = "Por Vencer";
