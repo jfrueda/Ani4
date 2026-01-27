@@ -1,103 +1,97 @@
 <?php
+  require_once($ruta_raiz . '/tcpdf/tcpdf.php');
 
+  class MYPDF extends TCPDF {
 
-      class MYPDF extends TCPDF
-      {
-          protected $processId = 0;
-          protected $header = '';
-          protected $footer = '';
-          static $errorMsg = '';
+      protected $radicadoOrfeo;
+      protected $fechaOrfeo;
+      protected $epigrafe;
 
-          protected $radicadoOrfeo;
-          protected $fechaOrfeo;
-          protected $epigrafe;
-          protected $tableEpi;
+      public function __construct($radicadoOrfeo, $fechaOrfeo, $epigrafe) {
+          $this->radicadoOrfeo = $radicadoOrfeo;
+          $this->fechaOrfeo    = $fechaOrfeo;
+          $this->epigrafe      = $epigrafe;
 
-          function __construct($radicadoOrfeo, $fechaOrfeo, $epigrafe) {
-             $this->radicadoOrfeo = $radicadoOrfeo;
-             $this->fechaOrfeo = $fechaOrfeo;
-             $this->epigrafe = $epigrafe;
-             parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, 3);
-          }
-
-
-          /**
-            * This method is used to override the parent class method.
-          **/
-          public function Header()
-          {
-            
-              if($this->page == 1) {
-                  $this->Image('../bodega/sys_img/logo.png', 25, 2, 25, 18, 'JPG');
-                  $this->SetLineStyle( array( 'width' => 0.2, 'color' => array(0,0,0)));
-                  $this->RoundedRect(20, 20, $this->getPageWidth() -40, $this->getPageHeight() - 40, 5);
-              } else {
-                $this->SetY(10);
-                $this->Cell(0, 15, 'RESOLUCIÓN No ' . $this->radicadoOrfeo . ' DE ' . $this->fechaOrfeo . ' Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'M', 'M'); 
-                $this->SetY(25);
-
-                  $this->tableEpi = '<table border="0">
-                       <tr align="center">
-                            <td>Continuación de la resolución, <b>' . $this->epigrafe  . '</b></td>
-                       </tr> 
-                  </table>';
-                  $this->writeHTML($this->tableEpi, true, false, true, false, '');                   
-                  $this->Line($this->getX(), $this->getY(), $this->getPageWidth() - 22,  $this->getY());
-
-                  $this->SetLineStyle( array( 'width' => 0.2, 'color' => array(0,0,0)));
-                  $this->RoundedRect(20, 20, $this->getPageWidth() -40, $this->getPageHeight() - 40, 5);
-              }
-
-
-          }
-
-        public function Footer() {         
-            $this->SetY(-15);
-            $this->SetFont ('helvetica', '', 8 , '', 'default', true );
-            $this->Cell(0, 10, 'Página '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'M', 'M'); 
-            $this->SetY(-15);
-            $this->Cell(0, 10, 'GJFT07', 0, false, 'L', 0, '', 0, false, 'M', 'M');                               
-        }          
-
+          parent::__construct(
+              PDF_PAGE_ORIENTATION,
+              PDF_UNIT,
+              PDF_PAGE_FORMAT,
+              true,
+              'UTF-8',
+              false
+          );
       }
-      
-      $pdf = new MYPDF($numradNofi, $anho, $radi_asun);
-      //$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, 3);
 
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor($setAutor);
-        $pdf->SetTitle($SetTitle);
-        $pdf->SetSubject($SetSubject);
-        $pdf->SetKeywords($SetKeywords);
+      /* =========================
+        HEADER
+      ========================= */
+      public function Header() {
+          if ($this->page == 1) {
+              $this->SetY(5);
+              $this->SetFont('helvetica', 'B', 14);
+              $this->Cell(0, 10, 'UNIVERSIDAD MILITAR NUEVA GRANADA', 0, 1, 'C');
+              
+              $logoPath = dirname(__FILE__) . '/../../../bodega/sys_img/logo.png';
+              $this->Image($logoPath, ($this->getPageWidth() - 25) / 2, 15, 25, 0, 'PNG');
+          }
 
-      
-      $pdf->SetMargins(22, 56, 22);
-      $pdf->AddPage();    
+          if ($this->page > 1) {
+              $this->SetY(10);
+              $this->SetFont('helvetica', '', 10);
+              $this->Cell(
+                  0,
+                  6,
+                  'Continuación de la Resolución No '.$this->radicadoOrfeo.' de '.$this->fechaOrfeo . ' Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages(),
+                  0,
+                  1,
+                  'C'
+              );
 
-        // define barcode style
-       /* $style = array(
-            'position' => '',
-            'align' => 'C',
-            'stretch' => true,
-            'fitwidth' => true,
-            'cellfitalign' => '',
-            'border' => false,
-            'hpadding' => 'auto',
-            'vpadding' => 'auto',
-            'fgcolor' => array(0,0,0),
-            'bgcolor' => false, //array(255,255,255),
-            'text' => false,
-            'font' => 'helvetica',
-            'fontsize' => 8,
-            'stretchtext' => 4
-        );
-        // echo "Entro a Radicar Anexo";
-        $style['position'] = 'R';
-        $pdf->write1DBarcode($nurad, 'C39', '', '', '', 7, 0.2, $style, 'N');*/
-        // output the HTML content      
+              $this->SetFont('helvetica', 'B', 10);
+              $this->Cell(0, 6, $this->epigrafe, 0, 1, 'C');
 
-      
-      $pdf->writeHTML($asu, true, false, true, false, '');
-      $pdf->Output($ruta_raiz.$ruta2, 'F');
+              $this->Line(22, $this->GetY(), $this->getPageWidth() - 22, $this->GetY());
+          }
+          $this->Ln(5);
+      }
 
+      /* =========================
+        FOOTER
+      ========================= */
+      public function Footer() {
+          $this->SetY(-15);
+          $this->SetFont('helvetica', '', 8);
+      }
+  }
+
+  /* =========================
+    USO DEL PDF
+  ========================= */
+
+  // VARIABLES ORFEO (ejemplo)
+  $numradNofi = $numradNofi;   // Número de resolución
+  $anho       = $anho;         // Fecha (texto)
+  $radi_asun  = $radi_asun;    // Epígrafe
+  $asu        = $asu;          // HTML del cuerpo
+  $ruta2      = $ruta2;        // Ruta de salida
+
+  $pdf = new MYPDF($numradNofi, $anho, $radi_asun);
+
+  // METADATOS
+  $pdf->SetCreator(PDF_CREATOR);
+  $pdf->SetAuthor($setAutor);
+  $pdf->SetTitle($SetTitle);
+  $pdf->SetSubject($SetSubject);
+  $pdf->SetKeywords($SetKeywords);
+
+  // CONFIGURACIÓN
+  $pdf->SetMargins(22, 55, 22);
+  $pdf->SetAutoPageBreak(true, 20);
+  $pdf->AddPage();
+
+  // CONTENIDO
+  $pdf->writeHTML($asu, true, false, true, false, '');
+
+  // SALIDA
+  $pdf->Output($ruta_raiz.$ruta2, 'F');
 ?>
