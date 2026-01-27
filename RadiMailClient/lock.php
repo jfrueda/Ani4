@@ -46,7 +46,7 @@ if(isset($_SESSION["email"]["error"])){
 						<h1><i class="fa fa-user fa-3x text-muted air air-top-right hidden-mobile"></i><?=current(explode("@",$usua_email))?><small><i class="fa fa-lock text-muted"></i> &nbsp;Locked</small></h1>
 						<p class="text-muted">
 							<br>
-							<input class="form-control" type="email" name="email" placeholder="<?=$usua_email?>" disabled>
+							<input class="form-control" type="email" name="email" >
 						</p>
 
 						<div class="input-group">

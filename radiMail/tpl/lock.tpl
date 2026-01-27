@@ -9,12 +9,12 @@
 	<h1 class="semi-bold"> Radicación de e-mail</h1>
 				</div>
 				<div>
-					<img src="{$logo}"  width="120" height="120" />
+					<img src="../bodega/sys_img/logo.png" alt="Logo" width="120" height="120" />
 					<div>
-						<h1><i class="fa fa-user fa-3x text-muted air air-top-right hidden-mobile"></i>{$username}<small><i class="fa fa-lock text-muted"></i> &nbsp;Locked</small></h1>
+						<h1><i class="fa fa-user fa-3x text-muted air air-top-right hidden-mobile"></i><small><i class="fa fa-lock text-muted"></i> &nbsp;Locked</small></h1>
 						<p class="text-muted">
 							<br>
-							<input class="form-control" type="email" name="email" placeholder="{$email}" disabled>
+							<input class="form-control" type="email" name="email" >
 						</p>
 
 						<div class="input-group">
