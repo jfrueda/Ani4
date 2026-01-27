@@ -79,7 +79,7 @@ if ($_GET['fechaIniSel'] == "" && $_GET['fechaInifSel'] == "") {
   <div id="spiffycalendar" class="text"></div>
 
   <form name="reporte_archivo" action='' method="post">
-    <div class="container my-4">
+    <div class="container-fluid my-4">
       <div class="card shadow-sm">
         <div class="card-header bg-orfeo text-white">
           <h5 class="mb-0 text-center">
