@@ -104,18 +104,23 @@ function fnc_date_calcm($this_date, $num_month)
 
 				if ($tipo == 1) {
 				?>
-					<TD class=titulos2 colspan="2">
-						<b>
-							<center>INVENTARIO CONSOLIDADO CAPACIDAD OCUPADA</center>
-						</b>
+					<td class=titulos2 colspan="2">
+						<div class="card shadow-sm my-3">
+							<div class="card-header bg-orfeo text-white">
+								<h5 class="mb-0 text-center">
+									INVENTARIO CONSOLIDADO CAPACIDAD OCUPADA
+								</h5>
+							</div>
+						</div>
 					</td>
 			</tr>
 			<tr>
 				<td class="titulos5">DEPARTAMENTO</td>
-				<td>&nbsp;
+				<td>
+					&nbsp;
 					<?
 					$rsD = $db->query($queryDpto);
-					print $rsD->GetMenu2("codDpto", $codDpto, "0:-- Seleccione --", false, "", " onChange='submit()' class='select'");
+					print $rsD->GetMenu2("codDpto", $codDpto, "0:-- Seleccione --", false, "", " onChange='submit()' class='form-select'");
 					?>
 				</td>
 			</tr>
@@ -125,7 +130,7 @@ function fnc_date_calcm($this_date, $num_month)
 					<?
 					if ($codDpto != 0) {
 						$rsm = $db->query($queryMuni);
-						print $rsm->GetMenu2("codMuni", $codMuni, "0:-- Seleccione --", false, "", " onChange='submit()' class='select'");
+						print $rsm->GetMenu2("codMuni", $codMuni, "0:-- Seleccione --", false, "", " onChange='submit()' class='form-select'");
 					}
 					?>
 				</td>
@@ -137,7 +142,7 @@ function fnc_date_calcm($this_date, $num_month)
 					if ($codMuni != 0 and $codMuni) {
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql7);
-						print $rs->GetMenu2('exp_edificio', $exp_edificio, true, false, "", "onChange='submit()'  class=select");
+						print $rs->GetMenu2('exp_edificio', $exp_edificio, true, false, "", "onChange='submit()'  class='form-select'");
 					}
 					?>
 				</TD>
@@ -163,9 +168,9 @@ function fnc_date_calcm($this_date, $num_month)
 			</TR>
 			<TR>
 				<td class=" titulos5" align="right">
-					<input name='Generar' type=submit class="botones_funcion" id="envia22" value="Generar">
+					<input name='Generar' type=submit class="btn btn-warning" id="envia22" value="Generar">
 				<TD class="titulos5" align="left">
-					<input name='Regresar' align="middle" type="button" class="botones_funcion" id="envia22" onClick="window.back();" value="Regresar">
+					<input name='Regresar' align="middle" type="button" class="btn btn-info" id="envia22" onClick="window.back();" value="Regresar">
 				</td>
 				</td>
 			</TR>
@@ -422,16 +427,21 @@ function fnc_date_calcm($this_date, $num_month)
 					if ($TIPO1 == 1) {
 					?>
 						<tr>
-							<td class="titulos5">A&Ntilde;O</td>
+							<td class="titulos5">AÑO</td>
 							<td>
-								<select class="select" name="s_desde_ano">
+								<select class="form-select" name="s_desde_ano">
 									<?
 									$agnoactual = Date('Y');
 									$i = 1990;
 									while ($i <= $agnoactual) {
-										if ($ano != 0) $i = $ano;
-										if ($i == $flds_desde_ano) $option = "<option SELECTED value=\"" . $i . "\">" . $i . "</option>";
-										else $option = "<option value=\"" . $i . "\">" . $i . "</option>";
+										if ($ano != 0) {
+											$i = $ano;
+										}
+										if ($i == $flds_desde_ano) {
+											$option = "<option SELECTED value=\"" . $i . "\">" . $i . "</option>";
+										} else {
+											$option = "<option value=\"" . $i . "\">" . $i . "</option>";
+										}
 										echo $option;
 										$i++;
 									}
@@ -445,7 +455,7 @@ function fnc_date_calcm($this_date, $num_month)
 								<?
 								$query = "select depe_nomb,depe_codi from DEPENDENCIA ORDER BY DEPE_NOMB";
 								$rs1 = $db->conn->query($query);
-								print $rs1->GetMenu2('dep_sel', $dep_sel, "0:--- TODAS LAS DEPENDENCIAS ---", false, "", " onChange='submit()' class=select");
+								print $rs1->GetMenu2('dep_sel', $dep_sel, "0:--- TODAS LAS DEPENDENCIAS ---", false, "", " onChange='submit()' class='form-select'");
 								?>
 							</td>
 						</tr>
@@ -469,7 +479,7 @@ function fnc_date_calcm($this_date, $num_month)
 								$rsD = $db->conn->query($querySerie);
 								$comentarioDev = "Muestra las Series Docuementales";
 								include "$ruta_raiz/include/tx/ComentarioTx.php";
-								print $rsD->GetMenu2("codserie", $codserie, "0:-- Seleccione --", false, "", "onChange='submit()' class='select'");
+								print $rsD->GetMenu2("codserie", $codserie, "0:-- Seleccione --", false, "", "onChange='submit()' class='form-select'");
 								?>
 							</td>
 						</tr>
@@ -480,19 +490,19 @@ function fnc_date_calcm($this_date, $num_month)
 								$nomb_varc = "su.sgd_sbrd_codigo";
 								$nomb_varde = "su.sgd_sbrd_descrip";
 								include "$ruta_raiz/include/query/trd/queryCodiDetalle.php";
-								include("$ruta_raiz/include/query/archivo/queryInventario.php");
+								include "$ruta_raiz/include/query/archivo/queryInventario.php";
 								$rsSub = $db->conn->query($querySub);
 								include "$ruta_raiz/include/tx/ComentarioTx.php";
-								print $rsSub->GetMenu2("tsub", $tsub, "0:-- Seleccione --", false, "", "onChange='submit()' class='select'");
+								print $rsSub->GetMenu2("tsub", $tsub, "0:-- Seleccione --", false, "", "onChange='submit()' class='form-select'");
 
 								if (!$codiSRD) {
 									$codiSRD = $codserie;
 									$codiSBRD = $tsub;
 								}
-								if ($codiSRD < 10 and $codiSRD != 0) $codiSRD = "0" . $codiSRD;
-								if ($codiSBRD < 10 and $codiSBRD != 0) $codiSBRD = "0" . $codiSBRD;
+								if ($codiSRD < 10 && $codiSRD != 0) $codiSRD = "0" . $codiSRD;
+								if ($codiSBRD < 10 && $codiSBRD != 0) $codiSBRD = "0" . $codiSBRD;
 								$expe = $s_desde_ano . $dep_sel . $codiSRD . $codiSBRD;
-								include("$ruta_raiz/include/query/archivo/queryInventario.php");
+								include "$ruta_raiz/include/query/archivo/queryInventario.php";
 								$rsc = $db->conn->query($sqlc);
 								$cajas2 = $rsc->fields['CAJA'];
 								?>
@@ -515,7 +525,7 @@ function fnc_date_calcm($this_date, $num_month)
 								&nbsp;
 								<?
 								$rsD = $db->query($queryDpto);
-								print $rsD->GetMenu2("codDpto", $codDpto, "0:-- Seleccione --", false, "", " onChange='submit()' class='select'");
+								print $rsD->GetMenu2("codDpto", $codDpto, "0:-- Seleccione --", false, "", " onChange='submit()' class='form-select'");
 								?>
 							</td>
 						</tr>
@@ -526,7 +536,7 @@ function fnc_date_calcm($this_date, $num_month)
 								<?
 								if ($codDpto != 0) {
 									$rsm = $db->query($queryMuni);
-									print $rsm->GetMenu2("codMuni", $codMuni, "0:-- Seleccione --", false, "", " onChange='submit()' class='select'");
+									print $rsm->GetMenu2("codMuni", $codMuni, "0:-- Seleccione --", false, "", " onChange='submit()' class='form-select'");
 								}
 								?>
 							</td>
@@ -539,7 +549,7 @@ function fnc_date_calcm($this_date, $num_month)
 								if ($codMuni != 0 and $codMuni) {
 									include("$ruta_raiz/include/query/archivo/queryInventario.php");
 									$rs = $db->query($sql7);
-									print $rs->GetMenu2('exp_edificio', $exp_edificio, true, false, "", "onChange='submit()'  class=select");
+									print $rs->GetMenu2('exp_edificio', $exp_edificio, true, false, "", "onChange='submit()'  class='form-select'");
 								} ?>
 							</TD>
 
@@ -551,7 +561,7 @@ function fnc_date_calcm($this_date, $num_month)
 								<?
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql3);
-								print $rs->GetMenu2('exp_piso', $exp_piso, true, false, "", " onChange='submit()' class=select ");
+								print $rs->GetMenu2('exp_piso', $exp_piso, true, false, "", " onChange='submit()' class='form-select' ");
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql1);
 								if (!$rs->EOF) $item61 = $rs->fields["SGD_EIT_NOMBRE"];
@@ -566,7 +576,7 @@ function fnc_date_calcm($this_date, $num_month)
 								<?
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql4);
-								print $rs->GetMenu2('exp_item11', $exp_item11, true, false, "", " onChange='submit()' class=select");
+								print $rs->GetMenu2('exp_item11', $exp_item11, true, false, "", " onChange='submit()' class='form-select'");
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql11);
 								if (!$rs->EOF) $item51 = $rs->fields["SGD_EIT_NOMBRE"];
@@ -580,7 +590,7 @@ function fnc_date_calcm($this_date, $num_month)
 								<?
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql17);
-								print $rs->GetMenu2('entre', $entre, true, false, "", "onChange='submit()'  class=select");
+								print $rs->GetMenu2('entre', $entre, true, false, "", "onChange='submit()'  class='form-select'");
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql16);
 								if (!$rs->EOF) $item41 = $rs->fields["SGD_EIT_NOMBRE"];
@@ -593,7 +603,7 @@ function fnc_date_calcm($this_date, $num_month)
 								<?
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql18);
-								print $rs->GetMenu2('estan', $estan, true, false, "", " onChange='submit()' class=select");
+								print $rs->GetMenu2('estan', $estan, true, false, "", " onChange='submit()' class='form-select'");
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql10);
 								if (!$rs->EOF) $item31 = $rs->fields["SGD_EIT_NOMBRE"];
@@ -607,7 +617,7 @@ function fnc_date_calcm($this_date, $num_month)
 								<?
 								include("$ruta_raiz/include/query/archivo/queryInventario.php");
 								$rs = $db->query($sql19);
-								print $rs->GetMenu2('item', $item, true, false, "", "  class=select");
+								print $rs->GetMenu2('item', $item, true, false, "", "  class='form-select'");
 								?>
 							</td>
 							<?
@@ -685,7 +695,7 @@ function fnc_date_calcm($this_date, $num_month)
 			<tr>
 				<TD colspan='2'>
 					<CENTER>
-						<input name='Cambiar' type=submit class="botones_funcion" id="envia22" value="Cambiar">
+						<input name='Cambiar' type=submit class="btn btn-primary" id="envia22" value="Cambiar">
 					</CENTER>
 				<?
 					}
@@ -736,7 +746,7 @@ function fnc_date_calcm($this_date, $num_month)
 					&nbsp;
 					<?
 						$rsD = $db->query($queryDpto);
-						print $rsD->GetMenu2("codDpto", $codDpto, "0:-- Seleccione --", false, "", " onChange='submit()' class='select'");
+						print $rsD->GetMenu2("codDpto", $codDpto, "0:-- Seleccione --", false, "", " onChange='submit()' class='form-select'");
 					?>
 				</td>
 			</tr>
@@ -748,7 +758,7 @@ function fnc_date_calcm($this_date, $num_month)
 
 						if ($codDpto != 0) {
 							$rsm = $db->query($queryMuni);
-							print $rsm->GetMenu2("codMuni", $codMuni, "0:-- Seleccione --", false, "", " onChange='submit()' class='select'");
+							print $rsm->GetMenu2("codMuni", $codMuni, "0:-- Seleccione --", false, "", " onChange='submit()' class='form-select'");
 						}
 					?>
 				</td>
@@ -761,7 +771,7 @@ function fnc_date_calcm($this_date, $num_month)
 						if ($codMuni != 0 and $codMuni) {
 							include("$ruta_raiz/include/query/archivo/queryInventario.php");
 							$rs = $db->query($sql7);
-							print $rs->GetMenu2('exp_edificio', $exp_edificio, true, false, "", "onChange='submit()'  class=select");
+							print $rs->GetMenu2('exp_edificio', $exp_edificio, true, false, "", "onChange='submit()'  class='form-select'");
 						}
 					?>
 				</TD>
@@ -774,7 +784,7 @@ function fnc_date_calcm($this_date, $num_month)
 					<?
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql3);
-						print $rs->GetMenu2('exp_piso', $exp_piso, true, false, "", "onChange='submit()'  class=select ");
+						print $rs->GetMenu2('exp_piso', $exp_piso, true, false, "", "onChange='submit()'  class='form-select' ");
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql1);
 						if (!$rs->EOF) $item61 = $rs->fields["SGD_EIT_NOMBRE"];
@@ -787,7 +797,7 @@ function fnc_date_calcm($this_date, $num_month)
 					<?
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql4);
-						print $rs->GetMenu2('exp_item11', $exp_item11, true, false, "", " onChange='submit()' class=select");
+						print $rs->GetMenu2('exp_item11', $exp_item11, true, false, "", " onChange='submit()' class='form-select'");
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql11);
 						if (!$rs->EOF) $item51 = $rs->fields["SGD_EIT_NOMBRE"];
@@ -800,7 +810,7 @@ function fnc_date_calcm($this_date, $num_month)
 					<?
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql17);
-						print $rs->GetMenu2('entre', $entre, true, false, "", " onChange='submit()' class=select");
+						print $rs->GetMenu2('entre', $entre, true, false, "", " onChange='submit()' class='form-select'");
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql16);
 						if (!$rs->EOF) $item41 = $rs->fields["SGD_EIT_NOMBRE"];
@@ -813,7 +823,7 @@ function fnc_date_calcm($this_date, $num_month)
 					<?
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql18);
-						print $rs->GetMenu2('estan', $estan, true, false, "", " onChange='submit()' class=select");
+						print $rs->GetMenu2('estan', $estan, true, false, "", " onChange='submit()' class='form-select'");
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql10);
 						if (!$rs->EOF) $item31 = $rs->fields["SGD_EIT_NOMBRE"];
@@ -826,7 +836,7 @@ function fnc_date_calcm($this_date, $num_month)
 					<?
 						include("$ruta_raiz/include/query/archivo/queryInventario.php");
 						$rs = $db->query($sql19);
-						print $rs->GetMenu2('item', $item, true, false, "", "  class=select");
+						print $rs->GetMenu2('item', $item, true, false, "", "  class='form-select'");
 					?>
 				</td>
 				<?
@@ -894,7 +904,7 @@ function fnc_date_calcm($this_date, $num_month)
 		<tr>
 			<TD colspan='2'>
 				<CENTER>
-					<input name='Cambiar' type=submit class="botones_funcion" id="envia22" value="Cambiar">
+					<input name='Cambiar' type=submit class="btn btn-primary" id="envia22" value="Cambiar">
 				</CENTER>
 			<?
 					}
@@ -907,9 +917,9 @@ function fnc_date_calcm($this_date, $num_month)
 
 				<table border=0 width 100% cellpadding="1" class="borde_tab">
 					<tr>
-						<td class="titulos5">A&Ntilde;O</td>
+						<td class="titulos5">AÑO</td>
 						<td>
-							<select class="select" name="s_desde_ano">
+							<select class="form-select" name="s_desde_ano">
 								<?
 								$agnoactual = Date('Y');
 								$i = 1990;
@@ -930,7 +940,7 @@ function fnc_date_calcm($this_date, $num_month)
 							<?
 							$query = "select depe_nomb,depe_codi from DEPENDENCIA ORDER BY DEPE_NOMB";
 							$rs1 = $db->conn->query($query);
-							print $rs1->GetMenu2('dep_sel', $dep_sel, "0:--- TODAS LAS DEPENDENCIAS ---", false, "", "  class=select");
+							print $rs1->GetMenu2('dep_sel', $dep_sel, "0:--- TODAS LAS DEPENDENCIAS ---", false, "", "  class='form-select'");
 							?>
 						</td><br>
 						<span class="titulos5">No se debe hacer cambio de dependencia sino hasta que se desee hacer otro inventario documental
@@ -980,7 +990,7 @@ function fnc_date_calcm($this_date, $num_month)
 							$rsD = $db->conn->query($querySerie);
 							$comentarioDev = "Muestra las Series Docuementales";
 							include "$ruta_raiz/include/tx/ComentarioTx.php";
-							print $rsD->GetMenu2("codserie", $codserie, "0:-- Seleccione --", false, "", "onChange='submit()' class='select'");
+							print $rsD->GetMenu2("codserie", $codserie, "0:-- Seleccione --", false, "", "onChange='submit()' class='form-select'");
 							?>
 						</td>
 					</tr>
@@ -994,7 +1004,7 @@ function fnc_date_calcm($this_date, $num_month)
 							include("$ruta_raiz/include/query/archivo/queryInventario.php");
 							$rsSub = $db->conn->query($querySub);
 							include "$ruta_raiz/include/tx/ComentarioTx.php";
-							print $rsSub->GetMenu2("tsub", $tsub, "0:-- Seleccione --", false, "", "onChange='submit()' class='select'");
+							print $rsSub->GetMenu2("tsub", $tsub, "0:-- Seleccione --", false, "", "onChange='submit()' class='form-select'");
 
 							if (!$codiSRD) {
 								$codiSRD = $codserie;
@@ -1170,7 +1180,7 @@ function fnc_date_calcm($this_date, $num_month)
 				}
 				if ($tipo == 3 || $tipo == 2) {
 				?>
-				<input name='Regresar' align="middle" type="button" class="botones_funcion margin-botton-table" id="envia22" onClick="window.back();" value="Regresar">
+				<input name='Regresar' align="middle" type="button" class="btn btn-secondary margin-botton-table" id="envia22" onClick="window.back();" value="Regresar">
 			<? } ?>
 			</TD>
 		</tr>
