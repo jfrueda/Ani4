@@ -590,10 +590,17 @@ if ($_SESSION["USUA_PRAD_TP3"]) {
 
 
 
+if ($_SESSION["USUA_PRAD_TP6"]) {
+    $menuRadicacion = 1;
+    $enlace6   = "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=6&depende=$dependencia";
+    $radicacion["radica6"] = array('subMenu' => 0, 'url' => "$enlace6", 'nombre' => "$tpDescRad[5]");
+}
+
+
 if ($_SESSION["USUA_PRAD_TP8"]) {
     $menuRadicacion = 1;
-    $enlace7   = "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=8&depende=$dependencia";
-    $radicacion["radica8"] = array('subMenu' => 0, 'url' => "$enlace7", 'nombre' => "$tpDescRad[7]");
+    $enlace8   = "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=8&depende=$dependencia";
+    $radicacion["radica8"] = array('subMenu' => 0, 'url' => "$enlace8", 'nombre' => "$tpDescRad[7]");
 }
 
 if ($_SESSION["usua_perm_owncloud"] >= 1) {

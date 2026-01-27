@@ -25,15 +25,19 @@
           **/
           public function Header()
           {
+              if ($this->page == 1) {
+                  $this->SetY(5);
+                  $this->SetFont('helvetica', 'B', 14);
+                  $this->Cell(0, 10, 'UNIVERSIDAD MILITAR NUEVA GRANADA', 0, 1, 'C');
+                  
+                  $logoPath = dirname(__FILE__) . '/../../../bodega/sys_img/logo.png';
+                  $this->Image($logoPath, ($this->getPageWidth() - 25) / 2, 15, 25, 0, 'PNG');
+              }
             
-              if($this->page == 1) {    
-                  $this->Image('../bodega/sys_img/logo.png', 25, 2, 25, 18, 'JPG');
-                  $this->SetLineStyle( array( 'width' => 0.2, 'color' => array(0,0,0)));
-                  $this->RoundedRect(20, 20, $this->getPageWidth() -40, $this->getPageHeight() - 40, 5);
-              } else {
+              if($this->page > 1) {    
                   $this->SetY(10);
-                  $this->Cell(0, 15, 'RESOLUCIÓN No RA_NOTI_S DE ANHO_S Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'M', 'M'); 
-                  $this->SetY(25);
+                  $this->SetFont('helvetica', '', 10);
+                  $this->Cell(0, 10, 'RESOLUCIÓN No RA_NOTI_S DE ANHO_S Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages(), 0, 1, 'C'); 
 
                   $this->tableEpi = '<table border="0">
                        <tr align="center">
@@ -41,21 +45,14 @@
                        </tr> 
                   </table>';
                   $this->writeHTML($this->tableEpi, true, false, true, false, '');                   
-                  $this->Line($this->getX(), $this->getY(), $this->getPageWidth() - 22,  $this->getY());
-
-                  $this->SetLineStyle( array( 'width' => 0.2, 'color' => array(0,0,0)));
-                  $this->RoundedRect(20, 20, $this->getPageWidth() -40, $this->getPageHeight() - 40, 5);                  
+                  $this->Line(22, $this->getY(), $this->getPageWidth() - 22,  $this->getY());
               }
-
-
           }
 
         public function Footer() {         
             $this->SetY(-15);
             $this->SetFont ('helvetica', '', 8 , '', 'default', true );
             $this->Cell(0, 10, 'Página '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'M', 'M');       
-            $this->SetY(-15);
-            $this->Cell(0, 10, 'GJFT07', 0, false, 'L', 0, '', 0, false, 'M', 'M');                 
         }          
 
       }
