@@ -14,7 +14,7 @@
 						<h1><i class="fa fa-user fa-3x text-muted air air-top-right hidden-mobile"></i><small><i class="fa fa-lock text-muted"></i> &nbsp;Locked</small></h1>
 						<p class="text-muted">
 							<br>
-							<input class="form-control" type="email" name="email" >
+							<input class="form-control" type="email" name="email"  placeholder="email">
 						</p>
 
 						<div class="input-group">
