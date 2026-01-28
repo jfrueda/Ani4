@@ -1,10 +1,11 @@
 <?php
+
 /**
-* @module Dias habiles 2021
-*
-* @author hardy Deimont Niño   <hdeimont@gmail.com>
-* @license  GNU AFFERO GENERAL PUBLIC LICENSE
-* @copyright
+ * @module Dias habiles 2021
+ *
+ * @author hardy Deimont Niño   <hdeimont@gmail.com>
+ * @license  GNU AFFERO GENERAL PUBLIC LICENSE
+ * @copyright
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -18,7 +19,7 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 date_default_timezone_set('America/Bogota');
 session_start();
 if (!$_SESSION['dependencia']) {
@@ -48,99 +49,94 @@ $ano = $ano ? $ano : date('Y');
 <html>
 
 <head>
-
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $ruta_raiz; ?>/estilos/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" media="screen"
-        href="<?php echo $ruta_raiz; ?>/estilos/smartadmin-production.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $ruta_raiz; ?>/estilos/smartadmin-production.css">
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $ruta_raiz; ?>/estilos/smartadmin-skins.css">
-    <link href="<?=$ruta_raiz?>/estilos/bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="screen" href="<?= $ruta_raiz ?>/estilos/custom.css">
+    <!-- <link href="<?= $ruta_raiz ?>/estilos/bootstrap4.min.css" rel="stylesheet"> -->
 
     <style type="text/css">
-    dataPres .td {
-        font-family: Verdana, Arial, Helvetica, sans-serif;
-        font-size: 10px;
-        font-weight: bolder;
-        color: #069;
-        text-decoration: none;
-    }
+        dataPres .td {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            font-weight: bolder;
+            color: #069;
+            text-decoration: none;
+        }
 
-    #lista {
-        width: 200px;
-    }
+        #lista {
+            width: 200px;
+        }
     </style>
 </head>
 
-<body >
-
+<body>
     <div class="col-12 pt-4">
-        <section id="widget-grid">
-            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
-                <header>
-                    <h2 id="nomReport"><?php echo $tituloPage; ?></h2>
-                </header>
-
+        <section id="widget-grid ">
+            <div class="jarviswidget jarviswidget-color-darken card shadow-sm" id="wid-id-1" data-widget-editbutton="false">
+                <div class="card-header bg-orfeo text-white">
+                    <h5 class="mb-2" id="nomReport">
+                        <?php echo $tituloPage; ?>
+                    </h5>
+                </div>
 
                 <!-- widget content -->
-                <div class="widget-body" style='min-height: 40px;padding-bottom:0px'>
-                    <div class="input-group mb-3">
+                <div class="widget-body card-body p-0" style='min-height: 40px;padding-bottom:0px'>
+                    <div class="input-group p-4">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Año</label>
                         </div>
                         <form action='adm_nohabiles.php' style='margin:0px'>
-                        <select id='ano' name='ano' class="custom-select" onchange='cambio()' style='max-width: 100px;' onchange="yearcarge()">
-                            <?php
-for ($index = (date('Y') + 1); $index > 2019; $index--) {
-    $select = $index == $ano ? ' selected="selected" ' : '';
-    echo "<option $select value='$index'>$index</option>";
-}
-?>
-                        </select>
+                            <select id='ano' name='ano' class="form-select" onchange='cambio()' style='max-width: 100px;' onchange="yearcarge()">
+                                <?php
+                                for ($index = (date('Y') + 1); $index > 2019; $index--) {
+                                    $select = $index == $ano ? ' selected="selected" ' : '';
+                                    echo "<option $select value='$index'>$index</option>";
+                                }
+                                ?>
+                            </select>
                         </form>
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Sábado</label>
                         </div>
                         <div class="input-group-append">
-
-                            <a href="#2" class='btn btn-outline-danger' onclick="habMas('sabado', 'addFmas');">No
-                                Habil</a>
-                            <a href="#2" class='btn btn-outline-success'
-                                onclick="habMas('sabado', 'delFmas');">Habil</a>
+                            <a href="#2" class='btn btn-outline-danger' onclick="habMas('sabado', 'addFmas');">NoHabil</a>
+                            <a href="#2" class='btn btn-outline-success' onclick="habMas('sabado', 'delFmas');">Habil</a>
                         </div>
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Domingo</label>
                         </div>
                         <div class="input-group-append">
-
-                            <a href="#2" class='btn btn-outline-danger' onclick="habMas('domingo', 'addFmas');">No
-                                Habil</a>
-                            <a href="#2" class='btn btn-outline-success'
-                                onclick="habMas('domingo', 'delFmas');">Habil</a>
+                            <a href="#2" class='btn btn-outline-danger' onclick="habMas('domingo', 'addFmas');">No Habil</a>
+                            <a href="#2" class='btn btn-outline-success' onclick="habMas('domingo', 'delFmas');">Habil</a>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
     </div>
+
     <div class="col-12">
         <section id="widget-grid">
-            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
-                <header>
-                    <h2 id="nomReport">Calendario</h2>
-                </header>
-
+            <div class="jarviswidget jarviswidget-color-darken card shadow-sm" id="wid-id-1" data-widget-editbutton="false">
+                <div class="card-header bg-orfeo text-white">
+                    <h5 class="mb-2" id="nomReport">
+                        Calendario
+                    </h5>
+                </div>
 
                 <!-- widget content -->
-                <div class="widget-body" id="listados">
-                    <div class="form-inline">
+                <div class="widget-body card-body p-4" id="listados">
+                    <div class="row">
                         <?php
-for ($i = 1; $i <= 12; $i++) {
-    echo "<div class='col-3 ' style='height:263px'>";
-    calendario($ano, $i);
-    echo "</div>";
-}
-?>
+                        for ($i = 1; $i <= 12; $i++) {
+                            echo "<div class='col-6 col-md-4 col-lg-3' style='height:263px'>";
+                            calendario($ano, $i);
+                            echo "</div>";
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -148,95 +144,94 @@ for ($i = 1; $i <= 12; $i++) {
     </div>
 </body>
 
-<script language="JavaScript" src="<?=$ruta_raiz?>/js/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="<?=$ruta_raiz?>/js/axios.min.js"></script>
+<script language="JavaScript" src="<?= $ruta_raiz ?>/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="<?= $ruta_raiz ?>/js/axios.min.js"></script>
 <script type="text/javascript">
+    function addfech(fecha, div, tdstyle) {
+        axios({
+                method: 'post',
+                baseURL: 'rest-adm.php',
+                data: 'fn=add&fecha=' + fecha
+            })
+            .then(function(response) {
+                document.getElementById(tdstyle).style.backgroundColor = "#d9534f";
+                dtfecga = fecha.replace('-', '').replace('-', '');
+                $('#A' + dtfecga).removeClass('btn-success');
+                $('#A' + dtfecga).addClass('btn-danger');
+                $('#A' + dtfecga).attr('onclick', "adddel('" + fecha + "','div" + dtfecga + "','td" + dtfecga + "')");
 
-function addfech(fecha, div, tdstyle) {
-    axios({
-            method: 'post',
-            baseURL: 'rest-adm.php',
-            data: 'fn=add&fecha=' + fecha
-        })
-        .then(function(response) {
-            document.getElementById(tdstyle).style.backgroundColor = "#d9534f";
-            dtfecga = fecha.replace('-', '').replace('-', '');           
-            $('#A' + dtfecga).removeClass('btn-success');
-            $('#A' + dtfecga).addClass('btn-danger');
-            $('#A' + dtfecga).attr('onclick', "adddel('" + fecha + "','div" + dtfecga + "','td" + dtfecga + "')");
-            
-        })
-        .catch(function(error) {
-            //  $('#animationload').hide();
-            if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
-                $(this).showError('Error en petición', 'Estado del error: ' + error.response.status +
-                    '. Mensaje: ' + error.response.data.error);
-            }
-            //toastr.error(data.message, 'Error al Modificar ');
-        });
-}
-
-function adddel(fecha, div, tdstyle) {
-    axios({
-            method: 'post',
-            baseURL: 'rest-adm.php',
-            data: 'fn=del&fecha=' + fecha
-        })
-        .then(function(response) {
-            
-            document.getElementById(tdstyle).style.backgroundColor = "#4cae4c";
-            dtfecga = fecha.replace('-', '').replace('-', '');
-            $('#A' + dtfecga).removeClass('btn-danger');
-            $('#A' + dtfecga).addClass('btn-success');
-            $('#A' + dtfecga).attr('onclick', "addfech('" + fecha + "','div" + dtfecga + "','td" + dtfecga + "')");
-
-        })
-        .catch(function(error) {
-            //   $('#animationload').hide();
-            if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
-                $(this).showError('Error en petición', 'Estado del error: ' + error.response.status +
-                    '. Mensaje: ' + error.response.data.error);
-            }
-            //toastr.error(data.message, 'Error al Modificar ');
-        });
-
-}
-
-function cambio(){
-    $( "form" ).submit();
-    
-}
-
-function habMas(nomb, action) {
-    var data;
-    var dato = '';
-    var fano = document.getElementById('ano').value;
-    for (var i = 1; i <= 12; i++) {
-        data = document.getElementById(nomb + i).value;
-        dato = dato + data;
+            })
+            .catch(function(error) {
+                //  $('#animationload').hide();
+                if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
+                    $(this).showError('Error en petición', 'Estado del error: ' + error.response.status +
+                        '. Mensaje: ' + error.response.data.error);
+                }
+                //toastr.error(data.message, 'Error al Modificar ');
+            });
     }
-    /*var poststr = "action=" + action + "&ano=" + fano + "&datos=" + dato;
-    partes('<?php echo $scripturl; ?>', 'listados', poststr, '');*/
-    axios({
-            method: 'post',
-            baseURL: 'rest-adm.php',
-            data: 'fn='+action+ "&ano=" + fano + "&datos=" + dato
-        })
-        .then(function(response) {
-            
-          //  document.getElementById(tdstyle).style.backgroundColor = "#4cae4c";
-            $( "form" ).submit();
 
-        })
-        .catch(function(error) {
-            //   $('#animationload').hide();
-            if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
-                $(this).showError('Error en petición', 'Estado del error: ' + error.response.status +
-                    '. Mensaje: ' + error.response.data.error);
-            }
-            //toastr.error(data.message, 'Error al Modificar ');
-        });
-}
+    function adddel(fecha, div, tdstyle) {
+        axios({
+                method: 'post',
+                baseURL: 'rest-adm.php',
+                data: 'fn=del&fecha=' + fecha
+            })
+            .then(function(response) {
+
+                document.getElementById(tdstyle).style.backgroundColor = "#4cae4c";
+                dtfecga = fecha.replace('-', '').replace('-', '');
+                $('#A' + dtfecga).removeClass('btn-danger');
+                $('#A' + dtfecga).addClass('btn-success');
+                $('#A' + dtfecga).attr('onclick', "addfech('" + fecha + "','div" + dtfecga + "','td" + dtfecga + "')");
+
+            })
+            .catch(function(error) {
+                //   $('#animationload').hide();
+                if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
+                    $(this).showError('Error en petición', 'Estado del error: ' + error.response.status +
+                        '. Mensaje: ' + error.response.data.error);
+                }
+                //toastr.error(data.message, 'Error al Modificar ');
+            });
+
+    }
+
+    function cambio() {
+        $("form").submit();
+
+    }
+
+    function habMas(nomb, action) {
+        var data;
+        var dato = '';
+        var fano = document.getElementById('ano').value;
+        for (var i = 1; i <= 12; i++) {
+            data = document.getElementById(nomb + i).value;
+            dato = dato + data;
+        }
+        /*var poststr = "action=" + action + "&ano=" + fano + "&datos=" + dato;
+        partes('<?php echo $scripturl; ?>', 'listados', poststr, '');*/
+        axios({
+                method: 'post',
+                baseURL: 'rest-adm.php',
+                data: 'fn=' + action + "&ano=" + fano + "&datos=" + dato
+            })
+            .then(function(response) {
+
+                //  document.getElementById(tdstyle).style.backgroundColor = "#4cae4c";
+                $("form").submit();
+
+            })
+            .catch(function(error) {
+                //   $('#animationload').hide();
+                if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
+                    $(this).showError('Error en petición', 'Estado del error: ' + error.response.status +
+                        '. Mensaje: ' + error.response.data.error);
+                }
+                //toastr.error(data.message, 'Error al Modificar ');
+            });
+    }
 </script>
 
 </html>
@@ -358,32 +353,45 @@ function UltimoDia($anho, $mes)
         $dias_febrero = 28;
     }
     switch ($mes) {
-        case 1:return 31;
+        case 1:
+            return 31;
             break;
-        case 2:return $dias_febrero;
+        case 2:
+            return $dias_febrero;
             break;
-        case 3:return 31;
+        case 3:
+            return 31;
             break;
-        case 4:return 30;
+        case 4:
+            return 30;
             break;
-        case 5:return 31;
+        case 5:
+            return 31;
             break;
-        case 6:return 30;
+        case 6:
+            return 30;
             break;
-        case 7:return 31;
+        case 7:
+            return 31;
             break;
-        case 8:return 31;
+        case 8:
+            return 31;
             break;
-        case 9:return 30;
+        case 9:
+            return 30;
             break;
-        case 10:return 31;
+        case 10:
+            return 31;
             break;
-        case 11:return 30;
+        case 11:
+            return 30;
             break;
-        case 12:return 31;
+        case 12:
+            return 31;
             break;
     }
 }
+
 function consultar($ano, $mes)
 {
 
