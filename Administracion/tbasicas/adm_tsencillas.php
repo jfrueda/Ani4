@@ -455,6 +455,12 @@ if ($error) {
 		//
 		-->
 	</script>
+	<script>
+		const slc_cmb2 = document.querySelector("select[name='slc_cmb2']");
+		if (slc_cmb2) {
+			slc_cmb2.classList.add("form-select");
+		}
+	</script>
 </body>
 
 </html>

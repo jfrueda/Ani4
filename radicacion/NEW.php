@@ -643,13 +643,13 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                 Sticker |
                             </a>
 
-                            <a title="Asociar Imagen"
+                            <!-- <a title="Asociar Imagen"
                                 id="asociar"
                                 href="javascript:void(0);"
                                 onClick="window.open('../uploadFiles/uploadFileRadicado.php?busqRadicados=<?= $nurad ?>&Buscar=Buscar&<?= $varEnvio ?>','asociar<?= $nurad ?>','width=550,height=280');"
                                 class="btn btn-link px-0">
                                 Asociar Imagen
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </div>
