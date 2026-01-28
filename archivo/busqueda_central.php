@@ -841,589 +841,595 @@ function fnc_date_calcm($this_date, $num_month)
 					break;
 			}
 		?>
-			<table border=0 width 100% cellpadding="1" class="borde_tab">
-				<tr>
-					<TD class=titulos5>RADICADO
-					<TD class=titulos5>FECHA RADICADO
-					<TD class=titulos5><?= $it1 ?>
-					<TD class=titulos5>FECHA INICIAL
-					<TD class=titulos5>FECHA FINAL
-					<TD class=titulos5><?= $it4 ?>
-					<TD class=titulos5>DEPENDENCIA
-					<TD class=titulos5><?= $it2 ?>
-					<TD class=titulos5><?= $it3 ?>
-					<TD class=titulos5>DOCUMENTO DE IDENTIDAD <?= $it2 ?>
-						<?
-						if ($codiSRD == '200') $tp = "DOCUMENTO DE IDENTIDAD " . $it3;
-						else $tp = "";
-						?>
-					<TD class=titulos5>DOCUMENTO DE IDENTIDAD QUERELLANTE
-					<TD class=titulos5>DIRECCION
-					<TD class=titulos5>SERIE
-					<TD class=titulos5>SUBSERIE
-					<TD class=titulos5>TIPO
-					<TD class=titulos5>FOLIOS
-					<TD class=titulos5>ZONA
-					<TD class=titulos5>CARRO
-					<TD class=titulos5>CARA
-					<TD class=titulos5>CUERPO
-					<TD class=titulos5>ENTREPA&Ntilde;O
-					<TD class=titulos5>CAJA
-					<TD class=titulos5>UNIDAD DOCUMENTAL
-					<TD class=titulos5>NRO CARPETA
-					<TD class=titulos5>OBSERVACIONES
-					<TD class=titulos5>
-						<p>INDICADORES DE DETERIORO</p>
-					<TD class=titulos5>
-						<p>MATERIAL AGREGADO</p>
-					<TD class=titulos5><?= $it5 ?>
-					<TD class=titulos5>PRESTAMO
-					<TD class=titulos5>FUNCIONARIO PRESTAMO
-					<TD class=titulos5>FECHA ENTREGA PRESTAMO
-				</tr>
-
-				<?
-				if ($buscar_ano != "") {
-					$x = "SGD_ARCHIVO_YEAR LIKE '$buscar_ano'";
-					$a = "and";
-				} else {
-					$x = "";
-					$a = "";
-				}
-				if ($buscar_rad != "") {
-					$r = "SGD_ARCHIVO_RAD LIKE '%$buscar_rad%'";
-					$b = "and";
-				} else {
-					$r = "";
-					$b = "";
-				}
-				if ($codserie != '0') {
-					$srds = "SGD_ARCHIVO_SRD LIKE '$codiSRD'";
-					$c = "and";
-				} else {
-					$srds = "";
-					$c = "";
-				}
-				if ($codiSBRD != '0') {
-					$sbrds = "SGD_ARCHIVO_SBRD LIKE '$codiSBRD'";
-					$d = "and";
-				} else {
-					$sbrds = "";
-					$d = "";
-				}
-				if ($buscar_zona != "") {
-					$bzon = strtoupper($buscar_zona);
-					$zon = "SGD_ARCHIVO_ZONA LIKE '$bzon'";
-					$f = "and";
-				} else {
-					$zon = "";
-					$f = "";
-				}
-				if ($buscar_carro != "") {
-					if ($item1 == "ESTANTE") $carro = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_carro'";
-					elseif ($item1 == "CARRO") $carro = "SGD_ARCHIVO_CARRO LIKE '$buscar_carro'";
-					$g = "and";
-				} else {
-					$carro = "";
-					$g = "";
-				}
-				if ($buscar_cara != "") {
-					if ($item3 == "ENTREPANO") $cara = "SGD_ARCHIVO_ENTREPANO LIKE '$buscar_cara'";
-					elseif ($item3 == "CARA") $cara = "SGD_ARCHIVO_CARA LIKE '$buscar_cara'";
-					$i = "and";
-				} else {
-					$cara = "";
-					$i = "";
-				}
-				if ($buscar_estante != "") {
-					if ($item4 == "ESTANTE") $estan = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_estante'";
-					elseif ($item4 == "CAJA") $estan = "SGD_ARCHIVO_CAJA LIKE '$buscar_estante'";
-					$h = "and";
-				} else {
-					$estan = "";
-					$h = "";
-				}
-				if ($buscar_entre != "") {
-					$entre = "SGD_ARCHIVO_ENTREPANO LIKE '$buscar_entre'";
-					$v = "and";
-				} else {
-					$entre = "";
-					$v = "";
-				}
-				if ($buscar_caja != "") {
-					$caja = "SGD_ARCHIVO_CAJA LIKE '$buscar_caja'";
-					$t = "and";
-				} else {
-					$caja = "";
-					$s = "";
-				}
-				if ($sep == '1') {
-					if ($fechaIni == $fechaInif) $fecha = "SGD_ARCHIVO_FECHAI like '$fechaIni'";
-					else {
-						$time = fnc_date_calcy($fechaInif, '1');
-						$fecha = "SGD_ARCHIVO_FECHAI <= '$time' and SGD_ARCHIVO_FECHAI >= '$fechaIni'";
+			<table class="table table-bordered table-striped table-hover align-middle small borde_tab" width="100%" cellpadding="1">
+				<thead class="table-light text-center">
+					<tr>
+						<TD>RADICADO</TD>
+						<TD>FECHA RADICADO</TD>
+						<TD><?= $it1 ?></TD>
+						<TD>FECHA INICIAL</TD>
+						<TD>FECHA FINAL</TD>
+						<TD><?= $it4 ?></TD>
+						<TD>DEPENDENCIA</TD>
+						<TD><?= $it2 ?></TD>
+						<TD><?= $it3 ?></TD>
+						<TD>DOCUMENTO DE IDENTIDAD <?= $it2 ?>
+							<?
+							if ($codiSRD == '200') $tp = "DOCUMENTO DE IDENTIDAD " . $it3;
+							else $tp = "";
+							?>
+						</TD>
+						<TD>DOCUMENTO DE IDENTIDAD QUERELLANTE</TD>
+						<TD>DIRECCION</TD>
+						<TD>SERIE</TD>
+						<TD>SUBSERIE</TD>
+						<TD>TIPO</TD>
+						<TD>FOLIOS</TD>
+						<TD>ZONA</TD>
+						<TD>CARRO</TD>
+						<TD>CARA</TD>
+						<TD>CUERPO</TD>
+						<TD>ENTREPA&Ntilde;O</TD>
+						<TD>CAJA</TD>
+						<TD>UNIDAD DOCUMENTAL</TD>
+						<TD>NRO CARPETA</TD>
+						<TD>OBSERVACIONES</TD>
+						<TD>
+							<p>INDICADORES DE DETERIORO</p>
+						</TD>
+						<TD>
+							<p>MATERIAL AGREGADO</p>
+						</TD>
+						<TD><?= $it5 ?></TD>
+						<TD>PRESTAMO</TD>
+						<TD>FUNCIONARIO PRESTAMO</TD>
+						<TD>FECHA ENTREGA PRESTAMO</TD>
+					</tr>
+				</thead>
+				<tbody>
+					<?
+					if ($buscar_ano != "") {
+						$x = "SGD_ARCHIVO_YEAR LIKE '$buscar_ano'";
+						$a = "and";
+					} else {
+						$x = "";
+						$a = "";
 					}
-					$j = "and";
-				} else {
-					$fecha = "";
-					$j = "";
-				}
-				if ($sep2 == '1') {
-					if ($fechaIni2 == $fechaInif2) $fecha2 = "SGD_ARCHIVO_FECHAF like '$fechaIni2'";
-					else {
-						$time2 = fnc_date_calcy($fechaInif2, '1');
-						$fecha2 = "SGD_ARCHIVO_FECHAF <= '$time2' and SGD_ARCHIVO_FECHAF >= '$fechaIni2'";
+					if ($buscar_rad != "") {
+						$r = "SGD_ARCHIVO_RAD LIKE '%$buscar_rad%'";
+						$b = "and";
+					} else {
+						$r = "";
+						$b = "";
 					}
-					$w = "and";
-				} else {
-					$fecha2 = "";
-					$w = "";
-				}
-				if ($sep3 == '1') {
-					if ($fechaIni3 == $fechaInif3) $fecha3 = "SGD_ARCHIVO_FECH like '$fechaIni3'";
-					else {
-						$time3 = fnc_date_calcy($fechaInif3, '1');
-						$fecha3 = "SGD_ARCHIVO_FECH <= '$time3' and SGD_ARCHIVO_FECH >= '$fechaIni3'";
+					if ($codserie != '0') {
+						$srds = "SGD_ARCHIVO_SRD LIKE '$codiSRD'";
+						$c = "and";
+					} else {
+						$srds = "";
+						$c = "";
 					}
-					$wq = "and";
-				} else {
-					$fecha3 = "";
-					$wq = "";
-				}
-				if ($buscar_orden != "") {
-					$orden = "SGD_ARCHIVO_ORDEN LIKE '%$buscar_orden%'";
-					$k = "and";
-				} else {
-					$orden = "";
-					$k = "";
-				}
-				if ($depen != "") {
-					$depe = "SGD_ARCHIVO_DEPE LIKE '$depen' ";
-					$l = "and";
-				} else {
-					$depe = "";
-					$l = "";
-				}
-				if ($buscar_deman != "") {
-					$dem = strtoupper($buscar_deman);
-					$deman = "SGD_ARCHIVO_DEMANDADO LIKE '%$dem%'";
-					$n = "and";
-				} else {
-					$deman = "";
-					$n = "";
-				}
-				if ($buscar_demant != "") {
-					$demt = strtoupper($buscar_demant);
-					$demant = "SGD_ARCHIVO_DEMANDANTE LIKE '%$demt%'";
-					$m = "and";
-				} else {
-					$demant = "";
-					$m = "";
-				}
-				if ($buscar_docu != "") {
-					$docu = "(SGD_ARCHIVO_CC_DEMANDANTE LIKE '%$buscar_docu%' or SGD_ARCHIVO_DOCU2 LIKE '%$buscar_docu%')";
-					$o = "and";
-				} else {
-					$docu = "";
-					$o = "";
-				}
-				if ($buscar_inder != '0') {
-					$inder = "SGD_ARCHIVO_INDER LIKE '$buscar_inder'";
-					$p = "and";
-				} else {
-					$inder = "";
-					$p = "";
-				}
-				if ($buscar_mata != '0') {
-					$mata = "SGD_ARCHIVO_MATA LIKE '$buscar_mata'";
-					$q = "and";
-				} else {
-					$mata = "";
-					$q = "";
-				}
-				if ($buscar_ano != "") $orde = " order by sgd_archivo_year";
-				else $orde = " order by sgd_archivo_fech";
-				if ($presta != "") {
-					$pst = "SGD_ARCHIVO_PRESTAMO=$presta ";
-					$pt = "and";
-				} else {
-					$pst = "";
-					$pt = "";
-				}
-				if ($fechaa != "") {
-					$fea = "SGD_ARCHIVO_FECHAA like '$fechaa' ";
-					$fta = "and";
-				} else {
-					$fea = "";
-					$fta = "";
-				}
-				if ($tip != "0") {
-					$ti = "SGD_ARCHIVO_PROC=$tip ";
-					$tic = "and";
-				} else {
-					$ti = "";
-					$tic = "";
-				}
-				if ($anexo != "") {
-					$anex = "SGD_ARCHIVO_ANEXO like '%$anexo%' ";
-					$an = "and";
-				} else {
-					$anex = "";
-					$an = "";
-				}
-
-				$at = $buscar_orden . $buscar_rad . $buscar_ano . $buscar_caja . $buscar_estante . $buscar_entrepa . $buscar_zona . $buscar_deman . $fecha . $depe . $buscar_demant .
-					$buscar_docu . $buscar_ufisica . $codserie . $codiSBRD . $buscar_proc . $buscar_inder;
-				$cont = 0;
-				$pru = $c . $d . $ef . $b . $a . $f . $g . $i . $h . $v . $t . $k . $l . $j . $w . $wq . $n . $m . $o . $p . $q . $pt . $fea . $tic . $an;
-				if ($pru != "") {
-					$de = $db->conn->Execute("select depe_codi from usuario where usua_login like '$krd'");
-					$depek = $de->fields['DEPE_CODI'];
-					include("$ruta_raiz/include/query/archivo/queryBusqueda_central.php");
-					//$db->conn->debug=true;
-					$rs = $db->conn->Execute($sql);
-					while (!$rs->EOF) {
-						$orden1 = $rs->fields['NRO_ORDEN'];
-						$sbrd = $rs->fields['SUBSERIE'];
-						$srd = $rs->fields['SERIE'];
-						$demandado = $rs->fields['QUERELLADO_O_OBJETO'];
-						$demandante = $rs->fields['QUERELLANTE_O_CONTRATISTA'];
-						$cc = $rs->fields['DOCUMENTO_DE_IDENTIDAD'];
-						$docu2 = $rs->fields['DOCUMENTO_QUERELLADO'];
-						$indet = $rs->fields['INDICADORES_DE_DETERIORO'];
-						$mata1 = $rs->fields['MATERIAL_INSERTADO'];
-						$fechi = $rs->fields['FECHA_INICIAL'];
-						$fechf = $rs->fields['FECHA_FINAL'];
-						$year = $rs->fields['VIGENCIA'];
-						$caja1 = $rs->fields['CAJA'];
-						$caja2 = $rs->fields['CAJA_HASTA'];
-						$carro1 = $rs->fields['CARRO'];
-						$cara1 = $rs->fields['CARA'];
-						$radi = $rs->fields["RADICADO"];
-						$estante1 = $rs->fields['ESTANTE'];
-						$unidoc = $rs->fields['UNIDAD_DOCUMENTAL'];
-						$dependencia = $rs->fields['DEPENDENCIA'];
-						$entrepa1 = $rs->fields['ENTREPANO'];
-						$folio = $rs->fields['FOLIOS'];
-						//$path=$rs->fields['SGD_ARCHIVO_PATH'];
-						$zona1 = $rs->fields['ZONA'];
-						$anexo = $rs->fields['OBSERVACIONES'];
-						$pres = $rs->fields['PRESTAMO'];
-						$funprest = $rs->fields['FUNCIONARIO_PRESTAMO'];
-						$fprestf = $rs->fields['FECHA_ENTREGA_PRESTAMO'];
-						$fechaR = $rs->fields['FECHA_RADICADO'];
-						$fecaa = $rs->fields['AUTO'];
-						$procc = $rs->fields['TIPO'];
-						$ncarp = $rs->fields['NRO_CARPETAS'];
-						$dir = $rs->fields['DIRECCION'];
-
-						if ($procc != 0) {
-							$wet = $db->conn->Execute("select sgd_pexp_descrip from sgd_pexp_procexpedientes where sgd_pexp_codigo like'" . $procc . "'");
-							$proce = $wet->fields['SGD_PEXP_DESCRIP'];
+					if ($codiSBRD != '0') {
+						$sbrds = "SGD_ARCHIVO_SBRD LIKE '$codiSBRD'";
+						$d = "and";
+					} else {
+						$sbrds = "";
+						$d = "";
+					}
+					if ($buscar_zona != "") {
+						$bzon = strtoupper($buscar_zona);
+						$zon = "SGD_ARCHIVO_ZONA LIKE '$bzon'";
+						$f = "and";
+					} else {
+						$zon = "";
+						$f = "";
+					}
+					if ($buscar_carro != "") {
+						if ($item1 == "ESTANTE") $carro = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_carro'";
+						elseif ($item1 == "CARRO") $carro = "SGD_ARCHIVO_CARRO LIKE '$buscar_carro'";
+						$g = "and";
+					} else {
+						$carro = "";
+						$g = "";
+					}
+					if ($buscar_cara != "") {
+						if ($item3 == "ENTREPANO") $cara = "SGD_ARCHIVO_ENTREPANO LIKE '$buscar_cara'";
+						elseif ($item3 == "CARA") $cara = "SGD_ARCHIVO_CARA LIKE '$buscar_cara'";
+						$i = "and";
+					} else {
+						$cara = "";
+						$i = "";
+					}
+					if ($buscar_estante != "") {
+						if ($item4 == "ESTANTE") $estan = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_estante'";
+						elseif ($item4 == "CAJA") $estan = "SGD_ARCHIVO_CAJA LIKE '$buscar_estante'";
+						$h = "and";
+					} else {
+						$estan = "";
+						$h = "";
+					}
+					if ($buscar_entre != "") {
+						$entre = "SGD_ARCHIVO_ENTREPANO LIKE '$buscar_entre'";
+						$v = "and";
+					} else {
+						$entre = "";
+						$v = "";
+					}
+					if ($buscar_caja != "") {
+						$caja = "SGD_ARCHIVO_CAJA LIKE '$buscar_caja'";
+						$t = "and";
+					} else {
+						$caja = "";
+						$s = "";
+					}
+					if ($sep == '1') {
+						if ($fechaIni == $fechaInif) $fecha = "SGD_ARCHIVO_FECHAI like '$fechaIni'";
+						else {
+							$time = fnc_date_calcy($fechaInif, '1');
+							$fecha = "SGD_ARCHIVO_FECHAI <= '$time' and SGD_ARCHIVO_FECHAI >= '$fechaIni'";
 						}
-						if ($pres == 1) $prest = "SI";
-						else $prest = "NO";
-
-						switch ($indet) {
-							case '0':
-								$indete = "Ninguno";
-								break;
-							case '1':
-								$indete = "Biologicos: Hongos";
-								break;
-							case '2':
-								$indete = "Biologicos: Roedores";
-								break;
-							case '3':
-								$indete = "Biologicos: Insectos";
-								break;
-							case '4':
-								$indete = "Decoloracion Soporte";
-								break;
-							case '5':
-								$indete = "Desgarros";
-								break;
-							case '6':
-								$indete = "Biologicos: Hongos y Biologicos: Roedores";
-								break;
-							case '7':
-								$indete = "Biologicos: Hongos y Biologicos: Insectos";
-								break;
-							case '8':
-								$indete = "Biologicos: Hongos y Decoloracion Soporte";
-								break;
-							case '9':
-								$indete = "Biologicos: Hongos y Desgarros";
-								break;
-							case '10':
-								$indete = "Biologicos: Roedores y Biologicos: Insectos";
-								break;
-							case '11':
-								$indete = "Biologicos: Roedores y Decoloracion Soporte";
-								break;
-							case '12':
-								$indete = "Biologicos: Roedores y Desgarros";
-								break;
-							case '13':
-								$indete = "Biologicos: Insectos y Decoloracion Soporte";
-								break;
-							case '14':
-								$indete = "Biologicos: Insectos y Desgarros";
-								break;
-							case '15':
-								$indete = "Decoloracion Soporte y Desgarros";
-								break;
-							case '16':
-								$indete = "Biologicos: Hongos, Biologicos: Roedores y Biologicos: Insectos";
-								break;
-							case '17':
-								$indete = "Biologicos: Hongos, Biologicos: Roedores y Decoloracion Soporte";
-								break;
-							case '18':
-								$indete = "Biologicos: Hongos, Biologicos: Roedores y Desgarros";
-								break;
-							case '19':
-								$indete = "Biologicos: Hongos, Biologicos: Insectos y Decoloracion Soporte";
-								break;
-							case '20':
-								$indete = "Biologicos: Hongos, Biologicos: Insectos y Desgarros";
-								break;
-							case '21':
-								$indete = "Biologicos: Hongos, Decoloracion Soporte y Desgarros";
-								break;
-							case '22':
-								$indete = "Biologicos: Roedores, Biologicos: Insectos y Decoloracion Soporte";
-								break;
-							case '23':
-								$indete = "Biologicos: Roedores, Biologicos: Insectos y Desgarros";
-								break;
-							case '24':
-								$indete = "Biologicos: Roedores, Decoloracion Soporte y Desgarros";
-								break;
-							case '25':
-								$indete = "Biologicos: Insectos, Decoloracion Soporte y Desgarros";
-								break;
-							case '26':
-								$indete = "Biologicos: Hongos, Biologicos: Roedores, Biologicos: Insectos y Decoloracion Soporte";
-								break;
-							case '27':
-								$indete = "Biologicos: Hongos, Biologicos: Roedores, Biologicos: Insectos y Desgarros";
-								break;
-							case '28':
-								$indete = "Biologicos: Hongos, Biologicos: Roedores, Decoloracion Soporte y Desgarros";
-								break;
-							case '29':
-								$indete = "Biologicos: Hongos, Biologicos: Insectos, Decoloracion Soporte y Desgarros";
-								break;
-							case '30':
-								$indete = "Biologicos: Roedores, Biologicos: Insectos, Decoloracion Soporte y Desgarros";
-								break;
-							case '31':
-								$indete = "Biologicos: Hongos, Biologicos: Roedores, Biologicos: Insectos, Decoloracion Soporte y Desgarros";
-								break;
+						$j = "and";
+					} else {
+						$fecha = "";
+						$j = "";
+					}
+					if ($sep2 == '1') {
+						if ($fechaIni2 == $fechaInif2) $fecha2 = "SGD_ARCHIVO_FECHAF like '$fechaIni2'";
+						else {
+							$time2 = fnc_date_calcy($fechaInif2, '1');
+							$fecha2 = "SGD_ARCHIVO_FECHAF <= '$time2' and SGD_ARCHIVO_FECHAF >= '$fechaIni2'";
 						}
-						switch ($mata1) {
-							case '0':
-								$mata2 = "Ninguno";
-								break;
-							case '1':
-								$mata2 = "Metalico";
-								break;
-							case '2':
-								$mata2 = "Post-it";
-								break;
-							case '3':
-								$mata2 = "Planos";
-								break;
-							case '4':
-								$mata2 = "Fotografia";
-								break;
-							case '5':
-								$mata2 = "Soporte Optico";
-								break;
-							case '6':
-								$mata2 = "Soporte Magnetico";
-								break;
-							case '7':
-								$mata2 = "Metalico y Post-it ";
-								break;
-							case '8':
-								$mata2 = "Metalico y Planos ";
-								break;
-							case '9':
-								$mata2 = "Metalico y Fotografia ";
-								break;
-							case '10':
-								$mata2 = "Metalico y Soporte Optico ";
-								break;
-							case '11':
-								$mata2 = "Metalico y Soporte Magnetico ";
-								break;
-							case '12':
-								$mata2 = "Post-it y Planos";
-								break;
-							case '13':
-								$mata2 = "Post-it y Fotografia";
-								break;
-							case '14':
-								$mata2 = "Post-it y Soporte Optico";
-								break;
-							case '15':
-								$mata2 = "Post-it y Soporte Magnetico";
-								break;
-							case '16':
-								$mata2 = "Planos y Fotografia";
-								break;
-							case '17':
-								$mata2 = "Planos y Soporte Optico";
-								break;
-							case '18':
-								$mata2 = "Planos y Soporte Magnetico";
-								break;
-							case '19':
-								$mata2 = "Fotografia y Soporte Optico";
-								break;
-							case '20':
-								$mata2 = "Fotografia y Soporte Magnetico";
-								break;
-							case '21':
-								$mata2 = "Soporte Optico y Soporte Magnetico";
-								break;
-							case '22':
-								$mata2 = "Metalico, Post-it y Planos";
-								break;
-							case '23':
-								$mata2 = "Metalico, Post-it y Fotografia";
-								break;
-							case '24':
-								$mata2 = "Metalico, Post-it y Soporte Optico";
-								break;
-							case '25':
-								$mata2 = "Metalico, Post-it y Soporte Magnetico";
-								break;
-							case '26':
-								$mata2 = "Metalico, Planos y Fotografia";
-								break;
-							case '27':
-								$mata2 = "Metalico, Planos y Soporte Optico";
-								break;
-							case '28':
-								$mata2 = "Metalico, Planos y Soporte Magnetico";
-								break;
-							case '29':
-								$mata2 = "Metalico, Fotografia y Soporte Optico";
-								break;
-							case '30':
-								$mata2 = "Metalico, Fotografia y Soporte Magnetico";
-								break;
-							case '31':
-								$mata2 = "Metalico, Soporte Optico y Soporte Magnetico";
-								break;
-							case '32':
-								$mata2 = "Post-it, Planos y Fotografia";
-								break;
-							case '33':
-								$mata2 = "Post-it, Planos y Soporte Optico";
-								break;
-							case '34':
-								$mata2 = "Post-it, Planos y Soporte Magnetico";
-								break;
-							case '35':
-								$mata2 = "Post-it, Fotografia y Soporte Optico";
-								break;
-							case '36':
-								$mata2 = "Post-it, Fotografia y Soporte Magnetico";
-								break;
-							case '37':
-								$mata2 = "Post-it, Soporte Optico y Soporte Magnetico";
-								break;
-							case '38':
-								$mata2 = "Planos, Fotografia y Soporte Optico";
-								break;
-							case '39':
-								$mata2 = "Planos, Fotografia y Soporte Magnetico";
-								break;
-							case '40':
-								$mata2 = "Planos, Soporte Optico y Soporte Magnetico";
-								break;
-							case '41':
-								$mata2 = "Fotografia, Soporte Optico y Soporte Magnetico";
-								break;
+						$w = "and";
+					} else {
+						$fecha2 = "";
+						$w = "";
+					}
+					if ($sep3 == '1') {
+						if ($fechaIni3 == $fechaInif3) $fecha3 = "SGD_ARCHIVO_FECH like '$fechaIni3'";
+						else {
+							$time3 = fnc_date_calcy($fechaInif3, '1');
+							$fecha3 = "SGD_ARCHIVO_FECH <= '$time3' and SGD_ARCHIVO_FECH >= '$fechaIni3'";
 						}
-				?>
-						<tr>
-							<td class=leidos2 align="center">
-								<?
-								$rs2 = $db->conn->Execute("select DEPE_CODI from sgd_archivo_central where sgd_archivo_rad like '$radi'");
-								$depen = $rs2->fields['DEPE_CODI'];
-								if ($usua_perm_archi >= 3 and ($depek == $depen or $depek == '623')) {
-								?>
-									<a href='insertar_central.php?<?= session_name() . "=" . session_id() . "&krd=$krd&fechah=$fechah&$orno&adodb_next_page&edi=1&rad=$radi" ?>'>
-									<? } ?>
-									<?= $radi ?></a>
-							</td>
-							<td class=titulos5 align="center"><b><a href='verHistoricoArch.php?<?= session_name() . "=" . session_id() . "&krd=$krd&fechah=$fechah&$orno&adodb_next_page&rad=$radi" ?>'><?= $fechaR ?></b></td>
-							<td class=leidos2 align="center"><b><?= $orden1 ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2> <?= $fechi ?></b></td>
-							<td class=leidos2 align="center"> <b><span class=leidos2><?= $fechf ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $year ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $dependencia ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $demandado ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $demandante ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $cc ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $docu2 ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $dir ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $srd ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $sbrd ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $proce ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $folio ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $zona1 ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $carro1 ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $cara1 ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $estante1 ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $entrepa1 ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><? echo $caja1;
-																						if ($caja2 != "") echo " a la " . $caja2; ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $unidoc ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $ncarp ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $anexo ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $indete ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $mata2 ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $fecaa ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $prest ?></b></td>
-							<td class=titulos5 align="center"><b><span class=leidos2><?= $funprest ?></b></td>
-							<td class=leidos2 align="center"><b><span class=leidos2><?= $fprestf ?></b></td>
-						</tr>
-				<?
-						$cont++;
-						$rs->MoveNext();
+						$wq = "and";
+					} else {
+						$fecha3 = "";
+						$wq = "";
+					}
+					if ($buscar_orden != "") {
+						$orden = "SGD_ARCHIVO_ORDEN LIKE '%$buscar_orden%'";
+						$k = "and";
+					} else {
+						$orden = "";
+						$k = "";
+					}
+					if ($depen != "") {
+						$depe = "SGD_ARCHIVO_DEPE LIKE '$depen' ";
+						$l = "and";
+					} else {
+						$depe = "";
+						$l = "";
+					}
+					if ($buscar_deman != "") {
+						$dem = strtoupper($buscar_deman);
+						$deman = "SGD_ARCHIVO_DEMANDADO LIKE '%$dem%'";
+						$n = "and";
+					} else {
+						$deman = "";
+						$n = "";
+					}
+					if ($buscar_demant != "") {
+						$demt = strtoupper($buscar_demant);
+						$demant = "SGD_ARCHIVO_DEMANDANTE LIKE '%$demt%'";
+						$m = "and";
+					} else {
+						$demant = "";
+						$m = "";
+					}
+					if ($buscar_docu != "") {
+						$docu = "(SGD_ARCHIVO_CC_DEMANDANTE LIKE '%$buscar_docu%' or SGD_ARCHIVO_DOCU2 LIKE '%$buscar_docu%')";
+						$o = "and";
+					} else {
+						$docu = "";
+						$o = "";
+					}
+					if ($buscar_inder != '0') {
+						$inder = "SGD_ARCHIVO_INDER LIKE '$buscar_inder'";
+						$p = "and";
+					} else {
+						$inder = "";
+						$p = "";
+					}
+					if ($buscar_mata != '0') {
+						$mata = "SGD_ARCHIVO_MATA LIKE '$buscar_mata'";
+						$q = "and";
+					} else {
+						$mata = "";
+						$q = "";
+					}
+					if ($buscar_ano != "") $orde = " order by sgd_archivo_year";
+					else $orde = " order by sgd_archivo_fech";
+					if ($presta != "") {
+						$pst = "SGD_ARCHIVO_PRESTAMO=$presta ";
+						$pt = "and";
+					} else {
+						$pst = "";
+						$pt = "";
+					}
+					if ($fechaa != "") {
+						$fea = "SGD_ARCHIVO_FECHAA like '$fechaa' ";
+						$fta = "and";
+					} else {
+						$fea = "";
+						$fta = "";
+					}
+					if ($tip != "0") {
+						$ti = "SGD_ARCHIVO_PROC=$tip ";
+						$tic = "and";
+					} else {
+						$ti = "";
+						$tic = "";
+					}
+					if ($anexo != "") {
+						$anex = "SGD_ARCHIVO_ANEXO like '%$anexo%' ";
+						$an = "and";
+					} else {
+						$anex = "";
+						$an = "";
 					}
 
-					include_once('../adodb/toexport.inc.php');
+					$at = $buscar_orden . $buscar_rad . $buscar_ano . $buscar_caja . $buscar_estante . $buscar_entrepa . $buscar_zona . $buscar_deman . $fecha . $depe . $buscar_demant .
+						$buscar_docu . $buscar_ufisica . $codserie . $codiSBRD . $buscar_proc . $buscar_inder;
+					$cont = 0;
+					$pru = $c . $d . $ef . $b . $a . $f . $g . $i . $h . $v . $t . $k . $l . $j . $w . $wq . $n . $m . $o . $p . $q . $pt . $fea . $tic . $an;
+					if ($pru != "") {
+						$de = $db->conn->Execute("select depe_codi from usuario where usua_login like '$krd'");
+						$depek = $de->fields['DEPE_CODI'];
+						include("$ruta_raiz/include/query/archivo/queryBusqueda_central.php");
+						//$db->conn->debug=true;
+						$rs = $db->conn->Execute($sql);
+						while (!$rs->EOF) {
+							$orden1 = $rs->fields['NRO_ORDEN'];
+							$sbrd = $rs->fields['SUBSERIE'];
+							$srd = $rs->fields['SERIE'];
+							$demandado = $rs->fields['QUERELLADO_O_OBJETO'];
+							$demandante = $rs->fields['QUERELLANTE_O_CONTRATISTA'];
+							$cc = $rs->fields['DOCUMENTO_DE_IDENTIDAD'];
+							$docu2 = $rs->fields['DOCUMENTO_QUERELLADO'];
+							$indet = $rs->fields['INDICADORES_DE_DETERIORO'];
+							$mata1 = $rs->fields['MATERIAL_INSERTADO'];
+							$fechi = $rs->fields['FECHA_INICIAL'];
+							$fechf = $rs->fields['FECHA_FINAL'];
+							$year = $rs->fields['VIGENCIA'];
+							$caja1 = $rs->fields['CAJA'];
+							$caja2 = $rs->fields['CAJA_HASTA'];
+							$carro1 = $rs->fields['CARRO'];
+							$cara1 = $rs->fields['CARA'];
+							$radi = $rs->fields["RADICADO"];
+							$estante1 = $rs->fields['ESTANTE'];
+							$unidoc = $rs->fields['UNIDAD_DOCUMENTAL'];
+							$dependencia = $rs->fields['DEPENDENCIA'];
+							$entrepa1 = $rs->fields['ENTREPANO'];
+							$folio = $rs->fields['FOLIOS'];
+							//$path=$rs->fields['SGD_ARCHIVO_PATH'];
+							$zona1 = $rs->fields['ZONA'];
+							$anexo = $rs->fields['OBSERVACIONES'];
+							$pres = $rs->fields['PRESTAMO'];
+							$funprest = $rs->fields['FUNCIONARIO_PRESTAMO'];
+							$fprestf = $rs->fields['FECHA_ENTREGA_PRESTAMO'];
+							$fechaR = $rs->fields['FECHA_RADICADO'];
+							$fecaa = $rs->fields['AUTO'];
+							$procc = $rs->fields['TIPO'];
+							$ncarp = $rs->fields['NRO_CARPETAS'];
+							$dir = $rs->fields['DIRECCION'];
 
-					$db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
+							if ($procc != 0) {
+								$wet = $db->conn->Execute("select sgd_pexp_descrip from sgd_pexp_procexpedientes where sgd_pexp_codigo like'" . $procc . "'");
+								$proce = $wet->fields['SGD_PEXP_DESCRIP'];
+							}
+							if ($pres == 1) $prest = "SI";
+							else $prest = "NO";
 
-					$rs = $db->query($sql);
+							switch ($indet) {
+								case '0':
+									$indete = "Ninguno";
+									break;
+								case '1':
+									$indete = "Biologicos: Hongos";
+									break;
+								case '2':
+									$indete = "Biologicos: Roedores";
+									break;
+								case '3':
+									$indete = "Biologicos: Insectos";
+									break;
+								case '4':
+									$indete = "Decoloracion Soporte";
+									break;
+								case '5':
+									$indete = "Desgarros";
+									break;
+								case '6':
+									$indete = "Biologicos: Hongos y Biologicos: Roedores";
+									break;
+								case '7':
+									$indete = "Biologicos: Hongos y Biologicos: Insectos";
+									break;
+								case '8':
+									$indete = "Biologicos: Hongos y Decoloracion Soporte";
+									break;
+								case '9':
+									$indete = "Biologicos: Hongos y Desgarros";
+									break;
+								case '10':
+									$indete = "Biologicos: Roedores y Biologicos: Insectos";
+									break;
+								case '11':
+									$indete = "Biologicos: Roedores y Decoloracion Soporte";
+									break;
+								case '12':
+									$indete = "Biologicos: Roedores y Desgarros";
+									break;
+								case '13':
+									$indete = "Biologicos: Insectos y Decoloracion Soporte";
+									break;
+								case '14':
+									$indete = "Biologicos: Insectos y Desgarros";
+									break;
+								case '15':
+									$indete = "Decoloracion Soporte y Desgarros";
+									break;
+								case '16':
+									$indete = "Biologicos: Hongos, Biologicos: Roedores y Biologicos: Insectos";
+									break;
+								case '17':
+									$indete = "Biologicos: Hongos, Biologicos: Roedores y Decoloracion Soporte";
+									break;
+								case '18':
+									$indete = "Biologicos: Hongos, Biologicos: Roedores y Desgarros";
+									break;
+								case '19':
+									$indete = "Biologicos: Hongos, Biologicos: Insectos y Decoloracion Soporte";
+									break;
+								case '20':
+									$indete = "Biologicos: Hongos, Biologicos: Insectos y Desgarros";
+									break;
+								case '21':
+									$indete = "Biologicos: Hongos, Decoloracion Soporte y Desgarros";
+									break;
+								case '22':
+									$indete = "Biologicos: Roedores, Biologicos: Insectos y Decoloracion Soporte";
+									break;
+								case '23':
+									$indete = "Biologicos: Roedores, Biologicos: Insectos y Desgarros";
+									break;
+								case '24':
+									$indete = "Biologicos: Roedores, Decoloracion Soporte y Desgarros";
+									break;
+								case '25':
+									$indete = "Biologicos: Insectos, Decoloracion Soporte y Desgarros";
+									break;
+								case '26':
+									$indete = "Biologicos: Hongos, Biologicos: Roedores, Biologicos: Insectos y Decoloracion Soporte";
+									break;
+								case '27':
+									$indete = "Biologicos: Hongos, Biologicos: Roedores, Biologicos: Insectos y Desgarros";
+									break;
+								case '28':
+									$indete = "Biologicos: Hongos, Biologicos: Roedores, Decoloracion Soporte y Desgarros";
+									break;
+								case '29':
+									$indete = "Biologicos: Hongos, Biologicos: Insectos, Decoloracion Soporte y Desgarros";
+									break;
+								case '30':
+									$indete = "Biologicos: Roedores, Biologicos: Insectos, Decoloracion Soporte y Desgarros";
+									break;
+								case '31':
+									$indete = "Biologicos: Hongos, Biologicos: Roedores, Biologicos: Insectos, Decoloracion Soporte y Desgarros";
+									break;
+							}
+							switch ($mata1) {
+								case '0':
+									$mata2 = "Ninguno";
+									break;
+								case '1':
+									$mata2 = "Metalico";
+									break;
+								case '2':
+									$mata2 = "Post-it";
+									break;
+								case '3':
+									$mata2 = "Planos";
+									break;
+								case '4':
+									$mata2 = "Fotografia";
+									break;
+								case '5':
+									$mata2 = "Soporte Optico";
+									break;
+								case '6':
+									$mata2 = "Soporte Magnetico";
+									break;
+								case '7':
+									$mata2 = "Metalico y Post-it ";
+									break;
+								case '8':
+									$mata2 = "Metalico y Planos ";
+									break;
+								case '9':
+									$mata2 = "Metalico y Fotografia ";
+									break;
+								case '10':
+									$mata2 = "Metalico y Soporte Optico ";
+									break;
+								case '11':
+									$mata2 = "Metalico y Soporte Magnetico ";
+									break;
+								case '12':
+									$mata2 = "Post-it y Planos";
+									break;
+								case '13':
+									$mata2 = "Post-it y Fotografia";
+									break;
+								case '14':
+									$mata2 = "Post-it y Soporte Optico";
+									break;
+								case '15':
+									$mata2 = "Post-it y Soporte Magnetico";
+									break;
+								case '16':
+									$mata2 = "Planos y Fotografia";
+									break;
+								case '17':
+									$mata2 = "Planos y Soporte Optico";
+									break;
+								case '18':
+									$mata2 = "Planos y Soporte Magnetico";
+									break;
+								case '19':
+									$mata2 = "Fotografia y Soporte Optico";
+									break;
+								case '20':
+									$mata2 = "Fotografia y Soporte Magnetico";
+									break;
+								case '21':
+									$mata2 = "Soporte Optico y Soporte Magnetico";
+									break;
+								case '22':
+									$mata2 = "Metalico, Post-it y Planos";
+									break;
+								case '23':
+									$mata2 = "Metalico, Post-it y Fotografia";
+									break;
+								case '24':
+									$mata2 = "Metalico, Post-it y Soporte Optico";
+									break;
+								case '25':
+									$mata2 = "Metalico, Post-it y Soporte Magnetico";
+									break;
+								case '26':
+									$mata2 = "Metalico, Planos y Fotografia";
+									break;
+								case '27':
+									$mata2 = "Metalico, Planos y Soporte Optico";
+									break;
+								case '28':
+									$mata2 = "Metalico, Planos y Soporte Magnetico";
+									break;
+								case '29':
+									$mata2 = "Metalico, Fotografia y Soporte Optico";
+									break;
+								case '30':
+									$mata2 = "Metalico, Fotografia y Soporte Magnetico";
+									break;
+								case '31':
+									$mata2 = "Metalico, Soporte Optico y Soporte Magnetico";
+									break;
+								case '32':
+									$mata2 = "Post-it, Planos y Fotografia";
+									break;
+								case '33':
+									$mata2 = "Post-it, Planos y Soporte Optico";
+									break;
+								case '34':
+									$mata2 = "Post-it, Planos y Soporte Magnetico";
+									break;
+								case '35':
+									$mata2 = "Post-it, Fotografia y Soporte Optico";
+									break;
+								case '36':
+									$mata2 = "Post-it, Fotografia y Soporte Magnetico";
+									break;
+								case '37':
+									$mata2 = "Post-it, Soporte Optico y Soporte Magnetico";
+									break;
+								case '38':
+									$mata2 = "Planos, Fotografia y Soporte Optico";
+									break;
+								case '39':
+									$mata2 = "Planos, Fotografia y Soporte Magnetico";
+									break;
+								case '40':
+									$mata2 = "Planos, Soporte Optico y Soporte Magnetico";
+									break;
+								case '41':
+									$mata2 = "Fotografia, Soporte Optico y Soporte Magnetico";
+									break;
+							}
+					?>
+							<tr>
+								<td class=leidos2 align="center">
+									<?
+									$rs2 = $db->conn->Execute("select DEPE_CODI from sgd_archivo_central where sgd_archivo_rad like '$radi'");
+									$depen = $rs2->fields['DEPE_CODI'];
+									if ($usua_perm_archi >= 3 and ($depek == $depen or $depek == '623')) {
+									?>
+										<a href='insertar_central.php?<?= session_name() . "=" . session_id() . "&krd=$krd&fechah=$fechah&$orno&adodb_next_page&edi=1&rad=$radi" ?>'>
+										<? } ?>
+										<?= $radi ?></a>
+								</td>
+								<td class=titulos5 align="center"><b><a href='verHistoricoArch.php?<?= session_name() . "=" . session_id() . "&krd=$krd&fechah=$fechah&$orno&adodb_next_page&rad=$radi" ?>'><?= $fechaR ?></b></td>
+								<td class=leidos2 align="center"><b><?= $orden1 ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2> <?= $fechi ?></b></td>
+								<td class=leidos2 align="center"> <b><span class=leidos2><?= $fechf ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $year ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $dependencia ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $demandado ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $demandante ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $cc ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $docu2 ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $dir ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $srd ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $sbrd ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $proce ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $folio ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $zona1 ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $carro1 ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $cara1 ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $estante1 ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $entrepa1 ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><? echo $caja1;
+																							if ($caja2 != "") echo " a la " . $caja2; ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $unidoc ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $ncarp ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $anexo ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $indete ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $mata2 ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $fecaa ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $prest ?></b></td>
+								<td class=titulos5 align="center"><b><span class=leidos2><?= $funprest ?></b></td>
+								<td class=leidos2 align="center"><b><span class=leidos2><?= $fprestf ?></b></td>
+							</tr>
+					<?
+							$cont++;
+							$rs->MoveNext();
+						}
 
-					$archivoCSV = $ruta_raiz . "/bodega/tmp/B_$krd.xls";
+						include_once('../adodb/toexport.inc.php');
 
-					$fp = fopen($archivoCSV, "w");
-					if ($fp) {
-						fwrite($fp, iconv("UTF-8", "ISO-8859-1", rs2csv($rs)));
-						fclose($fp);
+						$db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
+
+						$rs = $db->query($sql);
+
+						$archivoCSV = $ruta_raiz . "/bodega/tmp/B_$krd.xls";
+
+						$fp = fopen($archivoCSV, "w");
+						if ($fp) {
+							fwrite($fp, iconv("UTF-8", "ISO-8859-1", rs2csv($rs)));
+							fclose($fp);
+						}
+						require_once '../adodb/excel.inc.php';
+						//$tit=array("RADICADO","FECHA_RADICADO","NRO_ORDEN","FECHA_INICIAL","FECHA_FINAL","VIGENCIA","DEPENDENCIA","QUERELLANTE_O_CONTRATISTA","QUERELLADO_O_OBJETO","DOCUMENTO_DE_IDENTIDAD","DOCUMENTO_QUERELLADO","DIRECCION","SERIE","SUBSERIE","TIPO","FOLIOS","ZONA","CARRO","CARA","ESTANTE","ENTREPANO","CAJA","CAJA_HASTA","UNIDAD_DOCUMENTAL","NRO_CARPETAS","OBSERVACIONES","INDICADORES_DE_DETERIORO","MATERIAL_INSERTADO","AUTO","PRESTAMO");
+						$tit = array("NRO_ORDEN", "SERIE", "SUBSERIE", "TIPO", "FOLIOS", "CAJA", "NRO_CARPETAS");
+						$gerar = new sql2excel($tit, $sql, $db); //using $db pointer by default
+					} else {
+						echo "DEBE SELECCIONAR O LLENAR ALGUNA OPCION";
 					}
-					require_once('../adodb/excel.inc.php');
-					//$tit=array("RADICADO","FECHA_RADICADO","NRO_ORDEN","FECHA_INICIAL","FECHA_FINAL","VIGENCIA","DEPENDENCIA","QUERELLANTE_O_CONTRATISTA","QUERELLADO_O_OBJETO","DOCUMENTO_DE_IDENTIDAD","DOCUMENTO_QUERELLADO","DIRECCION","SERIE","SUBSERIE","TIPO","FOLIOS","ZONA","CARRO","CARA","ESTANTE","ENTREPANO","CAJA","CAJA_HASTA","UNIDAD_DOCUMENTAL","NRO_CARPETAS","OBSERVACIONES","INDICADORES_DE_DETERIORO","MATERIAL_INSERTADO","AUTO","PRESTAMO");
-					$tit = array("NRO_ORDEN", "SERIE", "SUBSERIE", "TIPO", "FOLIOS", "CAJA", "NRO_CARPETAS");
-					$gerar = new sql2excel($tit, $sql, $db); //using $db pointer by default
-				} else echo "DEBE SELECCIONAR O LLENAR ALGUNA OPCION";
-				?>
+					?>
+				</tbody>
 			</table>
 			<br>
-			<center>
-				<?= $cont ?> Archivos Encontrados<br>
-				<a href="<?php print $archivoCSV; ?>" class="botones_largo">VER ARCHIVO</a>
-			</center>
+			<?= $cont ?> Archivos Encontrados<br>
+			<a href="<?php print $archivoCSV; ?>" class="botones_largo margin-botton-table">VER ARCHIVO</a>
 		<?
 		}
 		?>
