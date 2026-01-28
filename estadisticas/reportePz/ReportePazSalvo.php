@@ -13,6 +13,15 @@ $ruta_raiz   = "../..";
 	<title>Generador de Informes</title>
 	<link rel="stylesheet" href="./style.css?<?= hash_file('md5', './style.css') ?>">
 	<?php include_once "$ruta_raiz/htmlheader.inc.php"; ?>
+	<style>
+		#dependencia {
+			width: 100% !important;
+		}
+
+		#usuario {
+			width: 100% !important;
+		}
+	</style>
 </head>
 
 <body>
@@ -26,47 +35,53 @@ $ruta_raiz   = "../..";
 
 			<div class="card-body">
 				<form>
-					<!-- DEPENDENCIA -->
-					<div class="mb-3">
-						<label for="dependencia" class="form-label fw-semibold">Seleccionar Dependencia</label>
-						<input
-							list="dataListdep"
-							id="dependencia"
-							name="dependencia"
-							autocomplete="off"
-							class="form-control"
-							placeholder="Escriba la dependencia...">
-						<datalist id="dataListdep">
-							<?php foreach ($obj->getDependencia() as $value): ?>
-								<option value="<?= $value['DEPENDENCIAS'] ?>">
-								<?php endforeach; ?>
-						</datalist>
+					<div class="row">
+						<div class="col-12 col-md-6">
+							<!-- DEPENDENCIA -->
+							<div class="mb-3">
+								<label for="dependencia" class="form-label fw-semibold">Seleccionar Dependencia</label>
+								<input
+									list="dataListdep"
+									id="dependencia"
+									name="dependencia"
+									autocomplete="off"
+									class="form-control"
+									placeholder="Escriba la dependencia...">
+								<datalist id="dataListdep">
+									<?php foreach ($obj->getDependencia() as $value): ?>
+										<option value="<?= $value['DEPENDENCIAS'] ?>">
+										<?php endforeach; ?>
+								</datalist>
+							</div>
+						</div>
+						<div class="col-12 col-md-6">
+							<!-- USUARIO -->
+							<div class="mb-3">
+								<label for="usuario" class="form-label fw-semibold">Seleccionar Usuario</label>
+								<input
+									list="dataListUsua"
+									id="usuario"
+									name="usuario"
+									disabled
+									autocomplete="off"
+									class="form-control"
+									placeholder="Seleccione una dependencia primero">
+								<datalist id="dataListUsua"></datalist>
+
+								<input type="text" name="usrMag" id="magicDataUsr" hidden>
+							</div>
+						</div>
+						<div class="col-12">
+							<!-- BOTÓN -->
+							<button
+								type="button"
+								id="btnSend"
+								hidden
+								class="btn btn-success px-4">
+								Generar Informe
+							</button>
+						</div>
 					</div>
-
-					<!-- USUARIO -->
-					<div class="mb-3">
-						<label for="usuario" class="form-label fw-semibold">Seleccionar Usuario</label>
-						<input
-							list="dataListUsua"
-							id="usuario"
-							name="usuario"
-							disabled
-							autocomplete="off"
-							class="form-control"
-							placeholder="Seleccione una dependencia primero">
-						<datalist id="dataListUsua"></datalist>
-
-						<input type="text" name="usrMag" id="magicDataUsr" hidden>
-					</div>
-
-					<!-- BOTÓN -->
-					<button
-						type="button"
-						id="btnSend"
-						hidden
-						class="btn btn-success px-4">
-						Generar Informe
-					</button>
 				</form>
 			</div>
 		</div>
@@ -90,9 +105,9 @@ $ruta_raiz   = "../..";
 										<th>Bandeja de Salida</th>
 										<th>Bandeja de Resoluciones</th>
 										<th>Bandeja de Memorando</th>
-										<th>Bandeja de Circular Interna</th>
+										<!-- <th>Bandeja de Circular Interna</th>
 										<th>Bandeja de Circular Externa</th>
-										<th>Bandeja de Autos</th>
+										<th>Bandeja de Autos</th> -->
 										<th>Bandeja de Vo.Bo.</th>
 										<th>Bandeja de Devueltos</th>
 										<th>Bandeja de Jefe de Área</th>

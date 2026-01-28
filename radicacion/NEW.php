@@ -569,7 +569,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
         .sticky-top-custom {
             position: sticky;
-            top: 10px;
+            top: 0px;
             /* distancia desde arriba */
             z-index: 1020;
             /* encima del contenido */
@@ -586,7 +586,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
             <input type="hidden" name="radicadopadre" value="<?= $radicadopadre ?>">
 
             <!-- HEADER -->
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm mb-1">
                 <div class="card-header bg-orfeo text-white">
                     <h4 class="mb-0">
                         Radicación <?= $nomEntidad ?> <?= $tRadicacionDesc ?>
@@ -598,7 +598,8 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
             </div>
 
             <!-- FORM CONTENT -->
-            <div class="card shadow-sm my-3 sticky-top-custom">
+            <!-- sticky-top-custom -->
+            <div class="card shadow-sm my-1 ">
                 <div class="card-body">
                     <div class="row align-items-end g-3">
                         <!-- FECHA ACTUAL -->
@@ -611,7 +612,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                         <!-- ENTRADAS DINÁMICAS -->
                         <?= $showEntrada ?>
-
                     </div>
                 </div>
 
@@ -2523,7 +2523,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         var radicado = '';
 
                         console.log(datos);
-                        
+
 
                         <?php
                         if ($datos) {
