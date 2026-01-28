@@ -178,24 +178,6 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link btn-nav-cel "
-                            href="#" id="btn-dep"
-                            onclick="$('.herramientas').hide(); listar('dpOLD');">
-                            <i class="bi bi-folder2 me-1"></i> Expediente V1
-                        </a>
-                    </li>
-
-                    <?php if ($_SESSION["USUA_PERM_ADMEXPV1"] >= 1): ?>
-                        <li class="nav-item">
-                            <a class="nav-link btn-nav-cel "
-                                href="#" id="btn-ccc"
-                                onclick="$('.herramientas').hide();$('#resulEstdatos').hide();$('#busqueda').hide();$('#busqueda2').show();">
-                                <i class="bi bi-search-heart me-1"></i> ADM V1
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
                     <?php if ($_SESSION['PERMISO_TEMPORAL_EXPEDIENTE']): ?>
                         <li class="nav-item me-1">
                             <a class="nav-link btn-nav-cel <?= $contab == 1 ? 'active' : '' ?> "
