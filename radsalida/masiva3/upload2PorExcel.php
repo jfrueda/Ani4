@@ -482,18 +482,32 @@ while (!$plant->EOF) {
     CKEDITOR.config.height = '400';
     CKEDITOR.replace('texrich');
 
-    $(function() {
+    document.addEventListener('DOMContentLoaded', function() {
       var indice = 0;
       var title = [];
       var dataset = [];
 
-      $('#select-plantillas').on('change', function() {
-        CKEDITOR.instances.texrich.setData(plantillas[$(this).val()]['PLAN_PLANTILLA']);
-      })
+      // $('#select-plantillas').on('change', function() {
+      //   CKEDITOR.instances.texrich.setData(plantillas[$(this).val()]['PLAN_PLANTILLA']);
+      // })
+      const selectPlantillasId = document.getElementById('select-plantillas');
+
+      selectPlantillasId?.addEventListener('change', function() {
+        const value = this.value;
+
+        if (
+          CKEDITOR.instances.texrich &&
+          plantillas[value] &&
+          plantillas[value]['PLAN_PLANTILLA']
+        ) {
+          CKEDITOR.instances.texrich.setData(
+            plantillas[value]['PLAN_PLANTILLA']
+          );
+        }
+      });
       //excel
 
       var ExcelToJSON = function() {
-
         this.parseExcel = function(file) {
           var reader = new FileReader();
 
@@ -721,28 +735,83 @@ while (!$plant->EOF) {
         }
       }
 
-      $('#borrarFichero').on('click', function() {
+      // $('#borrarFichero').on('click', function() {
+      //   Swal.fire({
+      //     icon: 'info',
+      //     title: 'Plantilla borrada',
+      //     text: 'Plantilla borrada puede cargar nuevamente'
+      //   });
+      //   document.getElementById('archivoPlantilla').value = null;
+      //   $('#envia22').prop('disabled', true); // Deshabilita el botón Radicar
+      //   throw new Error("error");
+      // })
+
+      const btnBorrar = document.getElementById('borrarFichero');
+      const inputArchivo = document.getElementById('archivoPlantilla');
+      const btnEnviar = document.getElementById('envia22');
+
+      btnBorrar?.addEventListener('click', function() {
         Swal.fire({
           icon: 'info',
           title: 'Plantilla borrada',
           text: 'Plantilla borrada puede cargar nuevamente'
         });
-        document.getElementById('archivoPlantilla').value = null;
-        $('#envia22').prop('disabled', true); // Deshabilita el botón Radicar
-        throw new Error("error");
-      })
+
+        // Limpia el input file
+        if (inputArchivo) {
+          inputArchivo.value = '';
+        }
+
+        // Deshabilita el botón Radicar
+        if (btnEnviar) {
+          btnEnviar.disabled = true;
+        }
+
+        // Equivalente funcional al throw (detiene ejecución)
+        throw new Error('error');
+      });
 
       //funcion para reemplazar variables en la plantilla por los registros del csv
-      function cargarDatos(id) {
-        $('#info').html("Pág. " + ((id % dataset.length) + 1) + " de " + dataset.length);
-        var html = CKEDITOR.instances.texrich.getData();
+      // function cargarDatos(id) {
+      //   $('#info').html("Pág. " + ((id % dataset.length) + 1) + " de " + dataset.length);
+      //   var html = CKEDITOR.instances.texrich.getData();
 
-        if (dataset.length > 0) {
-          var new_html = html;
-          $.each(dataset[id % dataset.length], function(k, v) {
-            new_html = new_html.replace(k, v);
-          });
-          $('#preview').html(new_html);
+      //   if (dataset.length > 0) {
+      //     var new_html = html;
+      //     $.each(dataset[id % dataset.length], function(k, v) {
+      //       new_html = new_html.replace(k, v);
+      //     });
+      //     $('#preview').html(new_html);
+      //   }
+      // }
+
+      function cargarDatos(id) {
+
+        const info = document.getElementById('info');
+        const preview = document.getElementById('preview');
+
+        if (!dataset || dataset.length === 0) return;
+
+        const paginaActual = (id % dataset.length) + 1;
+
+        // $('#info').html(...)
+        if (info) {
+          info.innerHTML = `Pág. ${paginaActual} de ${dataset.length}`;
+        }
+
+        // CKEditor
+        const html = CKEDITOR.instances.texrich.getData();
+        let new_html = html;
+
+        // $.each(...)
+        const fila = dataset[id % dataset.length];
+        Object.keys(fila).forEach(function(k) {
+          new_html = new_html.replace(k, fila[k]);
+        });
+
+        // $('#preview').html(...)
+        if (preview) {
+          preview.innerHTML = new_html;
         }
       }
 
@@ -766,9 +835,7 @@ while (!$plant->EOF) {
       //   cargarDatos(indice);
       //   $('#modal').modal('show');
       // })
-    })
 
-    document.addEventListener('DOMContentLoaded', function() {
       // Paginador previsualización
       document.getElementById('anterior')?.addEventListener('click', function(e) {
         indice--;
