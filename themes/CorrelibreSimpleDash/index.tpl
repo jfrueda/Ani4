@@ -67,7 +67,7 @@
         <div class="container-fluid">
 			<!-- Logo -->
             <a class="navbar-brand d-flex align-items-center logo" onclick="location.reload()" href="#">
-                <img src="<!--{$logoEntidad}-->" height="80" class="d-inline-block align-text-top" id="logo_superargo">
+                <img src="<!--{$logoEntidad}-->" height="80" class="d-inline-block align-text-top" id="logo_superargo" alt="Logo <!--{$entidad}-->">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#orfeo-navbar-collapse-1" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
@@ -225,7 +225,7 @@
     <div class="container-fluid mt-3">
         <div class="row">
 			<div class="col-md-2 mb-2">
-				<button class="btn btn-primary" id="toggleSidebarBtn">
+				<button class="btn btn-primary" id="toggleSidebarBtn" aria-label="SideBarToggle" title="Abrir/Cerrar Menú Lateral">
 					<i class="fa fa-bars"></i>
 				</button>
 			</div>
@@ -313,7 +313,7 @@
 
             <!-- CONTENIDO -->
             <div class="col-md-10" id="mainContent">
-                <iframe name="mainFrame" class="w-100"></iframe>
+                <iframe name="mainFrame" title="Contenido principal del sitio web" class="w-100"></iframe>
             </div>
         </div>
     </div>

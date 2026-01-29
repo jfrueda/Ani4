@@ -132,7 +132,7 @@ $ano = $ano ? $ano : date('Y');
                     <div class="row">
                         <?php
                         for ($i = 1; $i <= 12; $i++) {
-                            echo "<div class='col-12 col-md-4 col-lg-3' style='height:263px'>";
+                            echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3' style='height:263px'>";
                             calendario($ano, $i);
                             echo "</div>";
                         }

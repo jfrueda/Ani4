@@ -506,10 +506,11 @@ table.tablesorter thead tr th:hover {
 
 /* transición suave del sidebar */
 #sidebar {
-    transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
+
 #sidebar.d-none {
-    opacity: 0;
+  opacity: 0;
 }
 
 /* botón elegante */
@@ -557,4 +558,10 @@ iframe[name="mainFrame"] {
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   overflow-y: auto;
+}
+
+@media only screen and (max-width: 429px) {
+  iframe[name="mainFrame"] {
+    height: 51vh !important;
+  }
 }
