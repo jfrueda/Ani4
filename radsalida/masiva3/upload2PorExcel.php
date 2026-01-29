@@ -329,7 +329,7 @@ while (!$plant->EOF) {
                                     <td colspan="2">
                                         <p style="text-align:center">
                                         <span style="font-size:11px">
-                                            <strong>SUPERINTENDENCIA NACIONAL DE SALUD </strong>
+                                            <strong>UNIVERSIDAD MILITAR NUEVA GRANADA</strong>
                                         </span>
                                         </p>
                                     </td>
