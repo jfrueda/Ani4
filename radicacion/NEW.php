@@ -2640,10 +2640,10 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                 console.log(err);
 
                                 var errMsg = 'Error de creación/modificación del radicado. Reporte al administrador código http: ' + err.status;
-                                mostrarAlert({
+                                /*mostrarAlert({
                                     type: 'danger',
                                     message: errMsg
-                                });
+                                });*/
                             })
                             .finally(() => {
                                 EJECUCION = false;
