@@ -904,7 +904,7 @@ $smarty->assign("lastUpdate", $lastUpdate);
 $smarty->assign("lastCommit", $lastCommit);
 $smarty->assign("entidad_largo", $entidad_largo);
 $smarty->assign("logoEntidad", './bodega/sys_img/logo.png');
-$smarty->assign("favicon", './bodega' . $favicon);
+$smarty->assign("favicon", './bodega/sys_img/logo.png');
 if ($menuAcciones) {
     $smarty->assign("acciones", $acciones);
 }
