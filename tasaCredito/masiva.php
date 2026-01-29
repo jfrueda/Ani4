@@ -426,7 +426,7 @@ foreach ($sheetData as $t) {
                 }          
 
                 //chdir($ABSOL_PATH.'bodega/tmp/workDir');
-                $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar ' . str_replace('docx','pdf',$pathAux) . ' -kst PKCS12 -ksf ' . $P12_FILE . ' -ka "superintendencia nacional de salud" -ksp ' 
+                $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar ' . str_replace('docx','pdf',$pathAux) . ' -kst PKCS12 -ksf ' . $P12_FILE . ' -ksp ' 
                     . $clave . ' --font-size 7 -r \'Firmado al Radicar en SuperArgo\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d ' . $pathFolderAux . ' 2>&1';
 
                     $out = null;

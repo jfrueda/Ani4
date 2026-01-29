@@ -482,18 +482,32 @@ while (!$plant->EOF) {
     CKEDITOR.config.height = '400';
     CKEDITOR.replace('texrich');
 
-    $(function() {
+    document.addEventListener('DOMContentLoaded', function() {
       var indice = 0;
       var title = [];
       var dataset = [];
 
-      $('#select-plantillas').on('change', function() {
-        CKEDITOR.instances.texrich.setData(plantillas[$(this).val()]['PLAN_PLANTILLA']);
-      })
+      // $('#select-plantillas').on('change', function() {
+      //   CKEDITOR.instances.texrich.setData(plantillas[$(this).val()]['PLAN_PLANTILLA']);
+      // })
+      const selectPlantillasId = document.getElementById('select-plantillas');
+
+      selectPlantillasId?.addEventListener('change', function() {
+        const value = this.value;
+
+        if (
+          CKEDITOR.instances.texrich &&
+          plantillas[value] &&
+          plantillas[value]['PLAN_PLANTILLA']
+        ) {
+          CKEDITOR.instances.texrich.setData(
+            plantillas[value]['PLAN_PLANTILLA']
+          );
+        }
+      });
       //excel
 
       var ExcelToJSON = function() {
-
         this.parseExcel = function(file) {
           var reader = new FileReader();
 
@@ -619,28 +633,33 @@ while (!$plant->EOF) {
       function validar() {
         if (dataset.length > 0) {
           let errores = '';
-          valido = true
-          $.each(dataset, function(k, v) {
-            let tiporadSel;
-            tiporadSel = $('select[name=tipoRad]').val();
-            let envios_tipo = ['FISICO', 'EMAIL', 'AMBOS', 'EMAILNC']
-            if (tiporadSel == 1 && v["*MEDIOENVIO*"] === undefined) {
-              valido = false
-              errores += `una salida debe tener medio de envio EMAIL o EMAILNC o  FISICO o AMBOS valor actual: vacio \n`;
+          valido = true;
+
+          dataset.forEach(function(v) {
+
+            // $('select[name=tipoRad]').val()
+            const tipoRadSelect = document.querySelector('select[name="tipoRad"]');
+            const tiporadSel = tipoRadSelect ? tipoRadSelect.value : null;
+
+            const envios_tipo = ['FISICO', 'EMAIL', 'AMBOS', 'EMAILNC'];
+
+            if (tiporadSel == 1 && v['*MEDIOENVIO*'] === undefined) {
+              valido = false;
+              errores += `una salida debe tener medio de envio EMAIL o EMAILNC o FISICO o AMBOS valor actual: vacio \n`;
             }
-            $.each(v, function(i, val) {
 
-              if (tiporadSel == 1 && i == '*MEDIOENVIO*' && !envios_tipo.includes(val)) {
-                valido = false
-                errores += `una salida debe tener medio de envio EMAIL o EMAILNC o  FISICO o AMBOS valor actual: ${val} \n`;
+            Object.entries(v).forEach(function([i, val]) {
+
+              if (tiporadSel == 1 && i === '*MEDIOENVIO*' && !envios_tipo.includes(val)) {
+                valido = false;
+                errores += `una salida debe tener medio de envio EMAIL o EMAILNC o FISICO o AMBOS valor actual: ${val} \n`;
               }
-              //old
 
-              if (i == '*EMAIL*' && val != '') {
-                // Split emails by comma, trim spaces
-                let emails = val.split(';').map(e => e.trim());
-                // Expresión regular mejorada para validar correos electrónicos
-                let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+              // Validación EMAIL (regex básica)
+              if (i === '*EMAIL*' && val !== '') {
+                const emails = val.split(';').map(e => e.trim());
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
                 emails.forEach(function(email) {
                   if (email.length > 0 && (!emailRegex.test(email) || email.includes(' '))) {
                     valido = false;
@@ -648,9 +667,10 @@ while (!$plant->EOF) {
                   }
                 });
               }
-              // Nueva validación de correos electrónicos
-              if (i == '*EMAIL*' && val != '') {
-                // Validación de errores de dominio antes de la validación estándar
+
+              // Validación EMAIL avanzada (validator.js + fallback)
+              if (i === '*EMAIL*' && val !== '') {
+
                 const resultadoDominio = validarEmails(val);
                 if (resultadoDominio.errores) {
                   errores += resultadoDominio.errores;
@@ -658,10 +678,9 @@ while (!$plant->EOF) {
                 if (!resultadoDominio.valido) {
                   valido = false;
                 }
-                // Split emails by comma, trim spaces
-                let emails = val.split(';').map(e => e.trim());
 
-                // Verificar que validator esté disponible
+                const emails = val.split(';').map(e => e.trim());
+
                 if (typeof validator !== 'undefined') {
                   emails.forEach(function(email) {
                     if (email.length > 0 && !validator.isEmail(email)) {
@@ -670,9 +689,9 @@ while (!$plant->EOF) {
                     }
                   });
                 } else {
-                  console.error("La librería validator.js no se ha cargado correctamente");
-                  // Usar regex como fallback
-                  let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                  console.error('La librería validator.js no se ha cargado correctamente');
+
+                  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
                   emails.forEach(function(email) {
                     if (email.length > 0 && !emailRegex.test(email)) {
@@ -683,125 +702,300 @@ while (!$plant->EOF) {
                 }
               }
 
-
-              if (i == '*ANEXOS*' && val != '' && val.length > 0 && !Number.isInteger(parseInt(val))) {
-                valido = false
+              if (i === '*ANEXOS*' && val !== '' && !Number.isInteger(parseInt(val))) {
+                valido = false;
                 errores += `la columna anexos debe ser un número sin espacios ni caracteres, valor actual: ${val} \n`;
               }
 
-              if (i == '*MUNI_NOMBRE*' && val != '' && !municipios.includes(val)) {
-                valido = false
+              if (i === '*MUNI_NOMBRE*' && val !== '' && !municipios.includes(val)) {
+                valido = false;
                 errores += `verifica la divipola municipio con error ${val} \n`;
-
               }
-              if (i == '*DEPTO_NOMBRE*' && val != '' && !departamentos.includes(val)) {
-                valido = false
+
+              if (i === '*DEPTO_NOMBRE*' && val !== '' && !departamentos.includes(val)) {
+                valido = false;
                 errores += `verifica la divipola departamento con error ${val} \n`;
               }
-              var letters = /[´“”°ª–#'┃│]/g;
-              let data = val.match(letters);
-              if (data !== null) {
-                valido = false
-                errores += `El excel contiene los siguientes caracteres no validos: ${val} \n`
+
+              const letters = /[´“”°ª–#'┃│]/g;
+              if (typeof val === 'string' && letters.test(val)) {
+                valido = false;
+                errores += `El excel contiene los siguientes caracteres no validos: ${val} \n`;
               }
             });
           });
-          if (valido == false) {
-            $('#envia22').prop('disabled', true);
+
+          const btnEnviar = document.getElementById('envia22');
+          const inputArchivo = document.getElementById('archivoPlantilla');
+
+          if (valido === false) {
+            // $('#envia22').prop('disabled', true)
+            if (btnEnviar) {
+              btnEnviar.disabled = true;
+            }
+
             Swal.fire({
               icon: 'error',
               title: 'Errores en la plantilla',
-              html: errores.replace(/\n/g, '<br>') + "<br><b>Debes ajustar y cargar la plantilla nuevamente.</b>"
+              html: errores.replace(/\n/g, '<br>') +
+                '<br><b>Debes ajustar y cargar la plantilla nuevamente.</b>'
             });
-            document.getElementById('archivoPlantilla').value = null;
-            throw new Error("error");
+
+            // Limpia el input file
+            if (inputArchivo) {
+              inputArchivo.value = '';
+            }
+
+            // Detiene la ejecución (equivalente al original)
+            throw new Error('error');
           } else {
-            $('#envia22').prop('disabled', false);
+            // $('#envia22').prop('disabled', false)
+            if (btnEnviar) {
+              btnEnviar.disabled = false;
+            }
           }
         }
       }
 
-      $('#borrarFichero').on('click', function() {
+      // function validar() {
+      //   if (dataset.length > 0) {
+      //     let errores = '';
+      //     valido = true
+      //     $.each(dataset, function(k, v) {
+      //       let tiporadSel;
+      //       tiporadSel = $('select[name=tipoRad]').val();
+      //       let envios_tipo = ['FISICO', 'EMAIL', 'AMBOS', 'EMAILNC']
+      //       if (tiporadSel == 1 && v["*MEDIOENVIO*"] === undefined) {
+      //         valido = false
+      //         errores += `una salida debe tener medio de envio EMAIL o EMAILNC o  FISICO o AMBOS valor actual: vacio \n`;
+      //       }
+      //       $.each(v, function(i, val) {
+
+      //         if (tiporadSel == 1 && i == '*MEDIOENVIO*' && !envios_tipo.includes(val)) {
+      //           valido = false
+      //           errores += `una salida debe tener medio de envio EMAIL o EMAILNC o  FISICO o AMBOS valor actual: ${val} \n`;
+      //         }
+      //         //old
+
+      //         if (i == '*EMAIL*' && val != '') {
+      //           // Split emails by comma, trim spaces
+      //           let emails = val.split(';').map(e => e.trim());
+      //           // Expresión regular mejorada para validar correos electrónicos
+      //           let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      //           emails.forEach(function(email) {
+      //             if (email.length > 0 && (!emailRegex.test(email) || email.includes(' '))) {
+      //               valido = false;
+      //               errores += `El campo *EMAIL* contiene un correo inválido o con espacios: "${email}"\n`;
+      //             }
+      //           });
+      //         }
+
+      //         // Nueva validación de correos electrónicos
+      //         if (i == '*EMAIL*' && val != '') {
+      //           // Validación de errores de dominio antes de la validación estándar
+      //           const resultadoDominio = validarEmails(val);
+      //           if (resultadoDominio.errores) {
+      //             errores += resultadoDominio.errores;
+      //           }
+      //           if (!resultadoDominio.valido) {
+      //             valido = false;
+      //           }
+      //           // Split emails by comma, trim spaces
+      //           let emails = val.split(';').map(e => e.trim());
+
+      //           // Verificar que validator esté disponible
+      //           if (typeof validator !== 'undefined') {
+      //             emails.forEach(function(email) {
+      //               if (email.length > 0 && !validator.isEmail(email)) {
+      //                 valido = false;
+      //                 errores += `El campo *EMAIL* contiene un correo inválido: "${email}"\n`;
+      //               }
+      //             });
+      //           } else {
+      //             console.error("La librería validator.js no se ha cargado correctamente");
+      //             // Usar regex como fallback
+      //             let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      //             emails.forEach(function(email) {
+      //               if (email.length > 0 && !emailRegex.test(email)) {
+      //                 valido = false;
+      //                 errores += `El campo *EMAIL* contiene un correo inválido: "${email}"\n`;
+      //               }
+      //             });
+      //           }
+      //         }
+
+      //         if (i == '*ANEXOS*' && val != '' && val.length > 0 && !Number.isInteger(parseInt(val))) {
+      //           valido = false
+      //           errores += `la columna anexos debe ser un número sin espacios ni caracteres, valor actual: ${val} \n`;
+      //         }
+
+      //         if (i == '*MUNI_NOMBRE*' && val != '' && !municipios.includes(val)) {
+      //           valido = false
+      //           errores += `verifica la divipola municipio con error ${val} \n`;
+
+      //         }
+
+      //         if (i == '*DEPTO_NOMBRE*' && val != '' && !departamentos.includes(val)) {
+      //           valido = false
+      //           errores += `verifica la divipola departamento con error ${val} \n`;
+      //         }
+
+      //         var letters = /[´“”°ª–#'┃│]/g;
+      //         let data = val.match(letters);
+      //         if (data !== null) {
+      //           valido = false
+      //           errores += `El excel contiene los siguientes caracteres no validos: ${val} \n`
+      //         }
+      //       });
+      //     });
+
+      //     if (valido == false) {
+      //       $('#envia22').prop('disabled', true);
+      //       Swal.fire({
+      //         icon: 'error',
+      //         title: 'Errores en la plantilla',
+      //         html: errores.replace(/\n/g, '<br>') + "<br><b>Debes ajustar y cargar la plantilla nuevamente.</b>"
+      //       });
+      //       document.getElementById('archivoPlantilla').value = null;
+      //       throw new Error("error");
+      //     } else {
+      //       $('#envia22').prop('disabled', false);
+      //     }
+      //   }
+      // }
+
+      // $('#borrarFichero').on('click', function() {
+      //   Swal.fire({
+      //     icon: 'info',
+      //     title: 'Plantilla borrada',
+      //     text: 'Plantilla borrada puede cargar nuevamente'
+      //   });
+      //   document.getElementById('archivoPlantilla').value = null;
+      //   $('#envia22').prop('disabled', true); // Deshabilita el botón Radicar
+      //   throw new Error("error");
+      // })
+
+      const btnBorrar = document.getElementById('borrarFichero');
+      const inputArchivo = document.getElementById('archivoPlantilla');
+      const btnEnviar = document.getElementById('envia22');
+
+      btnBorrar?.addEventListener('click', function() {
         Swal.fire({
           icon: 'info',
           title: 'Plantilla borrada',
           text: 'Plantilla borrada puede cargar nuevamente'
         });
-        document.getElementById('archivoPlantilla').value = null;
-        $('#envia22').prop('disabled', true); // Deshabilita el botón Radicar
-        throw new Error("error");
-      })
 
-      // leer csv y precargar valores
-      /*
-      $('#archivoPlantilla').on('change', function(e) {
-        if (!window.FileReader ) {
-            return alert('No es soportada la previsualización de archivos en su navegador.');
-        } else {
-          var fileReader = new FileReader();
-          fileReader.onload = function () {
-            title = [];
-            dataset = [];
-            var data = fileReader.result;  // data <-- in this var you have the file data in Base64 format
-            var resultados = data.split("\n");
-            indice = 0;
-            size = 0;
-            $.each(resultados, function(i, row) {
-              var columns = row.split("\t");
-              if(i == 0) {
-                title = columns.map(function(e) { return e.trim(); });
-                size = title.length;
-              } else {
-                var object = {};
-                if(columns.length == size) {
-                    $.each(columns, function(i, e) {
-                      object[title[i]] = e;
-                    });
-
-                    dataset.push(object);
-                }
-              }
-            });
-          };
-          fileReader.readAsText($('#archivoPlantilla').prop('files')[0], 'utf-8');
+        // Limpia el input file
+        if (inputArchivo) {
+          inputArchivo.value = '';
         }
+
+        // Deshabilita el botón Radicar
+        if (btnEnviar) {
+          btnEnviar.disabled = true;
+        }
+
+        // Equivalente funcional al throw (detiene ejecución)
+        throw new Error('error');
       });
-      */
 
       //funcion para reemplazar variables en la plantilla por los registros del csv
-      function cargarDatos(id) {
-        $('#info').html("Pág. " + ((id % dataset.length) + 1) + " de " + dataset.length);
-        var html = CKEDITOR.instances.texrich.getData();
+      // function cargarDatos(id) {
+      //   $('#info').html("Pág. " + ((id % dataset.length) + 1) + " de " + dataset.length);
+      //   var html = CKEDITOR.instances.texrich.getData();
 
-        if (dataset.length > 0) {
-          var new_html = html;
-          $.each(dataset[id % dataset.length], function(k, v) {
-            new_html = new_html.replace(k, v);
-          });
-          $('#preview').html(new_html);
+      //   if (dataset.length > 0) {
+      //     var new_html = html;
+      //     $.each(dataset[id % dataset.length], function(k, v) {
+      //       new_html = new_html.replace(k, v);
+      //     });
+      //     $('#preview').html(new_html);
+      //   }
+      // }
+
+      function cargarDatos(id) {
+
+        const info = document.getElementById('info');
+        const preview = document.getElementById('preview');
+
+        if (!dataset || dataset.length === 0) return;
+
+        const paginaActual = (id % dataset.length) + 1;
+
+        // $('#info').html(...)
+        if (info) {
+          info.innerHTML = `Pág. ${paginaActual} de ${dataset.length}`;
+        }
+
+        // CKEditor
+        const html = CKEDITOR.instances.texrich.getData();
+        let new_html = html;
+
+        // $.each(...)
+        const fila = dataset[id % dataset.length];
+        Object.keys(fila).forEach(function(k) {
+          new_html = new_html.replace(k, fila[k]);
+        });
+
+        // $('#preview').html(...)
+        if (preview) {
+          preview.innerHTML = new_html;
         }
       }
 
       //paginador previsualización
-      $('#anterior').on('click', function(e) {
+      // $('#anterior').on('click', function(e) {
+      //   indice--;
+      //   cargarDatos(Math.abs(indice));
+      // });
+
+      // $('#siguiente').on('click', function(e) {
+      //   indice++;
+      //   cargarDatos(Math.abs(indice));
+      // });
+
+      // $(document).ready(function() {
+      //   $('#select-plantillas').select2();
+      // });
+
+      // $('#previsualizar').on('click', function(e) {
+      //   validar();
+      //   cargarDatos(indice);
+      //   $('#modal').modal('show');
+      // })
+
+      // Paginador previsualización
+      document.getElementById('anterior')?.addEventListener('click', function(e) {
         indice--;
         cargarDatos(Math.abs(indice));
       });
 
-      $('#siguiente').on('click', function(e) {
+      document.getElementById('siguiente')?.addEventListener('click', function(e) {
         indice++;
         cargarDatos(Math.abs(indice));
       });
 
-      $(document).ready(function() {
-        $('#select-plantillas').select2();
-      });
+      // Reemplazo de select2 (básico)
+      const selectPlantillas = document.getElementById('select-plantillas');
+      if (selectPlantillas) {
+        // Aquí solo queda como select normal
+        // Si quieres algo tipo select2 nativo → te explico abajo
+      }
 
-      $('#previsualizar').on('click', function(e) {
+      const btnPrevisualizar = document.getElementById('previsualizar');
+      btnPrevisualizar?.addEventListener('click', function(e) {
         validar();
         cargarDatos(indice);
-        $('#modal').modal('show');
-      })
+
+        // Mostrar modal (Bootstrap 5 nativo)
+        const modalEl = document.getElementById('modal');
+        if (modalEl) {
+          const modal = new bootstrap.Modal(modalEl);
+          modal.show();
+        }
+      });
     })
   </script>
 </body>
