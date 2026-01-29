@@ -1383,7 +1383,7 @@ if (isset($_REQUEST['clave']) && isset($_SESSION["usua_perm_firma"])){
 }
 if ($_SESSION['apiFirmaDigital']=='false'){
 
-    $commandFirmado='java  -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.str_replace('odt','pdf',$nombreArchivo).' -kst PKCS12  -ksf '.$ABSOL_PATH.'/bodega/firmas/'.$usua_doc.'.p12   -ka "superintendencia nacional de salud" -ksp '.$clave.' --font-size 7    -r \'Firmado al Radicar en OrfeoGPL\'  -V --img-path '.$ABSOL_PATH.'/imagenes/gnu.gif --render-mode  GRAPHIC_AND_DESCRIPTION -llx 0 -lly 0 -urx 550 -ury 27 2>&1';
+    $commandFirmado='java  -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.str_replace('odt','pdf',$nombreArchivo).' -kst PKCS12  -ksf '.$ABSOL_PATH.'/bodega/firmas/'.$usua_doc.'.p12   -ksp '.$clave.' --font-size 7    -r \'Firmado al Radicar en OrfeoGPL\'  -V --img-path '.$ABSOL_PATH.'/imagenes/gnu.gif --render-mode  GRAPHIC_AND_DESCRIPTION -llx 0 -lly 0 -urx 550 -ury 27 2>&1';
 
 //die (exec($commandFirmado));
     if (exec($commandFirmado)=="INFO  Finished: Creating of signature failed."){
@@ -1565,7 +1565,7 @@ if ($_SESSION['apiFirmaDigital']=='false'){
     if ($P12_PASS) {
         $clave = $P12_PASS;
     }
-    $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.str_replace('docx','pdf',$nombreArchivo).' -kst PKCS12 -ksf '.$P12_FILE.' -ka "superintendencia nacional de salud" -ksp '.$clave.' --font-size 7 -r \'Firmado al Radicar en SuperArgo\' -V -llx 0 -lly 0 -urx 550 -ury 27';
+    $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.str_replace('docx','pdf',$nombreArchivo).' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado al Radicar en SuperArgo\' -V -llx 0 -lly 0 -urx 550 -ury 27';
 
     if ($tsUrlTimeStamp) {
         $commandFirmadoTS = "$commandFirmado -ta PASSWORD -ts $tsUrlTimeStamp -tsu $tsuUserTimeStamp -tsp $tspPasswordTimeStamp 2>&1";

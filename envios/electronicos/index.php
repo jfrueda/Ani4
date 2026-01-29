@@ -31,7 +31,7 @@ if ($_SESSION['dependencia'] == 93001) {
             u.usua_esta = '1'
     ");
 }
-$dependencias = $db->conn->getAll('SELECT * FROM dependencia WHERE depe_estado = 1 and depe_codi IN (' . implode(',', $dependencias) . ') order by depe_codi');
+$dependencias = $db->conn->getAll('SELECT * FROM dependencia WHERE depe_estado = 1 order by depe_codi');
 ?>
 <!DOCTYPE html>
 <html lang="en">

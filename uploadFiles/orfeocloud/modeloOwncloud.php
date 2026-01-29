@@ -196,10 +196,10 @@ class modeloOwncloud {
         $opciones .= " -kst PKCS12 ";
 //        $opciones .= " -ksf ../../core/config/cert/dne/8099.p12  ";   // Fila Certificado
 /*        $opciones .= " -ksf ../../core/config/cert/dne/dne.p12  ";
-        $opciones .= " -ka "superintendencia nacional de salud" -ksp System2013 " ;*/
+        $opciones .= " -ksp System2013 " ;*/
         $opciones .= " -ksf " .KSF. " ";
-        $opciones .= " -ka "superintendencia nacional de salud" -ksp " .KSP. " ";
-        //$opciones .= " -ka "superintendencia nacional de salud" -ksp ideas ";
+        $opciones .= " -ksp " .KSP. " ";
+        //$opciones .= " -ksp ideas ";
         $opciones .= " --font-size 7 ";
         $opciones .= ' --l4-text ' . "'" . '${signer}  ' . "'";
         $opciones .= ' --l4-text ' . "'" . '${timestamp}' . "'";

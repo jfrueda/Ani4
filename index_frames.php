@@ -38,6 +38,8 @@ if (!$_SESSION['dependencia'] || $_GET['close']) {
     echo "<script>parent.frames.location.reload();top.location.reload();</script>";
 }
 
+
+
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/processConfig.php";
 require_once "include/tx/Menus.php";
@@ -661,21 +663,7 @@ $sub = array(
 
 );
 
-if ($_SESSION['usua_perm_scor'] == '1') {
-    $sub["consultaSupercor"] = array(
-        'subMenu' => 0,
-        'url' => "busqueda/supercor.php?$phpsession&&etapa=1&s_Listado=VerListado&fechah=$fechah",
-        'nombre' => 'Consulta Supercor'
-    );
-}
 
-if (isset($superargo1)) {
-    $sub["consultaSuperargo"] = array(
-        'subMenu' => 0,
-        'url' => "busqueda/superargo1_pendientes.php",
-        'nombre' => 'Consulta Superargo 1'
-    );
-}
 
 $bandejas["consultas"] = array('subMenu' => 1, 'url' => "#", 'nombre' => 'Consultas', 'sub' => $sub);
 $bandejas["estadisticas"] = array(
@@ -904,7 +892,7 @@ $smarty->assign("lastUpdate", $lastUpdate);
 $smarty->assign("lastCommit", $lastCommit);
 $smarty->assign("entidad_largo", $entidad_largo);
 $smarty->assign("logoEntidad", './bodega/sys_img/logo.png');
-$smarty->assign("favicon", './bodega' . $favicon);
+$smarty->assign("favicon", './bodega/sys_img/logo.png');
 if ($menuAcciones) {
     $smarty->assign("acciones", $acciones);
 }
