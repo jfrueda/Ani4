@@ -732,42 +732,6 @@ while (!$plant->EOF) {
         throw new Error("error");
       })
 
-      // leer csv y precargar valores
-      /*
-      $('#archivoPlantilla').on('change', function(e) {
-        if (!window.FileReader ) {
-            return alert('No es soportada la previsualización de archivos en su navegador.');
-        } else {
-          var fileReader = new FileReader();
-          fileReader.onload = function () {
-            title = [];
-            dataset = [];
-            var data = fileReader.result;  // data <-- in this var you have the file data in Base64 format
-            var resultados = data.split("\n");
-            indice = 0;
-            size = 0;
-            $.each(resultados, function(i, row) {
-              var columns = row.split("\t");
-              if(i == 0) {
-                title = columns.map(function(e) { return e.trim(); });
-                size = title.length;
-              } else {
-                var object = {};
-                if(columns.length == size) {
-                    $.each(columns, function(i, e) {
-                      object[title[i]] = e;
-                    });
-
-                    dataset.push(object);
-                }
-              }
-            });
-          };
-          fileReader.readAsText($('#archivoPlantilla').prop('files')[0], 'utf-8');
-        }
-      });
-      */
-
       //funcion para reemplazar variables en la plantilla por los registros del csv
       function cargarDatos(id) {
         $('#info').html("Pág. " + ((id % dataset.length) + 1) + " de " + dataset.length);
@@ -783,25 +747,58 @@ while (!$plant->EOF) {
       }
 
       //paginador previsualización
-      $('#anterior').on('click', function(e) {
+      // $('#anterior').on('click', function(e) {
+      //   indice--;
+      //   cargarDatos(Math.abs(indice));
+      // });
+
+      // $('#siguiente').on('click', function(e) {
+      //   indice++;
+      //   cargarDatos(Math.abs(indice));
+      // });
+
+      // $(document).ready(function() {
+      //   $('#select-plantillas').select2();
+      // });
+
+      // $('#previsualizar').on('click', function(e) {
+      //   validar();
+      //   cargarDatos(indice);
+      //   $('#modal').modal('show');
+      // })
+    })
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Paginador previsualización
+      document.getElementById('anterior')?.addEventListener('click', function(e) {
         indice--;
         cargarDatos(Math.abs(indice));
       });
 
-      $('#siguiente').on('click', function(e) {
+      document.getElementById('siguiente')?.addEventListener('click', function(e) {
         indice++;
         cargarDatos(Math.abs(indice));
       });
 
-      $(document).ready(function() {
-        $('#select-plantillas').select2();
-      });
+      // Reemplazo de select2 (básico)
+      const selectPlantillas = document.getElementById('select-plantillas');
+      if (selectPlantillas) {
+        // Aquí solo queda como select normal
+        // Si quieres algo tipo select2 nativo → te explico abajo
+      }
 
-      $('#previsualizar').on('click', function(e) {
+      const btnPrevisualizar = document.getElementById('previsualizar');
+      btnPrevisualizar?.addEventListener('click', function(e) {
         validar();
         cargarDatos(indice);
-        $('#modal').modal('show');
-      })
+
+        // Mostrar modal (Bootstrap 5 nativo)
+        const modalEl = document.getElementById('modal');
+        if (modalEl) {
+          const modal = new bootstrap.Modal(modalEl);
+          modal.show();
+        }
+      });
     })
   </script>
 </body>
