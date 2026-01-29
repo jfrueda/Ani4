@@ -630,127 +630,129 @@ while (!$plant->EOF) {
         };
       }
 
-      if (dataset.length > 0) {
-        let errores = '';
-        valido = true;
+      function validar() {
+        if (dataset.length > 0) {
+          let errores = '';
+          valido = true;
 
-        dataset.forEach(function(v) {
+          dataset.forEach(function(v) {
 
-          // $('select[name=tipoRad]').val()
-          const tipoRadSelect = document.querySelector('select[name="tipoRad"]');
-          const tiporadSel = tipoRadSelect ? tipoRadSelect.value : null;
+            // $('select[name=tipoRad]').val()
+            const tipoRadSelect = document.querySelector('select[name="tipoRad"]');
+            const tiporadSel = tipoRadSelect ? tipoRadSelect.value : null;
 
-          const envios_tipo = ['FISICO', 'EMAIL', 'AMBOS', 'EMAILNC'];
+            const envios_tipo = ['FISICO', 'EMAIL', 'AMBOS', 'EMAILNC'];
 
-          if (tiporadSel == 1 && v['*MEDIOENVIO*'] === undefined) {
-            valido = false;
-            errores += `una salida debe tener medio de envio EMAIL o EMAILNC o FISICO o AMBOS valor actual: vacio \n`;
-          }
-
-          Object.entries(v).forEach(function([i, val]) {
-
-            if (tiporadSel == 1 && i === '*MEDIOENVIO*' && !envios_tipo.includes(val)) {
+            if (tiporadSel == 1 && v['*MEDIOENVIO*'] === undefined) {
               valido = false;
-              errores += `una salida debe tener medio de envio EMAIL o EMAILNC o FISICO o AMBOS valor actual: ${val} \n`;
+              errores += `una salida debe tener medio de envio EMAIL o EMAILNC o FISICO o AMBOS valor actual: vacio \n`;
             }
 
-            // Validación EMAIL (regex básica)
-            if (i === '*EMAIL*' && val !== '') {
-              const emails = val.split(';').map(e => e.trim());
-              const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            Object.entries(v).forEach(function([i, val]) {
 
-              emails.forEach(function(email) {
-                if (email.length > 0 && (!emailRegex.test(email) || email.includes(' '))) {
-                  valido = false;
-                  errores += `El campo *EMAIL* contiene un correo inválido o con espacios: "${email}"\n`;
-                }
-              });
-            }
-
-            // Validación EMAIL avanzada (validator.js + fallback)
-            if (i === '*EMAIL*' && val !== '') {
-
-              const resultadoDominio = validarEmails(val);
-              if (resultadoDominio.errores) {
-                errores += resultadoDominio.errores;
-              }
-              if (!resultadoDominio.valido) {
+              if (tiporadSel == 1 && i === '*MEDIOENVIO*' && !envios_tipo.includes(val)) {
                 valido = false;
+                errores += `una salida debe tener medio de envio EMAIL o EMAILNC o FISICO o AMBOS valor actual: ${val} \n`;
               }
 
-              const emails = val.split(';').map(e => e.trim());
-
-              if (typeof validator !== 'undefined') {
-                emails.forEach(function(email) {
-                  if (email.length > 0 && !validator.isEmail(email)) {
-                    valido = false;
-                    errores += `El campo *EMAIL* contiene un correo inválido: "${email}"\n`;
-                  }
-                });
-              } else {
-                console.error('La librería validator.js no se ha cargado correctamente');
-
-                const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+              // Validación EMAIL (regex básica)
+              if (i === '*EMAIL*' && val !== '') {
+                const emails = val.split(';').map(e => e.trim());
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
                 emails.forEach(function(email) {
-                  if (email.length > 0 && !emailRegex.test(email)) {
+                  if (email.length > 0 && (!emailRegex.test(email) || email.includes(' '))) {
                     valido = false;
-                    errores += `El campo *EMAIL* contiene un correo inválido: "${email}"\n`;
+                    errores += `El campo *EMAIL* contiene un correo inválido o con espacios: "${email}"\n`;
                   }
                 });
               }
-            }
 
-            if (i === '*ANEXOS*' && val !== '' && !Number.isInteger(parseInt(val))) {
-              valido = false;
-              errores += `la columna anexos debe ser un número sin espacios ni caracteres, valor actual: ${val} \n`;
-            }
+              // Validación EMAIL avanzada (validator.js + fallback)
+              if (i === '*EMAIL*' && val !== '') {
 
-            if (i === '*MUNI_NOMBRE*' && val !== '' && !municipios.includes(val)) {
-              valido = false;
-              errores += `verifica la divipola municipio con error ${val} \n`;
-            }
+                const resultadoDominio = validarEmails(val);
+                if (resultadoDominio.errores) {
+                  errores += resultadoDominio.errores;
+                }
+                if (!resultadoDominio.valido) {
+                  valido = false;
+                }
 
-            if (i === '*DEPTO_NOMBRE*' && val !== '' && !departamentos.includes(val)) {
-              valido = false;
-              errores += `verifica la divipola departamento con error ${val} \n`;
-            }
+                const emails = val.split(';').map(e => e.trim());
 
-            const letters = /[´“”°ª–#'┃│]/g;
-            if (typeof val === 'string' && letters.test(val)) {
-              valido = false;
-              errores += `El excel contiene los siguientes caracteres no validos: ${val} \n`;
-            }
+                if (typeof validator !== 'undefined') {
+                  emails.forEach(function(email) {
+                    if (email.length > 0 && !validator.isEmail(email)) {
+                      valido = false;
+                      errores += `El campo *EMAIL* contiene un correo inválido: "${email}"\n`;
+                    }
+                  });
+                } else {
+                  console.error('La librería validator.js no se ha cargado correctamente');
+
+                  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                  emails.forEach(function(email) {
+                    if (email.length > 0 && !emailRegex.test(email)) {
+                      valido = false;
+                      errores += `El campo *EMAIL* contiene un correo inválido: "${email}"\n`;
+                    }
+                  });
+                }
+              }
+
+              if (i === '*ANEXOS*' && val !== '' && !Number.isInteger(parseInt(val))) {
+                valido = false;
+                errores += `la columna anexos debe ser un número sin espacios ni caracteres, valor actual: ${val} \n`;
+              }
+
+              if (i === '*MUNI_NOMBRE*' && val !== '' && !municipios.includes(val)) {
+                valido = false;
+                errores += `verifica la divipola municipio con error ${val} \n`;
+              }
+
+              if (i === '*DEPTO_NOMBRE*' && val !== '' && !departamentos.includes(val)) {
+                valido = false;
+                errores += `verifica la divipola departamento con error ${val} \n`;
+              }
+
+              const letters = /[´“”°ª–#'┃│]/g;
+              if (typeof val === 'string' && letters.test(val)) {
+                valido = false;
+                errores += `El excel contiene los siguientes caracteres no validos: ${val} \n`;
+              }
+            });
           });
-        });
 
-        const btnEnviar = document.getElementById('envia22');
-        const inputArchivo = document.getElementById('archivoPlantilla');
+          const btnEnviar = document.getElementById('envia22');
+          const inputArchivo = document.getElementById('archivoPlantilla');
 
-        if (valido === false) {
-          // $('#envia22').prop('disabled', true)
-          if (btnEnviar) {
-            btnEnviar.disabled = true;
-          }
+          if (valido === false) {
+            // $('#envia22').prop('disabled', true)
+            if (btnEnviar) {
+              btnEnviar.disabled = true;
+            }
 
-          Swal.fire({
-            icon: 'error',
-            title: 'Errores en la plantilla',
-            html: errores.replace(/\n/g, '<br>') +
-              '<br><b>Debes ajustar y cargar la plantilla nuevamente.</b>'
-          });
+            Swal.fire({
+              icon: 'error',
+              title: 'Errores en la plantilla',
+              html: errores.replace(/\n/g, '<br>') +
+                '<br><b>Debes ajustar y cargar la plantilla nuevamente.</b>'
+            });
 
-          // Limpia el input file
-          if (inputArchivo) {
-            inputArchivo.value = '';
-          }
+            // Limpia el input file
+            if (inputArchivo) {
+              inputArchivo.value = '';
+            }
 
-          // Detiene la ejecución (equivalente al original)
-          throw new Error('error');
-        } else {
-          // $('#envia22').prop('disabled', false)
-          if (btnEnviar) {
-            btnEnviar.disabled = false;
+            // Detiene la ejecución (equivalente al original)
+            throw new Error('error');
+          } else {
+            // $('#envia22').prop('disabled', false)
+            if (btnEnviar) {
+              btnEnviar.disabled = false;
+            }
           }
         }
       }
