@@ -159,12 +159,12 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                 document.getElementById("dvResultados").style.display = 'block';
             }
             $("input[name='Busqueda']").addClass("disabled");
-                waitMe();
-                document.getElementById("dvWarning").style.display = 'none';
-                document.getElementById("dvWarning").innerHTML = '';
-                return true;
-            }
+            waitMe();
+            document.getElementById("dvWarning").style.display = 'none';
+            document.getElementById("dvWarning").innerHTML = '';
+            return true;
         }
+    }
 
     }
 
@@ -1536,7 +1536,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             $dataArrayTmp[] = $fldDEPE_ACTU;
             $dataArrayTmp[] = $fldUSUA_ANTE;
             $verImg = ($seguridadRadicado == 1) ? ($fldUSUA_ACTU != $_SESSION['usua_nomb'] ? false : true) : ($nivelRadicado > $nivelus ? false : true);
-           
+
             /****************************************************************************************************************************/
             // Agregada variable de session para permisd de visualización en los radicados
             /****************************************************************************************************************************/
@@ -2092,9 +2092,9 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 <div class="modal  show" id="DetEsta" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-argo modal-xl" style='min-width: 99%;'>
         <div class="modal-content" style='min-height: 90vh'>
-            <div class="modal-header p-2">
+            <div class="modal-header p-2 bg-orfeo">
                 <label class="modal-title " id="titDet">Vista Radicado</label>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
