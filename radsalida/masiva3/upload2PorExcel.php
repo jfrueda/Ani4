@@ -452,8 +452,8 @@ while (!$plant->EOF) {
   <div id="modal" class="modal " tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content shadow-lg">
-        <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <div class="modal-header bg-orfeo text-white d-flex justify-content-between align-items-center">
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title fw-bold mb-0" id="myModalLabel">Verifica los datos que se van a cargar</h4>
         </div>
         <div class="modal-body">
