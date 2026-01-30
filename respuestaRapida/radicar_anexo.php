@@ -681,10 +681,10 @@ if (!class_exists('MYPDF')) {
         public function Header() {
             // Logo
             $this->Image(dirname(__DIR__, 1).'/bodega/sys_img/logo.png',
-            93,
-            3,
-            33,
+            94,
+            2,
             22,
+            24,
             'png',
             '',
             'T',
@@ -703,25 +703,9 @@ if (!class_exists('MYPDF')) {
 
         // Page footer
         public function Footer() {
-            // Position at 15 mm from bottom
-            $tbl = '
-            <table style="width:100%">
-                <tr>
-                <td style="width:6%"></td>
-                <td style="width:74%">
-                    <br>
-                    Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages() . '<br>
-                    Carrera 11 N.° 101-80 • PBX: (571) 650 00 00, ext. 1001, 1002 y 1003<br>
-                    unimilitar.edu.co.<br>
-                    Bogotá D. C. –Colombia-Sur América
-                </td>
-                </tr>
-            </table>';
-              $this->SetY(-25);
-              $this->SetFont ('helvetica', '', 9 , '', 'default', true );
-              $this->writeHTML($tbl, true, false, false, false, '');
-              $this->Image(dirname(__DIR__, 1).'/bodega/sys_img/ISO-14001-2015.png', 172, 257, 25, 22, 'PNG', '', 'T', false, 200, '', false, false, 0, false, false, false);
-
+          // Position at 25 mm from bottom
+          $this->SetY(-25);
+          $this->Image(dirname(__DIR__, 1).'/bodega/sys_img/footer_umng.png', 0, $this->GetY(), 210, 25, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
         }
     }
 }
