@@ -2095,7 +2095,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             <div class="modal-header p-2 bg-orfeo">
                 <label class="modal-title " id="titDet">Vista Radicado</label>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                    <span class="text-white" aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body p-0" style='overflow: auto;height:100'>
