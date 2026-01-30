@@ -82,9 +82,7 @@ if ($resp1=="OK"){
                                 "Anexo Modificado Correctamente<br>No se anex&oacute; ning&uacute;n archivo</br>";
 }else if ($resp1=="ERROR"){
     $mensaje="<span class=alarmas>Error al anexar archivos</span></br>";
-}else if ($resp1=="ERROR FORMATO"){
-    $mensaje="<span class=alarmas>Error al anexar el archivo, La plantilla no esta actualizada.</br>Por favor diríjase  a la sección Opciones/Plantillas de SuperArgo y descargue la actual.</span></br>";
-} 
+}
 
 include "$ruta_raiz/radicacion/crea_combos_universales.php";
 
@@ -107,39 +105,13 @@ $consultaESP  = "select r.EESP_CODI from radicado r where r.radi_nume_radi = $nu
 $rsESP        = $db->conn->Execute($consultaESP);
 
 
-// Sanitizador para valores de querystring (coincide con ver_datosrad.php)
-if (!function_exists('sanitize_qs_field')) {
-  function sanitize_qs_field($v) {
-    $v = (string)$v;
-    $v = str_replace('#', 'No.', $v);
-    $v = str_replace(["\r\n", "\n", "\r", "\t"], ' ', $v);
-    $v = str_replace(['"', ""], '', $v);
-    $v = str_replace(['\'', ""], '', $v);
-    $v = preg_replace('/[[:cntrl:]]/u', ' ', $v);
-    $v = preg_replace('/\s+/u', ' ', $v);
-    return trim($v);
-  }
-}
 
-// Construcción segura de $datos_envio
-$params_envio = [
-  'otro_us11'         => sanitize_qs_field($otro_us11 ?? ''),
-  'codigo'            => sanitize_qs_field($codigo ?? ''),
-  'dpto_nombre_us11'  => sanitize_qs_field($dpto_nombre_us11 ?? ''),
-  'direccion_us11'    => sanitize_qs_field($direccion_us11 ?? ''),
-  'muni_nombre_us11'  => sanitize_qs_field($muni_nombre_us11 ?? ''),
-  'nombret_us11'      => sanitize_qs_field($nombret_us11 ?? ''),
-  'otro_us2'          => sanitize_qs_field($otro_us2 ?? ''),
-  'dpto_nombre_us2'   => sanitize_qs_field($dpto_nombre_us2 ?? ''),
-  'muni_nombre_us2'   => sanitize_qs_field($muni_nombre_us2 ?? ''),
-  'direccion_us2'     => sanitize_qs_field($direccion_us2 ?? ''),
-  'nombret_us2'       => sanitize_qs_field($nombret_us2 ?? ''),
-  'dpto_nombre_us3'   => sanitize_qs_field($dpto_nombre_us3 ?? ''),
-  'muni_nombre_us3'   => sanitize_qs_field($muni_nombre_us3 ?? ''),
-  'direccion_us3'     => sanitize_qs_field($direccion_us3 ?? ''),
-  'nombret_us3'       => sanitize_qs_field($nombret_us3 ?? ''),
-];
-$datos_envio = '&' . http_build_query($params_envio, '', '&', PHP_QUERY_RFC3986);
+
+
+
+$datos_envio  = "&otro_us11=$otro_us11&codigo=$codigo&dpto_nombre_us11=$dpto_nombre_us11&direccion_us11=".urlencode($direccion_us11)."&muni_nombre_us11=$muni_nombre_us11&nombret_us11=$nombret_us11";
+$datos_envio .="&otro_us2=$otro_us2&dpto_nombre_us2=$dpto_nombre_us2&muni_nombre_us2=$muni_nombre_us2&direccion_us2=".urlencode($direccion_us2)."&nombret_us2=$nombret_us2";
+$datos_envio .="&dpto_nombre_us3=$dpto_nombre_us3&muni_nombre_us3=$muni_nombre_us3&direccion_us3=".urlencode($direccion_us3)."&nombret_us3=$nombret_us3";
 $variables    = "ent=$ent&".session_name()."=".trim(session_id())."&tipo=$tipo$datos_envio";
 
 if (!empty($codigo)){
@@ -172,21 +144,6 @@ $tip_rest = substr($verrad,-1);if ($tip_rest == 2){$inptpradic = 1 ;}else{$inptp
 <title>Informaci&oacute;n de Anexos</title>
 	<meta charset="utf-8">
   
-  <style>
-        .alertaux {
-      padding: 20px;
-      background-color: #f44336;
-      color: white;
-      opacity: 1;
-      transition: opacity 0.6s;
-      margin-bottom: 15px;
-    }
-
-      .alertaux.success {background-color: #04AA6D;}
-      .alertaux.info {background-color: #2196F3;}
-      .alertaux.warning {background-color: #ff9800;}
-  </style>
-
 	<link rel="shortcut icon" href="<?=$ruta_raiz?>/img/favicon.png">
 	<!-- Bootstrap core CSS -->
 	<?php include_once "$ruta_raiz/htmlheader.inc.php"; ?>
@@ -380,14 +337,8 @@ function cierre2(valor)
   $(document).ready(function() {
 
      $( "#b_asunto" ).click(function() {
-        var text = $( "#asunto_padre" ).val() || '';
-        // Quitar comillas rectas y tipográficas (simples/dobles) y acentos usados como comilla
-        text = text.replace(/["'‘’“”´`]/g, '');
-        // Normalizar saltos de línea (incluye separadores Unicode) y tabs a espacios
-        text = text.replace(/[\r\n\t\u2028\u2029]+/g, ' ');
-        // Reemplazar NBSP por espacio normal y colapsar espacios
-        text = text.replace(/\u00A0/g, ' ').replace(/\s+/g, ' ').trim();
-        $( "#descr" ).val( text );
+	      var text = $( "#asunto_padre" ).val();
+	      $( "#descr" ).val( text );
       });
       
       $('#sololect').on('change', function(e) {
@@ -452,7 +403,6 @@ function oculta_sololectura()
 </head>
 <body class="smart-form">
 <div>
-
 <form enctype="multipart/form-data" method="POST" name="formulario" id="formulario" action='upload2.php?<?=$variables?>' >
 
 <?php //ESTE INCLUDE PERMITE PASAR HERENCIA A UN ANEXO
@@ -600,9 +550,6 @@ if(!$radicado_rem){
           case 1:
                 $tablaHtmlDestinatarios .= "<td><select name='envio_$sgdDirId' data-id='$sgdDirId' class='' onClick='cierre2(this.value);'><option value='Físico' $tefisico>Físico</option></select></td>";
                 break;
-          case 10:
-                $tablaHtmlDestinatarios .= "<td><select name='envio_$sgdDirId' data-id='$sgdDirId' class='' onClick='cierre2(this.value);'><option value='Físico' $tefisico>Físico</option></select></td>";
-                break;                
           case 2:
                 $tablaHtmlDestinatarios .= "<td><select name='envio_$sgdDirId' data-id='$sgdDirId' class='' onClick='cierre2(this.value);'><option value='Físico' $tefisico>Físico</option></select></td>";
                 break;
@@ -625,7 +572,6 @@ if(!$radicado_rem){
   $tablaHtmlDestinatarios .= "</table>";
 
 ?>
-
 <div class="row">
 	<div class="col-lg-12">
 	<section id="widget-grid" class="">
@@ -639,12 +585,6 @@ if(!$radicado_rem){
 <input type="hidden" name="numrad" value="<?=$numrad?>">
 <input type="hidden" name="tipoLista" value="<?=$tipoLista?>">
 <input type="hidden" name="tipoDocumentoSeleccionado" value="<?php echo $tipoDocumentoSeleccionado ?>">
-
-<div class="alertaux info">
-  <strong>Información!</strong> La plantilla a radicar debe ser la última versión que esta en el sistema.
-</div>
-
-
 <table width="100%" class="table table-bordered">
   <tr>
     <td id="celda_sololectura" valign="middle">
@@ -661,25 +601,9 @@ $us_2   = "";
 $us_3   = "";
 $datoss = "";
 
-$sqlValMrec = "SELECT mrec_codi FROM radicado r WHERE radi_nume_radi = '{$numrad}'";
-$rsMrec = $db->conn->Execute($sqlValMrec);
+     
 
-if ($rsMrec->fields['MREC_CODI'] === '4'){
-    
-    $valRemit_1 = $nombreRem[1];
-    $valRemit_2 = $nombreRem[2];
-    $valRemit_3 = $nombreRem[3];
-
-}else{
-  
-  $valRemit_1 = $nombreRem[1] && $direccionRem[1];
-  $valRemit_2 = $nombreRem[2] && $direccionRem[2];
-  $valRemit_3 = $nombreRem[3] && $direccionRem[3];
-}
-
-//var_dump($valRemitente);
-
-if ($valRemit_1 && $muni_nombre_us[1] && $dpto_nombre_us[1]){
+if ($nombreRem[1] && $direccionRem[1] && $muni_nombre_us[1] && $dpto_nombre_us[1]){
     $us_1 = "si"; $usuar=1;
     if($remitente==1) {$datoss1=" checked " ;  }
 }else{
@@ -687,7 +611,7 @@ if ($valRemit_1 && $muni_nombre_us[1] && $dpto_nombre_us[1]){
 }
 
 $datoss = "";
-if ($valRemit_2 && $muni_nombre_us[2] && $dpto_nombre_us[2] )
+if ($nombreRem[2] && $direccionRem[2] && $muni_nombre_us[2] && $dpto_nombre_us[2] )
 { $us_2 = "si"; $predi=1;
   if($remitente==2) $datoss2=" checked  " ;
 }
@@ -695,7 +619,7 @@ else
 { $datoss2=" disabled ";  }
 
 $datoss = "";
-if ($valRemit_3 && $muni_nombre_us[3] && $dpto_nombre_us[3] )
+if ($nombreRem[3] && $direccionRem[3] && $muni_nombre_us[3] && $dpto_nombre_us[3] )
 {
   $us_3 = "si";
   $empre=1;
@@ -1074,7 +998,7 @@ if($rs_cierre->fields['CIERRE']==1)
           <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $tamano_archivo; ?>">
 						   <input name="userfile1" type="file" onChange="escogio_archivo();" id="userfile" value="valor">
 						<small>Archivo debe ser menor a <?php echo $maximo_tamano; ?>Mb.</small>
-						<p><small class="btn btn-<? if ($resp1=="ERROR" || $resp1=="ERROR FORMATO"){ echo "danger"; }else{ echo "success";}?>"><?=$mensaje?></small></p>
+						<p><small class="btn btn-<? if ($resp1=="ERROR"){ echo "danger"; }else{ echo "success";}?>"><?=$mensaje?></small></p>
 <!--						<p><small class="btn btn-success"><?=$mostrar_mensaje?></small></p> -->
           </td>
     </tr>

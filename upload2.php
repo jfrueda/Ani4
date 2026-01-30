@@ -1,8 +1,6 @@
 <?php
 session_start();
 $ruta_raiz = ".";
-require_once($ruta_raiz."/vendor/autoload.php");
-
 if (!$_SESSION['dependencia'])
   header ("Location: $ruta_raiz/cerrar_session.php");
 
@@ -78,52 +76,8 @@ $NO_RADICAR = true;
     $anexTip    =  new Anex_tipo($db);
     if (!$aplinteg)
         $aplinteg='null';
-
-$direcTor = $ruta_raiz . "/bodega/plantillas/";
-$radicado_salida_aux = empty($radicado_salida)? -1 : 1;
-$tpradicAux = empty($tpradic)? -1 : $tpradic;
-
-$xml=simplexml_load_file($direcTor . 'plantillas.xml');
-$flagValidator = true;
-try {
-	$phpWord = \PhpOffice\PhpWord\IOFactory::load($_FILES['userfile1']['tmp_name']);
-	$categoryDoc = $phpWord->getDocInfo()->getCategory();
-	if($radicado_salida_aux == 1) {
-	
-		$textLook = '';
-		if($tpradicAux == 1) {
-		   $textLook = 'Salida';
-		}  elseif($tpradicAux == 3) {
-		   $textLook = 'Memorando';
-		}  elseif($tpradicAux == 4) {
-			$textLook = 'Circular Interna';
-		}  elseif($tpradicAux == 5) {
-			$textLook = 'Circular Externa';
-		}  elseif($tpradicAux == 6) {
-			$textLook = 'Resoluci';
-		}  elseif($tpradicAux == 7) {
-			$textLook = 'Auto';
-		}
-		foreach($xml->children() as $campo) {
-			
-			if(is_numeric(stripos($campo->nombre, $textLook))) {
-				if($campo->categoria == $categoryDoc) {
-					$flagValidator = false;
-					break;
-				}
-			}
-		}		
-	} else {
-		$flagValidator = false;
-	}
-} catch (Exception $e) {
-	$flagValidator = false;
-}
-
-
-
-
-
+if (!$tpradic)
+	$tpradic='null';
 	if(!$cc){
 
 		$nuevo = ($codigo)? 'no' : 'si';
@@ -383,7 +337,5 @@ $isql = "UPDATE anexos
 
     }
 
-
-
-include "nuevo_archivo.php";
+    include "nuevo_archivo.php";
 ?>
