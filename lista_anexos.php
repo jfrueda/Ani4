@@ -156,16 +156,6 @@ if($rsAnexoSalida){
   $tieneAnexoSalida = $rsAnexoSalida->fields["NANEXOS"];
 }
 
-//Start::Validar si el memorando tienen al usuarrio
-$iSqlMemorandoMultiple= "SELECT count(*) EXISTE FROM SGD_DIR_DRECCIONES WHERE radi_nume_radi='$verrad' AND  SGD_DIR_DOC = '$usua_doc' and radi_nume_radi::text like '%3'";
-$rsMemorandoMultiple = $db->conn->query($iSqlMemorandoMultiple);
-$tieneAsignacion = 0;
-if ($rsMemorandoMultiple) {
-    if($rsMemorandoMultiple->fields["EXISTE"] > 0){
-        $tieneAsignacion = true;
-    }
-}
-//End::Validar si el memorando tienen al usuarrio
 
 // case eliminado. No se entiende para qu se realiza.
 $fechaYmdJ = date("Ymdhms"); 
@@ -330,8 +320,9 @@ while(!$rs->EOF){
 	}else{
 		//Se trata de un Anexo sin Radicar
 		$resulValiA = $verLinkArchivo->valPermisoAnex($coddocu);
-		$valImg = $resulValiA['verImg'];
+		$valImg = ($_SESSION["perm_rad_reser"] >= 1 || $_SESSION["perm_cons_rad_cal"] >= 1) ? 'SI' : $resulValiA['verImg'];
 	}
+	$valImg = ($extensionNombre == 'doc' ||  $extensionNombre == 'xls' ||  $extensionNombre ==  'ppt' ||  $extensionNombre == 'tif' ||  $extensionNombre == 'jpg' ||  $extensionNombre == 'gif' || $extensionNombre == 'pdf' ||  $extensionNombre == 'txt' ||  $extensionNombre == 'zip' ||  $extensionNombre == 'rtf' ||  $extensionNombre =='dia' ||  $extensionNombre ==' zargo' ||  $extensionNombre =='csv' ||  $extensionNombre =='odt' ||  $extensionNombre =='ods' ||  $extensionNombre =='xml' ||  $extensionNombre =='png' ||  $extensionNombre =='docx' ||  $extensionNombre =='avi' ||  $extensionNombre =='mpg' ||  $extensionNombre =='tar' ||  $extensionNombre =='xlsx' ||  $extensionNombre =='rar' ||  $extensionNombre =='7z' ||  $extensionNombre =='pptx' ||  $extensionNombre =='msg' ||  $extensionNombre =='mp3' ||  $extensionNombre =='mp4' ||  $extensionNombre =='xlsm' ||  $extensionNombre =='eml' ||  $extensionNombre =='xlsb'||  $extensionNombre =='svg') ? 'SI' : $resulVali;
 	 // Si hay un elemento definitivo,muestra el archivo definitivo.
 	if($pathRadSalida and substr($pathRadSalida, -10)!=substr(str_replace("d.",".",$linkarchivo), -10)){
 		//Se trata de un Radicado
@@ -362,6 +353,7 @@ while(!$rs->EOF){
             		</a>
             	</a>";
 		} else {
+			$verImg = ($_SESSION["perm_rad_reser"] >= 1 || $_SESSION["PERM_RAD_CAL"] >= 1) ? 'SI' : $valImg;
 			echo "<b><a class=\"vinculos\" href=\"#2\" onclick=\"funlinkArchivo('$coddocu','$ruta_raiz');\"><img src='img/icono_$ext.jpg' title='$ext' width='25'> $cod_radi_div </a>";
 		}
 	}else{
@@ -578,13 +570,25 @@ while(!$rs->EOF){
  	</small></td>
 	<td >
 	<?php
+
+		$sqlRestDep = "SELECT * FROM anexos a INNER JOIN usuario u on u.usua_login = a.anex_creador where a.anex_radi_nume = {$verrad} and a.anex_creador = '{$krd}'";
+		$rsValCorr = $db->conn->execute($sqlRestDep);
+		$anexNp = [];
+
+		foreach($rsValCorr as $value){
+			$anexNp[]=$value['ANEX_CODIGO'];
+		}
+
+		$npBorrLosDep = in_array($anexCodigo, $anexNp);
+
 		$es_administrador = $codusuario == 1;
 		$usuario_creador = $rs->fields["RADI_NUME_SALIDA"] == 0 and
 							$ruta_raiz != ".." and
 							(trim($rs->fields["ANEX_CREADOR"])==trim($krd) or $es_administrador);
 
+
 		if ($usuario_creador || $tieneAsignacion) {
-			if($origen!=1  and $linkarchivo || $tieneAsignacion) {
+			if($origen!=1  and ($linkarchivo || $tieneAsignacion) and ($npBorrLosDep || $dependencia == 900) ) {
 				$v = "0";
 				echo "<a class=\"vinculos\"  href=\"JavaScript:void(0);\" onclick=\"borrarArchivo('$coddocu','$linkarchivo','$cod_radi','0');\"> <img src='img/icono_borrar.png'  title='Borrar Archivo' id='iconoBorrar$coddocu'> </a>";
 			}else{
@@ -651,7 +655,7 @@ while(!$rs->EOF){
 ?>
 		<td >
 	<?php
-		if ( $origen!=1  and $linkarchivo and $_SESSION['perm_borrar_anexo'] == 1 && $anexTipo == 4 )
+		if ( $origen!=1  and $linkarchivo and $_SESSION['perm_borrar_anexo'] == 1 && $anexTipo == 4 and ($dependencia == 93004 or $dependencia == 900))
 		{
 			$v = $rs->fields["SGD_PNUFE_CODI"];
 			echo "<a class=\"vinculoTipifAnex\" href=\"JavaScript:void(0);\" onclick=\"borrarArchivo('$coddocu','$linkarchivo','$cod_radi','$v');\"> <img src='img/icono_borrar.png' title='Borrar Archivo'> </a>";
@@ -745,13 +749,34 @@ include "$ruta_raiz/lista_anexos_borrados.php";
   </div>
 </div>
 
-<script language="javascript">
+<script language="javascript" defer>
+
+function insertarHistorico(radicado,comentario,tx){
+	$.ajax({
+		type: 'POST',
+		url: '<?=$ruta_raiz?>/tx/insertarHistorico.php',
+		data: {numrad: radicado, tx_comentario: comentario, tx_codigo: tx},
+		success: function(data, status) {
+			console.log(data);
+		},
+		error: function(xhr, textStatus, errorThrown) {
+			console.log('Error: ' + errorThrown);
+		}
+	});
+}
 $(document).ready(function() {
 	$('.abrirVisor').click(function(){
 		var contador = $(this).attr('contador');
 		var link = $(this).attr('link');
 		var visorId = "#visor_" + contador;
 		var visorRequest = new Request(link);
+
+		try {
+			var rad = '<?=$verrad?>';
+			insertarHistorico(rad, `Ver anexo ${link?link:'principal'}`, 110);
+		} catch (error) {
+			console.log('Error: ' + error.message);
+		}
 
 		//Valida primero que el archivo exista y se pueda abrir.
 		fetch(visorRequest).then(function(response) {
