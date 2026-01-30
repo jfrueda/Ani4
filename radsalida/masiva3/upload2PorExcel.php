@@ -449,7 +449,7 @@ while (!$plant->EOF) {
     </form>
   </div>
 
-  <div id="modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div id="modal" class="modal " tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content shadow-lg">
         <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -468,7 +468,7 @@ while (!$plant->EOF) {
           <button type="button" class="btn btn-default" id="anterior">
             << /button>
               <button type="button" class="btn btn-default" id="siguiente">></button>
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
