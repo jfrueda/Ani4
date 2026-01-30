@@ -466,7 +466,8 @@ while (!$plant->EOF) {
         <div class="modal-footer">
           <span id="info"></span>
           <button type="button" class="btn btn-default" id="anterior">
-            << /button>
+            &nbsp; < &nbsp;
+              </button>
               <button type="button" class="btn btn-default" id="siguiente">></button>
               <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
         </div>
