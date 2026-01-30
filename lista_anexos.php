@@ -57,15 +57,11 @@ $limit2Oci8 = $db->limitOci8;
 $limit2Psql = $db->limitPsql;
 $verrad = strval(trim($verrad));
 
-$isql   = "select radi_path, is_borrador from radicado where radi_nume_radi = " . $verrad;
+$isql   = "select radi_path from radicado where radi_nume_radi = " . $verrad;
 $rs = $db->conn->Execute($isql);
-
-$usuario_actual = $db->conn->getRow("SELECT RADI_DEPE_ACTU, RADI_USUA_ACTU from radicado WHERE RADI_NUME_RADI = ?", [$verrad]);
-$propietario = $_SESSION['codusuario'] == $usuario_actual['RADI_USUA_ACTU'] && $_SESSION['dependencia'] == $usuario_actual['RADI_DEPE_ACTU'];
 
 if ($rs){
   $radi_path_firma = $rs->fields["RADI_PATH"];
-  $is_borrador = $rs->fields["IS_BORRADOR"];
 }
 
 if($radi_path_firma != NULL) {
@@ -119,7 +115,6 @@ $isql = "select $limitMsql a.anex_codigo AS DOCU
 			,$sqlFechaDocto FECDOC
 			,$sqlFechaAnexo FEANEX
 			,a.ANEX_TIPO NUMEXTDOC
-			,a.ANEX_DEPE_CREADOR
 		--,(SELECT d.sgd_dir_nomremdes from sgd_dir_drecciones d where (d.radi_nume_radi=a.anex_radi_nume) AND a.sgd_dir_tipo=d.sgd_dir_tipo  and a.anex_salida=1 limit 1) destino
       ,(SELECT d.sgd_dir_nomremdes from sgd_dir_drecciones d where (d.radi_nume_radi=a.radi_nume_salida) AND a.sgd_dir_tipo=d.sgd_dir_tipo and a.anex_salida=1  limit 1) destino_radicado
       ,rsal.radi_path PATH_RAD_SALIDA
@@ -161,12 +156,20 @@ if($rsAnexoSalida){
   $tieneAnexoSalida = $rsAnexoSalida->fields["NANEXOS"];
 }
 
-
+//Start::Validar si el memorando tienen al usuarrio
+$iSqlMemorandoMultiple= "SELECT count(*) EXISTE FROM SGD_DIR_DRECCIONES WHERE radi_nume_radi='$verrad' AND  SGD_DIR_DOC = '$usua_doc' and radi_nume_radi::text like '%3'";
+$rsMemorandoMultiple = $db->conn->query($iSqlMemorandoMultiple);
+$tieneAsignacion = 0;
+if ($rsMemorandoMultiple) {
+    if($rsMemorandoMultiple->fields["EXISTE"] > 0){
+        $tieneAsignacion = true;
+    }
+}
+//End::Validar si el memorando tienen al usuarrio
 
 // case eliminado. No se entiende para qu se realiza.
 $fechaYmdJ = date("Ymdhms"); 
 ?>
-<link rel="stylesheet" href="./estilos/modResponsiv.css">
 <div style="display: none">
 
 <a href="cuerpo.php?c=<?=$fechaYmdJ?>&<?=$fechaYmdJ?>&nomcarpeta=Salida&carpeta=1&tipo_carpt=0&order=14" target="mainFrame" class="menu_princ" id="carpetaCarpSalida" />
@@ -183,10 +186,10 @@ $fechaYmdJ = date("Ymdhms");
 <a href="cuerpo.php?c=<?=$fechaYmdJ?>&<?=$fechaYmdJ?>&nomcarpeta=Autos&carpeta=7&tipo_carpt=0&order=14" target="mainFrame" class="menu_princ" id="carpetaCarpAuto" />
 </div>
 
-<table WIDTH="100%" align="center" id="tableDocument" class="table tblRsp" >
+<table WIDTH="100%" align="center" id="tableDocument" class="table" >
     <thead>
         <tr class="pr2">
-            <th style="display: flex; border: 0px; iconOrigResp" >
+            <th style="display: flex; border: 0px;" >
              <img src='imagenes/estadoDoc1.png' title='Anexo'>
              <img src='imagenes/estadoDoc2.png' title='Radicado'>
              <img src='imagenes/estadoDoc3.png' title='Impreso'>
@@ -204,7 +207,6 @@ $fechaYmdJ = date("Ymdhms");
             <th width='10' colspan="6"><center>Acci&oacute;n</center></th>
         </tr>
     </thead>
-	
 <?php
 include_once "$ruta_raiz/tx/verLinkArchivo.php";
 $verLinkArchivo = new verLinkArchivo($db);
@@ -235,10 +237,7 @@ while(!$rs->EOF){
 	$anexCarpeta 	= $rs->fields["ANEX_CARPETA"];
 	$anexCodigo 	= $rs->fields["DOCU"];
 	$anexTipoFinal 	= $rs->fields["ANEX_TIPO_FINAL"];
-	$anexDepeCread 	= $rs->fields['ANEX_DEPE_CREADOR'];
-	$anexCreaond 	    = $rs->fields['ANEX_CREADOR'];
 	$contadorAnexos++;
-
 
 	if ($rs->fields["ANEX_SALIDA"]==1 )	$num_archivos++;
 	$linkarchivo=$directoriobase.substr(trim($coddocu),0,4)."/".intval(substr(trim($radiNumeSalida?:$coddocu),4,$ln))."/docs/".trim($rs->fields["NOMBRE"]);
@@ -259,6 +258,7 @@ while(!$rs->EOF){
 		}
 	}
 
+
 	$sql2 = "SELECT RADI_NUME_RADI AS RADI_NUME_RADI FROM SGD_RDF_RETDOCF r  WHERE RADI_NUME_RADI = '$radiNumeSalida'";
 	$rsq2=$db->conn->query($sql2);
 	$radiNumeroTrd = $rsq2->fields["RADI_NUME_RADI"];
@@ -276,8 +276,7 @@ while(!$rs->EOF){
 	<?php
 	if($contadorAnexos == 1){
 	?>
-		<!--<tr id="<?=$coddocu?>" class="alert-info pr3 bkAnex">-->
-		<tr id="<?=$coddocu?>">
+		<tr id="<?=$coddocu?>" class="alert-info pr3">
 	<?php
 	} else {
 	?>		
@@ -295,20 +294,10 @@ while(!$rs->EOF){
 	if($anex_estado==3) {$img_estado = "<img src='imagenes/docImpreso.gif' title='Se Archivo Radicado y listo para enviar . . .'>"; }
 	if($anex_estado==4) {$img_estado = "<img src='imagenes/docEnviado.gif' title='Archivo Enviado. . .'>"; }
 ?>
-<td class="iconResp">
-	<div  >
-             <img src='imagenes/estadoDoc1.png' title='Anexo'>
-             <img src='imagenes/estadoDoc2.png' title='Radicado'>
-             <img src='imagenes/estadoDoc3.png' title='Impreso'>
-             <img src='imagenes/estadoDoc4.png' title='Enviado'>
-	</div>
-</td>
-	<TD class="tdReso"> <font size=1> <?=$img_estado?> </font> </TD>
+	<TD height="21" > <font size=1> <?=$img_estado?> </font> </TD>
 <?php
 ?>
-
-	<td width="1" valign="middle" align=right class="respTdOrg">
-	<td class="respTd" width="5" valign="middle" data-titanex="DOCUMENTO">
+	<td width="1" valign="middle" align=right>
 <?
 	// Variables para visor modal
 	if($origenVerradicado){ 
@@ -341,15 +330,8 @@ while(!$rs->EOF){
 	}else{
 		//Se trata de un Anexo sin Radicar
 		$resulValiA = $verLinkArchivo->valPermisoAnex($coddocu);
-		require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
-		$radicadoFilter = new RadicadoFilter($db);
-		$valImg = (
-			$radicadoFilter->isDependenciaInFilter($cod_radi, $_SESSION["dependencia"]) || 
-			$_SESSION["perm_rad_reser"] >= 1 || 
-			$_SESSION["perm_cons_rad_cal"] >= 1
-		) ? 'SI' : $resulValiA['verImg'];
+		$valImg = $resulValiA['verImg'];
 	}
-	$valImg = ($extensionNombre == 'doc' ||  $extensionNombre == 'xls' ||  $extensionNombre ==  'ppt' ||  $extensionNombre == 'tif' ||  $extensionNombre == 'jpg' ||  $extensionNombre == 'gif' || $extensionNombre == 'pdf' ||  $extensionNombre == 'txt' ||  $extensionNombre == 'zip' ||  $extensionNombre == 'rtf' ||  $extensionNombre =='dia' ||  $extensionNombre ==' zargo' ||  $extensionNombre =='csv' ||  $extensionNombre =='odt' ||  $extensionNombre =='ods' ||  $extensionNombre =='xml' ||  $extensionNombre =='png' ||  $extensionNombre =='docx' ||  $extensionNombre =='avi' ||  $extensionNombre =='mpg' ||  $extensionNombre =='tar' ||  $extensionNombre =='xlsx' ||  $extensionNombre =='rar' ||  $extensionNombre =='7z' ||  $extensionNombre =='pptx' ||  $extensionNombre =='msg' ||  $extensionNombre =='mp3' ||  $extensionNombre =='mp4' ||  $extensionNombre =='xlsm' ||  $extensionNombre =='eml' ||  $extensionNombre =='xlsb'||  $extensionNombre =='svg') ? 'SI' : $resulVali;
 	 // Si hay un elemento definitivo,muestra el archivo definitivo.
 	if($pathRadSalida and substr($pathRadSalida, -10)!=substr(str_replace("d.",".",$linkarchivo), -10)){
 		//Se trata de un Radicado
@@ -380,7 +362,6 @@ while(!$rs->EOF){
             		</a>
             	</a>";
 		} else {
-			$verImg = ($_SESSION["perm_rad_reser"] >= 1 || $_SESSION["PERM_RAD_CAL"] >= 1) ? 'SI' : $valImg;
 			echo "<b><a class=\"vinculos\" href=\"#2\" onclick=\"funlinkArchivo('$coddocu','$ruta_raiz');\"><img src='img/icono_$ext.jpg' title='$ext' width='25'> $cod_radi_div </a>";
 		}
 	}else{
@@ -468,12 +449,12 @@ while(!$rs->EOF){
 ?>
 	</font>
 	</TD>
-	<td data-titanex="TRD"><font size=1 ><?=substr($destino,0,18)?></font></td>
-	<td data-titanex="TAMAÑO KB"><font size=1 ><?=$rs->fields["TAMA"]?></font></td>
-	<td data-titanex="CREADOR"><font size=1 ><?=$rs->fields["CREA"]?></font></td>
-	<td data-titanex="DESCRIPCIÓN \ TIPO"><font size=1 ><?=$rs->fields["DESCR"]?><br><?=$tprDescrip?></font></td>
-	<td data-titanex="FECHA DE CREACIÓN DE ANEXO"><font size=1 ><?=$rs->fields["FEANEX"]?></font></td>
-	<td data-titanex="ACCIÓN"><font size=1>
+	<td><font size=1><?=substr($destino,0,18)?></font></td>
+	<td><font size=1><?=$rs->fields["TAMA"]?></font></td>
+	<td><font size=1><?=$rs->fields["CREA"]?></font></td>
+	<td><font size=1><?=$rs->fields["DESCR"]?><br><?=$tprDescrip?></font></td>
+	<td><font size=1><?=$rs->fields["FEANEX"]?></font></td>
+	<td ><font size=1>
 <?php
 	$es_pdf = $rs->fields["EXT"] == "pdf";
 	$anexEnvEmail  = $rs->fields["ANEX_ENV_EMAIL"];
@@ -483,7 +464,7 @@ while(!$rs->EOF){
 
 	$existe_txt = file_exists($ruta_archivo_txt);
 
-	if($origen!=1 and $linkarchivo  and $verradPermisos == "Full" && $propietario) {
+	if($origen!=1 and $linkarchivo  and $verradPermisos == "Full" ) {
     	$no_esta_enviado = $anex_estado < 4;
 
 	    if ($no_esta_enviado) {
@@ -597,54 +578,19 @@ while(!$rs->EOF){
  	</small></td>
 	<td >
 	<?php
-
-		$sqlRestDep = "SELECT count(RADI_NUME_SALIDA) as radSal FROM anexos a  where a.anex_radi_nume = {$verrad} ";				
-		$rsValCorr = $db->conn->execute($sqlRestDep);
-
-		$estTramIniciado = ($anexDesc == 'Pdf Respuesta' || $anexDesc == 'Prueba bug anexos') ? true : false;
-
-		$cntDigRad = substr($verrad, -1);
-		// Valida el tramite iniciado 
-		$sqlTrIn = "SELECT count(a.sgd_dir_tipo) AS cnTip FROM anexos a WHERE a.anex_radi_nume = {$verrad}"; 
-		$rsTrIn = $db->conn->execute($sqlTrIn); 
-		
-		//var_dump($rsTrIn->fields['CNTIP']);
-		// Valida el usuario dueño del radicado 
-		$sqlTrRad = "SELECT radi_depe_actu, radi_usua_actu, * FROM radicado WHERE radi_nume_radi = {$verrad}"; 
-		$rsTrRad = $db->conn->execute($sqlTrRad);
-		//var_dump($rsTrRad);
-		$valMiUsr = ($dependencia == $rsTrRad->fields['RADI_DEPE_ACTU'] && $_SESSION['codusuario'] == $rsTrRad->fields['RADI_USUA_ACTU'] ) ? true : false;
-		
-		$cntDigDep = (strlen((string)$dependencia));
-		$depCorresp = substr($verrad, 4, $cntDigDep);
-		
-		$npBorrLosWeb = in_array($depCorresp, [21000, 95001, 81000, 82000]);
-		
-		$usuaAnexosVal = (trim($rs->fields["ANEX_CREADOR"])==trim($krd));
-		/*var_dump($valMiUsr);*/
 		$es_administrador = $codusuario == 1;
 		$usuario_creador = $rs->fields["RADI_NUME_SALIDA"] == 0 and
-		$ruta_raiz != ".." and
-		(trim($rs->fields["ANEX_CREADOR"])==trim($krd) or $es_administrador);
+							$ruta_raiz != ".." and
+							(trim($rs->fields["ANEX_CREADOR"])==trim($krd) or $es_administrador);
 
-		if ($usuario_creador || $tieneAsignacion || $is_borrador != 1) {
-			if(($dependencia == 900 && $rsValCorr->fields['RADSAL'] != 1 ) || ($dependencia == 93004 && $rsValCorr->fields['RADSAL'] == 0)){
-				if($origen!=1  and ($linkarchivo || $tieneAsignacion) and ($rsTrIn->fields['CNTIP'] == 0 || $cntDigRad != 2) ){
-					$v = "0";
-					echo "<a class=\"vinculos\"  href=\"JavaScript:void(0);\" onclick=\"borrarArchivo('$coddocu','$linkarchivo','$cod_radi','0');\"> <img src='img/icono_borrar.png'  title='Borrar Archivo' id='iconoBorrar$coddocu'> </a>";
-				}
-			}else if($usuaAnexosVal and $rsValCorr->fields['RADSAL'] == 0){
-				if($rsTrIn->fields['CNTIP'] == 0){
-					$v = "0";
-					echo "<a class=\"vinculos\"  href=\"JavaScript:void(0);\" onclick=\"borrarArchivo('$coddocu','$linkarchivo','$cod_radi','0');\"> <img src='img/icono_borrar.png'  title='Borrar Archivo' id='iconoBorrar$coddocu'> </a>";
-				}
-				else if($rsTrIn->fields['CNTIP'] > 0 && $valMiUsr){
-					$v = "0";
-					echo "<a class=\"vinculos\"  href=\"JavaScript:void(0);\" onclick=\"borrarArchivo('$coddocu','$linkarchivo','$cod_radi','0');\"> <img src='img/icono_borrar.png'  title='Borrar Archivo' id='iconoBorrar$coddocu'> </a>";	
-				}
+		if ($usuario_creador || $tieneAsignacion) {
+			if($origen!=1  and $linkarchivo || $tieneAsignacion) {
+				$v = "0";
+				echo "<a class=\"vinculos\"  href=\"JavaScript:void(0);\" onclick=\"borrarArchivo('$coddocu','$linkarchivo','$cod_radi','0');\"> <img src='img/icono_borrar.png'  title='Borrar Archivo' id='iconoBorrar$coddocu'> </a>";
+			}else{
+
 			}
 		}
-
 	?>
 	</small></td>
 	<td>
@@ -657,7 +603,7 @@ while(!$rs->EOF){
 	  	$permitir_radicar = $tpradic != 2;
 
 		if (intval($tpradic) != 0) {
-			if ($permitir_radicar and $es_extension and $propietario){
+			if ($permitir_radicar and $es_extension){
               if ($_SESSION['apiFirmaDigital'] == '' or ($_SESSION['apiFirmaDigital'] != '' && $_SESSION["usua_perm_firma"])) // si se utiliza firma digital permitir radicar los que tienen el permiso
 			    if (!$rs->fields["RADI_NUME_SALIDA"]){
 			        if(((($num_archivos>=2 or $tieneAnexoSalida==1) and (substr($verrad,-1)!=2 )) or (substr($verrad,-1) == 2 or (substr($verrad,-1) == 9) or $num_archivos>=2 )) and 
@@ -705,7 +651,7 @@ while(!$rs->EOF){
 ?>
 		<td >
 	<?php
-		if ( $origen!=1  and $linkarchivo and $_SESSION['perm_borrar_anexo'] == 1 && $anexTipo == 4 and ($dependencia == 93004 or $dependencia == 900))
+		if ( $origen!=1  and $linkarchivo and $_SESSION['perm_borrar_anexo'] == 1 && $anexTipo == 4 )
 		{
 			$v = $rs->fields["SGD_PNUFE_CODI"];
 			echo "<a class=\"vinculoTipifAnex\" href=\"JavaScript:void(0);\" onclick=\"borrarArchivo('$coddocu','$linkarchivo','$cod_radi','$v');\"> <img src='img/icono_borrar.png' title='Borrar Archivo'> </a>";
@@ -743,13 +689,12 @@ while(!$rs->EOF){
 </table>
 
 <?php
-
-if($verradPermisos == "Full" && $propietario){
+if($verradPermisos == "Full" ){
 ?>
 <table  width="100%" align="center" class="table-bordered table-striped table-condensed table-hover smart-form has-tickbox">
   <tr align="center">
      <td ><small>
-		<? if ($permRespuesta == 1 && $propietario) { ?>
+		<? if ($permRespuesta == 1) { ?>
 			<a class="titulos5" href="javascript:respuestaTx2()"> Respuesta en PDF</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;
      <? } ?>
@@ -800,44 +745,18 @@ include "$ruta_raiz/lista_anexos_borrados.php";
   </div>
 </div>
 
-<script language="javascript" defer>
-
-function insertarHistorico(radicado,comentario,tx){
-	$.ajax({
-		type: 'POST',
-		url: '<?=$ruta_raiz?>/tx/insertarHistorico.php',
-		data: {numrad: radicado, tx_comentario: comentario, tx_codigo: tx},
-		success: function(data, status) {
-			console.log(data);
-		},
-		error: function(xhr, textStatus, errorThrown) {
-			console.log('Error: ' + errorThrown);
-		}
-	});
-}
+<script language="javascript">
 $(document).ready(function() {
-	$('.abrirVisor').off('click').on('click', function() {
+	$('.abrirVisor').click(function(){
 		var contador = $(this).attr('contador');
 		var link = $(this).attr('link');
 		var visorId = "#visor_" + contador;
-		var iframe = $(visorId).find('iframe');
 		var visorRequest = new Request(link);
-
-		try {
-			var rad = '<?=$verrad?>';
-			insertarHistorico(rad, `Ver anexo ${link?link:'principal'}`, 110);
-		} catch (error) {
-			console.log('Error: ' + error.message);
-		}
 
 		//Valida primero que el archivo exista y se pueda abrir.
 		fetch(visorRequest).then(function(response) {
 		  if(response.status == 200){
-		  	 if (iframe.length > 0) {
-				iframe.attr('src', link);
-			} else {
-				$(visorId).append("<iframe style='width:100%; height:100%; z-index:-2;' src=" + link + "></iframe>");
-			}
+		  	$(visorId ).append("<iframe style='width:100%; height:100%; z-index:-2;' src=" + link + "></iframe>");
 		  	$(visorId).dialog();
 		  } else {
 		  	visorError(visorId);
@@ -845,7 +764,7 @@ $(document).ready(function() {
 		});
 	});
 
-	$('.cerrarVisor').off('click').on('click', function() {
+	$('.cerrarVisor').click(function(){
 		var visorId = "#visor_" + $(this).attr('contador');
 		$(visorId).dialog('destroy');
 	});
