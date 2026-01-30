@@ -449,12 +449,12 @@ while (!$plant->EOF) {
     </form>
   </div>
 
-  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
+  <div id="modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow-lg">
+        <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Verifica los datos que se van a cargar</h4>
+          <h4 class="modal-title fw-bold mb-0" id="myModalLabel">Verifica los datos que se van a cargar</h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -994,6 +994,7 @@ while (!$plant->EOF) {
         if (modalEl) {
           const modal = new bootstrap.Modal(modalEl);
           modal.show();
+          modalEl.style.display = 'block';
         }
       });
     })
