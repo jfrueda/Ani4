@@ -555,40 +555,6 @@ if($idPlantilla == 0) {
   //Radicar según id de plantilla
   if($idPlantilla == 100000){
      include ('./generadorpdf/resolucion/resolucionradrespuesta.php');
-  } elseif($idPlantilla == 100001) {
-    include ('./generadorpdf/ACFT01/ACFT01radrespuesta.php');
-  } elseif($idPlantilla == 100002) {
-    include ('./generadorpdf/AIFT02/AIFT02radrespuesta.php');
-  } elseif($idPlantilla == 100003) {
-    include ('./generadorpdf/CJFL01/CJFL01radrespuesta.php');
-  } elseif($idPlantilla == 100004) {
-    include ('./generadorpdf/CJFL02/CJFL02radrespuesta.php');
-  } elseif($idPlantilla == 100005) {
-    include ('./generadorpdf/CJFL04/CJFL04radrespuesta.php');
-  }  elseif($idPlantilla == 100006) {
-    include ('./generadorpdf/CJFL11/CJFL11radrespuesta.php');
-  } elseif($idPlantilla == 100007) {
-    include ('./generadorpdf/CJFL14/CJFL14radrespuesta.php');
-  } elseif($idPlantilla == 100008) {
-    include ('./generadorpdf/CJFL17/CJFL17radrespuesta.php');
-  } elseif($idPlantilla == 100009) {
-    include ('./generadorpdf/CJFL22/CJFL22radrespuesta.php');
-  } elseif($idPlantilla == 100010) {
-    include ('./generadorpdf/GDFL02/GDFL02radrespuesta.php');
-  } elseif($idPlantilla == 100011) {
-    include ('./generadorpdf/GDFL03/GDFL03rarespuesta.php');
-  } elseif($idPlantilla == 100012) {
-    include ('./generadorpdf/Salida/salidapradrespuesta.php');
-  } elseif($idPlantilla == 100013) {
-    include ('./generadorpdf/Memorando/memorandopradrespuesta.php');
-  } elseif($idPlantilla == 100016) {
-    include ('./generadorpdf/CJFL12/CJFL12radrespuesta.php');
-  } elseif($idPlantilla == 100017) {
-    include ('./generadorpdf/CJFL13/CJFL13radrespuesta.php');
-  } elseif($idPlantilla == 100018) {
-    include ('./generadorpdf/ATFT01/ATFT01radrespuesta.php');
-  } elseif($idPlantilla == 100019) {
-    include ('./generadorpdf/SEFT06/SEFT06radrespuesta.php');
   } else {
 
 class MYPDF extends TCPDF {
@@ -597,10 +563,10 @@ class MYPDF extends TCPDF {
   public function Header() {
 
             $this->Image('../bodega/sys_img/logo.png',
-            93,
-            3,
-            33,
+            94,
+            2,
             22,
+            24,
             'png',
             '',
             'T',
@@ -617,25 +583,9 @@ class MYPDF extends TCPDF {
 
   // Page footer
   public function Footer() {
-    // Position at 15 mm from bottom
-    $tbl = '
-      <table style="width:100%">
-        <tr>
-          <td style="width:6%"></td>
-          <td style="width:74%">
-              <br>
-              Página ' . $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages() . '<br>
-              Carrera 11 N.° 101-80 • PBX: (571) 650 00 00, ext. 1001, 1002 y 1003<br>
-              unimilitar.edu.co.<br>
-              Bogotá D. C. –Colombia-Sur América
-          </td>
-        </tr>
-      </table>';
+      // Position at 25 mm from bottom
       $this->SetY(-25);
-      $this->SetFont ('helvetica', '', 9 , '', 'default', true );
-      $this->writeHTML($tbl, true, false, false, false, '');
-      $this->Image(dirname(__DIR__, 1).'/bodega/sys_img/ISO-14001-2015.png', 172, 257, 25, 22, 'PNG', '', 'T', false, 200, '', false, false, 0, false, false, false);
-
+      $this->Image(dirname(__DIR__, 1).'/bodega/sys_img/footer_umng.png', 0, $this->GetY(), 210, 25, 'PNG', '', '', false, 300, '', false, false, 0, false, false, false);
   }
 }
 

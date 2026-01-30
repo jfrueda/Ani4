@@ -154,20 +154,11 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 
             return false;
         } else {
-            let futureDateobj = new Date();
-            futureDateobj.setFullYear(fromDateobj.getFullYear() + 1, document.Search.elements['s_desde_mes'].value - 1, document.Search.elements['s_desde_dia'].value);
-            if (futureDateobj < toDateobj) {
-                document.getElementById("dvWarning").innerHTML = "La busqueda no puede tener una longitud de mas de un año";
-                document.getElementById("dvWarning").style.display = 'block';
-                if (document.getElementById("dvResultados") !== null) {
-                    document.getElementById("dvResultados").style.display = 'none';
-                }
-                return false;
-            } else {
-                if (document.getElementById("dvResultados") !== null) {
-                    document.getElementById("dvResultados").style.display = 'block';
-                }
-                $("input[name='Busqueda']").addClass("disabled");
+            // ELIMINADA: Validación de límite de 1 año - permite búsquedas de cualquier duración
+            if (document.getElementById("dvResultados") !== null) {
+                document.getElementById("dvResultados").style.display = 'block';
+            }
+            $("input[name='Busqueda']").addClass("disabled");
                 waitMe();
                 document.getElementById("dvWarning").style.display = 'none';
                 document.getElementById("dvWarning").innerHTML = '';
@@ -1160,7 +1151,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         $radi_nume_radi . " AS RADI_NUME_RADI," .
                                         $db->conn->SQLDate('Y-m-d H:i:s', 'R.RADI_FECH_RADI') . " AS RADI_FECH_RADI,
                                                 r.RA_ASUN,
-                                                td.sgd_tpr_descrip, " .
+                                                COALESCE(td.sgd_tpr_descrip, 'Sin tipo') as sgd_tpr_descrip, " .
                                         $redondeo . " as FVCMTO,
                                                 r.RADI_NUME_HOJA,
                                                 r.fech_vcmto as FECHA_VCMTO,
@@ -1178,8 +1169,8 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                                 r.RADI_CUENTAI,
                                                 r.RADI_NUME_BORRADOR,
                                                 CASE WHEN r.is_borrador THEN 1 ELSE 0 END borrador,
-                                                td.sgd_tpr_codigo tprd,
-                                                (td.sgd_tpr_termino+(date_part('days', r.radi_fech_radi-CURRENT_TIMESTAMP)+(select count(1) from sgd_noh_nohabiles where NOH_FECHA between r.radi_fech_radi and CURRENT_TIMESTAMP)))  as diash," .
+                                                COALESCE(td.sgd_tpr_codigo, 0) as tprd,
+                                                COALESCE((td.sgd_tpr_termino+(date_part('days', r.radi_fech_radi-CURRENT_TIMESTAMP)+(select count(1) from sgd_noh_nohabiles where NOH_FECHA between r.radi_fech_radi and CURRENT_TIMESTAMP))), 0) as diash," .
                                         $select_circular;
 
                                     /**
@@ -1189,7 +1180,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                      */
                                     if (strlen($ps_SGD_EXP_SUBEXPEDIENTE) != 0)  $sSQL .= " ,EXP.SGD_EXP_NUMERO";
 
-                                    $sSQL .= " FROM radicado r, sgd_tpr_tpdcumento td, " . $from_circular;
+                                    $sSQL .= " FROM radicado r LEFT JOIN sgd_tpr_tpdcumento td ON r.TDOC_CODI=td.SGD_TPR_CODIGO, " . $from_circular;
 
                                     /**
                                      * Busqueda por expediente
@@ -1220,9 +1211,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         order by sgd_dir_codigo asc limit 1)  and";
                                     */
                                     if (!$esNotificacionCircular) {
-                                        $sSQL .= "dir.RADI_NUME_RADI=r.RADI_NUME_RADI AND r.TDOC_CODI=td.SGD_TPR_CODIGO";
-                                    } else {
-                                        $sSQL .= "r.TDOC_CODI=td.SGD_TPR_CODIGO";
+                                        $sSQL .= "dir.RADI_NUME_RADI=r.RADI_NUME_RADI";
                                     }
                                     /*Modificación para la CRA, sólo la dependencia 230 puede ver los radicados tipo 4*/
                                     if ($entidad == "CRA" and  $dependencia != 230)
@@ -1547,29 +1536,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             $dataArrayTmp[] = $fldDEPE_ACTU;
             $dataArrayTmp[] = $fldUSUA_ANTE;
             $verImg = ($seguridadRadicado == 1) ? ($fldUSUA_ACTU != $_SESSION['usua_nomb'] ? false : true) : ($nivelRadicado > $nivelus ? false : true);
-            //************************************************************************************************************************//
-            //Validación Memos Multiples
-            //************************************************************************************************************************//
-            $iSqlMemorandoMultipleCuerpo = "SELECT
-                                                count(*)  as TOTAL,
-                                                string_agg(DISTINCT SGD_DIR_DRECCIONES.sgd_dir_nombre, ',') AS DESTINATARIOS,
-                                                (SELECT count(*) FROM ANEXOS WHERE ANEXOS.radi_nume_salida ='$fldRADI_NUME_RADI' AND ANEX_ESTADO >= 2 ) AS RADICADO
-                                            FROM
-                                                SGD_DIR_DRECCIONES
-                                            WHERE
-                                                radi_nume_radi = '$fldRADI_NUME_RADI'
-                                                AND radi_nume_radi::text LIKE'%3'";
-
-            $iSqlMemorandoMultiple = "SELECT count(*) EXISTE FROM SGD_DIR_DRECCIONES WHERE radi_nume_radi = '$fldRADI_NUME_RADI' AND  SGD_DIR_DOC = '$usua_doc' and radi_nume_radi::text like '%3'";
-            $rsMemorandoMultiple = $db->conn->query($iSqlMemorandoMultiple);
-            $rsMemorandoMultipleCuerpo = $db->conn->query($iSqlMemorandoMultipleCuerpo);
-
-            $tieneAsignacion = 0;
-            if ($rsMemorandoMultiple) {
-                if ($rsMemorandoMultiple->fields["EXISTE"] > 0 && $rsMemorandoMultipleCuerpo->fields["TOTAL"] > 1) {
-                    $tieneAsignacion = true;
-                }
-            }
+           
             /****************************************************************************************************************************/
             // Agregada variable de session para permisd de visualización en los radicados
             /****************************************************************************************************************************/
