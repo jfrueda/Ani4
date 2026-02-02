@@ -97,14 +97,31 @@ $adodb_next_page = $_GET["adodb_next_page"];
 	$pagina_actual = "../anulacion/cuerpo_anulacion.php";
 	$varBuscada = "radi_nume_radi";
 	include "../envios/paBuscar.php";
-	if (!$busqRadicados)
-		die;
+	// if (!$busqRadicados)
+	// 	die;
 	$pagina_sig = "../anulacion/solAnulacion.php";
 	//$swListar = "no";
 	$accion_sal = "Solicitar Anulacion";
-	include "../envios/paOpciones.php";
+	//include "../envios/paOpciones.php";
 
 	$whereFiltro = $dependencia_busq2;
+	if ($busqRadicados) {
+		$busqRadicados = trim($busqRadicados);
+		$busqRadicadosTmp = "";
+		$textElements = preg_split('/\s*,\s*/', $busqRadicados, -1, PREG_SPLIT_NO_EMPTY);
+		foreach ($textElements as $item) {
+			$item = trim($item);
+			if ($item !== "") {
+				$busqRadicadosTmp .= " b.radi_nume_radi = '$item' or";
+			}
+		}
+		if (substr($busqRadicadosTmp, -2) == "or") {
+			$busqRadicadosTmp = substr($busqRadicadosTmp, 0, strlen($busqRadicadosTmp) - 2);
+		}
+		if (trim($busqRadicadosTmp)) {
+			$whereFiltro .= " and ( $busqRadicadosTmp ) ";
+		}
+	}
 	/**  GENERACION LISTADO DE RADICADOS
 	 *  Aqui utilizamos la clase adodb para generar el listado de los radicados
 	 *  Esta clase cuenta con una adaptacion a las clases utiilzadas de orfeo.
@@ -138,12 +155,7 @@ $adodb_next_page = $_GET["adodb_next_page"];
 		<div class="container-fluid my-4">
 
 			<!-- TÍTULO -->
-			<div class="d-flex justify-content-between align-items-center mb-4">
-				<h3 class="fw-bold text-primary">
-					<i class="bi bi-file-earmark-text me-2"></i> <?= $carpeta ?>
-				</h3>
-			</div>
-
+			
 			<!-- ALERTA -->
 			<div class="alert alert-warning shadow-sm rounded-3">
 				<strong>⚠ Importante:</strong>
