@@ -278,107 +278,102 @@ if ($error) {
 		<input type="hidden" id="hdBandera" name="hdBandera" value="">
 		<input type="hidden" id="krd" name="krd" value="<?= $krd ?>">
 
-		<div class="col-sm-12">
-			<!-- widget grid -->
+		<div class="container-fluid mt-4">
 			<section id="widget-grid">
-				<!-- row -->
-				<div class="row">
-					<!-- NEW WIDGET START -->
-					<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<!-- Widget ID (each widget will need unique ID)-->
-						<div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
-							<header>
-								<h2>
-									Administración de Formas de Envío
-								</h2>
-							</header>
+				<div class="row justify-content-center">
+					<article class="col-12 ">
+						<div class="card shadow-sm border-secondary">
+							<div class="card-header bg-orfeo text-white d-flex align-items-center">
+								<i class="fa fa-truck me-2"></i>
+								<h5 class="mb-0 fw-bold">Administración de Formas de Envío</h5>
+							</div>
 
-							<!-- widget div-->
-							<div>
-								<!-- widget content -->
-								<div class="widget-body no-padding">
-									<table class="table table-bordered table-striped">
-										<tr>
-											<td width="5%" align="center" valign="middle" class="titulos2">1.</td>
-											<td width="20%" align="left" class="titulos2">Seleccione Env&iacute;o</td>
-											<td class="listado2">&nbsp;
-												<?= $slc_fenv ?>
-											</td>
-										</tr>
-										<tr>
-											<td width="5%" align="center" valign="middle" class="titulos2">2.</td>
-											<td width="20%" align="left" class="titulos2">Mod. o Ingrese datos</td>
-											<td class="listado2">
+							<div class="card-body bg-light">
+								<div class="row mb-4 align-items-center border-bottom pb-3">
+									<div class="col-auto">
+										<span class="badge bg-secondary rounded-pill">1</span>
+									</div>
+									<div class="col-md-3">
+										<label class="fw-bold text-secondary">Seleccione Envío</label>
+									</div>
+									<div class="col-md-8">
+										<div class="input-group">
+											<span class="input-group-text bg-white"><i class="fa fa-list"></i></span>
+											<?= str_replace('class="select"', 'class="form-select"', $slc_fenv) ?>
+										</div>
+									</div>
+								</div>
 
-												<table class="table table-bordered table-striped">
-													<tr>
-														<td width="33%" align="center" valign="middle" class="titulos2">ID</td>
-														<td width="33%" align="center" valign="middle" class="titulos2">NOMBRE</td>
-													</tr>
-													<tr align="center">
-														<td width="33%"><input class="tex_area" type="text" name="txtId" id="txtId" size="3" maxlength="3"></td>
-														<td width="33%"><input class="tex_area" type="text" name="txtNombre" id="txtNombre" size="50" maxlength="80"></td>
-													</tr>
-													<tr>
-														<td width="33%" align="center" valign="middle" class="titulos2">Est&aacute; activa ?</td>
-														<td width="34%" align="center" valign="middle" class="titulos2">Genera Planilla ?</td>
-													</tr>
-													<tr align="center">
-														<td width="34%">
-															<select name="slc_act" id="slc_act" class="select">
-																<option value="">Seleccione</option>
-																<option value="1"> S I </option>
-																<option value="0"> N O </option>
-															</select>
-														</td>
-														<td width="34%">
-															<select name="slc_pnl" id="slc_pnl" class="select">
-																<option value="">Seleccione</option>
-																<option value="1"> S I </option>
-																<option value="0"> N O </option>
-															</select>
-														</td>
-													</tr>
-												</table>
-											</td>
-										</tr>
-										<?php echo $msg;	?>
-									</table>
+								<div class="row mb-4 align-items-start">
+									<div class="col-auto">
+										<span class="badge bg-secondary rounded-pill">2</span>
+									</div>
+									<div class="col-md-3">
+										<label class="fw-bold text-secondary">Modificar o Ingrese datos</label>
+									</div>
+									<div class="col-md-8">
+										<div class="card border-0 shadow-sm">
+											<div class="card-body border rounded bg-white">
+												<div class="row g-3">
+													<div class="col-md-3">
+														<label for="txtId" class="form-label small fw-bold">ID</label>
+														<input class="form-control" type="text" name="txtId" id="txtId" maxlength="3" placeholder="ID">
+													</div>
+													<div class="col-md-9">
+														<label for="txtNombre" class="form-label small fw-bold">NOMBRE</label>
+														<input class="form-control" type="text" name="txtNombre" id="txtNombre" maxlength="80" placeholder="Nombre de la forma de envío">
+													</div>
 
-									<table class="table table-bordered table-striped">
-										<tr>
-											<td width="10%" class="listado2">&nbsp;</td>
-											<td width="20%" class="listado2">
-												<span class="celdaGris">
-													<center>
-														<input name="btn_accion" type="button" class="botones" id="btn_accion" value="Listado" onClick="ver_listado();">
-													</center>
-												</span>
-											</td>
-											<td width="20%" class="listado2">
-												<span class="e_texto1">
-													<center>
-														<input name="btn_accion" type="submit" class="botones" id="btn_accion" value="Agregar" onClick="document.form1.hdBandera.value='A'; return ValidarInformacion();">
-													</center>
-												</span>
-											</td>
-											<td width="20%" class="listado2">
-												<span class="e_texto1">
-													<center>
-														<input name="btn_accion" type="submit" class="botones" id="btn_accion" value="Modificar" onClick="document.form1.hdBandera.value='M'; return ValidarInformacion();">
-													</center>
-												</span>
-											</td>
-											<td width="20%" class="listado2">
-												<span class="e_texto1">
-													<center>
-														<input name="btn_accion" type="submit" class="botones" id="btn_accion" value="Eliminar" onClick="document.form1.hdBandera.value='E'; return ValidarInformacion();">
-													</center>
-												</span>
-											</td>
-											<td width="10%" class="listado2">&nbsp;</td>
-										</tr>
-									</table>
+													<div class="col-md-6">
+														<label for="slc_act" class="form-label small fw-bold">¿Está activa?</label>
+														<select name="slc_act" id="slc_act" class="form-select">
+															<option value="">Seleccione</option>
+															<option value="1"> S I </option>
+															<option value="0"> N O </option>
+														</select>
+													</div>
+													<div class="col-md-6">
+														<label for="slc_pnl" class="form-label small fw-bold">¿Genera Planilla?</label>
+														<select name="slc_pnl" id="slc_pnl" class="form-select">
+															<option value="">Seleccione</option>
+															<option value="1"> S I </option>
+															<option value="0"> N O </option>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<?php if (!empty($msg)): ?>
+									<div class="alert alert-info mt-3">
+										<?= $msg ?>
+									</div>
+								<?php endif; ?>
+							</div>
+
+							<div class="card-footer bg-white border-top-0 pb-4">
+								<div class="row g-2 justify-content-center">
+									<div class="col-6 col-md-2">
+										<input name="btn_accion" type="button" class="btn btn-outline-dark w-100" id="btn_accion" value="Listado" onClick="ver_listado();">
+									</div>
+									<div class="col-6 col-md-2">
+										<input name="btn_accion" type="submit" class="btn btn-success w-100" id="btn_accion" value="Agregar" onClick="document.form1.hdBandera.value='A'; return ValidarInformacion();">
+									</div>
+									<div class="col-6 col-md-2">
+										<input name="btn_accion" type="submit" class="btn btn-primary w-100" id="btn_accion" value="Modificar" onClick="document.form1.hdBandera.value='M'; return ValidarInformacion();">
+									</div>
+									<div class="col-6 col-md-2">
+										<input name="btn_accion" type="submit" class="btn btn-danger w-100" id="btn_accion" value="Eliminar" onClick="document.form1.hdBandera.value='E'; return ValidarInformacion();">
+									</div>
+								</div>
+							</div>
+						</div>
+					</article>
+				</div>
+			</section>
+		</div>
 	</form>
 </body>
 

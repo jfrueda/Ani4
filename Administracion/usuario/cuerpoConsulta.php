@@ -189,40 +189,42 @@ $radSelec = "";
 		}
 	}
 	?>
-	<form name=formEnviar action='?<?= $encabezado ?>&usModo=2&busqRadicados=<?= $busqRadicados ?>' method=post>
-		<input type=hidden name=srd_sel value="<?= $srd_sel ?>">
-		<input type=hidden name=busqRadicados value="<?= $busqRadicados ?>">
-		<?
-		if ($orderNo == 98 || $orderNo == 99) {
-			$order = 1;
-			if ($orderNo == 98) {
-				$orderTipo = "desc";
+	<div class="container-fluid">
+		<form name=formEnviar action='?<?= $encabezado ?>&usModo=2&busqRadicados=<?= $busqRadicados ?>' method=post>
+			<input type=hidden name=srd_sel value="<?= $srd_sel ?>">
+			<input type=hidden name=busqRadicados value="<?= $busqRadicados ?>">
+			<?
+			if ($orderNo == 98 || $orderNo == 99) {
+				$order = 1;
+				if ($orderNo == 98) {
+					$orderTipo = "desc";
+				}
+				if ($orderNo == 99) {
+					$orderTipo = "";
+				}
+			} else {
+				if (!$orderNo) {
+					$orderNo = 0;
+				}
+				$order = $orderNo + 1;
 			}
-			if ($orderNo == 99) {
-				$orderTipo = "";
-			}
-		} else {
-			if (!$orderNo) {
-				$orderNo = 0;
-			}
-			$order = $orderNo + 1;
-		}
-		$sqlChar = $db->conn->SQLDate("d-m-Y H:i A", "SGD_RENV_FECH");
-		$sqlConcat = $db->conn->Concat("a.radi_nume_sal", "'-'", "a.sgd_renv_codigo", "'-'", "a.sgd_fenv_codigo", "'-'", "a.sgd_renv_peso");
-		include "$ruta_raiz/include/query/administracion/queryCuerpoConsulta.php";
+			$sqlChar = $db->conn->SQLDate("d-m-Y H:i A", "SGD_RENV_FECH");
+			$sqlConcat = $db->conn->Concat("a.radi_nume_sal", "'-'", "a.sgd_renv_codigo", "'-'", "a.sgd_fenv_codigo", "'-'", "a.sgd_renv_peso");
+			include "$ruta_raiz/include/query/administracion/queryCuerpoConsulta.php";
 
-		$rs = $db->conn->Execute($isql);
-		$nregis = $rs->fields["NOMBRE"];
-		if (!$nregis) {
-			echo "<hr><center><b>NO se encontro nada con el criterio de busqueda</center></b></hr>";
-		} else {
-			$pager = new ADODB_Pager($db, $isql, 'adodb', true, $orderNo, $orderTipo);
-			$pager->toRefLinks = $linkPagina;
-			$pager->toRefVars = $encabezado;
-			$pager->Render($rows_per_page = 20, $linkPagina, $checkbox = chkEnviar);
-		}
-		?>
-	</form>
+			$rs = $db->conn->Execute($isql);
+			$nregis = $rs->fields["NOMBRE"];
+			if (!$nregis) {
+				echo "<hr><center><b>NO se encontro nada con el criterio de busqueda</center></b></hr>";
+			} else {
+				$pager = new ADODB_Pager($db, $isql, 'adodb', true, $orderNo, $orderTipo);
+				$pager->toRefLinks = $linkPagina;
+				$pager->toRefVars = $encabezado;
+				$pager->Render($rows_per_page = 20, $linkPagina, $checkbox = chkEnviar);
+			}
+			?>
+		</form>
+	</div>
 
 	<div class="margin-botton-table">
 		<a href="srdByUser.php?dep=<?= $dep_sel ?>">Reporte series por usuario</a>
