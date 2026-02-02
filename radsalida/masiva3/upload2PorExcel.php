@@ -221,7 +221,7 @@ while (!$plant->EOF) {
 <body>
   <div id="spinner-back"></div>
   <div id="spinner-front">
-    <img src="https://www.v4software.com/Admin/Tpl/V4admin/Public/image/ajax-loaders/ajax-loader-no-color.gif" /><br>
+    <img src="../../bodega/sys_img/logo.png" /><br>
     Cargando...
   </div>
 
