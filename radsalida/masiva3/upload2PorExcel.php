@@ -59,16 +59,17 @@ function return_bytes($val)
 {
   $val = trim($val);
   $ultimo = strtolower($val[strlen($val) - 1]);
+  $val = (int)$val; // Convertir a entero primero
+  
   switch ($ultimo) {
-    // El modificador 'G' se encuentra disponible desde PHP 5.1.0
     case 'g':
-      $val *= 1024;
+      $val *= 1024 * 1024 * 1024; // Gigabytes
       break;
     case 'm':
-      $val *= 1024;
+      $val *= 1024 * 1024; // Megabytes
       break;
     case 'k':
-      $val *= 1024;
+      $val *= 1024; // Kilobytes
       break;
   }
   return $val;
