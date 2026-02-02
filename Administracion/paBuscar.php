@@ -1,10 +1,11 @@
 <?php
+
 /** * @module paBuscar
-*
-* @author Jairo Losada   <jlosada@gmail.com>
-* @author Cesar Gonzalez <aurigadl@gmail.com>
-* @license  GNU AFFERO GENERAL PUBLIC LICENSE
-* @copyright
+ *
+ * @author Jairo Losada   <jlosada@gmail.com>
+ * @author Cesar Gonzalez <aurigadl@gmail.com>
+ * @license  GNU AFFERO GENERAL PUBLIC LICENSE
+ * @copyright
 
 SIIM2 Models are the data definition of SIIM2 Information System
 Copyright (C) 2013 Infometrika Ltda.
@@ -21,59 +22,68 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 ?>
-  <div class="col-sm-12">
-    <!-- widget grid -->
-    <section id="widget-grid">
-      <!-- row -->
-      <div class="row">
-        <!-- NEW WIDGET START -->
-        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <!-- Widget ID (each widget will need unique ID)-->
-          <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
+<div class="container-fluid mt-3">
+  <section id="widget-grid">
+    <div class="row">
+      <article class="col-12">
+        <div class="card shadow-sm border-secondary">
+          <div class="card-header bg-orfeo text-white">
+            <h5 class="mb-0">
+              <i class="fa fa-search me-2"></i>Buscar
+              <br>
+              <small class="text-light fw-light"><?= $tituloCrear ?></small>
+            </h5>
+          </div>
 
-            <header>
-              <h2>
-                Buscar<br>
-                <small><?=$tituloCrear ?></small>
-              </h2>
-            </header>
+          <div class="card-body bg-light">
+            <form name="form_busq_rad" action='<?= $pagina_actual ?>?<?= session_name() . "=" . session_id() . "&krd=$krd" ?>&estado_sal=<?= $estado_sal ?>&tpAnulacion=<?= $tpAnulacion ?>&estado_sal_max=<?= $estado_sal_max ?>&pagina_sig=<?= $pagina_sig ?>&dep_sel=<?= $dep_sel ?>&nomcarpeta=<?= $nomcarpeta ?>' method="post">
 
-            <!-- widget div-->
-            <div>
-              <!-- widget content -->
-              <div class="widget-body no-padding">
-                <table class="table table-bordered table-striped">
+              <div class="row align-items-end">
+                <div class="col-md-10 mb-3 mb-md-0">
+                  <label for="busqRadicados" class="form-label fw-bold text-secondary">
+                    Buscar por nombres de usuario y/o login <span class="badge bg-info text-dark">Separados por coma</span>
+                  </label>
 
-                  <tr class="tablas">
-                  <td class="etextomenu" >
-                  <span class="etextomenu">
-                  <form name=form_busq_rad action='<?=$pagina_actual?>?<?=session_name()."=".session_id()."&krd=$krd" ?>&estado_sal=<?=$estado_sal?>&tpAnulacion=<?=$tpAnulacion?>&estado_sal_max=<?=$estado_sal_max?>&pagina_sig=<?=$pagina_sig?>&dep_sel=<?=$dep_sel?>&nomcarpeta=<?=$nomcarpeta?>' method=post>
-                  Buscar por nombres de usuario y/o login (Separados por coma)
-                  <input name="busqRadicados" type="text" size="60" class="tex_area" value="<?=$busqRadicados?>">
-                  <input type=submit value='Buscar ' name=Buscar valign='middle' class='botones'>
-                  <?
-                  if ($busqRadicados) {
-                    $busqRadicados = trim($busqRadicados);
-                    $textElements =explode (",", $busqRadicados);
-                    $newText = "";
-                    $i = 0;
-                    foreach ($textElements as $item) {
-                      $item = trim ( $item );
-                      if ($item) {
-                      if ($i != 0) $busq_and = " or "; else $busq_and = "  ";
-                        //$busq_radicados_tmp .= " $busq_and upper($varBuscada) like upper('%$item%') ";
-                        $busq_radicados_tmp .= " $busq_and upper($varBuscada) like upper('%$item%') ";
-                        if($varBuscada2) $busq_radicados_tmp .= " or upper($varBuscada2) like upper('%$item%') ";
-                        $i++;
-                      }
-                    } //FIN foreach
+                  <div class="input-group">
+                    <span class="input-group-text bg-white">
+                      <i class="fa fa-user text-muted"></i>
+                    </span>
+                    <input name="busqRadicados" id="busqRadicados" type="text" class="form-control form-control-lg" placeholder="Ej: jsmith, Juan Perez..." value="<?= $busqRadicados ?>">
+                    <input type="submit" value='Buscar' name="Buscar" valign='middle' class='btn btn-primary px-4'>
+                  </div>
+                </div>
+              </div>
 
-                  $dependencia_busq2 .= " and ($busq_radicados_tmp) ";
-                  } //FIN if ($busqRadicados)
-                ?>
-                  </form>
-                  </span>
-                  </td></tr>
-              </table>
+              <?php
+              if ($busqRadicados) {
+                $busqRadicados = trim($busqRadicados);
+                $textElements = explode(",", $busqRadicados);
+                $newText = "";
+                $i = 0;
+                $busq_radicados_tmp = ""; // Inicialización por seguridad
+
+                foreach ($textElements as $item) {
+                  $item = trim($item);
+                  if ($item) {
+                    if ($i != 0) $busq_and = " or ";
+                    else $busq_and = "  ";
+
+                    $busq_radicados_tmp .= " $busq_and upper($varBuscada) like upper('%$item%') ";
+                    if ($varBuscada2) {
+                      $busq_radicados_tmp .= " or upper($varBuscada2) like upper('%$item%') ";
+                    }
+                    $i++;
+                  }
+                }
+                $dependencia_busq2 .= " and ($busq_radicados_tmp) ";
+              }
+              ?>
+            </form>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
