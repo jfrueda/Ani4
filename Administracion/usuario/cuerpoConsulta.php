@@ -223,8 +223,6 @@ $radSelec = "";
 		}
 		?>
 	</form>
-	<?
-	?>
 
 	<div class="margin-botton-table">
 		<a href="srdByUser.php?dep=<?= $dep_sel ?>">Reporte series por usuario</a>
