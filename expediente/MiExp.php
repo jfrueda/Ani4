@@ -479,8 +479,11 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
 
     <div class="card shadow-sm border-0 rounded-4" id="resulEstdatos2" style="display:none">
         <!-- Encabezado -->
-        <div class="card-header bg-orfeo text-white py-3 rounded-top-4 d-flex align-items-center border-0">
+        <div class="card-header bg-orfeo text-white py-3 rounded-top-4 d-flex justify-content-between align-items-center border-0">
             <h5 class="mb-0 fw-bold" id="nomListado">Resultado</h5>
+            <button type="button" onclick="$('#tb_bsq_listaexp').table2excel({exclude: '.noExl', name: 'Consulta_Expedientes', filename: 'Consulta_Expedientes_'+new Date().getTime(), fileext: '.xls', exclude_img: true, exclude_links: true, exclude_inputs: true});" class="btn btn-sm btn-light">
+                <i class="bi bi-download"></i> Descargar
+            </button>
         </div>
 
         <!-- Contenido -->
