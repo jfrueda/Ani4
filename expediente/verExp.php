@@ -283,6 +283,11 @@ switch ($dataExp['SGD_SEXP_ESTADO']) {
                         <li>
                             <a class="btn btn-xs btn-danger" style="margin-left: 10px; margin-top:10px;" title="Descargar indice electrónico" href="exp-indice-pdf.php?exp=<?=$exp?>"><i class="fa fa-file" aria-hidden="true"></i></a>
                         </li>
+                        <li>
+                            <button class="btn  btn-xs btn-warning" style="margin-left: 10px; margin-top:10px;" data-toggle="modal" data-target="#modal_regenerar_indice_electronico" title="Regenerar indice electrónico">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </li>
                     <?php endif; ?>
                     <li class="nav-item">
                         <?php if(intval($dataExp['SGD_SEXP_ESTADO']) != 0 && $dataExp['SGD_SEXP_ESTADO'] != null): ?>
@@ -943,6 +948,26 @@ if ($expdata['SGD_EXP_PRIVADO'] == 0) {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="generar_indice_electronico" data-rel="exp-indice.php?exp=<?=$exp?>">Si</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal_regenerar_indice_electronico" class="modal fade " role="dialog" style="padding-right: 17px; ">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content ">
+            <div class="modal-header">
+                Regenerar índice electrónico expediente <?=$exp?>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Al regenerar el índice electrónico, el archivo anterior será reemplazado.<br>
+                    ¿Desea continuar?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="regenerar_indice_electronico" data-rel="exp-indice.php?exp=<?=$exp?>">Si</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
             </div>
         </div>

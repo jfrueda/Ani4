@@ -310,6 +310,11 @@ if (!file_exists($ruta)) {
     mkdir($ruta, 0777, true);
 }
 
+// Eliminar el PDF anterior si existe
+if (file_exists($ruta.$output_filename)) {
+    unlink($ruta.$output_filename);
+}
+
 $pdf->Output($ruta.$output_filename, 'F');
 
 try {

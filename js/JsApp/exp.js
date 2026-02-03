@@ -1860,4 +1860,22 @@ $(function () {
             console.log('always');
         });
     });
+
+    $('#regenerar_indice_electronico').on('click', function (e) {
+        $('#regenerar_indice_electronico').prop('disabled', true);
+        var request = $.get($(this).data('rel'));
+        request.done(function () {
+            console.log('Índice regenerado');
+            window.location.reload();
+        });
+
+        request.fail(function (xhr, status, error) {
+            console.log('fail', status, error);
+            alert('Error al regenerar el índice electrónico');
+        })
+
+        request.always(function () {
+            console.log('always');
+        });
+    });
 })
