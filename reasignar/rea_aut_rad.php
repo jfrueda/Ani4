@@ -242,8 +242,14 @@ function deshabilita(opcion)
 	        usua_login: $("#usuario").val()
 	    },
 	    function(data, status){
-			$("#urads").html(data);
-			//alert("Data: " + data + "\nStatus: " + status);
+			// Reemplazar las comas por saltos de línea para mostrar uno por línea
+			var radicados = data.split(',').join('\n');
+			$("#urads").val(radicados);
 	    });
 	}
+	
+	// Ejecutar getRads() al cargar la página
+	$(document).ready(function(){
+		getRads();
+	});
 </script>

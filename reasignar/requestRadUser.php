@@ -16,9 +16,14 @@ $isql="
 	FROM RADICADO r
 	left join usuario u on (r.radi_depe_actu=u.depe_codi and r.radi_usua_actu=u.usua_codi)
 	where u.usua_login='$user'
+	ORDER BY r.RADI_NUME_RADI DESC
 	";
 $rs=$db->conn->GetArray($isql);
-$rs=array_column($rs,'RADI_NUME_RADI');
-echo implode(',',$rs);
+if($rs && count($rs) > 0) {
+	$rs=array_column($rs,'RADI_NUME_RADI');
+	echo implode(',',$rs);
+} else {
+	echo "No hay radicados para este usuario";
+}
 
 ?>
