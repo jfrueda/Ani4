@@ -225,17 +225,12 @@ function microtime_float(){
 															}else {
 																echo "
 																		<center>
-																				<span  class=info>
-																						<br>Se llev&oacute; a cabo la radicaci&oacute;n masiva.<br>
-																				</span>
+																			
 																				<span class='info'>
 																						<br>
 																						<a class='vinculos' href=javascript:abrirArchivoaux('$arcPDF')> Abrir Listado</a>
 																				</span>
-																				<!--<span class='info'>
-																						<br>
-																						<a class='vinculos' href=javascript:abrirArchivoaux('$arcCSVfinal')> Archivo CSV para combinar</a>
-																				</span>-->
+																				
 																		<center>";
 															}
 													}
