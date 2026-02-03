@@ -258,6 +258,7 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                                     onclick="filtrobtn(1)"
                                     class="btn btn-primary">
                                     <i class="bi bi-download"></i>
+                                    Descargar
                                 </button>
                             </div>
                         </div>
