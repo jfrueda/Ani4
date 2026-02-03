@@ -527,7 +527,7 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" id="cerrar" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-danger" id="cerrar" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -537,29 +537,22 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="">Dependencia:</label>
-                            <?php echo $optionDepeResp; ?>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="">Responsable</label>
-                            <select aria-selected="true" name="herr_respUsuaDoc" id="herr_respUsuaDoc" class="custom-select">
-                            </select>
-                        </div>
+                    <div class="mb-3">
+                        <label for="herr_dep_resp" class="form-label">Dependencia:</label>
+                        <?php echo $optionDepeResp; ?>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12"><br></div>
+                    <div class="mb-3">
+                        <label for="herr_respUsuaDoc" class="form-label">Responsable</label>
+                        <select aria-selected="true" name="herr_respUsuaDoc" id="herr_respUsuaDoc" class="custom-select">
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <i><span class="herr_numExpedientesSeleccionados"></span> expediente(s) seleccionado(s).</i>
-                        </div>
+                    <div class="mt-3">
+                        <i><span class="herr_numExpedientesSeleccionados"></span> expediente(s) seleccionado(s).</i>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <input type="button" value="Cambiar responsable" id='cambiar_responsable_submit' class='btn btn-primary'>
-                    <button type="button" class="btn btn-danger" id="cambiar_responsable_cancel" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="cambiar_responsable_cancel" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -607,7 +600,7 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                 </div>
                 <div class="modal-footer">
                     <input type="button" value="Cambiar permisos" id='cambiar_permisos_submit' class='btn btn-primary'>
-                    <button type="button" class="btn btn-danger" id='cambiar_seguridad_cancel' data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id='cambiar_seguridad_cancel' data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -941,7 +934,7 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
                 </div>
                 <div class="modal-footer">
                     <input type="button" value="Asociar responsable" id='btnRcera' class='btn btn-warning btn-crearExpOLD' onclick='crearExpOLD () '>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" id='btnRadcancelartxslir'>Salir</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id='btnRadcancelartxslir'>Salir</button>
                 </div>
             </div>
         </div>
