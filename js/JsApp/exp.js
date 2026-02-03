@@ -1030,6 +1030,8 @@ function SeguridadList() {
             $('#imageprocesoSeg').hide();
             //  $('#btnSearchTbH').show();
             $('#tb_listaSegExp').show();
+            // Cargar lista de usuarios automáticamente
+            usuario4();
 
         })
         .catch(function (error) {
