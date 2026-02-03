@@ -771,7 +771,7 @@ switch ($dataExp['SGD_SEXP_ESTADO']) {
 
                                     <input type="text" class="form-control" name="SGD_SEXP_PAREXP1" id="SGD_SEXP_PAREXP1" value='<?=$dataExp['SGD_SEXP_PAREXP1'];?>'>
                                     <input type="hidden" name="opertituloOld" id="opertituloOld"
-                                        value='<?=$expdata['SGD_SEXP_PAREXP1'];?>'>
+                                        value='<?=$dataExp['SGD_SEXP_PAREXP1'];?>'>
                                     <div class="input-group-append">
                                         <button type="button" class="btn  btn-sm btn-outline-warning"
                                             onclick="addoption('SGD_SEXP_PAREXP1')"><i class="fa fa-save"></i> </button>
@@ -782,7 +782,7 @@ switch ($dataExp['SGD_SEXP_ESTADO']) {
                             <div class="input-group-prepend">
                                 <span class="input-group-text  text-uppercase font-weight-bold" style="width: 180px"><?=$paramsExp[2] ? $paramsExp[2] : "Descriptor 1";?></span>
                             </div>
-                            <input type="text" class="form-control" name="SGD_SEXP_PAREXP2" id="SGD_SEXP_PAREXP2" value='<?=$expdata['SGD_SEXP_PAREXP2'];?>'>
+                            <input type="text" class="form-control" name="SGD_SEXP_PAREXP2" id="SGD_SEXP_PAREXP2" value='<?=$dataExp['SGD_SEXP_PAREXP2'];?>'>
                             <div class="input-group-append">
                                         <button type="button" class="btn  btn-sm btn-outline-warning"
                                             onclick="addoption('SGD_SEXP_PAREXP2')"><i class="fa fa-save"></i> </button>
@@ -794,7 +794,7 @@ switch ($dataExp['SGD_SEXP_ESTADO']) {
                             <div class="input-group-prepend">
                                 <span class="input-group-text  text-uppercase font-weight-bold" style="width: 180px"><?=$paramsExp[3] ? $paramsExp[3] : "Descriptor 2";?> </span>
                             </div>
-                            <input type="text" class="form-control" name="SGD_SEXP_PAREXP3" id="SGD_SEXP_PAREXP3" value='<?=$expdata['SGD_SEXP_PAREXP3'];?>'>
+                            <input type="text" class="form-control" name="SGD_SEXP_PAREXP3" id="SGD_SEXP_PAREXP3" value='<?=$dataExp['SGD_SEXP_PAREXP3'];?>'>
                             <div class="input-group-append">
                                         <button type="button" class="btn  btn-sm btn-outline-warning"
                                             onclick="addoption('SGD_SEXP_PAREXP3')"><i class="fa fa-save"></i> </button>
@@ -818,7 +818,7 @@ switch ($dataExp['SGD_SEXP_ESTADO']) {
                             <div class="input-group-prepend">
                                 <span class="input-group-text  text-uppercase font-weight-bold" style="width: 180px"><?=$paramsExp[5] ? $paramsExp[5] : "Descriptor 3";?></span>
                             </div>
-                            <input type="text" class="form-control" name="SGD_SEXP_PAREXP5" id="SGD_SEXP_PAREXP5" value='<?=$expdata['SGD_SEXP_PAREXP5'];?>'>
+                            <input type="text" class="form-control" name="SGD_SEXP_PAREXP5" id="SGD_SEXP_PAREXP5" value='<?=$dataExp['SGD_SEXP_PAREXP5'];?>'>
                             <div class="input-group-append">
                                         <button type="button" class="btn  btn-sm btn-outline-warning"
                                             onclick="addoption('SGD_SEXP_PAREXP5')"><i class="fa fa-save"></i> </button>
