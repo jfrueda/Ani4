@@ -49,8 +49,8 @@
 	  where 
 		b.radi_nume_radi is not null
 		and b.radi_nume_radi=d.radi_nume_radi
-		'.($dep_sel != '9999' ? 'and b.depe_codi = '.$dep_sel : '').
-		'and b.tdoc_codi=c.sgd_tpr_codigo
+		'.($dep_sel != '9999' ? 'and b.depe_codi = '.$dep_sel.' ' : '').'
+		and b.tdoc_codi=c.sgd_tpr_codigo
 		'.$whereTpAnulacion.'
 		'.$whereFiltro.'
 	  order by d.usua_anu_acta,b.RADI_NUME_RADI';
