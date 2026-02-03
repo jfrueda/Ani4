@@ -290,17 +290,8 @@ function addPageWithData($pdf, $data, $paginas) {
     // Pie de página
     $pdf->SetFont('Arial', '', 10);
     $position = 37;
-    $pdf->Image('./indice_electronico/separador.png', 5, $pdf->GetPageHeight() - ($position +2), 287, 0.3);
-    $pdf->Image('./indice_electronico/separador.png', $pdf->GetPageWidth()-44, $pdf->GetPageHeight() - ($position), 0.2, 25);
     $pdf->SetXY(5, $pdf->GetPageHeight() - $position);
     $pdf->Cell(0, 5, utf8_decode('Página ' . $pdf->PageNo() . ' de ' .$paginas), 0, 0, 'L');
-    $pdf->SetXY(5, $pdf->GetPageHeight() - ($position - 7)); 
-    $pdf->Cell(0, 5, utf8_decode('Carrera 68 A N.º 24 B - 10, Torre 3 - Pisos 4, 9 y 10 | PBX +57 601 744 2000 - Bogotá D.C.'), 0, 0, 'L');
-    $pdf->SetXY(5, $pdf->GetPageHeight() - ($position - 14)); 
-    $pdf->Cell(0, 5, utf8_decode('www.supersalud.gov.co'), 0, 0, 'L');
-    $pdf->SetXY(5, $pdf->GetPageHeight() - ($position - 21)); 
-    $pdf->Cell(0, 5, utf8_decode('DIFT17'), 0, 0, 'L');
-    $pdf->Image('./indice_electronico/sgs_2.png',  $pdf->GetPageWidth()-40, $pdf->GetPageHeight()-40, 35);
 }
 
 // Dividir los datos en grupos de 9 registros por página
