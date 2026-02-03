@@ -564,38 +564,30 @@ $paramsExp = $expClass->parametrosEXP($dependencia);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="">Dependencia:</label>
-                            <?php echo $optionDepeResp2; ?>
-                        </div>
+                    <div class="mb-3">
+                        <label for="herr_dep_seg_resp" class="form-label">Dependencia:</label>
+                        <?php echo $optionDepeResp2; ?>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="">Usuarios</label>
-                            <button class="btn btn-sm" id="seleccionar_todos_seguridad">Seleccionar todos</button> - <button class="btn btn-sm" id="cancelar_seleccion_seguridad">Cancelar selección</button>
-                            <select multiple aria-selected="true" name="herr_respSegUsuaDoc[]" id="herr_respSegUsuaDoc" class="custom-select">
-                            </select>
+                    <div class="mb-3">
+                        <label for="herr_respSegUsuaDoc" class="form-label">Usuarios</label>
+                        <div class="mb-2">
+                            <button class="btn btn-sm btn-outline-primary" id="seleccionar_todos_seguridad">Seleccionar todos</button>
+                            <button class="btn btn-sm btn-outline-secondary" id="cancelar_seleccion_seguridad">Cancelar selección</button>
                         </div>
+                        <select multiple aria-selected="true" name="herr_respSegUsuaDoc[]" id="herr_respSegUsuaDoc" class="custom-select form-control" size="5">
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="">Permisos:</label>
-                            <select name="herr_segExp" id="herr_segExp" class='custom-select text-uppercase'>
-                                <option value="0"> Denegar </option>
-                                <option value="1"> Listar </option>
-                                <option value="2"> Listar y Ver Documentos</option>
-                                <option value="3"> Administrar </option>
-                            </select>
-                        </div>
+                    <div class="mb-3">
+                        <label for="herr_segExp" class="form-label">Permisos:</label>
+                        <select name="herr_segExp" id="herr_segExp" class='custom-select form-select text-uppercase'>
+                            <option value="0"> Denegar </option>
+                            <option value="1"> Listar </option>
+                            <option value="2"> Listar y Ver Documentos</option>
+                            <option value="3"> Administrar </option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12"><br></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <i><span class="herr_numExpedientesSeleccionados"></span> expediente(s) seleccionado(s).</i>
-                        </div>
+                    <div class="mt-3">
+                        <i><span class="herr_numExpedientesSeleccionados"></span> expediente(s) seleccionado(s).</i>
                     </div>
                 </div>
                 <div class="modal-footer">
