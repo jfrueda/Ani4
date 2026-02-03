@@ -1088,7 +1088,6 @@ class jhrtf {
 
             fclose($fp);
             echo "</table>";
-            echo "<span class='info'>Numero de registros $contador</span>";
             echo "<script>terminado();</script>";
             $this->pdf->ezTable($data);
             $this->pdf->ezText("\n",15,$justCentro);
