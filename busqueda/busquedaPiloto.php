@@ -509,8 +509,21 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Buscar en Radicados de</label>
                                     <select class="form-select" name="s_entrada">
-                                        <option value="9999"><?= $ss_TRAD_CODIDisplayValue ?></option>
-                                        <option value="9998"><?= $ss_TRAD_CODIDisplayNotiValue ?></option>
+                                        <?
+                                        if ($flds_entrada == 0) $flds_entrada = "9999";
+                                        echo "<option value=\"9999\">" . $ss_TRAD_CODIDisplayValue . "</option>";
+                                        echo "<option value=\"9998\">" . $ss_TRAD_CODIDisplayNotiValue . "</option>";
+                                        $lookup_s_entrada = db_fill_array("select SGD_TRAD_CODIGO, SGD_TRAD_DESCR from SGD_TRAD_TIPORAD order by 2");
+
+                                        if (is_array($lookup_s_entrada)) {
+                                            reset($lookup_s_entrada);
+                                            while (list($key, $value) = each($lookup_s_entrada)) {
+                                                if ($key == $flds_entrada) $option = "<option SELECTED value=\"$key\">$value</option>";
+                                                else $option = "<option value=\"$key\">$value</option>";
+                                                echo $option;
+                                            }
+                                        }
+                                        ?>
                                     </select>
                                 </div>
 
@@ -518,7 +531,20 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Tipo de Documento</label>
                                     <select class="form-select" name="s_TDOC_CODI">
-                                        <option value="9999"><?= $ss_TDOC_CODIDisplayValue ?></option>
+                                        <?
+                                        if ($flds_TDOC_CODI == 0) $flds_TDOC_CODI = "9999";
+                                        echo "<option value=\"9999\">" . $ss_TDOC_CODIDisplayValue . "</option>";
+                                        $lookup_s_TDOC_CODI = db_fill_array("select SGD_TPR_CODIGO, SGD_TPR_DESCRIP from SGD_TPR_TPDCUMENTO where sgd_tpr_codigo <= 9000 order by 2");
+
+                                        if (is_array($lookup_s_TDOC_CODI)) {
+                                            reset($lookup_s_TDOC_CODI);
+                                            while (list($key, $value) = each($lookup_s_TDOC_CODI)) {
+                                                if ($key == $flds_TDOC_CODI) $option = "<option SELECTED value=\"$key\">$value</option>";
+                                                else $option = "<option value=\"$key\">$value</option>";
+                                                echo $option;
+                                            }
+                                        }
+                                        ?>
                                     </select>
                                 </div>
 
@@ -533,7 +559,25 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                     <label class="form-label fw-semibold">Dependencia Actual</label>
                                     <div class="d-flex gap-2">
                                         <select class="form-select" name="s_RADI_DEPE_ACTU">
-                                            <option value=""><?= $ss_RADI_DEPE_ACTUDisplayValue ?></option>
+                                            <?
+                                            $l = strlen($flds_RADI_DEPE_ACTU);
+
+                                            if ($l == 0) {
+                                                echo "<option value=\"\" SELECTED>" . $ss_RADI_DEPE_ACTUDisplayValue . "</option>";
+                                            } else {
+                                                echo "<option value=\"\">" . $ss_RADI_DEPE_ACTUDisplayValue . "</option>";
+                                            }
+                                            $lookup_s_RADI_DEPE_ACTU = db_fill_array("select DEPE_CODI, DEPE_NOMB from DEPENDENCIA where depe_estado=1 order by 2");
+
+                                            if (is_array($lookup_s_RADI_DEPE_ACTU)) {
+                                                reset($lookup_s_RADI_DEPE_ACTU);
+                                                while (list($key, $value) = each($lookup_s_RADI_DEPE_ACTU)) {
+                                                    if ($l > 0 && $key == $flds_RADI_DEPE_ACTU) $option = "<option SELECTED value=\"$key\">$value</option>";
+                                                    else $option = "<option value=\"$key\">$value</option>";
+                                                    echo $option;
+                                                }
+                                            }
+                                            ?>
                                         </select>
 
                                         <button type="button" onclick="limpiar();" class="btn btn-outline-danger">
