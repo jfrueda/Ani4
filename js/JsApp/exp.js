@@ -1845,7 +1845,14 @@ function uploadAnexos() {
 
 $(function () {
     $('#generar_indice_electronico').on('click', function (e) {
+        e.preventDefault();
         $('#generar_indice_electronico').prop('disabled', true);
+        $('#modal_indice_electronico').modal('hide');
+        
+        // Mostrar mensaje de procesamiento
+        $('#processing-modal .modal-text').text('Generando índice electrónico, espere por favor...');
+        $('#processing-modal').modal('show');
+        
         var request = $.get($(this).data('rel'));
         request.done(function () {
             console.log('done');
@@ -1854,28 +1861,32 @@ $(function () {
 
         request.fail(function (xhr, status, error) {
             console.log('fail', status, error);
-        })
-
-        request.always(function () {
-            console.log('always');
+            $('#processing-modal').modal('hide');
+            alert('Error al generar el índice electrónico');
+            $('#generar_indice_electronico').prop('disabled', false);
         });
     });
 
     $('#regenerar_indice_electronico').on('click', function (e) {
+        e.preventDefault();
         $('#regenerar_indice_electronico').prop('disabled', true);
+        $('#modal_regenerar_indice_electronico').modal('hide');
+        
+        // Mostrar mensaje de procesamiento
+        $('#processing-modal .modal-text').text('Regenerando índice electrónico, espere por favor...');
+        $('#processing-modal').modal('show');
+        
         var request = $.get($(this).data('rel'));
         request.done(function () {
-            console.log('Índice regenerado');
+            console.log('Índice regenerado exitosamente');
             window.location.reload();
         });
 
         request.fail(function (xhr, status, error) {
             console.log('fail', status, error);
+            $('#processing-modal').modal('hide');
             alert('Error al regenerar el índice electrónico');
-        })
-
-        request.always(function () {
-            console.log('always');
+            $('#regenerar_indice_electronico').prop('disabled', false);
         });
     });
 })
