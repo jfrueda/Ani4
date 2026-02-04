@@ -250,383 +250,381 @@ $sqlTotalRad = "select count(1) as TOTAL
         <input type="hidden" name="medio_recepcion_b" id="medio_recepcion" value="">
     </form>
 
-    <div id="app">
-        <Transition name="slide-fade">
-            <form v-if="showForm" name="form1" id="form1" action="./tx/formEnvio.php?<?= $encabezado ?>#informados" methos="post">
-                <div id="content" class="card shadow">
-                    <div class="card-header bg-orfeo text-white">
-                        <h6 class="mb-0">
-                            <i class="fa fa-inbox fs-4"></i>
-                            Bandeja <span><?= $nomcarpeta ?></span> <span style="color:azure"> <?= $_SESSION['dependencia'] ?> <?= $_SESSION["codusuario"] ?></span>
-                        </h6>
-                    </div>
+    <form name="form1" id="form1" action="./tx/formEnvio.php?<?= $encabezado ?>#informados" methos="post">
+        <div id="content" class="card shadow">
+            <div class="card-header bg-orfeo text-white">
+                <h6 class="mb-0">
+                    <i class="fa fa-inbox fs-4"></i>
+                    Bandeja <span><?= $nomcarpeta ?></span> <span style="color:azure"> <?= $_SESSION['dependencia'] ?> <?= $_SESSION["codusuario"] ?></span>
+                </h6>
+            </div>
 
-                    <!-- widget grid -->
-                    <section id="widget-grid" class="">
-                        <!-- row -->
-                        <div class="row">
-                            <!-- NEW WIDGET START -->
-                            <article class="col-xs-12">
-                                <!-- Widget ID (each widget will need unique ID)-->
-                                <div class="jarviswidget jarviswidget-color-darken"
-                                    id="wid-id-0"
-                                    data-widget-editbutton="false">
-                                    <!-- widget div-->
-                                    <div>
-                                        <!-- widget content -->
-                                        <div class="actions smart-form" style="position: absolute !important; top: 147; z-index: 1; left: 28px;">
-                                            <?php
-                                            $controlAgenda = 1;
-                                            if (($carpeta == 11 && !$_SESSION["USUA_JEFE_DE_GRUPO"]) && !$tipo_carp && $codusuario != 1) {
-                                            } else { ?>
-                                            <?php include "./tx/txOrfeo.php";
-                                            }
-                                            ?>
-                                        </div>
-                                        <div class="widget-body no-padding">
-                                            <div class="widget-body-toolbar border rounded-4 p-4 bg-light mb-4">
-                                                <h4 class="fw-bold mb-3">Filtrar por fechas</h4>
-                                                <div class="row g-3 align-items-end">
-                                                    <!-- Página -->
-                                                    <div class="col-md-3">
-                                                        <label for="resultados_aux" class="form-label fw-semibold">Página</label>
-                                                        <div class="input-group">
-                                                            <input type="number" class="form-control" max="1000" min="0" value="<?= $_SESSION['resultados'] ?>" name="resultados_aux" id="resultados_aux">
-                                                            <span class="input-group-text bg-white">
-                                                                de&nbsp;<span id="total_bandeja" class="fw-bold"></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Fecha inicial -->
-                                                    <div class="col-md-3">
-                                                        <label class="form-label fw-semibold">Fecha inicial</label>
-                                                        <input
-                                                            type="date"
-                                                            class="form-control"
-                                                            name="fecha_inicial_aux"
-                                                            id="fecha_inicial_aux"
-                                                            value="<?= empty($_SESSION['fecha_inicial']) ? '' : $_SESSION['fecha_inicial'] ?>">
-                                                    </div>
-
-                                                    <!-- Fecha final -->
-                                                    <div class="col-md-3">
-                                                        <label class="form-label fw-semibold">Fecha final</label>
-                                                        <input
-                                                            type="date"
-                                                            class="form-control"
-                                                            name="fecha_final_aux"
-                                                            id="fecha_final_aux"
-                                                            value="<?= empty($_SESSION['fecha_final']) ? '' : $_SESSION['fecha_final'] ?>">
-                                                    </div>
-
-                                                    <!-- Medio de recepción -->
-                                                    <div class="col-md-3">
-                                                        <label class="form-label fw-semibold">Medio de recepción</label>
-                                                        <select
-                                                            class="form-select"
-                                                            name="medio_recepcion_aux"
-                                                            id="medio_recepcion_aux">
-                                                            <option value="todos">Todos</option>
-                                                            <?php foreach ($medios_recepcion as $medio): ?>
-                                                                <option
-                                                                    value="<?= $medio['MREC_CODI'] ?>"
-                                                                    <?= $medio['MREC_CODI'] == $_SESSION['medio_recepcion'] ? "selected" : '' ?>>
-                                                                    <?= $medio['MREC_DESC'] ?>
-                                                                </option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-
-                                                    <!-- Loader -->
-                                                    <div class="col-md-1 d-flex align-items-center mt-2">
-                                                        <img
-                                                            id="cargando_bandeja"
-                                                            src="https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_800,h_600/https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"
-                                                            width="40"
-                                                            style="display: none;"
-                                                            class="ms-2">
-                                                    </div>
-
-                                                    <!-- Botones -->
-                                                    <div class="col-12 mt-3 text-end">
-                                                        <input type="button" id="botongrande" value="Filtrar" class="btn btn-primary px-4">
-                                                        <input type="button" id="botongrandeBorrar" value="Borrar" class="btn btn-outline-secondary px-4 ms-2">
-                                                    </div>
+            <!-- widget grid -->
+            <section id="widget-grid" class="">
+                <!-- row -->
+                <div class="row">
+                    <!-- NEW WIDGET START -->
+                    <article class="col-xs-12">
+                        <!-- Widget ID (each widget will need unique ID)-->
+                        <div class="jarviswidget jarviswidget-color-darken"
+                            id="wid-id-0"
+                            data-widget-editbutton="false">
+                            <!-- widget div-->
+                            <div>
+                                <!-- widget content -->
+                                <div class="actions smart-form" style="position: absolute !important; top: 147; z-index: 1; left: 28px;">
+                                    <?php
+                                    $controlAgenda = 1;
+                                    if (($carpeta == 11 && !$_SESSION["USUA_JEFE_DE_GRUPO"]) && !$tipo_carp && $codusuario != 1) {
+                                    } else { ?>
+                                    <?php include "./tx/txOrfeo.php";
+                                    }
+                                    ?>
+                                </div>
+                                <div class="widget-body no-padding">
+                                    <div class="widget-body-toolbar border rounded-4 p-4 bg-light mb-4">
+                                        <h4 class="fw-bold mb-3">Filtrar por fechas</h4>
+                                        <div class="row g-3 align-items-end">
+                                            <!-- Página -->
+                                            <div class="col-md-3">
+                                                <label for="resultados_aux" class="form-label fw-semibold">Página</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" max="1000" min="0" value="<?= $_SESSION['resultados'] ?>" name="resultados_aux" id="resultados_aux">
+                                                    <span class="input-group-text bg-white">
+                                                        de&nbsp;<span id="total_bandeja" class="fw-bold"></span>
+                                                    </span>
                                                 </div>
                                             </div>
 
-                                            <!-- Contenedor responsive para evitar overflow -->
-                                            <div class="table-responsive margin-botton-table" style="max-height: 70vh; overflow-y: auto;">
-                                                <table id="dt_basic" class="table table-hover table-striped table-bordered align-middle">
-                                                    <thead class="text-center bg-orfeo">
-                                                        <tr>
-                                                            <th style="width: 40px;">
-                                                                <div class="form-check form-switch d-flex justify-content-center">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        class="form-check-input"
-                                                                        onclick="markAll();"
-                                                                        id="checkAll"
-                                                                        name="checkAll"
-                                                                        value="checkAll"
-                                                                        style="cursor: pointer;">
-                                                                </div>
-                                                            </th>
-                                                            <th>Radicado</th>
-                                                            <th style="display:none;">Alerta</th>
-                                                            <th>Fecha</th>
-                                                            <th>Asunto</th>
-                                                            <th>Remitente / Destinatario</th>
-                                                            <th>Identificación</th>
-                                                            <th>Expediente</th>
-                                                            <th>Enviado Por</th>
-                                                            <th>Tipo Documento</th>
-                                                            <th>Días Restantes</th>
-                                                            <th>Ref</th>
-                                                            <th>Medio de Recepción</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        include "$ruta_raiz/include/query/queryCuerpo.php";
+                                            <!-- Fecha inicial -->
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-semibold">Fecha inicial</label>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    name="fecha_inicial_aux"
+                                                    id="fecha_inicial_aux"
+                                                    value="<?= empty($_SESSION['fecha_inicial']) ? '' : $_SESSION['fecha_inicial'] ?>">
+                                            </div>
 
-                                                        $rs = $db->conn->Execute($isql);
+                                            <!-- Fecha final -->
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-semibold">Fecha final</label>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    name="fecha_final_aux"
+                                                    id="fecha_final_aux"
+                                                    value="<?= empty($_SESSION['fecha_final']) ? '' : $_SESSION['fecha_final'] ?>">
+                                            </div>
 
-                                                        if (!empty($isqlconteo)) {
-                                                            $rs_conteo = $db->conn->Execute($isqlconteo);
-                                                        }
+                                            <!-- Medio de recepción -->
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-semibold">Medio de recepción</label>
+                                                <select
+                                                    class="form-select"
+                                                    name="medio_recepcion_aux"
+                                                    id="medio_recepcion_aux">
+                                                    <option value="todos">Todos</option>
+                                                    <?php foreach ($medios_recepcion as $medio): ?>
+                                                        <option
+                                                            value="<?= $medio['MREC_CODI'] ?>"
+                                                            <?= $medio['MREC_CODI'] == $_SESSION['medio_recepcion'] ? "selected" : '' ?>>
+                                                            <?= $medio['MREC_DESC'] ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
 
-                                                        include_once "$ruta_raiz/tx/diasHabiles.php";
-                                                        $a = new FechaHabil($db);
+                                            <!-- Loader -->
+                                            <div class="col-md-1 d-flex align-items-center mt-2">
+                                                <img
+                                                    id="cargando_bandeja"
+                                                    src="https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_800,h_600/https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"
+                                                    width="40"
+                                                    style="display: none;"
+                                                    class="ms-2">
+                                            </div>
 
-                                                        $contadorImagenes = 0;
-                                                        $aux = '';
-                                                        while (!$rs->EOF) {
-                                                            $numeroRadicado        = $rs->fields["HID_RADI_NUME_RADI"];
-                                                            $fechaRadicado         = $rs->fields["HID_RADI_FECH_RADI"];
-                                                            $refRadicado           = $rs->fields["REFERENCIA"];
-                                                            $asuntoRadicado        = $rs->fields["ASUNTO"];
-                                                            $remitenteRadicado     = $rs->fields["REMITENTE"];
-                                                            $tipoDocumentoRadicado = $rs->fields["TIPO DOCUMENTO"];
-                                                            $fech_vcmto            = $rs->fields["FECHA_VCMTO"];
-                                                            $enviadoPor            = $rs->fields["ENVIADO POR"];
-                                                            $radiPath              = $rs->fields["HID_RADI_PATH"];
-                                                            $documentoUsuario      = $rs->fields["DOCUMENTO_USUARIO"];
-                                                            $tipo_rad              = $rs->fields["TIPO_RAD"];
-                                                            $mrec_desc             = $rs->fields["RADI_MREC_DESC"];
-                                                            $usuaCodi              = $rs->fields['RADI_USUA_ACTU'];
-                                                            $radi_depe_actu        = $rs->fields['RADI_DEPE_ACTU'];
+                                            <!-- Botones -->
+                                            <div class="col-12 mt-3 text-end">
+                                                <input type="button" id="botongrande" value="Filtrar" class="btn btn-primary px-4">
+                                                <input type="button" id="botongrandeBorrar" value="Borrar" class="btn btn-outline-secondary px-4 ms-2">
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                                            if ($aux === $rs->fields["HID_RADI_NUME_RADI"])
-                                                                
-                                                            //  $radiLeido             = $rs->fields["HID_RADI_LEIDO"];
-                                                            $radianulado       = $rs->fields["HID_EANU_CODIGO"];
-                                                            //Datos obtenidos para pintar los radicados
+                                    <!-- Contenedor responsive para evitar overflow -->
+                                    <div class="table-responsive margin-botton-table" style="max-height: 70vh; overflow-y: auto;">
+                                        <table id="dt_basic" class="table table-hover table-striped table-bordered align-middle">
+                                            <thead class="text-center bg-orfeo">
+                                                <tr>
+                                                    <th style="width: 40px;">
+                                                        <div class="form-check form-switch d-flex justify-content-center">
+                                                            <input
+                                                                type="checkbox"
+                                                                class="form-check-input"
+                                                                onclick="markAll();"
+                                                                id="checkAll"
+                                                                name="checkAll"
+                                                                value="checkAll"
+                                                                style="cursor: pointer;">
+                                                        </div>
+                                                    </th>
+                                                    <th>Radicado</th>
+                                                    <th style="display:none;">Alerta</th>
+                                                    <th>Fecha</th>
+                                                    <th>Asunto</th>
+                                                    <th>Remitente / Destinatario</th>
+                                                    <th>Identificación</th>
+                                                    <th>Expediente</th>
+                                                    <th>Enviado Por</th>
+                                                    <th>Tipo Documento</th>
+                                                    <th>Días Restantes</th>
+                                                    <th>Ref</th>
+                                                    <th>Medio de Recepción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                include "$ruta_raiz/include/query/queryCuerpo.php";
 
-                                                            //Start::expediente
-                                                            $iSqlexpTot = "select * from sgd_exp_expediente where radi_nume_radi in ($numeroRadicado) limit 1;";
-                                                            $rsiSqlexpTot = $db->conn->query($iSqlexpTot);
-                                                            $numExpediente = $rsiSqlexpTot->fields["SGD_EXP_NUMERO"];
-                                                            //End::expediente            
+                                                $rs = $db->conn->Execute($isql);
 
-                                                            if (empty($remitenteRadicado) && ($tipo_rad == CIRC_INTERNA || $tipo_rad == CIRC_EXTERNA)) {
-                                                                include_once("$ruta_raiz/include/tx/notificacion.php");
-                                                                $notificacion = new Notificacion($db);
-                                                                $destinatarios_circ = $notificacion->destinatariosPorRadicado($numeroRadicado);
-                                                                $remitenteRadicado = $destinatarios_circ[0]["DESTINATARIOS"];
-                                                            }
+                                                if (!empty($isqlconteo)) {
+                                                    $rs_conteo = $db->conn->Execute($isqlconteo);
+                                                }
 
-                                                            $anexEstado = $rs->fields["ANEX_ESTADO"];
-                                                            $_radiLeido = $rs->fields["HID_RADI_LEIDO"];
-                                                            //$numExpediente = $rs->fields["SGD_EXP_NUMERO"];
-                                                            $diasRadicado = $a->getDiasRestantes($numeroRadicado, $fech_vcmto, $tipoDocumentoRadicado);
+                                                include_once "$ruta_raiz/tx/diasHabiles.php";
+                                                $a = new FechaHabil($db);
 
-                                                            unset($TipoAlerta);
-                                                            unset($ColorAlerta);
-                                                            unset($MensajeAlerta);
+                                                $contadorImagenes = 0;
+                                                $aux = '';
+                                                while (!$rs->EOF) {
+                                                    $numeroRadicado        = $rs->fields["HID_RADI_NUME_RADI"];
+                                                    $fechaRadicado         = $rs->fields["HID_RADI_FECH_RADI"];
+                                                    $refRadicado           = $rs->fields["REFERENCIA"];
+                                                    $asuntoRadicado        = $rs->fields["ASUNTO"];
+                                                    $remitenteRadicado     = $rs->fields["REMITENTE"];
+                                                    $tipoDocumentoRadicado = $rs->fields["TIPO DOCUMENTO"];
+                                                    $fech_vcmto            = $rs->fields["FECHA_VCMTO"];
+                                                    $enviadoPor            = $rs->fields["ENVIADO POR"];
+                                                    $radiPath              = $rs->fields["HID_RADI_PATH"];
+                                                    $documentoUsuario      = $rs->fields["DOCUMENTO_USUARIO"];
+                                                    $tipo_rad              = $rs->fields["TIPO_RAD"];
+                                                    $mrec_desc             = $rs->fields["RADI_MREC_DESC"];
+                                                    $usuaCodi              = $rs->fields['RADI_USUA_ACTU'];
+                                                    $radi_depe_actu        = $rs->fields['RADI_DEPE_ACTU'];
 
-                                                            unset($TipoAlerta2);
-                                                            unset($ColorAlerta2);
-                                                            unset($MensajeAlerta2);
+                                                    if ($aux === $rs->fields["HID_RADI_NUME_RADI"])
 
-                                                            /**************** Script que colorea los radicados nuevos, leidos , por vencer y vencidos *******************/
+                                                        //  $radiLeido             = $rs->fields["HID_RADI_LEIDO"];
+                                                        $radianulado       = $rs->fields["HID_EANU_CODIGO"];
+                                                    //Datos obtenidos para pintar los radicados
 
-                                                            switch ($_radiLeido) {
-                                                                case 0:
-                                                                    $TipoAlerta = "class='fa fa-circle'";
-                                                                    $ColorAlerta =  "style='color:#356635;cursor:help'";
-                                                                    $ColorAlertaNoLeido =  "<b>";
-                                                                    $MensajeAlerta = "Radicado Nuevo";
+                                                    //Start::expediente
+                                                    $iSqlexpTot = "select * from sgd_exp_expediente where radi_nume_radi in ($numeroRadicado) limit 1;";
+                                                    $rsiSqlexpTot = $db->conn->query($iSqlexpTot);
+                                                    $numExpediente = $rsiSqlexpTot->fields["SGD_EXP_NUMERO"];
+                                                    //End::expediente            
 
-                                                                    break;
-                                                                case 1:
-                                                                    $TipoAlerta = "class='fa fa-circle'";
-                                                                    $ColorAlerta =  "style='font-weight: bold; color:#3276B1;cursor:help'";
-                                                                    $ColorAlertaleido =  "";
-                                                                    $MensajeAlerta = "Leido";
+                                                    if (empty($remitenteRadicado) && ($tipo_rad == CIRC_INTERNA || $tipo_rad == CIRC_EXTERNA)) {
+                                                        include_once("$ruta_raiz/include/tx/notificacion.php");
+                                                        $notificacion = new Notificacion($db);
+                                                        $destinatarios_circ = $notificacion->destinatariosPorRadicado($numeroRadicado);
+                                                        $remitenteRadicado = $destinatarios_circ[0]["DESTINATARIOS"];
+                                                    }
 
-                                                                    break;
-                                                            }
+                                                    $anexEstado = $rs->fields["ANEX_ESTADO"];
+                                                    $_radiLeido = $rs->fields["HID_RADI_LEIDO"];
+                                                    //$numExpediente = $rs->fields["SGD_EXP_NUMERO"];
+                                                    $diasRadicado = $a->getDiasRestantes($numeroRadicado, $fech_vcmto, $tipoDocumentoRadicado);
 
-                                                            //Debo calcular los dias del radicado antes
-                                                            if ($diasRadicado != "") {
-                                                                if ($diasRadicado == "-" || $diasRadicado == "N/A ó termino no definido") {
-                                                                    #No se pintan.
-                                                                } else {
-                                                                    if ($diasRadicado <= 0) {
-                                                                        $TipoAlerta2 = "class='fa fa-circle'";
-                                                                        $ColorAlerta2 =  "style='color:#FE2E2E;cursor:help'";
-                                                                        $MensajeAlerta2 = "Vencido";
-                                                                    } else {
-                                                                        if ($diasRadicado > 0 && $diasRadicado <= 3) {
-                                                                            $TipoAlerta2 = "class='fa fa-circle'";
-                                                                            $ColorAlerta2 =  "style='color:#8A2908;cursor:help'";
-                                                                            $MensajeAlerta2 = "Por Vencer";
-                                                                        }
-                                                                    }
+                                                    unset($TipoAlerta);
+                                                    unset($ColorAlerta);
+                                                    unset($MensajeAlerta);
+
+                                                    unset($TipoAlerta2);
+                                                    unset($ColorAlerta2);
+                                                    unset($MensajeAlerta2);
+
+                                                    /**************** Script que colorea los radicados nuevos, leidos , por vencer y vencidos *******************/
+
+                                                    switch ($_radiLeido) {
+                                                        case 0:
+                                                            $TipoAlerta = "class='fa fa-circle'";
+                                                            $ColorAlerta =  "style='color:#356635;cursor:help'";
+                                                            $ColorAlertaNoLeido =  "<b>";
+                                                            $MensajeAlerta = "Radicado Nuevo";
+
+                                                            break;
+                                                        case 1:
+                                                            $TipoAlerta = "class='fa fa-circle'";
+                                                            $ColorAlerta =  "style='font-weight: bold; color:#3276B1;cursor:help'";
+                                                            $ColorAlertaleido =  "";
+                                                            $MensajeAlerta = "Leido";
+
+                                                            break;
+                                                    }
+
+                                                    //Debo calcular los dias del radicado antes
+                                                    if ($diasRadicado != "") {
+                                                        if ($diasRadicado == "-" || $diasRadicado == "N/A ó termino no definido") {
+                                                            #No se pintan.
+                                                        } else {
+                                                            if ($diasRadicado <= 0) {
+                                                                $TipoAlerta2 = "class='fa fa-circle'";
+                                                                $ColorAlerta2 =  "style='color:#FE2E2E;cursor:help'";
+                                                                $MensajeAlerta2 = "Vencido";
+                                                            } else {
+                                                                if ($diasRadicado > 0 && $diasRadicado <= 3) {
+                                                                    $TipoAlerta2 = "class='fa fa-circle'";
+                                                                    $ColorAlerta2 =  "style='color:#8A2908;cursor:help'";
+                                                                    $MensajeAlerta2 = "Por Vencer";
                                                                 }
                                                             }
+                                                        }
+                                                    }
 
-                                                            /*******************Script que colorea los radicados con anex_estado=4 (envíos)*******************/
+                                                    /*******************Script que colorea los radicados con anex_estado=4 (envíos)*******************/
 
-                                                            unset($anexEstadoEstilo);
-                                                            unset($anexEstadoEstiloLink);
+                                                    unset($anexEstadoEstilo);
+                                                    unset($anexEstadoEstiloLink);
 
-                                                            switch ($anexEstado) {
-                                                                case 3:
-                                                                    $TipoAlerta = "class='fa fa-circle'";
-                                                                    //$ColorAlerta =  "style='color:#FF8000;cursor:help'";
-                                                                    $MensajeAlerta = "Marcado como Impreso";
-                                                                    break;
+                                                    switch ($anexEstado) {
+                                                        case 3:
+                                                            $TipoAlerta = "class='fa fa-circle'";
+                                                            //$ColorAlerta =  "style='color:#FF8000;cursor:help'";
+                                                            $MensajeAlerta = "Marcado como Impreso";
+                                                            break;
 
-                                                                case 4: //(envios)
-                                                                    //@anexEstadoEstilo estilo para el <tr>
-                                                                    //@anexEstadoEstiloLink estilo para enlaces <a>
-                                                                    $anexEstadoEstilo = " style='color: #356635'";
-                                                                    $anexEstadoEstiloLink = " style='color: #356635'";
-                                                                    break;
-                                                            }
+                                                        case 4: //(envios)
+                                                            //@anexEstadoEstilo estilo para el <tr>
+                                                            //@anexEstadoEstiloLink estilo para enlaces <a>
+                                                            $anexEstadoEstilo = " style='color: #356635'";
+                                                            $anexEstadoEstiloLink = " style='color: #356635'";
+                                                            break;
+                                                    }
 
-                                                            if ($linkVerRadicado != '') {
-                                                                // $anexEstado_linkradi = " style='text-decoration: underline'";
-                                                            }
+                                                    if ($linkVerRadicado != '') {
+                                                        // $anexEstado_linkradi = " style='text-decoration: underline'";
+                                                    }
 
-                                                            /****************Mostrar icono (folder) para radicados dentro de Expedientes****************************/
+                                                    /****************Mostrar icono (folder) para radicados dentro de Expedientes****************************/
 
-                                                            unset($radInExpStyle);
+                                                    unset($radInExpStyle);
 
-                                                            if (strlen($numExpediente) > 0) {
+                                                    if (strlen($numExpediente) > 0) {
 
-                                                                $radInExpStyle = "<img src='img/icon-folder-open-big.png' width=15 alt='Expediente : $numExpediente' title='Expedientes: $numExpediente'>";
-                                                            }
+                                                        $radInExpStyle = "<img src='img/icon-folder-open-big.png' width=15 alt='Expediente : $numExpediente' title='Expedientes: $numExpediente'>";
+                                                    }
 
-                                                            /*******************************************************************************************************/
+                                                    /*******************************************************************************************************/
 
-                                                            if (strpos($radiPath, "/") != 0) {
-                                                                $radiPath = "/" . $radiPath;
-                                                            }
+                                                    if (strpos($radiPath, "/") != 0) {
+                                                        $radiPath = "/" . $radiPath;
+                                                    }
 
-                                                            $linkVerRadicado = "./verradicado.php?verrad=$numeroRadicado&depe_actu=$radi_depe_actu&usuacodi=$usuaCodi&tieneAsignacion=0";
-                                                            $linkImagen = "$ruta_raiz/bodega" . $radiPath;
-                                                            $contadorImagenes++;
+                                                    $linkVerRadicado = "./verradicado.php?verrad=$numeroRadicado&depe_actu=$radi_depe_actu&usuacodi=$usuaCodi&tieneAsignacion=0";
+                                                    $linkImagen = "$ruta_raiz/bodega" . $radiPath;
+                                                    $contadorImagenes++;
 
-                                                            unset($leido);
-                                                            if ($_radiLeido == 0) {
-                                                                $leido = "success";
-                                                            }
-                                                            unset($colorAnulado);
-                                                            if ($radianulado == 2) {
-                                                                $colorAnulado = " text-danger ";
-                                                            }
-                                                        ?>
-                                                            <tr <?= $anexEstadoEstilo ?> class="<?= $leido ?> ">
-                                                                <td class="inbox-table-icon sorting_1 ">
-                                                                    <div>
-                                                                        <label class="checkbox">
-                                                                            <input id="<?= $numeroRadicado ?>" name="checkValue[<?= $numeroRadicado ?>]" value="CHKANULAR" type="checkbox">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                            <i></i>
-                                                                            <?php
-                                                                            $iSqlEstadoAnexos = null;
-                                                                            $anex_estado = null;
-                                                                            $envio_estado = null;
-                                                                            $img_estado = null;
-                                                                            $anex_estado = $rs->fields["ANEX_ESTADO"];
-                                                                            $envio_estado = $rs->fields["SGD_DEVE_CODIGO"];
+                                                    unset($leido);
+                                                    if ($_radiLeido == 0) {
+                                                        $leido = "success";
+                                                    }
+                                                    unset($colorAnulado);
+                                                    if ($radianulado == 2) {
+                                                        $colorAnulado = " text-danger ";
+                                                    }
+                                                ?>
+                                                    <tr <?= $anexEstadoEstilo ?> class="<?= $leido ?> ">
+                                                        <td class="inbox-table-icon sorting_1 ">
+                                                            <div>
+                                                                <label class="checkbox">
+                                                                    <input id="<?= $numeroRadicado ?>" name="checkValue[<?= $numeroRadicado ?>]" value="CHKANULAR" type="checkbox">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <i></i>
+                                                                    <?php
+                                                                    $iSqlEstadoAnexos = null;
+                                                                    $anex_estado = null;
+                                                                    $envio_estado = null;
+                                                                    $img_estado = null;
+                                                                    $anex_estado = $rs->fields["ANEX_ESTADO"];
+                                                                    $envio_estado = $rs->fields["SGD_DEVE_CODIGO"];
 
-                                                                            if ($anex_estado == '4') {
-                                                                                $img_estado = "<img src='./bodega/sys_img/enviado.png' width=15 title='Archivo Enviado. . .'>";
-                                                                            }
+                                                                    if ($anex_estado == '4') {
+                                                                        $img_estado = "<img src='./bodega/sys_img/enviado.png' width=15 title='Archivo Enviado. . .'>";
+                                                                    }
 
-                                                                            if ($envio_estado <> 0 && $anex_estado == '2') {
-                                                                                $img_estado = "<img src='./bodega/sys_img/devuelto.png' width=15 title='Archivo devuelto. . .'>";
-                                                                            }
+                                                                    if ($envio_estado <> 0 && $anex_estado == '2') {
+                                                                        $img_estado = "<img src='./bodega/sys_img/devuelto.png' width=15 title='Archivo devuelto. . .'>";
+                                                                    }
 
-                                                                            if ($envio_estado <> 0 && $anex_estado == '3') {
-                                                                                $img_estado = "<img src='./bodega/sys_img/devuelto.png' width=15 title='Archivo devuelto. . .'>";
-                                                                            }
+                                                                    if ($envio_estado <> 0 && $anex_estado == '3') {
+                                                                        $img_estado = "<img src='./bodega/sys_img/devuelto.png' width=15 title='Archivo devuelto. . .'>";
+                                                                    }
 
-                                                                            $ultimoDigito = str_split($numeroRadicado);
-                                                                            if (end($ultimoDigito) == '2') {
-                                                                                //Start::enviado en entradas
-                                                                                $iSqlEntradaConteo = "
+                                                                    $ultimoDigito = str_split($numeroRadicado);
+                                                                    if (end($ultimoDigito) == '2') {
+                                                                        //Start::enviado en entradas
+                                                                        $iSqlEntradaConteo = "
                                                                                         SELECT count(a.*) as TOTAL
                                                                                         FROM anexos a
                                                                                         WHERE 
                                                                                         anex_radi_nume =  '$numeroRadicado'
                                                                                         and a.radi_nume_salida::text like '%1'
                                                                                         and a.sgd_deve_codigo != 0 and  a.anex_estado in(2,3)";
-                                                                                $rsEntradaConteo = $db->conn->query($iSqlEntradaConteo);
+                                                                        $rsEntradaConteo = $db->conn->query($iSqlEntradaConteo);
 
-                                                                                //End::enviado en entradas
-                                                                                //Start::enviado en entradas
-                                                                                $iSqlEntradaConteoEnviados = "
+                                                                        //End::enviado en entradas
+                                                                        //Start::enviado en entradas
+                                                                        $iSqlEntradaConteoEnviados = "
                                                                                         SELECT count(a.*) as TOTAL
                                                                                         FROM anexos  a
                                                                                         WHERE
                                                                                         anex_radi_nume =  '$numeroRadicado'
                                                                                         and a.radi_nume_salida::text like '%1' 
                                                                                         and anex_estado = 4";
-                                                                                $rsEntradaConteoEnviados = $db->conn->query($iSqlEntradaConteoEnviados);
+                                                                        $rsEntradaConteoEnviados = $db->conn->query($iSqlEntradaConteoEnviados);
 
-                                                                                $iSqlEntradaConteoTotal = "
+                                                                        $iSqlEntradaConteoTotal = "
                                                                                             SELECT count(a.*) as TOTAL
                                                                                             FROM anexos  a
                                                                                             WHERE
                                                                                             anex_radi_nume =  '$numeroRadicado'
                                                                                             and a.radi_nume_salida::text like '%1' 
                                                                                             and anex_estado >= 2";
-                                                                                $rsEntradaConteoTotal = $db->conn->query($iSqlEntradaConteoTotal);
-                                                                                $img_estado = '';
-                                                                                $img_estado .=  "<img src='./bodega/sys_img/enviado.png' width=15 title='Enviados . . .'> <span class='enviossalida' >" . $rsEntradaConteoEnviados->fields['TOTAL'] . "</span>";
-                                                                                $img_estado .=  "<img src='./bodega/sys_img/devuelto.png' width=15 title='Devueltos . . .'> <span class='enviossalida' >" . $rsEntradaConteo->fields['TOTAL'] . "</span>";
-                                                                                $img_estado .=  "<img src='./bodega/sys_img/bandejasalida.svg' width=15 title='Total salidas. . .'> <span class='enviossalida' >" . $rsEntradaConteoTotal->fields['TOTAL'] . "</span>";
+                                                                        $rsEntradaConteoTotal = $db->conn->query($iSqlEntradaConteoTotal);
+                                                                        $img_estado = '';
+                                                                        $img_estado .=  "<img src='./bodega/sys_img/enviado.png' width=15 title='Enviados . . .'> <span class='enviossalida' >" . $rsEntradaConteoEnviados->fields['TOTAL'] . "</span>";
+                                                                        $img_estado .=  "<img src='./bodega/sys_img/devuelto.png' width=15 title='Devueltos . . .'> <span class='enviossalida' >" . $rsEntradaConteo->fields['TOTAL'] . "</span>";
+                                                                        $img_estado .=  "<img src='./bodega/sys_img/bandejasalida.svg' width=15 title='Total salidas. . .'> <span class='enviossalida' >" . $rsEntradaConteoTotal->fields['TOTAL'] . "</span>";
 
-                                                                                //End::enviado en entradas
-                                                                            }
-                                                                            ?>
-                                                                        </label>
-                                                                    </div>
-                                                                </td>
-                                                                <?php
-                                                                $fechasymd = date('ymdhis');
-                                                                if (!empty($radiPath)) {
-                                                                    $extension = explode('.', $radiPath);
-                                                                    if ($extension[1] == 'pdf') {
-                                                                        //Muestra el archivo en una nueva pestanha sin usar el modal visor
-                                                                        //echo "<td class='inbox-data-from'> <div><small> <a target='_blank' href='$linkImagen'>$numeroRadicado</a></small> </div></td>";
+                                                                        //End::enviado en entradas
+                                                                    }
+                                                                    ?>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <?php
+                                                        $fechasymd = date('ymdhis');
+                                                        if (!empty($radiPath)) {
+                                                            $extension = explode('.', $radiPath);
+                                                            if ($extension[1] == 'pdf') {
+                                                                //Muestra el archivo en una nueva pestanha sin usar el modal visor
+                                                                //echo "<td class='inbox-data-from'> <div><small> <a target='_blank' href='$linkImagen'>$numeroRadicado</a></small> </div></td>";
 
-                                                                        //Muestra el pdf en el visor modal
-                                                                        echo "<td class='inbox-data-from'> 
+                                                                //Muestra el pdf en el visor modal
+                                                                echo "<td class='inbox-data-from'> 
                                                                     <div><small> 
                                                                     <a href='javascript:void(0)' class='abrirVisor' contador=$contadorImagenes link=$linkImagen>$numeroRadicado
                                                                     </a>
                                                                     </small>$radInExpStyle</div>$img_estado
                                                                 </td>";
 
-                                                                        //Modal Visor
-                                                                        $visorId = "visor_" . $contadorImagenes;
-                                                                        echo "<div id=$visorId style='display:none; 
+                                                                //Modal Visor
+                                                                $visorId = "visor_" . $contadorImagenes;
+                                                                echo "<div id=$visorId style='display:none; 
                                                                         position:fixed;
                                                                         padding:26px 30px 30px;
                                                                         top:0;
@@ -638,110 +636,108 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                                         <!--iframe></iframe-->
                                                                         $img_estado
                                                                     </div>";
-                                                                    } else {
-                                                                        //Funcionalidad para descargar el archivo.
-                                                                        echo "<td > <div > <small> <a $anexEstado_linkradi  $anexEstadoEstiloLink href='javascript:void(0)' onclick=\"funlinkArchivo('$numeroRadicado','$ruta_raiz');\">$numeroRadicado</a></small> $radInExpStyle</div> $img_estado</td>";
-                                                                    }
-                                                                } else {
-                                                                    $incialRadicado = substr($numeroRadicado, 0, 4);
-                                                                    if ($incialRadicado >= 3000) {
-                                                                        $img_borrar_borrador = "<a class=\"btn btn-warning btn-xs\" onclick=\"eliminarBorrador('$numeroRadicado');\" title='Eliminar borrador'><i class=\"fa fa-times\"></i></a>";
-                                                                    } else {
-                                                                        $img_borrar_borrador = "";
-                                                                    }
-                                                                    echo "<td > <div > <small> $numeroRadicado</small> $radInExpStyle</div> $img_estado 
+                                                            } else {
+                                                                //Funcionalidad para descargar el archivo.
+                                                                echo "<td > <div > <small> <a $anexEstado_linkradi  $anexEstadoEstiloLink href='javascript:void(0)' onclick=\"funlinkArchivo('$numeroRadicado','$ruta_raiz');\">$numeroRadicado</a></small> $radInExpStyle</div> $img_estado</td>";
+                                                            }
+                                                        } else {
+                                                            $incialRadicado = substr($numeroRadicado, 0, 4);
+                                                            if ($incialRadicado >= 3000) {
+                                                                $img_borrar_borrador = "<a class=\"btn btn-warning btn-xs\" onclick=\"eliminarBorrador('$numeroRadicado');\" title='Eliminar borrador'><i class=\"fa fa-times\"></i></a>";
+                                                            } else {
+                                                                $img_borrar_borrador = "";
+                                                            }
+                                                            echo "<td > <div > <small> $numeroRadicado</small> $radInExpStyle</div> $img_estado 
                                                                     $img_borrar_borrador
                                                             </td>";
-                                                                }
-                                                                ?>
-
-                                                                <td align="center" style="display: none">
-                                                                    <a <?= $ColorAlerta ?> title="<?= $MensajeAlerta ?>">
-                                                                        <div <?= $TipoAlerta ?>></div>
-                                                                    </a>
-                                                                    <?php if ($MensajeAlerta2 != "") { ?> <a <?= $ColorAlerta2 ?> title="<?= $MensajeAlerta2 ?>">
-                                                                            <div <?= $TipoAlerta2 ?>></div>
-                                                                        </a> <?php } ?>
-                                                                </td>
-
-                                                                <td>
-                                                                    <div><small><a title="click para ver radicado <?= $numeroRadicado ?>" <?= $anexEstadoEstiloLink ?> href="<?= $linkVerRadicado ?><?= empty($_REQUEST['nomcarpeta']) ? '' : '&nomcarpeta=' . $_REQUEST['nomcarpeta'] ?>" target="mainFrame"><?= $fechaRadicado ?></a></small></div>
-                                                                </td>
-                                                                <td width="250px">
-                                                                    <div><span><small><?= $asuntoRadicado ?></small></span> </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="scrollable-div"> <small><?= $remitenteRadicado ?></small> </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div><span><small><?= $documentoUsuario ?></small></span> </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div><span><small><?= $numExpediente ?></small></span> </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div> <small><?= $enviadoPor ?></small> </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div> <small><?= $tipoDocumentoRadicado ?></small> </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div> <small><?= $diasRadicado ?></small> </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div><span><small><?= $refRadicado ?></small></span> </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div><span><small><?= $mrec_desc ?></small></span> </div>
-                                                                </td>
-
-                                                            </tr>
-                                                        <?php
-                                                            $aux = $rs->fields["HID_RADI_NUME_RADI"];
-                                                            $rs->MoveNext();
                                                         }
                                                         ?>
-                                                    </tbody>
-                                                </table>
+
+                                                        <td align="center" style="display: none">
+                                                            <a <?= $ColorAlerta ?> title="<?= $MensajeAlerta ?>">
+                                                                <div <?= $TipoAlerta ?>></div>
+                                                            </a>
+                                                            <?php if ($MensajeAlerta2 != "") { ?> <a <?= $ColorAlerta2 ?> title="<?= $MensajeAlerta2 ?>">
+                                                                    <div <?= $TipoAlerta2 ?>></div>
+                                                                </a> <?php } ?>
+                                                        </td>
+
+                                                        <td>
+                                                            <div><small><a title="click para ver radicado <?= $numeroRadicado ?>" <?= $anexEstadoEstiloLink ?> href="<?= $linkVerRadicado ?><?= empty($_REQUEST['nomcarpeta']) ? '' : '&nomcarpeta=' . $_REQUEST['nomcarpeta'] ?>" target="mainFrame"><?= $fechaRadicado ?></a></small></div>
+                                                        </td>
+                                                        <td width="250px">
+                                                            <div><span><small><?= $asuntoRadicado ?></small></span> </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="scrollable-div"> <small><?= $remitenteRadicado ?></small> </div>
+                                                        </td>
+                                                        <td>
+                                                            <div><span><small><?= $documentoUsuario ?></small></span> </div>
+                                                        </td>
+                                                        <td>
+                                                            <div><span><small><?= $numExpediente ?></small></span> </div>
+                                                        </td>
+                                                        <td>
+                                                            <div> <small><?= $enviadoPor ?></small> </div>
+                                                        </td>
+                                                        <td>
+                                                            <div> <small><?= $tipoDocumentoRadicado ?></small> </div>
+                                                        </td>
+                                                        <td>
+                                                            <div> <small><?= $diasRadicado ?></small> </div>
+                                                        </td>
+                                                        <td>
+                                                            <div><span><small><?= $refRadicado ?></small></span> </div>
+                                                        </td>
+                                                        <td>
+                                                            <div><span><small><?= $mrec_desc ?></small></span> </div>
+                                                        </td>
+
+                                                    </tr>
                                                 <?php
-
-                                                if ((isset($krd) && $krd == "CONTACTCENTER") || (isset($dependencia) && $dependencia == '8010'))
-                                                    $paginacion = 200;
-                                                else
-                                                    $paginacion = 100;
-
-                                                if (!empty($rs_conteo->fields['COUNT']) && ($rs_conteo->fields['COUNT'] / $paginacion) > 1)
-                                                    $conteo_paginas =  ceil($rs_conteo->fields['COUNT'] / $paginacion);
-                                                else
-                                                    $conteo_paginas = 1;
-
+                                                    $aux = $rs->fields["HID_RADI_NUME_RADI"];
+                                                    $rs->MoveNext();
+                                                }
                                                 ?>
-                                                <script type="text/javascript">
-                                                    document.getElementById("total_bandeja").textContent = "<?= $conteo_paginas ?>";
-                                                </script>
+                                            </tbody>
+                                        </table>
+                                        <?php
 
-                                                <?php
-                                                $xsql = serialize($isql);
-                                                $_SESSION['xsql'] = $xsql;
-                                                echo "<a style='border:0px' href='./adodb/adodb-doc.inc.php?" . session_name() . "=" . session_id() . "' target='_blank'><img src='./adodb/compfile.png' width='40' heigth='    40' border='0' ></a>";
-                                                echo "<a href='./adodb/adodb-xls.inc.php?" . session_name() . "=" . session_id() . "' target='_blank'><img src='./adodb/spreadsheet.png' width='40' heigth='40' border='0'></a>";
-                                                ?>
-                                            </div>
-                                        </div>
-                                        <!-- end widget content -->
+                                        if ((isset($krd) && $krd == "CONTACTCENTER") || (isset($dependencia) && $dependencia == '8010'))
+                                            $paginacion = 200;
+                                        else
+                                            $paginacion = 100;
+
+                                        if (!empty($rs_conteo->fields['COUNT']) && ($rs_conteo->fields['COUNT'] / $paginacion) > 1)
+                                            $conteo_paginas =  ceil($rs_conteo->fields['COUNT'] / $paginacion);
+                                        else
+                                            $conteo_paginas = 1;
+
+                                        ?>
+                                        <script type="text/javascript">
+                                            document.getElementById("total_bandeja").textContent = "<?= $conteo_paginas ?>";
+                                        </script>
+
+                                        <?php
+                                        $xsql = serialize($isql);
+                                        $_SESSION['xsql'] = $xsql;
+                                        echo "<a style='border:0px' href='./adodb/adodb-doc.inc.php?" . session_name() . "=" . session_id() . "' target='_blank'><img src='./adodb/compfile.png' width='40' heigth='    40' border='0' ></a>";
+                                        echo "<a href='./adodb/adodb-xls.inc.php?" . session_name() . "=" . session_id() . "' target='_blank'><img src='./adodb/spreadsheet.png' width='40' heigth='40' border='0'></a>";
+                                        ?>
                                     </div>
-                                    <!-- end widget div -->
                                 </div>
-                                <!-- end widget -->
-                            </article>
+                                <!-- end widget content -->
+                            </div>
+                            <!-- end widget div -->
                         </div>
-                        <!-- end row -->
-                    </section>
-                    <!-- end widget grid -->
+                        <!-- end widget -->
+                    </article>
                 </div>
-            </form>
-        </Transition>
-    </div>
+                <!-- end row -->
+            </section>
+            <!-- end widget grid -->
+        </div>
+    </form>
 
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
@@ -1041,23 +1037,6 @@ $sqlTotalRad = "select count(1) as TOTAL
                 });
             }
         }
-    </script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script>
-        const {
-            createApp
-        } = Vue;
-
-        createApp({
-            data() {
-                return {
-                    showForm: false
-                };
-            },
-            mounted() {
-                this.showForm = true
-            }
-        }).mount('#app');
     </script>
 </body>
 
