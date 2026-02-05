@@ -222,7 +222,7 @@ while (!$plant->EOF) {
 <body>
   <div id="spinner-back"></div>
   <div id="spinner-front">
-    <img src="../../bodega/sys_img/logo.png" /><br>
+    <img src="../../bodega/sys_img/logo.png" style="width: 100px; height: auto;" /><br>
     Cargando...
   </div>
 
