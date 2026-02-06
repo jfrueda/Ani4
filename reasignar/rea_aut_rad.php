@@ -108,133 +108,173 @@ function valida($radicados, $dependencia, $codigo, $db)
 
 <body>
 	<form method="post" action="rea_aut_rad.php" name="reasignacion">
-		<table width="50%" border="0" cellpadding="0" class="borde_tab" align="center" cellspacing="5">
-			<tbody>
-				<tr bordercolor="#FFFFFF">
-					<td colspan="2" class="titulos4" align="center">REASIGNACION AUTOMATICA DE RADICADOS</td>
-				</tr>
-				<tr bordercolor="#FFFFFF" class="listado2">
-					<td width="42%">USUARIO ORIGEN </td>
-					<td width="58%">
-						<select id='usuario' name="usuario" class="select" onchange='getRads();'>
+		<div class="container-fluid mb-1">
+			<div class="row justify-content-center">
+				<div class="col-12 ">
+					<div class="card shadow ">
+						<div class="card-header bg-orfeo text-white text-center py-3">
+							<h5 class="mb-0 fw-bold">REASIGNACION AUTOMATICA DE RADICADOS</h5>
+						</div>
 
-							<?php
-							$sql_usu = "SELECT USUA_NOMB,
-											USUA_CODI,
-											DEPE_CODI,
-											USUA_LOGIN
-										FROM USUARIO where usua_esta='1'
-										ORDER BY USUA_NOMB ";
-
-							$rs_usu = $db->conn->Execute($sql_usu);
-							while (!$rs_usu->EOF) {
-							?>
-								<option value="<?= $rs_usu->fields['USUA_CODI'] . "-" . $rs_usu->fields['DEPE_CODI'] . "-" . $rs_usu->fields['USUA_LOGIN']; ?>"><?= strtoupper($rs_usu->fields['USUA_NOMB']) ?></option>
-							<?
-
-								$rs_usu->MoveNext();
-							}
-							?>
-						</select>
-					</td>
-				</tr>
-				<tr bordercolor="#FFFFFF" class="listado2">
-					<td>USUARIO DESTINO </td>
-					<td>
-						<select name="usuario2" class="select">
-
-							<?
-							$sql_usu = "SELECT USUA_NOMB, USUA_CODI, DEPE_CODI, USUA_LOGIN FROM USUARIO where usua_esta='1'  ORDER BY USUA_NOMB";
-							$rs_usu = $db->conn->Execute($sql_usu);
-							while (!$rs_usu->EOF) {
-							?>
-								<option value="<?= $rs_usu->fields['USUA_CODI'] . "-" . $rs_usu->fields['DEPE_CODI'] . "-" . $rs_usu->fields['USUA_LOGIN']; ?>"><?= strtoupper($rs_usu->fields['USUA_NOMB']) ?></option>
-							<?
-
-								$rs_usu->MoveNext();
-							}
-							?>
-						</select>
-
-					</td>
-				</tr>
-				<tr bordercolor="#FFFFFF" class="listado2">
-					<td>TODOS LOS RADICADOS</td>
-					<td><input name="todos" type="checkbox" id="todos" value="1" onclick="deshabilita(this.checked);" /></td>
-				</tr>
-				<tr bordercolor="#FFFFFF" class="listado2">
-					<td>No RADICADO(S) <br />
-						<strong>Separados por - </strong>
-					</td>
-					<td><textarea name="radicado" cols="40" id="radicado"></textarea></td>
-				</tr>
-				<tr bordercolor="#FFFFFF" class="listado2">
-					<td>Observaciones </td>
-					<td><textarea name="obs" cols="40" id="obs"></textarea></td>
-				</tr>
-				<tr bordercolor="#FFFFFF">
-					<td colspan="2" class="titulos4" align="center"><input type="submit" name="Submit" value="Asignar" class="botones" /></td>
-				</tr>
-			</tbody>
-		</table>
+						<div class="card-body bg-light p-4">
+							<div class="mb-3 row align-items-center">
+								<label for="usuario" class="col-sm-4 col-form-label fw-bold text-secondary">USUARIO ORIGEN</label>
+								<div class="col-sm-8">
+									<select id='usuario' name="usuario" class="form-select shadow-sm" onchange='getRads();'>
+										<?php
+										$sql_usu = "SELECT USUA_NOMB, USUA_CODI, DEPE_CODI, USUA_LOGIN FROM USUARIO where usua_esta='1' ORDER BY USUA_NOMB ";
+										$rs_usu = $db->conn->Execute($sql_usu);
+										while (!$rs_usu->EOF) {
+										?>
+											<option value="<?= $rs_usu->fields['USUA_CODI'] . "-" . $rs_usu->fields['DEPE_CODI'] . "-" . $rs_usu->fields['USUA_LOGIN']; ?>"><?= strtoupper($rs_usu->fields['USUA_NOMB']) ?></option>
+										<?
+											$rs_usu->MoveNext();
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							<div class="mb-3 row align-items-center">
+								<label class="col-sm-4 col-form-label fw-bold text-secondary">USUARIO DESTINO</label>
+								<div class="col-sm-8">
+									<select name="usuario2" class="form-select shadow-sm">
+										<?
+										$sql_usu = "SELECT USUA_NOMB, USUA_CODI, DEPE_CODI, USUA_LOGIN FROM USUARIO where usua_esta='1' ORDER BY USUA_NOMB";
+										$rs_usu = $db->conn->Execute($sql_usu);
+										while (!$rs_usu->EOF) {
+										?>
+											<option value="<?= $rs_usu->fields['USUA_CODI'] . "-" . $rs_usu->fields['DEPE_CODI'] . "-" . $rs_usu->fields['USUA_LOGIN']; ?>"><?= strtoupper($rs_usu->fields['USUA_NOMB']) ?></option>
+										<?
+											$rs_usu->MoveNext();
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							<hr class="text-muted">
+							<div class="mb-3 row align-items-center">
+								<label class="col-sm-4 form-check-label fw-bold text-secondary">TODOS LOS RADICADOS</label>
+								<div class="col-sm-8">
+									<div class="form-check form-switch fs-5">
+										<input name="todos" type="checkbox" id="todos" value="1" class="form-check-input shadow-sm" onclick="deshabilita(this.checked);" />
+									</div>
+								</div>
+							</div>
+							<div class="mb-3">
+								<label for="radicado" class="form-label fw-bold text-secondary">No. RADICADO(S) <small class="text-muted fw-normal">(Separados por -)</small></label>
+								<textarea name="radicado" id="radicado" class="form-control shadow-sm" rows="2"></textarea>
+							</div>
+							<div class="mb-4">
+								<label for="obs" class="form-label fw-bold text-secondary">Observaciones</label>
+								<textarea name="obs" id="obs" class="form-control shadow-sm" rows="3" placeholder="Escriba el motivo de la reasignación..."></textarea>
+							</div>
+						</div>
+						<div class="card-footer bg-white py-3 text-center border-top-0">
+							<input type="submit" name="Submit" value="Asignar" class="btn btn-success px-5 fw-bold shadow border-2" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<input type="hidden" name="reasigna" value="reasigna" />
 	</form>
+
 	<? if (($_POST['reasigna']) && ($validacion == 0)) { ?>
 		<br />
-		<table border="0" cellspace="2" cellpad="2" width="50%" class="t_bordeGris" id="tb_general" align="center">
-			<tr>
-				<td colspan="2" class="titulos4" align="center">ACCION REQUERIDA
-					COMPLETADA
-				</td>
-			</tr>
-			<tr>
-				<td align="right" bgcolor="#CCCCCC" height="25" class="titulos2">ACCION REQUERIDA : </td>
-				<td width="65%" height="25" class="listado2_no_identa">REASIGNACION AUTOMATICA
-				</td>
-			</tr>
-			<tr>
-				<td align="right" bgcolor="#CCCCCC" height="25" class="titulos2">RADICADOS INVOLUCRADOS : </td>
-				<td width="65%" height="25" class="listado2_no_identa">
-					<?
-					foreach ($radicados as $value) {
-						echo $value . "<br>";
-					}
-					?>
-				</td>
-			</tr>
-			<tr>
-				<td align="right" bgcolor="#CCCCCC" height="25" class="titulos2">USUARIO DESTINO : </td>
-				<td width="65%" height="25" class="listado2_no_identa"><? nombre_usuario($usud[0], $usud[1], $db); ?>
-				</td>
-			</tr>
-			<tr>
-				<td align="right" bgcolor="#CCCCCC" height="25" class="titulos2">FECHA Y HORA : </td>
-				<td width="65%" height="25" class="listado2_no_identa"><?= date("m-d-Y  H:i:s") ?>
-				</td>
-			</tr>
-			<tr>
-				<td align="right" bgcolor="#CCCCCC" height="25" class="titulos2">USUARIO ORIGEN: </td>
-				<td width="65%" height="25" class="listado2_no_identa"><? nombre_usuario($usuo[0], $usuo[1], $db); ?>
-				</td>
-			</tr>
-			<tr>
-				<td align="right" bgcolor="#CCCCCC" height="25" class="titulos2">DEPENDENCIA ORIGEN: </td>
-				<td width="65%" height="25" class="listado2_no_identa"><? nombre_dependencia($usuo[1], $db) ?>
-				</td>
-			</tr>
-		</table>
+		<div class="container-fluid">
+			<div class="row justify-content-center">
+				<div class="col-12 ">
+					<div class="card shadow border-0">
+						<div class="card-header bg-success text-white text-center py-3">
+							<h5 class="mb-0 fw-bold">
+								<i class="fa fa-check-circle me-2"></i>ACCION REQUERIDA COMPLETADA
+							</h5>
+						</div>
+
+						<div class="card-body p-0">
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item d-flex align-items-start p-3">
+									<div class="fw-bold text-secondary text-end w-40 me-3">ACCION REQUERIDA :</div>
+									<div class="text-dark">REASIGNACION AUTOMATICA</div>
+								</li>
+
+								<li class="list-group-item d-flex align-items-start p-3 bg-light">
+									<div class="fw-bold text-secondary text-end w-40 me-3">RADICADOS INVOLUCRADOS :</div>
+									<div class="text-primary fw-bold">
+										<?php
+										foreach ($radicados as $value) {
+											echo '<span class="badge bg-white text-primary border border-primary mb-1">' . $value . '</span><br>';
+										}
+										?>
+									</div>
+								</li>
+
+								<li class="list-group-item d-flex align-items-start p-3">
+									<div class="fw-bold text-secondary text-end w-40 me-3">USUARIO DESTINO :</div>
+									<div class="text-dark"><?php nombre_usuario($usud[0], $usud[1], $db); ?></div>
+								</li>
+
+								<li class="list-group-item d-flex align-items-start p-3 bg-light">
+									<div class="fw-bold text-secondary text-end w-40 me-3">FECHA Y HORA :</div>
+									<div class="text-dark"><i class="fa fa-calendar-o me-1"></i> <?= date("m-d-Y  H:i:s") ?></div>
+								</li>
+
+								<li class="list-group-item d-flex align-items-start p-3">
+									<div class="fw-bold text-secondary text-end w-40 me-3">USUARIO ORIGEN :</div>
+									<div class="text-dark"><?php nombre_usuario($usuo[0], $usuo[1], $db); ?></div>
+								</li>
+
+								<li class="list-group-item d-flex align-items-start p-3 bg-light">
+									<div class="fw-bold text-secondary text-end w-40 me-3">DEPENDENCIA ORIGEN :</div>
+									<div class="text-dark"><?php nombre_dependencia($usuo[1], $db) ?></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	<? } ?>
-	<table width="50%" border="0" cellpadding="0" class="borde_tab" align="center" cellspacing="5">
-		<tbody>
-			<tr bordercolor="#FFFFFF">
-				<td colspan="2" class="titulos4" align="center">RADICADOS</td>
-			</tr>
-			<tr bordercolor="#FFFFFF" class="listado2">
-				<td>Rads del usuario <br /></td>
-				<td><textarea name="urads" cols="110" rows='25' id="urads"></textarea></td>
-			</tr>
-		</tbody>
-	</table>
+
+	<div class="container-fluid margin-botton-table">
+		<div class="row justify-content-center">
+			<div class="col-12">
+				<div class="card shadow-sm ">
+					<div class="card-header bg-orfeo text-white text-center py-2">
+						<h6 class="mb-0 fw-bold">LISTADO DE RADICADOS</h6>
+					</div>
+
+					<div class="card-body bg-light">
+						<div class="row g-3">
+							<div class="col-md-2 text-md-end">
+								<label for="urads" class="form-label fw-bold text-secondary mt-2">
+									Rads del usuario:
+								</label>
+							</div>
+
+							<div class="col-md-10">
+								<div class="input-group shadow-sm">
+									<span class="input-group-text bg-white border-end-0">
+										<i class="fa fa-file-text-o text-muted"></i>
+									</span>
+									<textarea
+										name="urads"
+										id="urads"
+										class="form-control border-start-0"
+										rows="15"
+										style="font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; resize: vertical;"
+										placeholder="Los números de radicado aparecerán aquí..."><?= isset($urads) ? $urads : '' ?></textarea>
+								</div>
+								<div class="form-text mt-2 italic text-muted small">
+									<i class="fa fa-info-circle me-1"></i> Visualización de registros cargados actualmente en el sistema.
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<script>
 		function getRads() {
