@@ -304,20 +304,20 @@ if ($ent == CIRC_INTERNA || $ent == CIRC_EXTERNA) {
 
 							<h5 class="mb-0 fw-bold">
 								<?php
-								if ($mostrar_opc_envio == 0 and $carpeta != 8 and !$agendado and $verradPermisos == "Full") {
+								if ($mostrar_opc_envio == 0 && $carpeta != 8 && !$agendado && $verradPermisos == "Full") {
 									$ent = substr($verrad, -1);
 									echo "
                                     <a title='Modificar Documento'
                                        href='./radicacion/NEW.php?nurad=$verrad&Buscar=BuscarDocModUS&Submit3=ModificarDocumentos&Buscar1=BuscarOrfeo78956jkgf'
                                        class='text-decoration-none pa-3'>
-                                       $verrad
+                                       '$verrad
                                        <img src='img/icono_modificar_radicado.png' title='Modificar'>
                                     </a>";
 								} else {
 									echo $verrad;
 								}
 
-								if ($tpPerRad[2] == 1 or $tpPerRad[2] == 3) {
+								if ($tpPerRad[2] == 1 || $tpPerRad[2] == 3) {
 									$varEnvio  = session_name() . "=" . session_id() . "&nurad=$verrad&ent=$ent";
 									echo "
                                     <a href=\"javascript:void(0);\" 
