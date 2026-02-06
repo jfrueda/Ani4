@@ -515,7 +515,6 @@ function countChar(val){
 
 
 function createUploader() {
-	console.log($, $('filelimit-fine-uploader'));
 uploader = new qq.FineUploader({
 element: $('filelimit-fine-uploader'),
 request: {

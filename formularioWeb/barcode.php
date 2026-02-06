@@ -1,13 +1,13 @@
 <?php
 define('FPDF_FONTPATH','font/');
-require('fpdf186/fpdfa.php');
+require('fpdf181/fpdf.php');
 
-class PDF_Code39 extends FPDFA
+class PDF_Code39 extends FPDF
 {
 function Code39($xpos, $ypos, $code, $baseline=0.5, $height=5){
 
     $wide = $baseline;
-    $narrow = $baseline / 3.5 ; 
+    $narrow = $baseline / 3 ; 
     $gap = $narrow;
 
     $barChar['0'] = 'nnnwwnwnn';
@@ -55,6 +55,7 @@ function Code39($xpos, $ypos, $code, $baseline=0.5, $height=5){
     $barChar['+'] = 'nwnnnwnwn';
     $barChar['%'] = 'nnnwnwnwn';
 
+    $this->SetFont('Arial','',10);
     //$this->Text($xpos, $ypos + $height + 4, $code);
     $this->SetFillColor(0);
 

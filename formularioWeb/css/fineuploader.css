@@ -7,33 +7,20 @@
 .qq-uploader {
     position: relative;
     width: 100%;
-    outline: none;
-}
-.qq-uploader:focus, #filelimit-fine-uploader, #filelimit-fine-uploader:focus {
-    outline: none;
 }
 .qq-upload-button {
-    display: inline-block;
-    font-weight: 400;
-    color: #fff;
-    background-color: #117a8b;
+    display: block;
+    /*or inline-block*/
+    width: 150px;
+    padding: 7px 0;
     text-align: center;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    border: 1px solid #117a8b;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    font-weight: bold;
+    background: #38A5C9;
+    border-bottom: 1px solid #DDD;
+    color: #FFF;
 }
 .qq-upload-button-hover {
-    color: #fff;
-    background-color: #138496;
-    border-color: #138496;
+    background: #CC0000;
 }
 .qq-upload-button-focus {
     outline: 1px dotted #000000;
@@ -69,7 +56,7 @@
     background: #FF7171;
 }
 .qq-upload-list {
-    margin-top: 10px;
+    margin: 0;
     padding: 0;
     list-style: none;
 }
@@ -78,7 +65,7 @@
     padding: 9px;
     line-height: 15px;
     font-size: 16px;
-    background-color: #fff;
+    background-color: #FFF0BD;
 }
 .qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-retry, .qq-upload-failed-text, .qq-upload-finished {
     margin-right: 12px;
@@ -132,12 +119,12 @@
     color: #D60000;
 }
 .qq-upload-list li.qq-upload-success {
-    background-color: #cce5ff;
-    color: #333;
+    background-color: #BDE0EC;
+    color: #FFFFFF;
 }
 .qq-upload-list li.qq-upload-fail {
-    background-color: #f8d7da;
-    color: #333;
+    background-color: #D60000;
+    color: #FFFFFF;
 }
 .qq-progress-bar {
     background: -moz-linear-gradient(top,  rgba(30,87,153,1) 0%, rgba(41,137,216,1) 50%, rgba(32,124,202,1) 51%, rgba(125,185,232,1) 100%); /* FF3.6+ */

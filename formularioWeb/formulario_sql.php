@@ -43,13 +43,12 @@ while (!$rs_depto->EOF)
 	$depto.="<option value='".$rs_depto->fields['DPTO_CODI']."'>".$rs_depto->fields['DPTO_NOMB']."</option>";
 	$rs_depto->MoveNext();
 }
-
 //municipio
 if(isset($_GET['depto']))
 {
 	$sql_muni="select distinct * from municipio where dpto_codi=".$_GET['depto']." order by muni_nomb";
 	$rs_muni=$db->conn->Execute($sql_muni);
-	$muni="<select name='muni' id ='slc_municipio' class='field' tabindex='19'>";
+	$muni="<select name='muni' id ='slc_municipio' class='form-select' tabindex='19'>";
 	while (!$rs_muni->EOF)
 	{
 		$muni.="<option value='".$rs_muni->fields['MUNI_CODI']."'>".$rs_muni->fields['MUNI_NOMB']."</option>";
@@ -68,25 +67,6 @@ while (!$rs_temas->EOF)
 	$temas.= "<option value='".$rs_temas->fields['SGD_TMA_CODIGO']."'>".$rs_temas->fields['SGD_TMA_DESCRIP']."</option>";
 	$rs_temas->MoveNext();
 }
-
-//Dependencias
-$query = "SELECT " .
-    $db->conn->Concat("d.DEPE_NOMB") . ", d.DEPE_CODI
-      FROM
-        DEPENDENCIA d
-        INNER JOIN usuario u ON u.depe_codi = d.depe_codi
-        and u.usua_esta   ='1'
-        and d.depe_estado = 1
-      GROUP BY
-        d.DEPE_CODI, d.DEPE_NOMB
-      ORDER BY
-        d.DEPE_CODI, d.DEPE_NOMB";
-
-
-$rs = $db->conn->query($query);
-$depselect = $rs->GetMenu2("coddepe", $coddepe, "0:-- Grupo destino --", false, false, "class='form-control'");
-
-
 //entidad
 if(isset($_GET['nit']))
 {
