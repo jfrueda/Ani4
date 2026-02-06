@@ -12,9 +12,6 @@ session_start();
  */
 $ruta_raiz = "..";
 
-ini_set('display_errors', 1); 
-ini_set('display_startup_errors', 1); 
-error_reporting(E_ALL);
 
 require_once("$ruta_raiz/include/db/ConnectionHandler.php");
 require_once("$ruta_raiz/processConfig.php");
@@ -47,22 +44,9 @@ if(strcasecmp ($captcha ,$_SESSION['captcha_formulario']['code'] ) != 0 || strca
 if($errorFormulario==0){
 	$uploader = new Uploader($_FILES);
 	$uploader->FILES = $_FILES;
-	
-	// Debug: Log del valor recibido
-	error_log("adjuntosSubidos recibido: " . $adjuntosSubidos);
-	
 	$adjuntosSubidos = json_decode($adjuntosSubidos);
-	
-	// Debug: Log después de decodificar
-	error_log("adjuntosSubidos decodificado: " . print_r($adjuntosSubidos, true));
-	
 	$uploader->subidos = $adjuntosSubidos;
-	$resultado = $uploader->adjuntarYaSubidos();
-	
-	// Debug: Verificar si se adjuntaron archivos
-	error_log("Resultado adjuntarYaSubidos: " . ($resultado ? 'true' : 'false'));
-	error_log("tieneArchivos: " . ($uploader->tieneArchivos ? 'true' : 'false'));
-	error_log("Cantidad de archivos subidos: " . count($uploader->subidos));
+	$uploader->adjuntarYaSubidos();
 }
 
 $_SESSION['depeRadicaFormularioWeb']=$depeRadicaFormularioWeb;
@@ -240,55 +224,106 @@ if($errorFormulario==0){
 
 
     //trae usualogin
-
     $sql_login="select usua_login from usuario where usua_codi=".$_SESSION["usuaRecibeWeb"]." and depe_codi=".$_SESSION["depeRadicaFormularioWeb"];
     $rs_login=$db->conn->Execute($sql_login);
+    
+    // Verificar que el usuario existe y tiene login
+    $usuarioCreador = 'web';
+    if($rs_login && !$rs_login->EOF && isset($rs_login->fields['USUA_LOGIN'])){
+        $usuarioCreador = $rs_login->fields['USUA_LOGIN'];
+    }
+    error_log("Usuario creador de anexos: " . $usuarioCreador);
 
 
     //insertar anexos
     $fechaval=valida_fecha($db);
     $_SESSION['cantidad_adjuntos'] = 0;
-    
-    // Debug: Verificar estado antes de insertar
-    error_log("=== INICIO INSERCIÓN DE ANEXOS ===");
-    error_log("tieneArchivos: " . ($uploader->tieneArchivos ? 'SI' : 'NO'));
-    error_log("Archivos en subidos: " . count($uploader->subidos));
-    error_log("Archivos subidos: " . print_r($uploader->subidos, true));
-    
     if($uploader->tieneArchivos){
-        error_log("Entrando al bloque de inserción de anexos");
         for($i=0; $i < count($uploader->subidos);$i++)
         {
             if(strlen($uploader->subidos[$i]) == 0){
-                error_log("Archivo vacío en índice: " . $i);
                 continue;
             }
-            error_log("Procesando archivo " . ($i+1) . ": " . $uploader->subidos[$i]);
-            
             $_SESSION['cantidad_adjuntos'] = $_SESSION['cantidad_adjuntos'] + 1;
             $extension = strtolower(end(explode('.',$uploader->subidos[$i])));
-            error_log("Extensión detectada: " . $extension);
             
+            // Buscar tipo de anexo por extensión
             $sql_tipoAnex = "select anex_tipo_codi from anexos_tipo where anex_tipo_ext = '".$extension ."'";
             $rs_tipoAnexo = $db->conn->Execute($sql_tipoAnex);
-            $tipoCodigo = 24;
-            if(!$rs_tipoAnexo->EOF){
-                $tipoCodigo = $rs_tipoAnexo->fields["anex_tipo_codi"];
+            $tipoCodigo = 7; // Valor por defecto: PDF (anex_tipo_codi=7)
+            
+            if($rs_tipoAnexo && !$rs_tipoAnexo->EOF){
+                $tipoCodigo = $rs_tipoAnexo->fields["ANEX_TIPO_CODI"];
             }else {
+                // Si no encuentra por extensión, buscar el tipo genérico (*)
                 $sql_tipoAnex = "select anex_tipo_codi from anexos_tipo where anex_tipo_ext = '*'";
                 $rs_tipoAnexo = $db->conn->Execute($sql_tipoAnex);
-                if(!$rs_tipoAnexo->EOF){
-                    $tipoCodigo = $rs_tipoAnexo->fields["anex_tipo_codi"];
+                if($rs_tipoAnexo && !$rs_tipoAnexo->EOF){
+                    $tipoCodigo = $rs_tipoAnexo->fields["ANEX_TIPO_CODI"];
                 }
             }
             
+            // Asegurar que tipoCodigo tenga un valor válido
+            if(empty($tipoCodigo) || $tipoCodigo == ''){
+                $tipoCodigo = 7; // Valor por defecto: PDF si todo falla
+            }
+            
+            error_log("Extension: " . $extension);
             error_log("Tipo de código anexo: " . $tipoCodigo);
-            error_log("Tamaño archivo: " . $uploader->sizes[$i]);
+            error_log("Tamaño archivo: " . $uploader->sizes[$i] . " KB");
             error_log("SHA1: " . $uploader->sha1sums[$i]);
             error_log("Nombre Orfeo: " . $uploader->nombreOrfeo[$i]);
+            
+            // Preparar la ruta de la carpeta donde está el archivo
+            $anoRad = date("Y");
+            $carpetaAnexo = $anoRad . "/" . intval($_SESSION['depeRadicaFormularioWeb']) . "/docs/";
+            error_log("Carpeta anexo: " . $carpetaAnexo);
 
-            $ins_anex="insert into anexos(anex_radi_nume,anex_codigo,anex_tipo,anex_tamano,anex_solo_lect,anex_creador,anex_desc,anex_numero,anex_nomb_archivo,anex_borrado,anex_origen,anex_salida,anex_estado,sgd_rem_destino,sgd_dir_tipo,anex_depe_creador,anex_fech_anex,sgd_apli_codi)
-                values(".$numeroRadicado.",".$numeroRadicado.sprintf("%05d",($i+1)).",".$tipoCodigo.",".$uploader->sizes[$i].",'S','".$rs_login->fields['usua_login']."','".$uploader->sha1sums[$i]."',1,'".$uploader->nombreOrfeo[$i]."','N',0,0,0,1,1,".$_SESSION["depeRadicaFormularioWeb"].",now(),0)";
+            $ins_anex="insert into anexos(
+                anex_radi_nume,
+                anex_codigo,
+                anex_tipo,
+                anex_tamano,
+                anex_solo_lect,
+                anex_creador,
+                anex_desc,
+                anex_numero,
+                anex_nomb_archivo,
+                anex_borrado,
+                anex_origen,
+                anex_salida,
+                anex_estado,
+                sgd_rem_destino,
+                sgd_dir_tipo,
+                anex_depe_creador,
+                anex_fech_anex,
+                sgd_apli_codi,
+                sgd_trad_codigo,
+                anex_carpeta,
+                anex_hash
+            ) values(
+                ".$numeroRadicado.",
+                ".$numeroRadicado.sprintf("%05d",($i+1)).",
+                ".$tipoCodigo.",
+                ".$uploader->sizes[$i].",
+                'S',
+                '".$usuarioCreador."',
+                '".$uploader->sha1sums[$i]."',
+                1,
+                '".$uploader->nombreOrfeo[$i]."',
+                'N',
+                0,
+                0,
+                0,
+                1,
+                1,
+                ".$_SESSION["depeRadicaFormularioWeb"].",
+                now(),
+                0,
+                2,
+                '".$carpetaAnexo."',
+                '".$uploader->sha1sums[$i]."'
+            )";
             
             error_log("SQL INSERT ANEXO: " . $ins_anex);
             
@@ -300,11 +335,7 @@ if($errorFormulario==0){
                 error_log("ERROR al insertar anexo: " . $db->conn->ErrorMsg());
             }
         }
-        error_log("Total anexos insertados: " . $_SESSION['cantidad_adjuntos']);
-    }else{
-        error_log("NO SE TIENEN ARCHIVOS PARA INSERTAR");
     }
-    error_log("=== FIN INSERCIÓN DE ANEXOS ===");
 
 
     require('barcode.php');
@@ -316,13 +347,13 @@ if($errorFormulario==0){
     $sql_depeNomb = "select depe_nomb from dependencia where depe_codi = ". $_SESSION['depeRadicaFormularioWeb'];
     $rs_depeNomb = $db->conn->Execute($sql_depeNomb);
     if(!$rs_depeNomb->EOF){
-        $depeNomb = substr($rs_depeNomb->fields["depe_nomb"],0,40);
+        $depeNomb = substr($rs_depeNomb->fields["DEPE_NOMB"],0,40);
     }
 
     $sql_muniNomb = "select muni_nomb from municipio where muni_codi = ". $_SESSION['muni'] . " and dpto_codi = " . $_SESSION['depto'] ;
     $rs_muniNomb = $db->conn->Execute($sql_muniNomb);
     if(!$rs_muniNomb->EOF){
-        $muniNomb = $rs_muniNomb->fields["muni_nomb"];
+        $muniNomb = $rs_muniNomb->fields["MUNI_NOMB"];
     }else {
         $muniNomb = "";
     }
