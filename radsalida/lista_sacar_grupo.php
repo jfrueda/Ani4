@@ -214,7 +214,7 @@ $radsGrupo = $grupoMas->obtenerGrupo($dep_sel, $grupo, $busq_radicados);
               }
           ?>
               <tr class="<?= $clase ?>">
-                <td><span class="fw-semibold"><?= $radsGrupo[$i] ?></span></td>
+                <td><span class="fw-semibold">'<?= $radsGrupo[$i] ?></span></td>
                 <td><?= $rad->getRadi_fech_radi() ?></td>
                 <td><?= $rad->getAsuntoRad() ?></td>
                 <td><?= $datosRad["nombre"] ?></td>
