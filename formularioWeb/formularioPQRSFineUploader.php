@@ -132,10 +132,11 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 						<img src='<?=$log?>' height='150' class="" alt="Logo Universidad Militar Nueva Granada - Formulario PQRS">
 					</div>
 					<h1 class="text-center fs-4 mb-4">SISTEMA DE PQRSDF UNIVERSIDAD MILITAR NUEVA GRANADA</h1>
+					<p class="text-center text-black mb-4">Señor Usuario: a través de este formulario usted puede diligenciar las PQRSDF para su debido trámite.</p>
 
 					<!-- Definiciones PQRSDF (collapse sutil) -->
 					<div class="text-center mb-3">
-						<a href="#definicionesPQRSDF" class="text-decoration-none small text-muted" data-bs-toggle="collapse" aria-expanded="false" aria-controls="definicionesPQRSDF">
+						<a href="#definicionesPQRSDF" class="text-decoration-none small text-black" data-bs-toggle="collapse" aria-expanded="false" aria-controls="definicionesPQRSDF">
 							<i class="bi bi-info-circle me-1" aria-hidden="true"></i>Definiciones PQRSDF <i class="bi bi-chevron-down small" aria-hidden="true"></i>
 						</a>
 					</div>
