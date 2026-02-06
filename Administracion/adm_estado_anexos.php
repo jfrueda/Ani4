@@ -115,6 +115,11 @@ if (isset($_POST['radicados'])) {
                             </div>
                         </form>
                     </div>
+                    <div class="card-footer bg-white py-2">
+                        <small class="text-muted italic px-2">
+                            <i class="fa fa-info-circle me-1 text-primary"></i> Los campos marcados con (*) son obligatorios.
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
