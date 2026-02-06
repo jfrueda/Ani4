@@ -82,12 +82,46 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 <script>
     window.onload = createUploader;
+
+    // Event listeners en lugar de onchange inline (accesibilidad: evita JS jump menu)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('slc_pais').addEventListener('change', function() {
+            cambia_pais();
+        });
+        document.getElementById('slc_depto').addEventListener('change', function() {
+            trae_municipio();
+        });
+        document.getElementById('tipoSolicitud').addEventListener('change', function() {
+            document.getElementById('tipoSolicitudTexto').value = this.options[this.selectedIndex].text;
+        });
+    });
 </script>
+
+<!-- Accesibilidad: sobreescrituras de contraste y foco -->
+<style>
+    /* Contraste WCAG AA mínimo 4.5:1 para texto auxiliar */
+    .form-text, .text-muted {
+        color: #495057 !important; /* ratio ~7:1 sobre blanco */
+    }
+    /* Foco visible para navegación por teclado */
+    *:focus-visible {
+        outline: 3px solid #0d6efd;
+        outline-offset: 2px;
+    }
+    /* Asegurar que los enlaces del footer tengan contraste */
+    footer a {
+        color: #0d6efd;
+    }
+</style>
 
 </head>
 
 <body id="public" class="bg-light">
 
+<!-- Enlace saltar al contenido (accesibilidad) -->
+<a class="visually-hidden-focusable" href="#main-content">Saltar al contenido principal</a>
+
+<header role="banner">
 <div class="container my-5">
 	<div class="row justify-content-center">
 		<div class="col-lg-10 col-xl-9">
@@ -95,20 +129,62 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 				<div class="card-body p-4 p-md-5">
 					<!-- Logo -->
 					<div class="text-center mb-4">
-						<img src='<?=$log?>' height='150'  class="" alt="Logo">
+						<img src='<?=$log?>' height='150' class="" alt="Logo Universidad Militar Nueva Granada - Formulario PQRS">
+					</div>
+					<h1 class="text-center fs-4 mb-4">SISTEMA DE PQRSDF UNIVERSIDAD MILITAR NUEVA GRANADA</h1>
+
+					<!-- Definiciones PQRSDF (collapse sutil) -->
+					<div class="text-center mb-3">
+						<a href="#definicionesPQRSDF" class="text-decoration-none small text-muted" data-bs-toggle="collapse" aria-expanded="false" aria-controls="definicionesPQRSDF">
+							<i class="bi bi-info-circle me-1" aria-hidden="true"></i>Definiciones PQRSDF <i class="bi bi-chevron-down small" aria-hidden="true"></i>
+						</a>
+					</div>
+					<div class="collapse mb-3" id="definicionesPQRSDF">
+						<div class="card card-body small border-0 bg-light p-3">
+							<dl class="row mb-0">
+								<dt class="col-sm-3">Petición</dt>
+								<dd class="col-sm-9">Toda persona tiene derecho a presentar peticiones respetuosas a las autoridades, en los términos señalados en la ley 1755 de 2015, por motivos de interés general o particular y a obtener pronta resolución completa y de fondo sobre la misma.</dd>
+
+								<dt class="col-sm-3">Queja</dt>
+								<dd class="col-sm-9">Es la manifestación de protesta, censura, descontento o inconformidad que formula una persona en la relación con la conducta que considera irregular de uno o varios servidores públicos en desarrollo de sus funciones.</dd>
+
+								<dt class="col-sm-3">Reclamo</dt>
+								<dd class="col-sm-9">Es el derecho que tiene toda persona de exigir, reivindicar o demandar una solución, por motivo general o particular, referente a la prestación indebida de un servicio o la falta de atención de una solicitud.</dd>
+
+								<dt class="col-sm-3">Sugerencia</dt>
+								<dd class="col-sm-9">Cualquier propuesta que formula un grupo de interés, que tiene como finalidad mejorar la prestación de un servicio en cualquiera de las áreas académicas o administrativas de la Universidad.</dd>
+
+								<dt class="col-sm-3">Denuncia</dt>
+								<dd class="col-sm-9">Es la puesta en conocimiento ante una autoridad competente de una conducta posiblemente irregular, para que se adelante la correspondiente investigación y se remitan las correspondientes copias a las entidades competentes.</dd>
+
+								<dt class="col-sm-3">Felicitación</dt>
+								<dd class="col-sm-9 mb-0">Expresión de satisfacción de un grupo de interés con relación a la prestación de un servicio.</dd>
+							</dl>
+						</div>
 					</div>
 
-					<!-- Información -->
-					
+					</div><!-- /.card-body -->
+				</div><!-- /.card -->
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	</div><!-- /.container -->
+</header>
 
+<main id="main-content" role="main">
+<div class="container my-3">
+	<div class="row justify-content-center">
+		<div class="col-lg-10 col-xl-9">
+			<div class="card shadow-lg border-0">
+				<div class="card-body p-4 p-md-5">
 					<form id="contactoOrfeo" autocomplete="on"
 						enctype="multipart/form-data" method="post" action="formulariotx.php"
-						name="quejas" class="needs-validation" novalidate>
+						name="quejas" class="needs-validation" novalidate
+						aria-label="Formulario de Peticiones, Quejas, Reclamos y Sugerencias">
 
 										<div class="row g-3">
 											<!-- Sección: Información del usuario -->
 											<div class="col-12">
-												<h5 class="border-bottom pb-2 mb-0 text-primary"><i class="bi bi-person-fill me-2"></i>Información del usuario</h5>
+												<h2 class="fs-5 border-bottom pb-2 mb-0 text-primary"><i class="bi bi-person-fill me-2" aria-hidden="true"></i>Información del usuario</h2>
 											</div>
 
 											<!-- Anónimo (oculto, por defecto No) -->
@@ -117,30 +193,30 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Número de Identificación -->
 											<div class="col-md-6">
-												<label for="campo_numid" class="form-label">Documento de identificación <span class="text-danger">*</span></label>
-												<input id="campo_numid" name="numid" type="text" class="form-control" value="" maxlength="11" tabindex="4" onkeypress="return alpha(event,numbers+letters)" required />
-												<div class="form-text">Solo números o letras</div>
+										<label for="campo_numid" class="form-label">Documento de identificación <span class="text-danger" aria-hidden="true">*</span></label>
+										<input id="campo_numid" name="numid" type="text" class="form-control" value="" maxlength="11" onkeypress="return alpha(event,numbers+letters)" required aria-required="true" aria-describedby="numid-help" />
+										<div class="form-text" id="numid-help">Solo números o letras</div>
 												<div class="invalid-feedback">Por favor ingrese su número de identificación.</div>
 											</div>
 
 											<!-- Nombre -->
 											<div class="col-md-6">
-												<label for="campo_nombre" class="form-label">Usuario <span class="text-danger">*</span></label>
-												<input id="campo_nombre" name="nombre_remitente" type="text" class="form-control" value="" tabindex="5" onkeypressS="return alpha(event,letters);" required />
+										<label for="campo_nombre" class="form-label">Usuario <span class="text-danger" aria-hidden="true">*</span></label>
+										<input id="campo_nombre" name="nombre_remitente" type="text" class="form-control" value="" onkeypress="return alpha(event,letters);" required aria-required="true" />
 												<div class="invalid-feedback">Por favor ingrese el nombre.</div>
 											</div>
 
 											<!-- Apellidos -->
 											<div class="col-md-6">
-												<label for="campo_apellido" class="form-label">Apellidos <span class="text-danger">*</span></label>
-												<input id="campo_apellido" name="apellidos_remitente" type="text" class="form-control" value="" tabindex="6" onkeypress="return alpha(event,letters);" required />
+										<label for="campo_apellido" class="form-label">Apellidos <span class="text-danger" aria-hidden="true">*</span></label>
+										<input id="campo_apellido" name="apellidos_remitente" type="text" class="form-control" value="" onkeypress="return alpha(event,letters);" required aria-required="true" />
 												<div class="invalid-feedback">Por favor ingrese los apellidos.</div>
 											</div>
 
 											<!-- País -->
 											<div class="col-md-6">
-												<label for="slc_pais" class="form-label">País <span class="text-danger">*</span></label>
-												<select id="slc_pais" name="pais" class="form-select" tabindex="7" onchange="cambia_pais()" required>
+										<label for="slc_pais" class="form-label">País <span class="text-danger" aria-hidden="true">*</span></label>
+										<select id="slc_pais" name="pais" class="form-select" required aria-required="true">
 													<?=$pais ?>
 												</select>
 												<div class="invalid-feedback">Por favor seleccione el país.</div>
@@ -148,8 +224,8 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Departamento -->
 											<div class="col-md-6">
-												<label for="slc_depto" class="form-label">Estado <span class="text-danger">*</span></label>
-												<select id="slc_depto" name="depto" class="form-select" tabindex="8" onchange="trae_municipio()" required>
+										<label for="slc_depto" class="form-label">Estado <span class="text-danger" aria-hidden="true">*</span></label>
+										<select id="slc_depto" name="depto" class="form-select" required aria-required="true">
 													<option value="0" selected>Seleccione</option>
 													<?=$depto ?>
 												</select>
@@ -158,9 +234,9 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Municipio -->
 											<div class="col-md-6">
-												<label for="slc_municipio" class="form-label">Provincia <span class="text-danger">*</span></label>
-												<div id="div-contenidos">
-													<select id="slc_municipio" name="muni" class="form-select" tabindex="9" required>
+										<label for="slc_municipio" class="form-label">Provincia <span class="text-danger" aria-hidden="true">*</span></label>
+										<div id="div-contenidos">
+											<select id="slc_municipio" name="muni" class="form-select" required aria-required="true">
 														<option value="0" selected>Seleccione..</option>
 													</select>
 												</div>
@@ -170,26 +246,26 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 											<!-- Dirección -->
 											<div class="col-md-6">
 												<label for="campo_direccion" class="form-label">Dirección</label>
-												<input id="campo_direccion" name="direccion" type="text" class="form-control" value="" maxlength="150" tabindex="10" onkeypress="return alpha(event,numbers+letters+signs+custom)" />
+												<input id="campo_direccion" name="direccion" type="text" class="form-control" value="" maxlength="150" onkeypress="return alpha(event,numbers+letters+signs+custom)" />
 											</div>
 
 											<!-- Teléfono -->
 											<div class="col-md-6">
 														<label for="campo_telefono" class="form-label">Número de Teléfono</label>
-														<input id="campo_telefono" name="telefono" type="text" class="form-control" value="" maxlength="80" tabindex="11" onkeypress="return alpha(event,numbers+alpha)" />
+											<input id="campo_telefono" name="telefono" type="text" class="form-control" value="" maxlength="80" onkeypress="return alpha(event,numbers+alpha)" />
 													</div>
 
 													<!-- Móvil -->
 													<div class="col-md-6">
-														<label for="campo_celular" class="form-label">Móvil <span class="text-danger">*</span></label>
-														<input id="campo_celular" name="celular" type="text" class="form-control" value="" maxlength="15" tabindex="12" onkeypress="return alpha(event,numbers)" required />
+											<label for="campo_celular" class="form-label">Móvil <span class="text-danger" aria-hidden="true">*</span></label>
+											<input id="campo_celular" name="celular" type="text" class="form-control" value="" maxlength="15" onkeypress="return alpha(event,numbers)" required aria-required="true" />
 														<div class="invalid-feedback">Por favor ingrese el número de celular.</div>
 													</div>
 
 													<!-- Medio de contacto preferido -->
 													<div class="col-md-6">
 														<label for="medioContacto" class="form-label">Medio de contacto preferido</label>
-														<select id="medioContacto" name="medioContacto" class="form-select" tabindex="13">
+														<select id="medioContacto" name="medioContacto" class="form-select">
 															<option value="" selected>Seleccione</option>
 															<option value="Correo electrónico">Correo electrónico</option>
 															<option value="Vía telefónica">Vía telefónica</option>
@@ -199,15 +275,15 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Email -->
 											<div class="col-md-6">
-												<label for="campo_email" class="form-label">E-mail <span class="text-danger">*</span></label>
-												<input id="campo_email" name="email" type="email" class="form-control" value="" maxlength="50" tabindex="12" required />
+										<label for="campo_email" class="form-label">E-mail <span class="text-danger" aria-hidden="true">*</span></label>
+										<input id="campo_email" name="email" type="email" class="form-control" value="" maxlength="50" required aria-required="true" />
 												<div class="invalid-feedback">Por favor ingrese un email válido.</div>
 											</div>
 
 											<!-- Tipo de Población -->
 											<div class="col-md-6">
-												<label for="tipoPoblacioen" class="form-label">Tipo de población</label>
-												<select id="tipoPoblacioen" name="tipoPoblacion" class="form-select" tabindex="39">
+												<label for="tipoPoblacion" class="form-label">Tipo de población</label>
+												<select id="tipoPoblacion" name="tipoPoblacion" class="form-select">
 													<?=$temas;?>
 													<option value="0" selected>No aplica</option>
 													<option value="1">Población Desplazada</option>
@@ -220,13 +296,13 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Sección: Información de solicitud -->
 											<div class="col-12 mt-4">
-												<h5 class="border-bottom pb-2 mb-0 text-primary"><i class="bi bi-file-earmark-text-fill me-2"></i>Información de solicitud</h5>
+												<h2 class="fs-5 border-bottom pb-2 mb-0 text-primary"><i class="bi bi-file-earmark-text-fill me-2" aria-hidden="true"></i>Información de solicitud</h2>
 											</div>
 
 											<!-- Tipo de Solicitud -->
 											<div class="col-md-6">
-												<label for="tipoSolicitud" class="form-label">Tipo de Solicitud <span class="text-danger">*</span></label>
-												<select id="tipoSolicitud" name="tipoSolicitud" class="form-select" tabindex="1" required onchange="document.getElementById('tipoSolicitudTexto').value=this.options[this.selectedIndex].text;">
+										<label for="tipoSolicitud" class="form-label">Tipo de Solicitud <span class="text-danger" aria-hidden="true">*</span></label>
+										<select id="tipoSolicitud" name="tipoSolicitud" class="form-select" required aria-required="true">
 													<option value="0" selected>Seleccione</option>
 													<?=$tipo; ?>
 													<option value="2">Queja</option>
@@ -245,8 +321,8 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Tipo de Solicitante -->
 											<div class="col-md-6">
-												<label for="tipoSolicitante" class="form-label">Tipo de Solicitante <span class="text-danger">*</span></label>
-												<select id="tipoSolicitante" name="tipoSolicitante" class="form-select" tabindex="2" required>
+										<label for="tipoSolicitante" class="form-label">Tipo de Solicitante <span class="text-danger" aria-hidden="true">*</span></label>
+										<select id="tipoSolicitante" name="tipoSolicitante" class="form-select" required aria-required="true">
 													<option value="" selected>Seleccione</option>
 													<option value="Aspirante">Aspirante</option>
 													<option value="Estudiante">Estudiante</option>
@@ -260,8 +336,8 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Selecciona el servicio -->
 													<div class="col-md-6">
-														<label for="servicio" class="form-label">Selecciona el servicio <span class="text-danger">*</span></label>
-														<select id="servicio" name="servicio" class="form-select" tabindex="14" required>
+											<label for="servicio" class="form-label">Selecciona el servicio <span class="text-danger" aria-hidden="true">*</span></label>
+											<select id="servicio" name="servicio" class="form-select" required aria-required="true">
 															<option value="" selected>Seleccione</option>
 															<option value="Académicos">Académicos</option>
 															<option value="Administrativos">Administrativos</option>
@@ -278,7 +354,7 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 													<!-- Sistema al que Aplica -->
 													<div class="col-md-6">
 														<label for="sistemaAplica" class="form-label">Sistema al que Aplica</label>
-														<select id="sistemaAplica" name="sistemaAplica" class="form-select" tabindex="15">
+														<select id="sistemaAplica" name="sistemaAplica" class="form-select">
 															<option value="" selected>Seleccione</option>
 															<option value="Calidad">Calidad</option>
 															<option value="Ambiente">Ambiente</option>
@@ -288,16 +364,16 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 													<!-- Asunto -->
 											<div class="col-12">
-												<label for="campo_asunto" class="form-label">Ponle un titulo a tu solicitud <span class="text-danger">*</span></label>
-												<input id="campo_asunto" name="asunto" type="text" class="form-control" value="" maxlength="80" tabindex="15" required />
+										<label for="campo_asunto" class="form-label">Ponle un titulo a tu solicitud <span class="text-danger" aria-hidden="true">*</span></label>
+										<input id="campo_asunto" name="asunto" type="text" class="form-control" value="" maxlength="80" required aria-required="true" />
 												<div class="invalid-feedback">Por favor ingrese el tema de su petición.</div>
 											</div>
 
 											<!-- Comentario -->
 											<div class="col-12">
-												<label for="campo_comentario" class="form-label">Cuéntanos sobre tu solicitud <span class="text-danger">*</span></label>
+												<label for="campo_comentario" class="form-label">Cuéntanos sobre tu solicitud <span class="text-danger" aria-hidden="true">*</span></label>
 												
-												<textarea id="campo_comentario" name="comentario" class="form-control" rows="6" tabindex="16" onkeyup="countChar(this)" placeholder="Escriba aquí..." required></textarea>
+												<textarea id="campo_comentario" name="comentario" class="form-control" rows="6" onkeyup="countChar(this)" placeholder="Escriba aquí..." required aria-required="true"></textarea>
 												<div class="d-flex justify-content-between mt-1">
 													<div class="invalid-feedback">Por favor ingrese su comentario.</div>
 													<small id="charNum" class="text-muted"></small>
@@ -307,8 +383,10 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Archivos Adjuntos -->
 											<div class="col-12">
-												<label class="form-label"><i class="bi bi-paperclip me-2"></i>Adjunto</label>
-												<div id="filelimit-fine-uploader" class="border rounded p-3 bg-light" tabindex="17"></div>
+										<label id="label-adjunto" for="fileacc" class="form-label"><i class="bi bi-paperclip me-2" aria-hidden="true"></i>Adjunto</label>
+										<input type="hidden" id="fileacc" name="fileacc" />
+											<div class="mb-3">
+										<div id="filelimit-fine-uploader" class="border rounded p-3 bg-light" role="group" aria-labelledby="label-adjunto"></div>
 												<div id="availabeForUpload"></div>
 											</div>
 
@@ -316,14 +394,15 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 											<div class="col-12">
 												<div class="row align-items-center">
 													<div class="col-md-6">
-														<label for="campo_captcha" class="form-label">Imagen de verificación <span class="text-danger">*</span></label>
-														<input id="campo_captcha" name="captcha" type="text" class="form-control" value="" maxlength="5" tabindex="20" onkeypress="return alpha(event,numbers+letters)" placeholder="Digite el código" required />
-														<div class="invalid-feedback">Por favor ingrese el código de verificación.</div>
+											<label for="campo_captcha" class="form-label">Imagen de verificación <span class="text-danger" aria-hidden="true">*</span></label>
+											<input id="campo_captcha" name="captcha" type="text" class="form-control" value="" maxlength="5" onkeypress="return alpha(event,numbers+letters)" placeholder="Digite el código" required aria-required="true" aria-describedby="captcha-help" />
+											<div class="invalid-feedback">Por favor ingrese el código de verificación.</div>
+											<small id="captcha-help" class="form-text">Escriba los caracteres que aparecen en la imagen.</small>
 													</div>
 													<div class="col-md-6 text-center">
 														<?php
-														echo '<img id="imgcaptcha" src="' . $_SESSION['captcha_formulario']['image_src'] . '" alt="CAPTCHA" class="img-fluid rounded border mb-2" /><br>';
-														echo '<a href="#" onClick="return reloadImg(\'imgcaptcha\');" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-clockwise me-1"></i>Cambiar imagen</a>'
+											echo '<img id="imgcaptcha" src="' . $_SESSION['captcha_formulario']['image_src'] . '" alt="Imagen de verificación CAPTCHA - escriba los caracteres mostrados" class="img-fluid rounded border mb-2" /><br>';
+											echo '<a href="#" onClick="return reloadImg(\'imgcaptcha\');" class="btn btn-sm btn-outline-secondary" role="button"><i class="bi bi-arrow-clockwise me-1" aria-hidden="true"></i>Cambiar imagen</a>'
 														?>
 													</div>
 												</div>
@@ -347,15 +426,15 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 											<!-- Botones -->
 											<div class="col-12 mt-4">
 												<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-													<button id="saveForm" type="submit" class="btn btn-primary btn-lg px-5" onclick="return valida_form();" tabindex="21">
-														<i class="bi bi-send-fill me-2"></i>Enviar
-													</button>
-													<button name="button" type="button" class="btn btn-secondary btn-lg px-5" onclick="window.close();" tabindex="22">
-														<i class="bi bi-x-circle me-2"></i>Cancelar
-													</button>
-												</div>
+												<button id="saveForm" type="submit" class="btn btn-primary btn-lg px-5" onclick="return valida_form();">
+													<i class="bi bi-send-fill me-2" aria-hidden="true"></i>Enviar
+												</button>
+												<button name="button" type="button" class="btn btn-secondary btn-lg px-5" onclick="window.close();">
+													<i class="bi bi-x-circle me-2" aria-hidden="true"></i>Cancelar
+												</button>
 											</div>
 										</div>
+									</div>
 
 					</form>
 
@@ -364,6 +443,41 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 		</div>
 	</div>
 </div>
+</main>
 
-</body>
-</html>
+<footer role="contentinfo" class="container mb-5">
+	<div class="row justify-content-center">
+		<div class="col-lg-10 col-xl-9 text-center">
+			<a href="#accesibilidad" class="text-decoration-none fw-semibold" style="color: #1a4e8a;" data-bs-toggle="collapse" aria-expanded="false" aria-controls="accesibilidad">
+					<i class="bi bi-universal-access me-1" aria-hidden="true"></i>Declaración de Accesibilidad
+				</a>
+			<div class="collapse mt-3 text-start" id="accesibilidad">
+				<div class="card card-body small" style="color: #212529;">
+					<p>La <strong>UNIVERSIDAD MILITAR NUEVA GRANADA</strong> se caracteriza por mantenerse en desarrollo constante; ha obtenido el reconocimiento de Acreditación en alta calidad y siempre se encuentra trabajando para atender las normativas y resoluciones que se establecen de obligatorio cumplimiento. En ese sentido, en cumplimiento al artículo 3 de la Resolución 1519 de 2020, la Universidad realiza revisiones continuas que permiten mejorar la comunicación hacia los diferentes grupos de interés a través del portal web publicado en <a href="https://www.umng.edu.co" target="_blank" rel="noopener noreferrer">https://www.umng.edu.co</a>.</p>
+					<p>En virtud de ofrecer contenidos e información accesible, se han adoptado medidas para minimizar las restricciones que puedan ser ocasionadas por diversidades funcionales de los usuarios. Así en la creación, edición y actualización de contenidos se ofrece el mayor grado de accesibilidad ayudando a sortear barreras que pueden limitar el entendimiento de la información que se publica especialmente a las personas en situación de discapacidad.</p>
+					<p>La Universidad está trabajando para conseguir un grado adecuado de implementación de acuerdo a los criterios del Anexo 01 de la Resolución 1519 de 2020, respondiendo a una conformidad subjetiva como se menciona a continuación:</p>
+					<dl>
+						<dt>A. Texto alternativo</dt>
+						<dd>El portal dispone del funcionamiento adecuado del texto alternativo con la etiqueta "alt" utilizando el campo de descripción para que sea agregado en la edición de contenidos.</dd>
+						<dt>B. Multimedia accesible</dt>
+						<dd>El portal web permite cargar todo tipo de contenido audiovisual. Los videos cuentan con subtítulos a través de YouTube. En cuanto a los videos de rendición de cuentas, se está trabajando para que cuenten con lenguaje de señas.</dd>
+						<dt>C. Texto legible y ampliable</dt>
+						<dd>Se cumple con el criterio en cuanto al texto (mínimo 12 puntos) y el portal cuenta con el módulo de accesibilidad que permite aumentar y disminuir los textos hasta un 200% sin desconfigurar el contenido.</dd>
+						<dt>D. Código estructurado y navegación</dt>
+						<dd>El portal utiliza etiquetas organizadas permitiendo la navegabilidad con jerarquía en títulos, subtítulos y párrafos e incluye buscador con filtros avanzados.</dd>
+						<dt>E. Formularios accesibles</dt>
+						<dd>El portal dispone de formularios con canales sensoriales, campos obligatorios marcados con asterisco y colores, cumpliendo los criterios de accesibilidad.</dd>
+						<dt>F. Navegación por tabulación</dt>
+						<dd>El portal permite la navegación por tabulación en orden adecuado, resaltando la información seleccionada por los diferentes campos y menús.</dd>
+						<dt>G. Control de movimientos</dt>
+						<dd>El portal permite controlar contenidos con movimiento mediante botones de continuar/pausar eventos.</dd>
+						<dt>H. Lenguaje claro</dt>
+						<dd>El portal utiliza lenguaje claro en español siguiendo la guía del DAFP, con jerarquía de etiquetas para títulos, subtítulos y párrafos.</dd>
+						<dt>I. Documentos accesibles</dt>
+						<dd>El portal permite cargar diferentes tipos de archivos accesibles. Los documentos se encuentran en revisión para atender las directrices de accesibilidad.</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>

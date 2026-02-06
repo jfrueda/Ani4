@@ -41,7 +41,7 @@ body{
     text-align: right;
 }
 
-#top, #bottom
+#top, #bottom, #footer{
 	width:650px;
 	height:10px !important;
 	display:block !important;
@@ -61,10 +61,6 @@ h1{
 	margin:0;
 	padding:0;
 	min-height:0;
-	background-color:#dedede;
-	text-indent:-9000px;
-	text-decoration:none;
-  
 }
 
 img, a img{
