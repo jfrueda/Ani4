@@ -1,11 +1,11 @@
 <?php
 
 /**
-*
-* @author Jairo Losada   <jlosada@gmail.com>
-* @author Cesar Gonzalez <aurigadl@gmail.com>
-* @license  GNU AFFERO GENERAL PUBLIC LICENSE
-* @copyright
+ *
+ * @author Jairo Losada   <jlosada@gmail.com>
+ * @author Cesar Gonzalez <aurigadl@gmail.com>
+ * @license  GNU AFFERO GENERAL PUBLIC LICENSE
+ * @copyright
 
 SIIM2 Models are the data definition of SIIM2 Information System
 Copyright (C) 2013 Infometrika Ltda.
@@ -22,15 +22,18 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 session_start();
 
 $ruta_raiz = "../..";
 
-    if (!$_SESSION['dependencia'])
-        header ("Location: $ruta_raiz/cerrar_session.php");
+if (!$_SESSION['dependencia']) {
+    header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-foreach ($_POST as $key => $valor) ${$key} = $valor;
+foreach ($_POST as $key => $valor) {
+    ${$key} = $valor;
+}
 
 $doc    = new DOMDocument();
 $flagUpdateMetada = false;
@@ -38,26 +41,25 @@ $uploadFileMetada = '';
 //Abrir o crear el archivo de listado en
 //boveda con el nombre plantillas.txt
 $direcTor = "$ruta_raiz/bodega/plantillas/";
-$archivo1 = $direcTor."combiSencilla.xml";
-$archivo2 = $direcTor."combiMasiva.xml";
-$archivo3 = $direcTor."plantillas.xml";
+$archivo1 = $direcTor . "combiSencilla.xml";
+$archivo2 = $direcTor . "combiMasiva.xml";
+$archivo3 = $direcTor . "plantillas.xml";
 
 $tamArchi = 5054432;
 
 /****************************************
-* creo el directorio con los permisos.
-*****************************************/
+ * creo el directorio con los permisos.
+ *****************************************/
 if (@!file_exists($direcTor)) {
-    $directorio = mkdir("$direcTor",0777);
+    $directorio = mkdir("$direcTor", 0777);
 }
 
-
 /****************************************
-* Plantillas agregar y eliminar
-*****************************************/
+ * Plantillas agregar y eliminar
+ *****************************************/
 //Eliminar plantillas si se envian la solicitud
-if(($btn_acc == "Borrar")){
-    if(!empty($nomPlant)){
+if (($btn_acc == "Borrar")) {
+    if (!empty($nomPlant)) {
         $doc->load($archivo3);
         $campos     = $doc->getElementsByTagName("campo");
 
@@ -67,7 +69,7 @@ if(($btn_acc == "Borrar")){
         $r = $doc4->createElement("campos");
         $doc4->appendChild($r);
 
-        foreach($campos as $campo){
+        foreach ($campos as $campo) {
             $campTemp1 = $campo->getElementsByTagName("nombre");
             $campTemp2 = $campo->getElementsByTagName("ruta");
             $campTemp3 = $campo->getElementsByTagName("categoria");
@@ -75,7 +77,7 @@ if(($btn_acc == "Borrar")){
             $temp2     = $campTemp2->item(0)->nodeValue;
             $temp3     = $campTemp3->item(0)->nodeValue;
 
-            if(!in_array($temp2,$nomPlant)){
+            if (!in_array($temp2, $nomPlant)) {
                 $b = $doc4->createElement("campo");
                 $nombre = $doc4->createElement("nombre");
                 $nombre->appendChild(
@@ -104,13 +106,13 @@ if(($btn_acc == "Borrar")){
 }
 
 //Leer archivo con listado de plantillas
-if(@!$doc->load($archivo3)){
+if (@!$doc->load($archivo3)) {
     $handler    = fopen($archivo3, "w+");
     $msg        .= " Se creo el archivo $archivo3</br>";
     fclose($handler);
-}else{
+} else {
     $campos     = $doc->getElementsByTagName("campo");
-    foreach($campos as $campo){
+    foreach ($campos as $campo) {
         $campTemp1 = $campo->getElementsByTagName("nombre");
         $campTemp2 = $campo->getElementsByTagName("ruta");
         $campTemp3 = $campo->getElementsByTagName("categoria");
@@ -118,29 +120,31 @@ if(@!$doc->load($archivo3)){
         $temp2     = $campTemp2->item(0)->nodeValue;
         $temp3     = $campTemp3->item(0)->nodeValue;
 
-        $plantill[] = array('nombre' => $temp1,
-                            'ruta'   => $temp2,
-                            'categoria'   => $temp3);
+        $plantill[] = array(
+            'nombre' => $temp1,
+            'ruta'   => $temp2,
+            'categoria'   => $temp3
+        );
     }
 }
 
-
-if($btn_acc == "adjuntar"){
-
-    $extension = end(explode('.',$_FILES['userfile']['name']));
-    $nomb       = "plant".time().rand(0,1000).".".$extension;
-    $uploadfile = $direcTor.$nomb;
+if ($btn_acc == "adjuntar") {
+    $extension = end(explode('.', $_FILES['userfile']['name']));
+    $nomb       = "plant" . time() . rand(0, 1000) . "." . $extension;
+    $uploadfile = $direcTor . $nomb;
     $uploadFileMetada = $uploadfile;
-//var_dump($uploadfile);
+    //var_dump($uploadfile);
     $tipValidoOdt  = 'application/vnd.oasis.opendocument.text';
     $tipoValidoDocx = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     $tipoValidoXls = 'application/vnd.ms-excel';
     $tipoValidoXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-//var_dump(move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile));
+    //var_dump(move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile));
     $tipValidoOds = 'application/vnd.oasis.opendocument.spreadsheet';
-    if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile) &&
-           ($_FILES['userfile']['type']==$tipoValidoXls) ||  ($_FILES['userfile']['type']==$tipValidoOds) || ($_FILES['userfile']['type'] == $tipValidoOdt) || ($_FILES['userfile']['type'] == $tipoValidoDocx)
-                    || ($_FILES['userfile']['type'] == $tipoValidoXlsx)){
+    if (
+        move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile) &&
+        ($_FILES['userfile']['type'] == $tipoValidoXls) ||  ($_FILES['userfile']['type'] == $tipValidoOds) || ($_FILES['userfile']['type'] == $tipValidoOdt) || ($_FILES['userfile']['type'] == $tipoValidoDocx)
+        || ($_FILES['userfile']['type'] == $tipoValidoXlsx)
+    ) {
 
         //crear listado de plantillas
         $doc3 = new DOMDocument();
@@ -149,13 +153,15 @@ if($btn_acc == "adjuntar"){
         $r = $doc3->createElement("campos");
         $doc3->appendChild($r);
 
-        $plantill[] = array('nombre' => $_FILES['userfile']['name'],
-                            'ruta'   => $nomb,
-                            'categoria'   => $userCategoria);
+        $plantill[] = array(
+            'nombre' => $_FILES['userfile']['name'],
+            'ruta'   => $nomb,
+            'categoria'   => $userCategoria
+        );
 
-        foreach($plantill as $campo){
-            $b = $doc3->createElement( "campo" );
-            if(!empty($campo)){
+        foreach ($plantill as $campo) {
+            $b = $doc3->createElement("campo");
+            if (!empty($campo)) {
                 $nombre = $doc3->createElement("nombre");
                 $nombre->appendChild(
                     $doc3->createTextNode(trim($campo['nombre']))
@@ -172,7 +178,7 @@ if($btn_acc == "adjuntar"){
                 $categoria->appendChild(
                     $doc3->createTextNode($campo['categoria'])
                 );
-                $b->appendChild($categoria);                
+                $b->appendChild($categoria);
             }
             $r->appendChild($b);
         }
@@ -184,8 +190,8 @@ if($btn_acc == "adjuntar"){
     }
 }
 
-if(!empty($plantill)){
-    foreach($plantill as $campo){
+if (!empty($plantill)) {
+    foreach ($plantill as $campo) {
         $ruta   = $campo['ruta'];
         $nombre = $campo['nombre'];
         $nombArc .= "<input type='checkbox' name='nomPlant[]' value='$ruta'>$nombre<br/>";
@@ -195,7 +201,7 @@ if(!empty($plantill)){
 /****************************************
  * Modificar datos en el xml
  *****************************************/
-if($btn_acc == "Modificar"){
+if ($btn_acc == "Modificar") {
     $formSim  = explode(",", trim($simple));
     $formMas  = explode(",", trim($masiva));
     $formPlan = explode(",", trim($planti));
@@ -206,9 +212,9 @@ if($btn_acc == "Modificar"){
     $r = $doc->createElement("campos");
     $doc->appendChild($r);
 
-    foreach($formSim as $campo){
-        $b = $doc->createElement( "campo" );
-        if(!empty($campo)){
+    foreach ($formSim as $campo) {
+        $b = $doc->createElement("campo");
+        if (!empty($campo)) {
             $nombre = $doc->createElement("nombre");
             $nombre->appendChild(
                 $doc->createTextNode(trim($campo))
@@ -228,9 +234,9 @@ if($btn_acc == "Modificar"){
     $r = $doc2->createElement("campos");
     $doc2->appendChild($r);
 
-    foreach($formMas as $campo){
-        $b = $doc2->createElement( "campo" );
-        if(!empty($campo)){
+    foreach ($formMas as $campo) {
+        $b = $doc2->createElement("campo");
+        if (!empty($campo)) {
             $nombre = $doc2->createElement("nombre");
             $nombre->appendChild(
                 $doc2->createTextNode(trim($campo))
@@ -245,41 +251,40 @@ if($btn_acc == "Modificar"){
     $msg    .= "Se actulizo la informacion de los campos</br>";
 }
 
-
-
 /*****************************************
  * Leer el archivo existente o crearlo
  * ***************************************/
-if(@!$doc->load($archivo1)){
+if (@!$doc->load($archivo1)) {
     $handler    = fopen($archivo1, "w+");
     $msg        .= " Se creo el archivo $archivo1</br>";
     fclose($handler);
-}else{
-    $plantill[] = array('nombre' => $temp1,
-                                'ruta'   => $temp2);
+} else {
+    $plantill[] = array(
+        'nombre' => $temp1,
+        'ruta'   => $temp2
+    );
     $campos     = $doc->getElementsByTagName("campo");
-    foreach($campos as $campo){
+    foreach ($campos as $campo) {
         $campTemp = $campo->getElementsByTagName("nombre");
         $valor    = $campTemp->item(0)->nodeValue;
-        $nombSe   .= empty($nombSe)? $valor : ", $valor";
+        $nombSe   .= empty($nombSe) ? $valor : ", $valor";
     }
 }
 
-if(@!$doc->load($archivo2)){
+if (@!$doc->load($archivo2)) {
     $handler    = fopen($archivo2, "w+");
     $msg        .= " Se creo el archivo $archivo2</br>";
     fclose($handler);
-}else{
+} else {
     $campos     = $doc->getElementsByTagName("campo");
-    foreach($campos as $campo){
+    foreach ($campos as $campo) {
         $campTemp = $campo->getElementsByTagName("nombre");
         $valor    = $campTemp->item(0)->nodeValue;
-        $nombMa  .= empty($nombMa)? $valor : ", $valor";
+        $nombMa  .= empty($nombMa) ? $valor : ", $valor";
     }
 }
 
-
-if(empty($nombSe)){
+if (empty($nombSe)) {
     $nombSe = "*TIPO*
                 , *NOMBRE*
                 , *EMPRESA*
@@ -290,7 +295,7 @@ if(empty($nombSe)){
                 , *PAIS_NOMBRE* ";
 }
 
-if(empty($nombMa)){
+if (empty($nombMa)) {
     $nombMa = "
             *RAD_S*, *RAD_E_PADRE*, *CTA_INT*
             , *ASUNTO*, *F_RAD_E*, *SAN_FECHA_RADICADO*
@@ -313,94 +318,109 @@ if(empty($nombMa)){
             , *DEPENDENCIA_NOMBRE*
          ";
 }
-
-
-
 ?>
 
 
 <html>
-    <head>
-        <title>Orfeo- Admon de soportes.</title>
-        <?php include_once "$ruta_raiz/htmlheader.inc.php"; ?>
-        <script language="Javascript">
-        </script>
-    </head>
 
-    <body>
-        <form enctype="multipart/form-data" name="formSeleccion" id="formSeleccion" method="post" action="">
-            <input type='hidden' name='<?=session_name()?>' value='<?=session_id()?>'>
-            <input type="hidden" name="MAX_FILE_SIZE" value="<?=$tamArchi?>" />
-            <div class="col-sm-12">
-              <!-- widget grid -->
-              <section id="widget-grid">
-                <!-- row -->
-                <div class="row">
-                  <!-- NEW WIDGET START -->
-                  <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <!-- Widget ID (each widget will need unique ID)-->
-                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
+<head>
+    <title>Orfeo- Admon de soportes.</title>
+    <?php include_once "$ruta_raiz/htmlheader.inc.php"; ?>
+    <script language="Javascript">
+    </script>
+</head>
 
-                      <header>
-                        <h2>
-                          Administrador de plantillas<br>
-                          <small><?=$tituloCrear ?></small>
-                        </h2>
-                      </header>
+<body>
+    <form enctype="multipart/form-data" name="formSeleccion" id="formSeleccion" method="post" action="">
+        <input type='hidden' name='<?= session_name() ?>' value='<?= session_id() ?>'>
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?= $tamArchi ?>" />
 
-                      <!-- widget div-->
-                      <div>
-                        <!-- widget content -->
-                        <div class="widget-body no-padding">
+        <div class="container-fluid mt-4">
+            <section id="widget-grid">
+                <div class="row justify-content-center">
+                    <article class="col-12">
 
-                          <table class="table table-bordered table-striped">
+                        <div class="card shadow border-secondary">
+                            <div class="card-header bg-orfeo text-white p-3">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-file-text me-2 "></i>Administrador de plantillas
+                                    <br>
+                                    <small class="text-light fw-light fs-6"><?= $tituloCrear ?></small>
+                                </h5>
+                            </div>
 
-                          <tr class=timparr>
-                              <td width="15%" align="left" class="titulos2"><b>&nbsp;Campos para combinaci&oacute;n sencilla separados por comas</b></td>
-                          </tr>
-                          <tr class=timparr>
-                              <td class="listado2"><textarea rows="1" name="simple" class="select100"><?=$nombSe ?></textarea></td>
-                          </tr>
-                          <tr class=timparr>
-                              <td width="15%" align="left" class="titulos2"><b>&nbsp;Campos combinaci&oacute;n masiva:</b> separados por comas</td>
-                          </tr>
-                          <tr class=timparr>
-                              <td class="listado2"><textarea rows="1" name="masiva" class="select100"><?=$nombMa ?></textarea></td>
-                          </tr>
-                      </table>
+                            <div class="card-body bg-light">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="p-3 border rounded bg-white shadow-sm mb-3">
+                                            <label class="form-label fw-bold text-secondary">
+                                                <i class="fa fa-list-ul me-1"></i> Campos para combinación sencilla (separados por comas)
+                                            </label>
+                                            <textarea rows="2" name="simple" class="form-control"><?= $nombSe ?></textarea>
+                                        </div>
 
-                      <table class="table table-bordered table-striped">
-                          <tr><td><center><?=$msg?></center></td></tr>
-                      </table>
+                                        <div class="p-3 border rounded bg-white shadow-sm mb-3">
+                                            <label class="form-label fw-bold text-secondary">
+                                                <i class="fa fa-users me-1"></i> Campos combinación masiva (separados por comas)
+                                            </label>
+                                            <textarea rows="2" name="masiva" class="form-control"><?= $nombMa ?></textarea>
+                                        </div>
+                                    </div>
+                                </div>
 
-                      <table class="table table-bordered table-striped">
-                        <tr>
-                            <td width="20%" align="center"><input name="btn_acc" type="submit" class="botones" value="Modificar"></td>
-                        </tr>
-                      </table>
+                                <?php if (!empty($msg)): ?>
+                                    <div class="alert alert-info text-center py-2 mb-3">
+                                        <?= $msg ?>
+                                    </div>
+                                <?php endif; ?>
 
-                      <table class="table table-bordered table-striped">
-                        <tr>
-                            <td width="50%" align="left" class="titulos2"><b>&nbsp;Plantillas en formato ODT</b></td>
-                        </tr>
-                        <tr class="listado1">
-                            <td align="left" valign="top">
-                                Categoría: <input name="userCategoria" type="text" maxlength='5' title='Valor que viene dentro de Metadata si se necesita comparar al radicar un archivo' >
-                                <input name="userfile" type="file">
-                                <input class="botones" type="submit" name="btn_acc" value="adjuntar" class="botones">
-                                <br/><br/>
-                                <?=$nombArc ?>
-                                <br/><input name="btn_acc" type="submit" class="botones" value="Borrar">
-                            </td>
-                        </tr>
-                    </table>
-                  </div>
+                                <div class="text-center mb-4">
+                                    <input name="btn_acc" type="submit" class="btn btn-primary px-5 fw-bold shadow-sm" value="Modificar">
+                                </div>
+
+                                <hr class="my-4">
+
+                                <div class="card border-0 bg-white shadow-sm margin-botton-table">
+                                    <div class="card-header bg-orfeo text-white fw-bold">
+                                        Plantillas en formato ODT
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row align-items-end g-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label small fw-bold">Categoría</label>
+                                                <input name="userCategoria" type="text" class="form-control form-control-sm" maxlength='5' title='Metadata para comparar al radicar'>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">Seleccionar archivo</label>
+                                                <input name="userfile" type="file" class="form-control form-control-sm">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="btn btn-success btn-sm w-100 fw-bold" type="submit" name="btn_acc" value="adjuntar">
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4 p-3 border rounded bg-light border-dashed">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-muted italic small fw-bold">
+                                                    <i class="fa fa-file-code-o me-1"></i> Archivo actual:
+                                                </span>
+                                                <span class="badge bg-white text-dark border px-3 py-2 fw-normal">
+                                                    <?= $nombArc ?>
+                                                </span>
+                                            </div>
+                                            <div class="mt-3 text-end">
+                                                <input name="btn_acc" type="submit" class="btn btn-outline-danger btn-sm px-4 fw-bold" value="Borrar">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
                 </div>
-              </div>
-            </article>
-          </div>
-        </section>
-      </div>
+            </section>
+        </div>
     </form>
-  </body>
+</body>
+
 </html>
