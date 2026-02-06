@@ -296,9 +296,7 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 											<!-- Comentario -->
 											<div class="col-12">
 												<label for="campo_comentario" class="form-label">Cuéntanos sobre tu solicitud <span class="text-danger">*</span></label>
-												<div class="alert alert-light border mb-2">
-													<small><i class="bi bi-info-circle me-1"></i>Para dar mayor agilidad a su solicitud, por favor realizar la descripción de los hechos haciendo referencia al momento, lugar, participantes y móviles entre otros elementos que considere que pueden despejar cualquier duda sobre las circunstancias.</small>
-												</div>
+												
 												<textarea id="campo_comentario" name="comentario" class="form-control" rows="6" tabindex="16" onkeyup="countChar(this)" placeholder="Escriba aquí..." required></textarea>
 												<div class="d-flex justify-content-between mt-1">
 													<div class="invalid-feedback">Por favor ingrese su comentario.</div>
