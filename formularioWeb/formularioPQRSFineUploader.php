@@ -36,11 +36,7 @@ if(!isset($isFacebook)){
 	$isFacebook = 0;
 }
 
-if($logoEntidad){
-  $log = "$logoEntidad";
-}else{
-  $log = "$ruta_raiz/img/orfeo.png";
-}
+$log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 ?>
 
@@ -103,195 +99,267 @@ if($logoEntidad){
 					</div>
 
 					<!-- Información -->
-					<div class="alert alert-info border-0 shadow-sm mb-4" role="alert">
-						<h5 class="alert-heading"><i class="bi bi-info-circle-fill me-2"></i>Apreciado ciudadano:</h5>
-						<p class="mb-2">Al diligenciar el formulario, tenga en cuenta lo siguiente:</p>
-						<p class="mb-0">En cualquier caso su requerimiento puede realizarse de manera anónima o identificada. Si usted opta por presentar su comunicación en forma anónima, no será posible que reciba de manera directa respuesta. Los campos con <span class="text-danger fw-bold">*</span> son obligatorios.</p>
-					</div>
+					
 
-<form id="contactoOrfeo" autocomplete="on"
-	enctype="multipart/form-data" method="post" action="formulariotx.php"
-	name="quejas" class="needs-validation" novalidate>
+					<form id="contactoOrfeo" autocomplete="on"
+						enctype="multipart/form-data" method="post" action="formulariotx.php"
+						name="quejas" class="needs-validation" novalidate>
 
-					<div class="row g-3">
-						<!-- Tipo de Solicitud -->
-						<div class="col-md-6">
-							<label for="tipoSolicitud" class="form-label">Tipo de petición <span class="text-danger">*</span></label>
-							<select id="tipoSolicitud" name="tipoSolicitud" class="form-select" tabindex="1" required>
-								<option value="0" selected>Seleccione</option>
-								<?=$tipo; ?>
-								<option value="1">Petición</option>
-								<option value="2">Queja</option>
-								<option value="3">Reclamo</option>
-								<option value="4">Sugerencia</option>
-								<option value="7">Felicitaciones</option>
-								<option value="8">Otros</option>
-							</select>
-							<div class="invalid-feedback">Por favor seleccione el tipo de petición.</div>
-						</div>
+										<div class="row g-3">
+											<!-- Sección: Información del usuario -->
+											<div class="col-12">
+												<h5 class="border-bottom pb-2 mb-0 text-primary"><i class="bi bi-person-fill me-2"></i>Información del usuario</h5>
+											</div>
 
-						<!-- Anónimo -->
-						<div class="col-md-6">
-							<label for="chkAnonimo" class="form-label">¿Desea que su petición sea anónima? <span class="text-danger">*</span></label>
-							<select id="chkAnonimo" name="anonimo" class="form-select" tabindex="2" 
-								onChange="if (checkAnonimo()){document.getElementById('campo_asunto').focus(); alert('Si usted opta por presentar su comunicación en forma anónima, no será posible que reciba de manera directa respuesta.')}else{document.getElementById('tipoDocumento').focus()};" required>
-								<option value="0" selected>No</option>
-								<option value="1">Sí</option>
-							</select>
-							<div class="invalid-feedback">Por favor seleccione una opción.</div>
-						</div>
+											<!-- Anónimo (oculto, por defecto No) -->
+											<input type="hidden" id="chkAnonimo" name="anonimo" value="0" />
+											<input type="hidden" id="tipoDocumento" name="tipoDocumento" value="1" >
 
-						<input type="hidden" id="tipoDocumento" name="tipoDocumento" value="1" >
+											<!-- Número de Identificación -->
+											<div class="col-md-6">
+												<label for="campo_numid" class="form-label">Documento de identificación <span class="text-danger">*</span></label>
+												<input id="campo_numid" name="numid" type="text" class="form-control" value="" maxlength="11" tabindex="4" onkeypress="return alpha(event,numbers+letters)" required />
+												<div class="form-text">Solo números o letras</div>
+												<div class="invalid-feedback">Por favor ingrese su número de identificación.</div>
+											</div>
 
-						<!-- Número de Identificación -->
-						<div class="col-md-6">
-							<label for="campo_numid" class="form-label">Número de identificación <span class="text-danger">*</span></label>
-							<input id="campo_numid" name="numid" type="text" class="form-control" value="" maxlength="11" tabindex="4" onkeypress="return alpha(event,numbers+letters)" required />
-							<div class="form-text">Solo números o letras</div>
-							<div class="invalid-feedback">Por favor ingrese su número de identificación.</div>
-						</div>
+											<!-- Nombre -->
+											<div class="col-md-6">
+												<label for="campo_nombre" class="form-label">Usuario <span class="text-danger">*</span></label>
+												<input id="campo_nombre" name="nombre_remitente" type="text" class="form-control" value="" tabindex="5" onkeypressS="return alpha(event,letters);" required />
+												<div class="invalid-feedback">Por favor ingrese el nombre.</div>
+											</div>
 
-						<!-- Nombre -->
-						<div class="col-md-6">
-							<label for="campo_nombre" class="form-label">Nombre del remitente o razón social <span class="text-danger">*</span></label>
-							<input id="campo_nombre" name="nombre_remitente" type="text" class="form-control" value="" tabindex="5" onkeypressS="return alpha(event,letters);" required />
-							<div class="invalid-feedback">Por favor ingrese el nombre.</div>
-						</div>
+											<!-- Apellidos -->
+											<div class="col-md-6">
+												<label for="campo_apellido" class="form-label">Apellidos <span class="text-danger">*</span></label>
+												<input id="campo_apellido" name="apellidos_remitente" type="text" class="form-control" value="" tabindex="6" onkeypress="return alpha(event,letters);" required />
+												<div class="invalid-feedback">Por favor ingrese los apellidos.</div>
+											</div>
 
-						<!-- Apellidos -->
-						<div class="col-md-6">
-							<label for="campo_apellido" class="form-label">Apellidos o tipo de empresa <span class="text-danger">*</span></label>
-							<input id="campo_apellido" name="apellidos_remitente" type="text" class="form-control" value="" tabindex="6" onkeypress="return alpha(event,letters);" required />
-							<div class="invalid-feedback">Por favor ingrese los apellidos.</div>
-						</div>
+											<!-- País -->
+											<div class="col-md-6">
+												<label for="slc_pais" class="form-label">País <span class="text-danger">*</span></label>
+												<select id="slc_pais" name="pais" class="form-select" tabindex="7" onchange="cambia_pais()" required>
+													<?=$pais ?>
+												</select>
+												<div class="invalid-feedback">Por favor seleccione el país.</div>
+											</div>
 
-						<!-- Departamento -->
-						<div class="col-md-6">
-							<label for="slc_depto" class="form-label">Departamento <span class="text-danger">*</span></label>
-							<select id="slc_depto" name="depto" class="form-select" tabindex="8" onchange="trae_municipio()" required>
-								<option value="0" selected>Seleccione</option>
-								<?=$depto ?>
-							</select>
-							<div class="invalid-feedback">Por favor seleccione el departamento.</div>
-						</div>
+											<!-- Departamento -->
+											<div class="col-md-6">
+												<label for="slc_depto" class="form-label">Estado <span class="text-danger">*</span></label>
+												<select id="slc_depto" name="depto" class="form-select" tabindex="8" onchange="trae_municipio()" required>
+													<option value="0" selected>Seleccione</option>
+													<?=$depto ?>
+												</select>
+												<div class="invalid-feedback">Por favor seleccione el departamento.</div>
+											</div>
 
-						<!-- País -->
-						<div class="col-md-6">
-							<label for="slc_pais" class="form-label">País <span class="text-danger">*</span></label>
-							<select id="slc_pais" name="pais" class="form-select" tabindex="40" onchange="cambia_pais()" required>
-								<?=$pais ?>
-							</select>
-							<div class="invalid-feedback">Por favor seleccione el país.</div>
-						</div>
+											<!-- Municipio -->
+											<div class="col-md-6">
+												<label for="slc_municipio" class="form-label">Provincia <span class="text-danger">*</span></label>
+												<div id="div-contenidos">
+													<select id="slc_municipio" name="muni" class="form-select" tabindex="9" required>
+														<option value="0" selected>Seleccione..</option>
+													</select>
+												</div>
+												<div class="invalid-feedback">Por favor seleccione el municipio.</div>
+											</div>
 
-						<!-- Municipio -->
-						<div class="col-md-6">
-							<label for="slc_municipio" class="form-label">Municipio <span class="text-danger">*</span></label>
-							<div id="div-contenidos">
-								<select id="slc_municipio" name="muni" class="form-select" tabindex="9" required>
-									<option value="0" selected>Seleccione..</option>
-								</select>
-							</div>
-							<div class="invalid-feedback">Por favor seleccione el municipio.</div>
-						</div>
+											<!-- Dirección -->
+											<div class="col-md-6">
+												<label for="campo_direccion" class="form-label">Dirección</label>
+												<input id="campo_direccion" name="direccion" type="text" class="form-control" value="" maxlength="150" tabindex="10" onkeypress="return alpha(event,numbers+letters+signs+custom)" />
+											</div>
 
-						<!-- Dirección -->
-						<div class="col-md-6">
-							<label for="campo_direccion" class="form-label">Dirección</label>
-							<input id="campo_direccion" name="direccion" type="text" class="form-control" value="" maxlength="150" tabindex="10" onkeypress="return alpha(event,numbers+letters+signs+custom)" />
-						</div>
+											<!-- Teléfono -->
+											<div class="col-md-6">
+														<label for="campo_telefono" class="form-label">Número de Teléfono</label>
+														<input id="campo_telefono" name="telefono" type="text" class="form-control" value="" maxlength="80" tabindex="11" onkeypress="return alpha(event,numbers+alpha)" />
+													</div>
 
-						<!-- Teléfono -->
-						<div class="col-md-6">
-							<label for="campo_telefono" class="form-label">Teléfono <span class="text-danger">*</span></label>
-							<input id="campo_telefono" name="telefono" type="text" class="form-control" value="" maxlength="80" tabindex="11" onkeypress="return alpha(event,numbers+alpha)" required />
-							<div class="invalid-feedback">Por favor ingrese el teléfono.</div>
-						</div>
+													<!-- Móvil -->
+													<div class="col-md-6">
+														<label for="campo_celular" class="form-label">Móvil <span class="text-danger">*</span></label>
+														<input id="campo_celular" name="celular" type="text" class="form-control" value="" maxlength="15" tabindex="12" onkeypress="return alpha(event,numbers)" required />
+														<div class="invalid-feedback">Por favor ingrese el número de celular.</div>
+													</div>
 
-						<!-- Email -->
-						<div class="col-md-6">
-							<label for="campo_email" class="form-label">E-mail <span class="text-danger">*</span></label>
-							<input id="campo_email" name="email" type="email" class="form-control" value="" maxlength="50" tabindex="12" required />
-							<div class="invalid-feedback">Por favor ingrese un email válido.</div>
-						</div>
+													<!-- Medio de contacto preferido -->
+													<div class="col-md-6">
+														<label for="medioContacto" class="form-label">Medio de contacto preferido</label>
+														<select id="medioContacto" name="medioContacto" class="form-select" tabindex="13">
+															<option value="" selected>Seleccione</option>
+															<option value="Correo electrónico">Correo electrónico</option>
+															<option value="Vía telefónica">Vía telefónica</option>
+															<option value="Correo escrito">Correo escrito</option>
+														</select>
+											</div>
 
-						<!-- Tipo de Población -->
-						<div class="col-md-6">
-							<label for="tipoPoblacioen" class="form-label">Tipo de población</label>
-							<select id="tipoPoblacioen" name="tipoPoblacion" class="form-select" tabindex="39">
-								<?=$temas;?>
-								<option value="0" selected>No aplica</option>
-								<option value="1">Población Desplazada</option>
-								<option value="2">Mujer Gestante</option>
-								<option value="3">Niños, Niñas, Adolescentes</option>
-								<option value="4">Veterano Fuerza Pública</option>
-								<option value="5">Adulto Mayor</option>
-							</select>
-						</div>
+											<!-- Email -->
+											<div class="col-md-6">
+												<label for="campo_email" class="form-label">E-mail <span class="text-danger">*</span></label>
+												<input id="campo_email" name="email" type="email" class="form-control" value="" maxlength="50" tabindex="12" required />
+												<div class="invalid-feedback">Por favor ingrese un email válido.</div>
+											</div>
 
-						<!-- Asunto -->
-						<div class="col-12">
-							<label for="campo_asunto" class="form-label">Tema de su petición <span class="text-danger">*</span></label>
-							<input id="campo_asunto" name="asunto" type="text" class="form-control" value="" maxlength="80" tabindex="15" required />
-							<div class="invalid-feedback">Por favor ingrese el tema de su petición.</div>
-						</div>
+											<!-- Tipo de Población -->
+											<div class="col-md-6">
+												<label for="tipoPoblacioen" class="form-label">Tipo de población</label>
+												<select id="tipoPoblacioen" name="tipoPoblacion" class="form-select" tabindex="39">
+													<?=$temas;?>
+													<option value="0" selected>No aplica</option>
+													<option value="1">Población Desplazada</option>
+													<option value="2">Mujer Gestante</option>
+													<option value="3">Niños, Niñas, Adolescentes</option>
+													<option value="4">Veterano Fuerza Pública</option>
+													<option value="5">Adulto Mayor</option>
+												</select>
+											</div>
 
-						<!-- Comentario -->
-						<div class="col-12">
-							<label for="campo_comentario" class="form-label">Comentario <span class="text-danger">*</span></label>
-							<div class="alert alert-light border mb-2">
-								<small><i class="bi bi-info-circle me-1"></i>Para dar mayor agilidad a su solicitud, por favor realizar la descripción de los hechos haciendo referencia al momento, lugar, participantes y móviles entre otros elementos que considere que pueden despejar cualquier duda sobre las circunstancias.</small>
-							</div>
-							<textarea id="campo_comentario" name="comentario" class="form-control" rows="6" tabindex="16" onkeyup="countChar(this)" placeholder="Escriba aquí..." required></textarea>
-							<div class="d-flex justify-content-between mt-1">
-								<div class="invalid-feedback">Por favor ingrese su comentario.</div>
-								<small id="charNum" class="text-muted"></small>
-							</div>
-							<input type="hidden" id="adjuntosSubidos" name="adjuntosSubidos" value="" />
-						</div>
+											<!-- Sección: Información de solicitud -->
+											<div class="col-12 mt-4">
+												<h5 class="border-bottom pb-2 mb-0 text-primary"><i class="bi bi-file-earmark-text-fill me-2"></i>Información de solicitud</h5>
+											</div>
 
-						<!-- Archivos Adjuntos -->
-						<div class="col-12">
-							<label class="form-label"><i class="bi bi-paperclip me-2"></i>Archivos adjuntos</label>
-							<div id="filelimit-fine-uploader" class="border rounded p-3 bg-light" tabindex="17"></div>
-							<div id="availabeForUpload"></div>
-						</div>
+											<!-- Tipo de Solicitud -->
+											<div class="col-md-6">
+												<label for="tipoSolicitud" class="form-label">Tipo de Solicitud <span class="text-danger">*</span></label>
+												<select id="tipoSolicitud" name="tipoSolicitud" class="form-select" tabindex="1" required onchange="document.getElementById('tipoSolicitudTexto').value=this.options[this.selectedIndex].text;">
+													<option value="0" selected>Seleccione</option>
+													<?=$tipo; ?>
+													<option value="2">Queja</option>
+													<option value="3">Reclamo</option>
+													<option value="1">Derecho de petición de consulta</option>
+													<option value="1">Derecho de Petición entre Autoridades</option>
+													<option value="1">Derecho de Petición</option>
+													<option value="1">Derecho de Petición de Información y Documentos</option>
+													<option value="4">Sugerencia</option>
+													<option value="7">Felicitación</option>
+													<option value="8">Denuncia</option>
+												</select>
+												<input type="hidden" id="tipoSolicitudTexto" name="tipoSolicitudTexto" value="" />
+												<div class="invalid-feedback">Por favor seleccione el tipo de petición.</div>
+											</div>
 
-						<!-- Captcha -->
-						<div class="col-12">
-							<div class="row align-items-center">
-								<div class="col-md-6">
-									<label for="campo_captcha" class="form-label">Imagen de verificación <span class="text-danger">*</span></label>
-									<input id="campo_captcha" name="captcha" type="text" class="form-control" value="" maxlength="5" tabindex="20" onkeypress="return alpha(event,numbers+letters)" placeholder="Digite el código" required />
-									<div class="invalid-feedback">Por favor ingrese el código de verificación.</div>
-								</div>
-								<div class="col-md-6 text-center">
-									<?php
-									echo '<img id="imgcaptcha" src="' . $_SESSION['captcha_formulario']['image_src'] . '" alt="CAPTCHA" class="img-fluid rounded border mb-2" /><br>';
-									echo '<a href="#" onClick="return reloadImg(\'imgcaptcha\');" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-clockwise me-1"></i>Cambiar imagen</a>'
-									?>
-								</div>
-							</div>
-						</div>
+											<!-- Tipo de Solicitante -->
+											<div class="col-md-6">
+												<label for="tipoSolicitante" class="form-label">Tipo de Solicitante <span class="text-danger">*</span></label>
+												<select id="tipoSolicitante" name="tipoSolicitante" class="form-select" tabindex="2" required>
+													<option value="" selected>Seleccione</option>
+													<option value="Aspirante">Aspirante</option>
+													<option value="Estudiante">Estudiante</option>
+													<option value="Egresado">Egresado</option>
+													<option value="Docente">Docente</option>
+													<option value="Administrativo">Administrativo</option>
+													<option value="Ciudadano">Ciudadano</option>
+												</select>
+												<div class="invalid-feedback">Por favor seleccione el tipo de solicitante.</div>
+											</div>
 
-						<!-- Campos ocultos -->
-						<input type="hidden" name="pqrsFacebook" value="<?=$isFacebook?>" />
-						<input type="hidden" name="idFormulario" value="<?=$_SESSION["idFormulario"]?>" />
+											<!-- Selecciona el servicio -->
+													<div class="col-md-6">
+														<label for="servicio" class="form-label">Selecciona el servicio <span class="text-danger">*</span></label>
+														<select id="servicio" name="servicio" class="form-select" tabindex="14" required>
+															<option value="" selected>Seleccione</option>
+															<option value="Académicos">Académicos</option>
+															<option value="Administrativos">Administrativos</option>
+															<option value="Extensión">Extensión</option>
+															<option value="Infraestructura">Infraestructura</option>
+															<option value="Institucionales">Institucionales</option>
+															<option value="Jurídico y Legal">Jurídico y Legal</option>
+															<option value="Tecnológico">Tecnológico</option>
+															<option value="Otro">Otro</option>
+														</select>
+														<div class="invalid-feedback">Por favor seleccione el servicio.</div>
+													</div>
 
-						<!-- Botones -->
-						<div class="col-12 mt-4">
-							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button id="saveForm" type="submit" class="btn btn-primary btn-lg px-5" onclick="return valida_form();" tabindex="21">
-									<i class="bi bi-send-fill me-2"></i>Enviar
-								</button>
-								<button name="button" type="button" class="btn btn-secondary btn-lg px-5" onclick="window.close();" tabindex="22">
-									<i class="bi bi-x-circle me-2"></i>Cancelar
-								</button>
-							</div>
-						</div>
-					</div>
+													<!-- Sistema al que Aplica -->
+													<div class="col-md-6">
+														<label for="sistemaAplica" class="form-label">Sistema al que Aplica</label>
+														<select id="sistemaAplica" name="sistemaAplica" class="form-select" tabindex="15">
+															<option value="" selected>Seleccione</option>
+															<option value="Calidad">Calidad</option>
+															<option value="Ambiente">Ambiente</option>
+															<option value="Seguridad y Salud">Seguridad y Salud</option>
+														</select>
+													</div>
 
-</form>
+													<!-- Asunto -->
+											<div class="col-12">
+												<label for="campo_asunto" class="form-label">Ponle un titulo a tu solicitud <span class="text-danger">*</span></label>
+												<input id="campo_asunto" name="asunto" type="text" class="form-control" value="" maxlength="80" tabindex="15" required />
+												<div class="invalid-feedback">Por favor ingrese el tema de su petición.</div>
+											</div>
+
+											<!-- Comentario -->
+											<div class="col-12">
+												<label for="campo_comentario" class="form-label">Cuéntanos sobre tu solicitud <span class="text-danger">*</span></label>
+												<div class="alert alert-light border mb-2">
+													<small><i class="bi bi-info-circle me-1"></i>Para dar mayor agilidad a su solicitud, por favor realizar la descripción de los hechos haciendo referencia al momento, lugar, participantes y móviles entre otros elementos que considere que pueden despejar cualquier duda sobre las circunstancias.</small>
+												</div>
+												<textarea id="campo_comentario" name="comentario" class="form-control" rows="6" tabindex="16" onkeyup="countChar(this)" placeholder="Escriba aquí..." required></textarea>
+												<div class="d-flex justify-content-between mt-1">
+													<div class="invalid-feedback">Por favor ingrese su comentario.</div>
+													<small id="charNum" class="text-muted"></small>
+												</div>
+												<input type="hidden" id="adjuntosSubidos" name="adjuntosSubidos" value="" />
+											</div>
+
+											<!-- Archivos Adjuntos -->
+											<div class="col-12">
+												<label class="form-label"><i class="bi bi-paperclip me-2"></i>Adjunto</label>
+												<div id="filelimit-fine-uploader" class="border rounded p-3 bg-light" tabindex="17"></div>
+												<div id="availabeForUpload"></div>
+											</div>
+
+											<!-- Captcha -->
+											<div class="col-12">
+												<div class="row align-items-center">
+													<div class="col-md-6">
+														<label for="campo_captcha" class="form-label">Imagen de verificación <span class="text-danger">*</span></label>
+														<input id="campo_captcha" name="captcha" type="text" class="form-control" value="" maxlength="5" tabindex="20" onkeypress="return alpha(event,numbers+letters)" placeholder="Digite el código" required />
+														<div class="invalid-feedback">Por favor ingrese el código de verificación.</div>
+													</div>
+													<div class="col-md-6 text-center">
+														<?php
+														echo '<img id="imgcaptcha" src="' . $_SESSION['captcha_formulario']['image_src'] . '" alt="CAPTCHA" class="img-fluid rounded border mb-2" /><br>';
+														echo '<a href="#" onClick="return reloadImg(\'imgcaptcha\');" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-clockwise me-1"></i>Cambiar imagen</a>'
+														?>
+													</div>
+												</div>
+											</div>
+
+					<!-- Política de privacidad -->
+													<div class="col-12">
+														<div class="form-check">
+															<input type="checkbox" class="form-check-input" name="politicaPrivacidad" id="politicaPrivacidad" value="1" required />
+															<label class="form-check-label" for="politicaPrivacidad">
+																Autorizo el almacenamiento, consulta, procesamiento y tratamiento de mis datos personales conforme a su política de privacidad.
+															</label>
+															<div class="invalid-feedback">Debe aceptar la política de privacidad para continuar.</div>
+														</div>
+													</div>
+
+													<!-- Campos ocultos -->
+											<input type="hidden" name="pqrsFacebook" value="<?=$isFacebook?>" />
+											<input type="hidden" name="idFormulario" value="<?=$_SESSION["idFormulario"]?>" />
+
+											<!-- Botones -->
+											<div class="col-12 mt-4">
+												<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+													<button id="saveForm" type="submit" class="btn btn-primary btn-lg px-5" onclick="return valida_form();" tabindex="21">
+														<i class="bi bi-send-fill me-2"></i>Enviar
+													</button>
+													<button name="button" type="button" class="btn btn-secondary btn-lg px-5" onclick="window.close();" tabindex="22">
+														<i class="bi bi-x-circle me-2"></i>Cancelar
+													</button>
+												</div>
+											</div>
+										</div>
+
+					</form>
 
 				</div>
 			</div>

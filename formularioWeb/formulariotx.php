@@ -29,11 +29,7 @@ $ADODB_COUNTRECS = false;
 $db   = new ConnectionHandler($ruta_raiz);
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 
-if($logoEntidad){
-  $log = "$logoEntidad";
-}else{
-  $log = "$ruta_raiz/img/orfeo.png";
-}
+$log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 session_start();
 $errorFormulario = 0;
@@ -109,6 +105,12 @@ if($errorFormulario==0){
         $_SESSION['mrec_codi']=4;
     }
     $_SESSION['tipo']=$tipoSolicitud;
+    $_SESSION['tipoSolicitudTexto']=$tipoSolicitudTexto ? $tipoSolicitudTexto : 'No especificado';
+    $_SESSION['tipoSolicitante']=$tipoSolicitante ? $tipoSolicitante : 'No especificado';
+    $_SESSION['servicio']=$servicio ? $servicio : 'No especificado';
+    $_SESSION['sistemaAplica']=$sistemaAplica ? $sistemaAplica : 'No aplica';
+    $_SESSION['medioContacto']=$medioContacto ? $medioContacto : 'No especificado';
+    $_SESSION['celular']=$celular ? $celular : 'No registra';
     $_SESSION['asunto']=$asunto;
     $_SESSION['desc']=textoPDF($comentario);
     //TODO Imprimir el grupo de poblacional haciendo la consulta a sgd_tma_temas
@@ -399,7 +401,20 @@ if($errorFormulario==0){
     $pdf->SetFont('','');
     $pdf->Text(12,89,textoPDF("Ciudad"));
     $pdf->Text(12,99,textoPDF("Asunto : ".mb_strtoupper($_SESSION['asunto'],"utf-8")));
-    $pdf->SetXY(11,105);
+
+    // Información adicional del formulario
+    $pdf->SetFont('Arial','B',8);
+    $pdf->Text(12,106,"Informacion de la solicitud:");
+    $pdf->SetFont('Arial','',8);
+    $pdf->Text(12,110,textoPDF("Tipo de Peticion: " . $_SESSION['tipoSolicitudTexto']));
+    $pdf->Text(12,114,textoPDF("Tipo de Solicitante: " . $_SESSION['tipoSolicitante']));
+    $pdf->Text(12,118,textoPDF("Servicio: " . $_SESSION['servicio']));
+    $pdf->Text(12,122,textoPDF("Sistema al que Aplica: " . $_SESSION['sistemaAplica']));
+    $pdf->Text(12,126,textoPDF("Medio de contacto preferido: " . $_SESSION['medioContacto']));
+    $pdf->Text(12,130,textoPDF("Celular: " . $_SESSION['celular']));
+
+    $pdf->SetFont('Arial','',10);
+    $pdf->SetXY(11,136);
     //$pdf->MultiCell(0,4,textoPDF($_SESSION['desc'],0));
     $pdf->MultiCell(0,4,$_SESSION['desc'],0);
     $pdf->Text(12,236,"Atentamente,");
@@ -409,7 +424,7 @@ if($errorFormulario==0){
     $pdf->Text(12,250,$_SESSION['cedula']!='0'?"C.C. " . $_SESSION['cedula']:"NIT. " . $_SESSION['nit']);
     $pdf->Text(12,254,textoPDF($_SESSION['direccion_remitente'] . " " . $muniNomb . ", ". $deptNomb . "."));
     $pdf->Text(12,258,textoPDF($paisNomb));
-    $pdf->Text(12,262,textoPDF("Tel. " . $_SESSION['telefono_remitente']));
+    $pdf->Text(12,262,textoPDF("Tel. " . $_SESSION['telefono_remitente'] . "  Cel. " . $_SESSION['celular']));
     $pdf->Text(12,266,textoPDF($_SESSION['email']));
 
     //guarda documento en un SERVIDOR

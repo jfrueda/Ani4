@@ -48,7 +48,7 @@ if(isset($_GET['depto']))
 {
 	$sql_muni="select distinct * from municipio where dpto_codi=".$_GET['depto']." order by muni_nomb";
 	$rs_muni=$db->conn->Execute($sql_muni);
-	$muni="<select name='muni' id ='slc_municipio' class='field' tabindex='19'>";
+	$muni="<select name='muni' id ='slc_municipio' class='form-select' tabindex='19'>";
 	while (!$rs_muni->EOF)
 	{
 		$muni.="<option value='".$rs_muni->fields['MUNI_CODI']."'>".$rs_muni->fields['MUNI_NOMB']."</option>";
