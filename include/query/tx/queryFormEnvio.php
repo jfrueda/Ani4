@@ -97,11 +97,10 @@ switch($db->driver) {
 							,b.RADI_USU_ANTE "Enviado Por"
 							,to_char(b.RADI_NUME_RADI) "CHK_CHKANULAR"
 					 from
-						radicado b,
-					 	SGD_TPR_TPDCUMENTO c
+						radicado b
+					 	LEFT JOIN SGD_TPR_TPDCUMENTO c ON b.tdoc_codi=c.sgd_tpr_codigo
 				 	where
-						b.radi_nume_radi is not null '.
-						' and b.tdoc_codi=c.sgd_tpr_codigo
+						b.radi_nume_radi is not null
 						'.$whereFiltro.$whereCarpeta.'
 				  	order by '.$order .' ' .$orderTipo;
 				}break;
@@ -172,11 +171,10 @@ switch($db->driver) {
 							,b.RADI_USU_ANTE		 as "Enviado Por"
 							,cast(b.RADI_NUME_RADI as varchar(20)) as "CHK_CHKANULAR"
 					 from
-						radicado b,
-					 	SGD_TPR_TPDCUMENTO c
+						radicado b
+					 	LEFT JOIN SGD_TPR_TPDCUMENTO c ON b.tdoc_codi=c.sgd_tpr_codigo
 				 	where
-						b.radi_nume_radi is not null '.
-						' and b.tdoc_codi=c.sgd_tpr_codigo
+						b.radi_nume_radi is not null
 						'.$whereFiltro . $whereCarpeta.'
 				  	order by '.$order .' ' .$orderTipo;
 				}break;
