@@ -21,9 +21,11 @@ $url = "http://10.161.91.191/SuperCor-WS/SuperCorWS?wsdl";
 
 $ADODB_COUNTRECS = false;
 require_once("$ruta_raiz/include/db/ConnectionHandler.php");
-$_SESSION["depeRadicaFormularioWeb"]=$depeRadicaFormularioWeb;  // Es radicado en la Dependencia 900
-$_SESSION["usuaRecibeWeb"]=$usuaRecibeWeb; // Usuario que Recibe los Documentos Web
-$_SESSION["secRadicaFormularioWeb"]=$secRadicaFormularioWeb; // Osea que usa la Secuencia sec_tp2_900
+
+// Validar variables de configuración
+$_SESSION["depeRadicaFormularioWeb"] = isset($depeRadicaFormularioWeb) ? $depeRadicaFormularioWeb : 900;  // Es radicado en la Dependencia 900
+$_SESSION["usuaRecibeWeb"] = isset($usuaRecibeWeb) ? $usuaRecibeWeb : 1; // Usuario que Recibe los Documentos Web
+$_SESSION["secRadicaFormularioWeb"] = isset($secRadicaFormularioWeb) ? $secRadicaFormularioWeb : ''; // Osea que usa la Secuencia sec_tp2_900
 $db = new ConnectionHandler($ruta_raiz);
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 //Revisar si se envio el formulario
@@ -44,7 +46,7 @@ if(isset($numeroRadicado)){
         $supercor = false;
         $pqr = false;
 
-		if($numeroRadicado==$idWeb and substr($numeroRadicado,-1)=='2' && (strcasecmp ($captcha ,$_SESSION['captcha_consulta']['code'] ) == 0))
+		if($numeroRadicado==$idWeb and substr($numeroRadicado,-1)=='2' && isset($_SESSION['captcha_consulta']['code']) && (strcasecmp ($captcha ,$_SESSION['captcha_consulta']['code'] ) == 0))
 		{
 			$ValidacionWeb="Si";
             $idRadicado = $idWeb;
@@ -57,9 +59,11 @@ if(isset($numeroRadicado)){
             $db->connect('CYDCL-P-PQR.supersalud.local','steven.hernandez','Super.2019','GestionPqrd');
             //var_dump($db); exit;
             $numeroRadicado = trim(strtoupper($numeroRadicado));
+            $numeroRadicado_escaped = $db->qstr($numeroRadicado);
+            $id_escaped = $db->qstr($id);
             $data = $db->getAll("SELECT * FROM PQRSNS.PQR INNER JOIN
                                     PQRSNS.PQRDatosAfectado ON PQR.IdPQR = PQRDatosAfectado.IdPQR
-                                WHERE (NroRadicacionSistemaExterno = '$numeroRadicado' OR NroRadicacionInicial = '$numeroRadicado' OR 'NroRadicacion' = '$numeroRadicado') AND PQRDatosAfectado.Identificacion = '$id'");
+                                WHERE (NroRadicacionSistemaExterno = $numeroRadicado_escaped OR NroRadicacionInicial = $numeroRadicado_escaped OR NroRadicacion = $numeroRadicado_escaped) AND PQRDatosAfectado.Identificacion = $id_escaped");
             $pqr = !!$data;
         }
 
@@ -79,7 +83,7 @@ if(isset($numeroRadicado)){
 
             $result = $client->__soapCall($tipo, ['parameters' => $p]);
 
-            if($result->return->codigoAccion === ' ') {
+            if($result && $result->return && $result->return->codigoAccion == '000') {
                 $supercor = true;
             }
         }

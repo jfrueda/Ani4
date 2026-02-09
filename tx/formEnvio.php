@@ -176,9 +176,11 @@ if ($codTx == 9 || $codTx==14) {
 $arrayAdscritas = [];
 $sqlAdscritas = "SELECT depe_codi FROM dependencia where depe_codi_territorial = $dependencia order by depe_codi asc";
 $rsAdscritas   = $db->conn->query($sqlAdscritas);
-while (!$rsAdscritas->EOF){
-    array_push($arrayAdscritas, $rsAdscritas->fields['DEPE_CODI']);
-    $rsAdscritas->MoveNext ();
+if($rsAdscritas && is_object($rsAdscritas)){
+    while (!$rsAdscritas->EOF){
+        array_push($arrayAdscritas, $rsAdscritas->fields['DEPE_CODI']);
+        $rsAdscritas->MoveNext ();
+    }
 }
 
 $_rads_=array_keys($_REQUEST["checkValue"]);

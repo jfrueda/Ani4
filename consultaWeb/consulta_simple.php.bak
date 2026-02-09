@@ -1,0 +1,279 @@
+<?php
+session_start();
+/**
+ * Consulta Web Simple - Orfeo
+ * Busca radicado por número y código de verificación
+ * Muestra datos básicos y anexos
+ */
+$ruta_raiz = "..";
+include ("$ruta_raiz/processConfig.php");
+include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+
+$db = new ConnectionHandler($ruta_raiz);
+$db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
+
+$resultado = null;
+$error = null;
+
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $numeroRadicado = isset($_POST['numeroRadicado']) ? trim($_POST['numeroRadicado']) : '';
+    $codigoVerificacion = isset($_POST['codigoVerificacion']) ? trim($_POST['codigoVerificacion']) : '';
+    
+    if(empty($numeroRadicado)) {
+        $error = "Por favor ingrese un número de radicado";
+    } elseif(empty($codigoVerificacion)) {
+        $error = "Por favor ingrese el código de verificación";
+    } else {
+        // Limpiar número de radicado
+        $numeroRadicado = str_replace([' ', '.', ',', '_'], '', $numeroRadicado);
+        // Limpiar y normalizar código de verificación (convertir a minúsculas)
+        $codigoVerificacion = strtolower(trim($codigoVerificacion));
+        
+        // Consultar radicado
+        $sql = "SELECT 
+                    r.radi_nume_radi,
+                    r.radi_fech_radi,
+                    r.ra_asun,
+                    r.sgd_rad_codigoverificacion,
+                    r.radi_usua_actu,
+                    r.radi_depe_actu,
+                    u.usua_nomb,
+                    d.depe_nomb,
+                    t.sgd_tpr_descrip as tipo_doc,
+                    CASE 
+                        WHEN r.radi_leido = 1 THEN 'Leído'
+                        ELSE 'No Leído'
+                    END as estado_lectura
+                FROM radicado r
+                LEFT JOIN usuario u ON r.radi_usua_actu = u.usua_codi AND r.radi_depe_actu = u.depe_codi
+                LEFT JOIN dependencia d ON r.radi_depe_actu = d.depe_codi
+                LEFT JOIN sgd_tpr_tpdcumento t ON r.tdoc_codi = t.sgd_tpr_codigo
+                WHERE r.radi_nume_radi = " . $db->conn->qstr($numeroRadicado);
+        
+        $rsRad = $db->conn->Execute($sql);
+        
+        if($rsRad && !$rsRad->EOF) {
+            $radicado = $rsRad->fields;
+            
+            // Validar código de verificación (case-insensitive)
+            // Intentar con diferentes casos de columna
+            $codigoVerifBD = '';
+            if(isset($radicado['sgd_rad_codigoverificacion'])) {
+                $codigoVerifBD = strtolower(trim($radicado['sgd_rad_codigoverificacion'] ?? ''));
+            } elseif(isset($radicado['SGD_RAD_CODIGOVERIFICACION'])) {
+                $codigoVerifBD = strtolower(trim($radicado['SGD_RAD_CODIGOVERIFICACION'] ?? ''));
+            }
+            
+            if($codigoVerifBD === $codigoVerificacion) {
+                // Consultar anexos
+                $sqlAnexos = "SELECT 
+                                anex_numero,
+                                anex_descripcion,
+                                anex_tipo,
+                                anex_nomb_archivo,
+                                anex_fech_crea,
+                                anex_size,
+                                anex_carpeta
+                            FROM anexos
+                            WHERE anex_radi_nume = " . $db->conn->qstr($numeroRadicado) . "
+                            AND anex_borrado = 'N'
+                            ORDER BY anex_numero ASC";
+                
+                $rsAnexos = $db->conn->Execute($sqlAnexos);
+                $anexos = array();
+                
+                if($rsAnexos && is_object($rsAnexos)) {
+                    while(!$rsAnexos->EOF) {
+                        $anexos[] = $rsAnexos->fields;
+                        $rsAnexos->MoveNext();
+                    }
+                }
+                
+                $resultado = array(
+                    'radicado' => $radicado,
+                    'anexos' => $anexos
+                );
+            } else {
+                $error = "Código de verificación incorrecto";
+            }
+        } else {
+            $error = "Radicado no encontrado";
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Radicados - Orfeo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f5f5f5; padding: 20px 0; }
+        .container { background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 30px; }
+        .logo { text-align: center; margin-bottom: 30px; }
+        .form-section { background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .table-section { margin-top: 30px; }
+        .table-header { background-color: #007bff; color: white; }
+        .status-badge { padding: 5px 10px; border-radius: 4px; }
+        .status-leido { background-color: #28a745; color: white; }
+        .status-no-leido { background-color: #ffc107; color: black; }
+        .error-alert { margin-bottom: 20px; }
+        .success-info { background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 900px;">
+        <div class="logo">
+            <h2>🔍 Consulta de Estado de Radicados</h2>
+            <p class="text-muted">Sistema de Gestión Documental - Orfeo</p>
+        </div>
+        
+        <div class="form-section">
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label for="numeroRadicado">Número de Radicado:</label>
+                    <input type="text" class="form-control" id="numeroRadicado" name="numeroRadicado" 
+                           placeholder="Ej: 2026009000000162" value="<?= isset($_POST['numeroRadicado']) ? htmlspecialchars($_POST['numeroRadicado']) : '' ?>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="codigoVerificacion">Código de Verificación:</label>
+                    <input type="text" class="form-control" id="codigoVerificacion" name="codigoVerificacion" 
+                           placeholder="Ingrese su código de verificación" value="<?= isset($_POST['codigoVerificacion']) ? htmlspecialchars($_POST['codigoVerificacion']) : '' ?>" required>
+                    <small class="form-text text-muted">Código enviado al momento de radicar</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Consultar</button>
+            </form>
+        </div>
+        
+        <?php if($error): ?>
+            <div class="alert alert-danger error-alert" role="alert">
+                <strong>Error:</strong> <?= htmlspecialchars($error) ?>
+            </div>
+        <?php endif; ?>
+        
+        <?php if($resultado): ?>
+            <div class="success-info">
+                ✓ Consulta exitosa - Radicado encontrado
+            </div>
+            
+            <div class="table-section">
+                <h3>Información del Radicado</h3>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th width="30%">Número de Radicado</th>
+                            <td><strong><?= htmlspecialchars($resultado['radicado']['RADI_NUME_RADI']) ?></strong></td>
+                        </tr>
+                        <tr>
+                            <th>Fecha de Radicación</th>
+                            <td><?= isset($resultado['radicado']['RADI_FECH_RADI']) ? date('d/m/Y H:i:s', strtotime($resultado['radicado']['RADI_FECH_RADI'])) : 'N/A' ?></td>
+                        </tr>
+                        <tr>
+                            <th>Asunto</th>
+                            <td><?= htmlspecialchars($resultado['radicado']['RA_ASUN'] ?? 'N/A') ?></td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de Documento</th>
+                            <td><?= htmlspecialchars($resultado['radicado']['TIPO_DOC'] ?? 'N/A') ?></td>
+                        </tr>
+                        <tr>
+                            <th>Dependencia Actual</th>
+                            <td><?= htmlspecialchars($resultado['radicado']['DEPE_NOMB'] ?? 'N/A') ?></td>
+                        </tr>
+                        <tr>
+                            <th>Usuario Actual</th>
+                            <td><?= htmlspecialchars($resultado['radicado']['USUA_NOMB'] ?? 'N/A') ?></td>
+                        </tr>
+                        <tr>
+                            <th>Estado</th>
+                            <td>
+                                <?php 
+                                $clase = strpos($resultado['radicado']['ESTADO_LECTURA'], 'Leído') !== false ? 'status-leido' : 'status-no-leido';
+                                ?>
+                                <span class="status-badge <?= $clase ?>">
+                                    <?= htmlspecialchars($resultado['radicado']['ESTADO_LECTURA']) ?>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-section">
+                <h3>Anexos (<?= count($resultado['anexos']) ?> archivo<?= count($resultado['anexos']) !== 1 ? 's' : '' ?>)</h3>
+                <?php if(count($resultado['anexos']) > 0): ?>
+                    <table class="table table-striped table-hover">
+                        <thead class="table-header">
+                            <tr>
+                                <th>Número</th>
+                                <th>Archivo</th>
+                                <th>Tipo</th>
+                                <th>Tamaño</th>
+                                <th>Fecha de Creación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($resultado['anexos'] as $anexo): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($anexo['ANEX_NUMERO'] ?? 'N/A') ?></td>
+                                    <td>
+                                        <?php 
+                                        $nombreArchivo = htmlspecialchars($anexo['ANEX_NOMB_ARCHIVO'] ?? 'N/A');
+                                        $carpeta = htmlspecialchars($anexo['ANEX_CARPETA'] ?? '');
+                                        if($carpeta && $carpeta !== 'N/A') {
+                                            $rutaArchivo = '/bodega/' . trim($carpeta, '/') . '/' . basename($anexo['ANEX_NOMB_ARCHIVO'] ?? '');
+                                            echo '<a href="' . htmlspecialchars($rutaArchivo) . '" target="_blank" title="Descargar ' . $nombreArchivo . '">' . $nombreArchivo . '</a>';
+                                        } else {
+                                            echo $nombreArchivo;
+                                        }
+                                        ?>
+                                    </td>
+                                    <td><?= htmlspecialchars($anexo['ANEX_TIPO'] ?? 'N/A') ?></td>
+                                    <td>
+                                        <?php 
+                                        if(isset($anexo['ANEX_SIZE']) && is_numeric($anexo['ANEX_SIZE'])) {
+                                            $size = $anexo['ANEX_SIZE'];
+                                            if($size >= 1024*1024) {
+                                                echo round($size/(1024*1024), 2) . ' MB';
+                                            } elseif($size >= 1024) {
+                                                echo round($size/1024, 2) . ' KB';
+                                            } else {
+                                                echo $size . ' bytes';
+                                            }
+                                        } else {
+                                            echo 'N/A';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php 
+                                        if(isset($anexo['ANEX_FECH_CREA'])) {
+                                            echo date('d/m/Y H:i:s', strtotime($anexo['ANEX_FECH_CREA']));
+                                        } else {
+                                            echo 'N/A';
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <p class="text-muted">No hay anexos registrados para este radicado</p>
+                <?php endif; ?>
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="consulta_simple.php" class="btn btn-outline-secondary">Nueva Consulta</a>
+            </div>
+        <?php endif; ?>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
