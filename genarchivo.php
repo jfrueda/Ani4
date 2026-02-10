@@ -1521,13 +1521,12 @@ $linkArchivo=(!empty($linkArchivo))?$linkArchivo:$anexo;
     $firmasd = $ABSOL_PATH.'/bodega/firmas/';
     require_once 'vendor/autoload.php';
     $grafo = $firmasd.'grafo/'.strtolower($_SESSION['krd']).'.png';
-    /*if (file_exists($grafo)) {
+    if (file_exists($grafo)) {
        
-        $phpWord = new \PhpOffice\PhpWord\PhpWord();
-        $template= $phpWord->loadTemplate($ABSOL_PATH.'/bodega/'.$linkarchivo_grabar);
+        $template = new \PhpOffice\PhpWord\TemplateProcessor($ABSOL_PATH.'/bodega/'.$linkarchivo_grabar);
         $template->setImageValue('FIRMA', array('path' => $grafo, 'width' => 384, 'height' => 70, 'ratio' => false));
         $template->saveAs($ABSOL_PATH.'/bodega/'.$linkarchivo_grabar);
-    }*/
+    }
 
     $docxFirma = new \IRebega\DocxReplacer\Docx($ABSOL_PATH.'/bodega/'.$linkarchivo_grabar);
     $docxFirma->replaceText('${FIRMA}', 'Firmado electrónicamente por: ' . $_SESSION['usua_nomb']);
