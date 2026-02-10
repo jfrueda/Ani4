@@ -42,7 +42,6 @@ class Bandejas
     var  $db;
     var  $codUsuario;
     var  $depeCodi;
-    var  $usuaDoc;
 
     function __construct($db)
     {
@@ -87,45 +86,14 @@ class Bandejas
         $nRadsNoLeidos=0;
         $rs  = $this->db->conn->query($iSql);
         $auxdevueltos = 0;
-        $nRadsMultiple =0;
 
         while(!$rs->EOF){
             $nRads=0;
             $nRadsNoLeidos=0;
-            $nRadsMultiple =0;
             $numdata    = trim($rs->fields["CARP_CODI"]);
-            
-            //Star::multiple
-            if($numdata == "0" ){
-                
-                $usua_doc=$this->usuaDoc;
-                $relacionados = 'select COUNT(*) as TOTAL
-                from radicado b
-                WHERE b.radi_nume_radi is not null
-                  and b.SGD_EANU_CODIGO is null
-                  and radi_nume_radi::text LIKE \'%3\'
-                  and (b.is_borrador is false or  b.radi_firma  is true)
-                  and (
-                SELECT count(*)
-                FROM SGD_DIR_DRECCIONES
-                WHERE SGD_DIR_DRECCIONES.radi_nume_radi=b.radi_nume_radi  ) > 1
-                  and (
-                SELECT count(*)
-                FROM SGD_DIR_DRECCIONES
-                WHERE SGD_DIR_DRECCIONES.radi_nume_radi=b.radi_nume_radi AND sgd_doc_fun = \''.$usua_doc.'\' ) > 0
-                and (
-                     SELECT count(t.*) 
-                            FROM hist_eventos t
-                            WHERE radi_nume_radi =  b.radi_nume_radi and usua_doc = \''.$usua_doc.'\'  and sgd_ttr_codigo in (13,9)
-                    ) = 0';
-                $rs_multiple  = $this->db->conn->query($relacionados);
-                if($rs_multiple) $nRadsMultiple = $rs_multiple->fields["TOTAL"];
-            }
-            //End::multiple
-           
             //$rsCarpDesc = $db->query($sqlCarpDep);
             $desccarpt  = $rs->fields["CARP_DESC"];
-            $nRads      = $rs->fields["NRADS"] + $nRadsMultiple;
+            $nRads      = $rs->fields["NRADS"];
             $nRadsNoLeidos      = $rs->fields["CONTADOR_NOLEIDOS"];
             if($nRadsNoLeidos>=1) $nRadsNoLeidos = " $nRadsNoLeidos /"; else $nRadsNoLeidos = " $nRadsNoLeidos /";
             if($numdata==0) $numdata = 9998;
@@ -180,28 +148,14 @@ class Bandejas
 
 
     function getContadorInformados($cod, $dependencia){
-        $isql   =" SELECT COUNT(DISTINCT I.radi_nume_radi) AS CONTADOR
-            FROM INFORMADOS I
-            JOIN RADICADO R ON I.radi_nume_radi = R.radi_nume_radi
-            WHERE I.DEPE_CODI=$dependencia
-            and I.usua_codi=$cod
-            and I.info_conjunto=0
-            and R.is_borrador = false";
+        $isql   =" SELECT COUNT(1) AS CONTADOR
+            FROM INFORMADOS
+            WHERE DEPE_CODI=$dependencia
+            and usua_codi=$cod
+            and info_conjunto=0";
 
         $rs1     = $this->db->conn->query($isql);
         $numerot = ($rs1)? $rs1->fields["CONTADOR"] : 0;
-        return $numerot;
-    }
-
-    function getContadorTramiteConjunto($cod, $dependencia){
-        $sqlMemNorm = "SELECT count(*) CNTINF 
-            FROM tramiteconjunto i 
-            INNER JOIN radicado r2 ON r2.radi_nume_radi = i.radi_nume_radi AND r2.is_borrador = false
-            WHERE i.depe_codi = '{$dependencia}' 
-            AND i.usua_codi = {$cod} 
-            AND i.info_codi IS NOT NULL";
-        $rs1 = $this->db->conn->query($sqlMemNorm);
-        $numerot = ($rs1) ? $rs1->fields["CNTINF"] : 0;
         return $numerot;
     }
 

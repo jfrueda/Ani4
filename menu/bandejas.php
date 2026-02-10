@@ -123,20 +123,6 @@ $link1show .= "<li><a $link1 target=\"mainFrame\" >Devueltos (0)</a></li>";
   if($numerot>=1){
     // $link5show= "<li><a $enlace4 target=\"mainFrame\"> Tramite Conjunto ($numerot)</a></li>";
   }
-
-
-  //Tramite conjunto
-  $isql="SELECT COUNT(1) AS CONTADOR
-         FROM TRAMITECONJUNTO
-         WHERE DEPE_CODI=$dependencia
-          and usua_codi=$codusuario
-          and info_conjunto>=1 ";
-  $rs1=$db->query($isql);
-
-  $numerot = ($rs1)? $rs1->fields["CONTADOR"] : 0;
-  if($numerot>=1){
-    $link5show= "<li><a $enlace4 target=\"mainFrame\"> Tramite Conjunto ($numerot)</a></li>";
-  }
   //Ultimas transacciones del usuario
   $data     ="Ultimas Transacciones del Usuario";
   $link6    = $enlace5."$fechah&nomcarpeta=$data&tipo_carpt=0\"";
