@@ -147,6 +147,7 @@ foreach ($reportes as $key => $value) {
 
         .card-header {
             border-bottom: 1px solid rgba(0, 0, 0, .05);
+            background-color: #043074 !important;
         }
 
         .input-group-text {
@@ -175,6 +176,10 @@ foreach ($reportes as $key => $value) {
             border: 1px solid #ced4da;
             border-radius: 0 4px 4px 0;
         }
+
+        .margin-botton-table {
+            margin-bottom: 5rem !important;
+        }
     </style>
 </head>
 
@@ -192,7 +197,7 @@ foreach ($reportes as $key => $value) {
             <div class="row">
                 <article class="col-12">
                     <div class="card shadow-sm border-light">
-                        <div class="card-header bg-primary py-3">
+                        <div class="card-header py-3">
                             <h5 class="m-0 font-weight-bold text-white">
                                 <i class="fa fa-chart-bar mr-2"></i> Panel de Estadísticas
                             </h5>
