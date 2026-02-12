@@ -199,7 +199,7 @@ foreach ($reportes as $key => $value) {
                     <div class="card shadow-sm border-light">
                         <div class="card-header py-3">
                             <h5 class="m-0 font-weight-bold text-white">
-                                <i class="fa fa-chart-bar mr-2"></i> Panel de Estadísticas
+                                <i class="fa fa-table mr-2"></i> Panel de Estadísticas
                             </h5>
                         </div>
                         <div class="card-body bg-light-50">
