@@ -321,7 +321,7 @@ foreach ($reportes as $key => $value) {
         </div>
     </div>
 
-    <div class="col-12" id='resulEstdatos' style='display:none'>
+    <div class="col-12 margin-botton-table" id='resulEstdatos' style='display:none'>
         <section id="widget-grid">
             <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
                 <header class='pl-2'>
