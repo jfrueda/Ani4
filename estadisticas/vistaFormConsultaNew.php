@@ -326,14 +326,14 @@ foreach ($reportes as $key => $value) {
         </div>
     </div>
 
-    <div class="col-12 margin-botton-table" id='resulEstdatos' style='display:none'>
+    <div class="col-12 " id='resulEstdatos' style='display:none'>
         <section id="widget-grid">
             <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
                 <header class='pl-2'>
                     <h2 id="nomReport"> Resultado</h2>
                 </header>
                 <!-- widget content -->
-                <div class="widget-body">
+                <div class="widget-body margin-botton-table">
                     <div class="" id='resultado'> resultado</div>
                 </div>
             </div>
