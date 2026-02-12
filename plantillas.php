@@ -138,7 +138,7 @@ if (file_exists($archivo1)) {
 
                                             <div>
                                                 <h6 class="text-primary border-bottom pb-2">
-                                                    <i class="fa fa-share-alt me-2"></i>Combinación Sencilla
+                                                    <i class="fa fa-share me-2"></i>Combinación Sencilla
                                                 </h6>
                                                 <div class="p-2 bg-light rounded font-monospace small">
                                                     <?= $nombMa ?>
@@ -175,7 +175,7 @@ if (file_exists($archivo1)) {
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12 margin-botton-table">
                                     <div class="card border-0 shadow-sm">
                                         <div class="card-header bg-primary text-white py-2">
                                             <h6 class="mb-0 small fw-bold text-center uppercase tracking-wider">Listado de Plantillas Disponibles</h6>
@@ -187,7 +187,6 @@ if (file_exists($archivo1)) {
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
