@@ -121,6 +121,7 @@ function regresar(){
                                              }
                                           $codusdp = str_pad($dependencia, 3, "0", STR_PAD_LEFT).str_pad($codusuario, 3, "0", STR_PAD_LEFT);
                                           $objHistorico->insertarHistorico($arrayRad,$dependencia ,$codusuario, $dependencia,$codusuario, $observa, 38);
+                                          echo "<script>setTimeout(function(){ window.location.reload(); }, 1500);</script>";
                                          }
                                     }
                                     else
@@ -160,11 +161,9 @@ function regresar(){
                     <br>
                         <table class="table table-bordered table-striped">
                           <tr align="center">
-                            <td width="33%" height="25" class="listado2" align="center">
+                            <td width="50%" height="25" class="listado2" align="center">
                              <center><input name="insertar_registro" type=submit class="botones_funcion" value="Grabar Cambio "></center></TD>
-                             <td width="33%" class="listado2" height="25">
-                             <center><input name="actualizar" type="button" class="botones_funcion" id="envia23" onClick="procModificar();"value=" Busqueda "></center></TD>
-                            <td width="33%" class="listado2" height="25">
+                            <td width="50%" class="listado2" height="25">
                              <center><input name="aceptar" type="button" class="botones_funcion" id="envia22" onClick=" opener.regresar();window.close();"value=" Cancelar "></center></TD>
                            </tr>
                         </table>
