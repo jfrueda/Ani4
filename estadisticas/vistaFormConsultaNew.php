@@ -57,7 +57,6 @@ if ($usua_perm_estadistica > 1) {
     order by depe_codi";
     $rsDep = $db->conn->Execute($sql);
     $optionDep = $rsDep->GetMenu2("dependencia_busq", "$dependencia", false, false, " ", " id='dependencia_busq'  class='custom-select text-capitalize ' ");
-
 }
 $rs = $db->conn->Execute('select SGD_TRAD_DESCR, SGD_TRAD_CODIGO  from SGD_TRAD_TIPORAD order by 2');
 $nmenu = "tipoRadicado";
@@ -85,12 +84,12 @@ $reportes[1]['leyend'] = 'Este reporte muestra la cantidad de radicados generado
 $reportes[2]['Nomb'] = 'Radicación- Estadística Por Medio de Recepción- Envío';
 $reportes[2]['leyend'] = 'Este reporte genera la cantidad de radicados de acuerdo al medio de recepción, realizado al momento de la radicación.';
 $reportes[3]['Nomb'] = 'Radicación- Estadística de Medio Envío Final de Documentos';
-$reportes[3]['leyend'] ='Este reporte genera la cantidad de radicados enviados a su destino final por el área.';
+$reportes[3]['leyend'] = 'Este reporte genera la cantidad de radicados enviados a su destino final por el área.';
 $reportes[4]['Nomb'] = 'Radicación: Digitalización de Documentos';
 $reportes[4]['leyend'] = 'Este reporte genera la cantidad de radicados digitalizados por usuario y el total de hojas digitalizadas. Se puede seleccionar el tipo de radicación.';
 /**$reportes[5]['Nomb'] = 'Radicados de Entrada Recibos del Area de Correspondencia';
 $reportes[5]['leyend'] = 'Este reporte genera la cantidad de documentos de entrada radicados del área de correspondencia a una dependencia.';
-*/
+ */
 $reportes[6]['Nomb'] = 'Radicados actuales en la dependencia';
 $reportes[6]['leyend'] = 'Este reporte genera la cantidad de documentos de entrada radicados del área de correspondencia a una dependencia.';
 $reportes[7]['Nomb'] = 'Control entrega de correspondencia recibida';
@@ -107,30 +106,11 @@ $reportes[12]['Nomb'] = 'Gestión De Radicados de Memorandos';
 $reportes[12]['leyend'] = 'Reporte que Muestra la gestión de radicados de Memorandos';
 $reportes[30]['Nomb'] = 'Reporte De Borradores';
 $reportes[30]['leyend'] = 'Reporte De Borradores';
-$reportes[30]['reporteId'] =15;
+$reportes[30]['reporteId'] = 15;
 $reportes[14]['Nomb'] = 'Reporte jefes de area';
 $reportes[14]['leyend'] = 'Reporte que los jefes actuales de las dependencias';
 $reportes[17]['Nomb'] = 'Reporte expedientes por área';
 $reportes[17]['leyend'] = 'Reporte expedientes por área';
-/*$reportes[13]['Nomb'] = 'Radicados en Bandejas';
-$reportes[13]['leyend'] = 'Muestra los radicados que estan en los usuarios';
-/*$reportes[14]['Nomb'] = 'Radicados de Entrada Imagén (anexos y radicados)';
-$reportes[14]['leyend'] = 'Muestra los radicados que no cuentan con imagen.';
-$reportes[15]['Nomb'] = 'Gestión De Radicados de Memorandos';
-$reportes[15]['leyend'] = 'Reporte que Muestra la gestión de radicados de Memorandos';
-/*
-<!--
-<option value="9">9 - INFORME TRAMITE DE RADICADOS DE ENTRADA</option>-->
-<!--  <option value="23">10 - CANTIDAD DE RADICADOS EN BANDEJA JEFES</option>
-<option value="24">11 - CANTIDAD DE RADICADOS EN BANDEJA POR
-DEPENDENCIA/AREA </option>
-<option value="25">12 - CANTIDAD DE RADICADOS QUE TRANSITAN POR
-DEPENDENCIA/AREA</option>
-<option value="26">13 - RADICADOS POR TIPO</option>
-<option value="27">14 - RADICADOS POR USUARIO - (IMAGEN Y ANEXOS)</option>
-<option value="29">15 - RADICADOS POR USUARIO - (DATOS DE ENVIO)</option>-->
-
- */
 
 foreach ($reportes as $key => $value) {
     $reporteId = isset($value['reporteId']) ? $value['reporteId'] : $key;
@@ -159,228 +139,207 @@ foreach ($reportes as $key => $value) {
     <!--<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />-->
 
     <title>Estadisiticas - SuperArgo</title>
+    <style>
+        /* Estilos adicionales para mejorar la apariencia en BS4 */
+        .card {
+            border-radius: 10px;
+        }
 
+        .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, .05);
+            background-color: #043074 !important;
+        }
+
+        .input-group-text {
+            font-size: 0.82rem;
+            color: #555;
+        }
+
+        .custom-select {
+            cursor: pointer;
+        }
+
+        .btn {
+            border-radius: 6px;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+        }
+
+        /* Para corregir el ancho de los selects generados por PHP si es necesario */
+        .custom-select-container select {
+            width: 100%;
+            height: calc(1.5em + 0.5rem + 2px);
+            padding: 0.25rem 0.5rem;
+            font-size: .875rem;
+            border: 1px solid #ced4da;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .margin-botton-table {
+            margin-bottom: 5rem !important;
+        }
+    </style>
 </head>
 
 <body>
     <noscript>
-        <span class="warningjs">Aviso: La ejecución de JavaScript está deshabilitada en su navegador. Es posible que no
+        <span class="warningjs">
+            Aviso: La ejecución de JavaScript está deshabilitada en su navegador. Es posible que no
             pueda responder todas las preguntas de la encuesta. Por favor, verifique la configuración de su
-            navegador.</span>
+            navegador.
+        </span>
     </noscript>
     <br>
-    <div class="col-12">
-
+    <div class="col-12 mt-3">
         <section id="widget-grid">
-            <!-- row -->
             <div class="row">
-                <!-- NEW WIDGET START -->
                 <article class="col-12">
-                    <!-- Widget ID (each widget will need unique ID)-->
-                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
-
-                        <header class='pl-2'>
-                            <h2> Estadisticas</h2>
-                        </header>
-                        <!-- widget content -->
-                        <div class="widget-body">
+                    <div class="card shadow-sm border-light">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-white">
+                                <i class="fa fa-table mr-2"></i> Panel de Estadísticas
+                            </h5>
+                        </div>
+                        <div class="card-body bg-light-50">
                             <div class="row">
-                                <div class="col-sm-12 col-md-8 ">
-                                    <div class='row'>
-                                        <div class="col-12 ">
-                                            <div class="input-group input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text text-left" id="basic-addon1">Tipo de
-                                                        Estadistica</span>
-                                                </div>
-                                                <select name="tipoEstadistica" id='tipoEstadistica'
-                                                    class="custom-select text-capitalize">
-                                                    <option value=0>-- Selecione --</option>
-                                                    <?php echo $optResp; ?>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='row'>
-
-                                        <div class="col-12 ">
-                                            <div class="input-group input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text  text-left"
-                                                        id="basic-addon1">Dependencias</span>
-                                                    <span class="input-group-text">Adscritas
-                                                        <input id="CHKseldep" type="checkbox"
-                                                            aria-label="Checkbox for following text input">
-                                                </div>
-                                                <?php //echo $optionDep; ?>
-                                                <select name="dependencia_busq" id="dependencia_busq" class="custom-select text-capitalize ">
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='row'>
-                                        <div class="col-12">
-                                            <div class="input-group input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text tamCab text-left"
-                                                        id="basic-addon1">Serie</span>
-                                                </div>
-                                                <select name="selSerie" id="selSerie" class="custom-select ">
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='row'>
-                                        <div class="col-12">
-                                            <div class="input-group input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text tamCab text-left"
-                                                        id="basic-addon1">Subserie</span>
-                                                </div>
-                                                <select name="selSubSerie" id="selSubSerie" class="custom-select">
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='row'>
-                                        <div class="col-12">
-                                            <div class="input-group input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text text-left"
-                                                        id="basic-addon1">Usuario</span>
-                                                    <span class="input-group-text"> Incluir Inactivos
-                                                        <input id="CHKselUsuario" onclick='usuario();' type="checkbox"
-                                                            aria-label="Checkbox for following text input">
-                                                </div>
-                                                </span>
-                                                <select name="selUsuario" id="selUsuario"
-                                                    class="custom-select text-capitalize">
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            
-                            <div class='col-md-4 col-sm-12 '>
-                                <div class='row'>
-                                    <div class="col-12 ">
+                                <div class="col-lg-7 col-md-12 border-right">
+                                    <div class="form-group mb-3">
                                         <div class="input-group input-group-sm">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text tamCab text-left" id="basic-addon1">Fecha
-                                                    Desde</span>
+                                                <span class="input-group-text bg-light border-right-0" style="min-width: 140px;">Tipo Estadística</span>
                                             </div>
-                                            <input type="date" name="fecha_ini" id="fecha_ini"
-                                                placeholder="Fecha Inicial" value="<?php echo date($fecha_ini); ?>"
-                                                class="form-control">
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-12 ">
-                                        <div class="input-group input-group-sm">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text tamCab text-left" id="basic-addon1">Fecha
-                                                    Hasta</span>
-                                            </div>
-                                            <input type="date" name="fecha_fin" id="fecha_fin" placeholder="Fecha FIn"
-                                                value="<?php echo date('Y-m-d'); ?>" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-12">
-                                        <div class="input-group input-group-sm">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text tamCab text-left" id="basic-addon1">Tipo
-                                                    Radicado</span>
-                                            </div>
-                                            <?php echo $tipoRad; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-12">
-                                        <div class="input-group input-group-sm">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text tamCab text-left " id="basic-addon1">Tipo
-                                                    Documento</span>
-                                            </div>
-                                            <select id="selTipoDoc" id="selTipoDoc"
-                                                class="form-control text-capitalize " data-live-search="true">>
+                                            <select name="tipoEstadistica" id="tipoEstadistica" class="form-control custom-select text-capitalize">
+                                                <option value="0">-- Seleccione --</option>
+                                                <?php echo $optResp; ?>
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-12">
-                                        <span class="input-group-btn ">
-                                            <button class="btn btn-sm btn-primary pull-right btn-generar" type="button"
-                                                id='generar'><i class='fa fa-play'></i>
-                                                Generar</button>
-                                            <button class="btn btn-sm btn-primary pull-right" type="button"><i
-                                                    class='fa fa-eraser'></i> Limpiar</button>
 
-                                        </span>
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-light border-right-0" style="min-width: 140px;">Dependencias</span>
+                                                <div class="input-group-text bg-white border-left-0 border-right-0 py-0">
+                                                    <small class="mr-2 text-muted">Adscritas</small>
+                                                    <input id="CHKseldep" type="checkbox" aria-label="Adscritas">
+                                                </div>
+                                            </div>
+                                            <select name="dependencia_busq" id="dependencia_busq" class="form-control custom-select text-capitalize"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row no-gutters mb-3">
+                                        <div class="col-md-6 pr-md-1">
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-light" style="min-width: 80px;">Serie</span>
+                                                </div>
+                                                <select name="selSerie" id="selSerie" class="form-control custom-select"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 pl-md-1 mt-2 mt-md-0">
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-light" style="min-width: 80px;">Subserie</span>
+                                                </div>
+                                                <select name="selSubSerie" id="selSubSerie" class="form-control custom-select"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-0">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-light border-right-0" style="min-width: 140px;">Usuario</span>
+                                                <div class="input-group-text bg-white border-left-0 border-right-0 py-0">
+                                                    <small class="mr-2 text-muted">Inactivos</small>
+                                                    <input id="CHKselUsuario" onclick="usuario();" type="checkbox" aria-label="Inactivos">
+                                                </div>
+                                            </div>
+                                            <select name="selUsuario" id="selUsuario" class="form-control custom-select text-capitalize"></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-5 col-md-12 mt-3 mt-lg-0">
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-12 mb-3">
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-light" style="min-width: 100px;">Desde</span>
+                                                </div>
+                                                <input type="date" name="fecha_ini" id="fecha_ini" value="<?php echo date($fecha_ini); ?>" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-12 mb-3">
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-light" style="min-width: 100px;">Hasta</span>
+                                                </div>
+                                                <input type="date" name="fecha_fin" id="fecha_fin" value="<?php echo date('Y-m-d'); ?>" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-light" style="min-width: 100px;">Tipo Radicado</span>
+                                            </div>
+                                            <div class="flex-grow-1 custom-select-container">
+                                                <?php echo $tipoRad; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-4">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-light" style="min-width: 100px;">Tipo Documento</span>
+                                            </div>
+                                            <select id="selTipoDoc" class="form-control custom-select text-capitalize" data-live-search="true"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end align-items-center mt-4">
+                                        <button class="btn btn-sm btn-outline-secondary mr-2" type="button" onclick="location.reload();">
+                                            <i class="fa fa-sync-alt mr-1"></i> Limpiar
+                                        </button>
+                                        <button class="btn btn-sm btn-primary px-4 shadow-sm font-weight-bold" type="button" id="generar">
+                                            <i class="fa fa-play mr-1"></i> Generar
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-
-
-                        </div>
-
-                        <div class="row">
-
-
-                        </div>
-
-                        <div class="row">
-
-
-                        </div>
-                        <div class="row">
-
-
-                        </div>
                     </div>
-
+                </article>
             </div>
-    </div>
-    </article>
-    </div>
-    </section>
+        </section>
     </div>
 
     <div class="col-12">
         <div class="alert alert-warning INFOalert ">
             <strong>Esta nueva interfase migrara los reportes o estadisticas a médida que estén aprobados</strong>
-            <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>-->
-            </button>
         </div>
     </div>
-    <div class="col-12" id='resulEstdatos' style='display:none'>
+
+    <div class="col-12 " id='resulEstdatos' style='display:none'>
         <section id="widget-grid">
             <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
                 <header class='pl-2'>
                     <h2 id="nomReport"> Resultado</h2>
                 </header>
-
-
                 <!-- widget content -->
-                <div class="widget-body">
+                <div class="widget-body margin-botton-table">
                     <div class="" id='resultado'> resultado</div>
                 </div>
-
             </div>
         </section>
     </div>
+
     <div class="modal  show" id="DetEsta" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-argo modal-xl" style='min-width: 99%;'>
             <div class="modal-content">
@@ -398,45 +357,42 @@ foreach ($reportes as $key => $value) {
             </div>
         </div>
     </div>
+
     <div class="modal  static fade" data-backdrop="static" id="processing-modal" aria-modal="true" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-body" style='min-height:300px;' >
-                    <div class="text-center">                        
-                            <h5><span class="modal-text">Procesando, Espere por favor... </span></h5>
-                            <div id="imageLoad"></div>
+                <div class="modal-body" style='min-height:300px;'>
+                    <div class="text-center">
+                        <h5><span class="modal-text">Procesando, Espere por favor... </span></h5>
+                        <div id="imageLoad"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-<iframe name='excel_desc' id='excel_desc' style='display:none' ></iframe>
+    <iframe name='excel_desc' id='excel_desc' style='display:none'></iframe>
     <script type="text/javascript" src="../js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="../js/bootstrap/popper.min.js"></script>
     <script type="text/javascript" src="../js/bootstrap/bootstrap4.min.js"></script>
     <script type="text/javascript" src="../js/axios.min.js"></script>
     <script type="text/javascript" src="../include/DataTables/datatables.min.js"></script>
     <script type="text/javascript" src="../include/DataTables/Buttons-1.7.0/js/buttons.html5.js"></script>
-    <script type="text/javascript" src="estadisticas.js?<?=uniqid('h');?>"></script>
-    <!--<script type="text/javascript" src="../js/bootstrap/bootstrap-select.min.js"></script>-->
-
+    <script type="text/javascript" src="estadisticas.js?<?= uniqid('h'); ?>"></script>
     <script>
-    series();
-    tipodoc();
-    usuario();
-    
-    //$('#fecha_ini').val(<?php echo date($fecha_ini); ?>);
-    /*  var $disabledResults = $(".selectpicker"); $disabledResults.select2();*/
+        series();
+        tipodoc();
+        usuario();
     </script>
+
     <div id="animationload" class="animationload" style="display: none;">
         <div id="imageLoad"></div>
     </div>
-    <script type="text/javascript" language="javascript">
-    var aniLoad = document.getElementById('animationload');
-    aniLoad.style.display = 'block';
-    </script>
 
+    <script type="text/javascript" language="javascript">
+        var aniLoad = document.getElementById('animationload');
+        aniLoad.style.display = 'block';
+    </script>
 </body>
 
 </html>
