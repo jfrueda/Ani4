@@ -1,0 +1,190 @@
+.rmpTblBordStrip table{
+    width: 100%;
+    margin-bottom: 1rem; 
+    color: #212529;
+    border-collapse: collapse;
+}
+/* Bordes para la tabla */
+.rmpTblBordStrip {
+    border: 1px solid #dee2e6;
+}
+
+.rmpTblBordStrip th,
+.rmpTblBordStrip td {
+    border: 1px solid #dee2e6;
+}
+
+/* Rayas para la tabla */
+.rmpTblBordStrip tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+/* Estilo básico para la tabla */
+.rmpTblBordStrip {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+}
+
+/* Estilo general para las celdas de la tabla */
+.rmpTblBordStrip th,
+.rmpTblBordStrip td {
+    padding: 0.75rem;
+    vertical-align: top;
+    /*border-top: 1px solid #dee2e6;*/
+}
+
+.rmpTblBordStrip thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.rmpTblBordStrip tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.img-estdos {
+    display: none;
+}
+.checkAllmark{
+    display: none;
+}
+.titulosR{
+    display: none;
+}
+.btnStyleResp{
+ display: none;
+}
+.resBtn2{
+    display: none;
+}
+.iconResp{
+    display: none;   
+}
+
+.respTd{
+    display: none;
+}
+@media (max-width: 40em ){
+    /********************************************************/
+    /*Encabezado*/
+    /********************************************************/
+    .btnStyle{
+        display: none;
+    }
+    .btnStyleResp{
+        display: flex;
+        flex-direction: column;
+    }
+    .texList{
+        padding-bottom: 1em;
+    }
+    .vacio{
+        display: none;
+    }
+    .titulosR{
+        display: flex;
+    }
+    .form-control {
+         box-sizing: border-box; 
+    }
+    /********************************************************/
+    /********************************************************/
+    .resBtnorg{
+        display: none;
+    }
+    .resBtn2{
+        display: flex;
+        flex-direction: column;
+        padding: 1em;
+    }
+    /********************************************************/
+    
+    .img-estdos {
+        display: flex;
+    }
+    
+    .respMq{
+        font-size: 1.3em;
+    }
+    
+    .checkAllmark{
+        display: flex;
+        color: silver;
+        font-weight: bold;
+    }
+    .rmpTblBordStrip th,
+    .rmpTblBordStrip td {
+        border: none;
+    }
+
+    .rmpTblBordStrip th,
+    .rmpTblBordStrip td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: none;
+    }
+    
+    .respMq tr{
+        display: flex;
+        flex-direction: column;
+        border:1px solid gray;
+        padding: 1em;
+        margin-bottom: 1em;
+    }
+    .respMq thead{
+        display: none;
+    }
+
+    .respMq td[data-titulo]{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .respMq td[data-titulo]::before{
+        content: attr( data-titulo );
+        color: silver;
+        font-weight: bold;
+    }
+
+/*****************************************************/
+/*ESTILOS PARA ANEXOS*/
+/*****************************************************/
+
+    .tblRsp thead{
+        display: none;    
+    }
+    .tblRsp tr{
+        display: flex;
+        flex-direction: column;
+        padding: 1em;
+        margin-bottom: 1em;
+        background-color: #dee2e6;
+    }
+    .tblRsp td[data-titanex]{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .tblRsp td[data-titanex]::before{
+        content: attr( data-titanex );
+        color: silver;
+        font-weight: bold;
+    }
+    .iconResp{
+     display: flex;   
+    }
+    .iconOrigResp{
+        display: none;
+    }
+    .respTdOrg{
+        display: none;
+    }
+    .tdReso{
+        padding-bottom: 3rem;
+    }
+    .respTd{
+        display: flex;
+    }
+}
+

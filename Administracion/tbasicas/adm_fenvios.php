@@ -1,0 +1,380 @@
+<?php
+
+/**
+ * @module crearUsuario
+ *
+ * @author Jairo Losada   <jlosada@gmail.com>
+ * @author Cesar Gonzalez <aurigadl@gmail.com>
+ * @license  GNU AFFERO GENERAL PUBLIC LICENSE
+ * @copyright
+
+SIIM2 Models are the data definition of SIIM2 Information System
+Copyright (C) 2013 Infometrika Ltda.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+session_start();
+
+$ruta_raiz = "../..";
+if (!$_SESSION['dependencia'])
+	header("Location: $ruta_raiz/cerrar_session.php");
+
+if (!isset($krd)) $krd = $_POST['krd'];
+else $krd = $_GET['krd'];
+
+require_once("$ruta_raiz/include/db/ConnectionHandler.php");
+$db = new ConnectionHandler($ruta_raiz);
+
+/*
+*	Funcion que convierte un valor de PHP a un valor Javascript.
+*/
+function valueToJsValue($value, $encoding = false)
+{
+	if (!is_numeric($value)) {
+		$value = str_replace('\\', '\\\\', $value);
+		$value = str_replace('"', '\"', $value);
+		$value = '"' . $value . '"';
+	}
+	if ($encoding) {
+		switch ($encoding) {
+			case 'utf8':
+				return iconv("ISO-8859-2", "UTF-8", $value);
+				break;
+		}
+	} else {
+		return $value;
+	}
+	return;
+}
+
+/*
+*	Funcion que convierte un vector de PHP a un vector Javascript.
+*	Utiliza a su vez la funcion valueToJsValue.
+*/
+function arrayToJsArray($array, $name, $nl = "\n", $encoding = false)
+{
+	if (is_array($array)) {
+		$jsArray = $name . ' = new Array();' . $nl;
+		foreach ($array as $key => $value) {
+			switch (gettype($value)) {
+				case 'unknown type':
+				case 'resource':
+				case 'object':
+					break;
+				case 'array':
+					$jsArray .= arrayToJsArray($value, $name . '[' . valueToJsValue($key, $encoding) . ']', $nl);
+					break;
+				case 'NULL':
+					$jsArray .= $name . '[' . valueToJsValue($key, $encoding) . '] = null;' . $nl;
+					break;
+				case 'boolean':
+					$jsArray .= $name . '[' . valueToJsValue($key, $encoding) . '] = ' . ($value ? 'true' : 'false') . ';' . $nl;
+					break;
+				case 'string':
+					$jsArray .= $name . '[' . valueToJsValue($key, $encoding) . '] = ' . valueToJsValue($value, $encoding) . ';' . $nl;
+					break;
+				case 'double':
+				case 'integer':
+					$jsArray .= $name . '[' . valueToJsValue($key, $encoding) . '] = ' . $value . ';' . $nl;
+					break;
+				default:
+					trigger_error('Hoppa, egy j ERROR a PHP-ben?' . __CLASS__ . '::' . __FUNCTION__ . '()!', E_USER_WARNING);
+			}
+		}
+		return $jsArray;
+	} else {
+		return false;
+	}
+}
+
+$error = 0;
+
+if ($db) {
+	$db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
+
+	if (isset($_POST['btn_accion'])) {
+		$codi_ini = $_POST['sls_idfenv'];
+		$record = array();
+
+		$record['SGD_FENV_DESCRIP'] = $_POST['txtNombre'];
+		$record['SGD_FENV_CODIGO'] = $_POST['txtId'];
+		$record['SGD_FENV_ESTADO'] = $_POST['slc_act'];
+		$record['SGD_FENV_PLANILLA'] = $_POST['slc_pnl'];
+
+		switch ($_POST['btn_accion']) {
+			case 'Agregar': {
+					$tabla = 'SGD_FENV_FRMENVIO';
+					$sql = $db->conn->GetInsertSQL($tabla, $record, true, null);
+					$ok = $db->conn->Execute($sql);
+					($ok) ? $error = 3 : $error = 2;
+				}
+				break;
+			case 'Modificar': {
+					if ($codi_ini <> $record['SGD_FENV_CODIGO']) {
+						//No se permite modificar el código del envío
+						$error = 6;
+					} else {
+						$ok = $db->conn->Replace('SGD_FENV_FRMENVIO', $record, 'SGD_FENV_CODIGO', true);
+						($ok) ? $error = 4 : $error = 2;
+					}
+				}
+				break;
+			case 'Eliminar': {
+					$ADODB_COUNTRECS = true;
+					$sql1 = "SELECT count(1) FROM SGD_RENV_REGENVIO WHERE SGD_FENV_CODIGO = " . $record['SGD_FENV_CODIGO'];
+					$sql2 = "SELECT count(1) FROM SGD_CLTA_CLSTARIF WHERE SGD_FENV_CODIGO = " . $record['SGD_FENV_CODIGO'];
+					$cnt1 = $db->conn->GetOne($sql1);
+					$cnt2 = $db->conn->GetOne($sql2);
+					if ($cnt1 > 0 || $cnt2 > 0) {
+						$error = 5;
+					} else {
+						$ok = $db->conn->Execute('DELETE FROM SGD_FENV_FRMENVIO WHERE SGD_FENV_CODIGO=' . $record['SGD_FENV_CODIGO']);
+						if (!$ok) $error = 2;
+					}
+				}
+				break;
+			default:
+				break;
+		}
+		unset($record);
+	}
+
+	$sql =	"SELECT SGD_FENV_DESCRIP, SGD_FENV_CODIGO, SGD_FENV_ESTADO, SGD_FENV_PLANILLA
+				FROM SGD_FENV_FRMENVIO ORDER BY SGD_FENV_DESCRIP";
+	$Rs = $db->conn->Execute($sql);
+	if (!($Rs)) $error = 2;
+	else {	//Creamos el vector que contiene todas las Formas de envio con su respectiva informacion.
+		$v_fenv = array();
+		$i = 0;
+		while ($arr = $Rs->fetchRow()) {
+			$v_fenv[$i]['nombre'] = trim($arr['SGD_FENV_DESCRIP']);
+			$v_fenv[$i]['id'] = trim($arr['SGD_FENV_CODIGO']);
+			$v_fenv[$i]['estado'] = trim($arr['SGD_FENV_ESTADO']);
+			$v_fenv[$i]['planilla'] = trim($arr['SGD_FENV_PLANILLA']);
+			$i += 1;
+		}
+		//$Rs->Move(0);
+		$Rs = $db->conn->Execute($sql);
+		$slc_fenv = $Rs->GetMenu2('sls_idfenv', 0, "0:&lt;&lt; SELECCIONE &gt;&gt;", false, 0, "id=\"sls_idfenv\" class=\"select\" onchange=\"actualiza_datos(this.value)\"");
+		$Rs->Close();
+		reset($v_fenv);
+	}
+} else {
+	$error = 1;
+}
+
+$msg = "";
+if ($error) {
+	$msg .= '<tr> 			<td width="3%" align="center" class="titulosError" colspan="3" bgcolor="#FFFFFF">';
+	switch ($error) {
+		case 1:	//NO CONECCION A BD
+			$msg .= "Error al conectar a BD, comun&iacute;quese con el Administrador de sistema !!";
+			break;
+		case 2:	//ERROR EJECUCCION SQL
+			$msg .= "Error al gestionar datos, Si est&aacute; agregando es posible que el ID asignado exista sino comun&iacute;quese con el Administrador de sistema !!";
+			break;
+		case 3:	//ACUTALIZACION REALIZADA
+			$msg .= "Forma de Envio creada satisfactoriamente!!";
+			break;
+		case 4:	//INSERCION REALIZADA
+			$msg .= "Informaci&oacute;n actualizada!!";
+			break;
+		case 5:	//IMPOSIBILIDAD DE ELIMINAR, TIENE HISTORIAL.
+			$msg .= "No se puede eliminar, se encuentra ligado a otros registros.";
+			break;
+		case 6:	//IMPOSIBILIDAD MODIFICAR CODIGO DEL ENVÍO,
+			$msg .= "No se puede Modificar el Codigo del Env&iacute;o .";
+			break;
+	}
+	$msg .= '</td></tr>';
+}
+?>
+<html>
+
+<head>
+	<title>.: ORFEO :. Administraci&oacute;n de ESP(Entidades)</title>
+	<script language="JavaScript" src="<?= $ruta_raiz ?>/js/crea_combos_2.js"></script>
+	<script language="JavaScript" src="<?= $ruta_raiz ?>/js/formchek.js"></script>
+	<?php include_once "$ruta_raiz/htmlheader.inc.php"; ?>
+	<!-- language="JavaScript" type="text/JavaScript" -->
+	<script>
+		function ver_listado(que) {
+			window.open('listados.php?<?= session_name() . "=" . session_id() ?>&var=fnv', '', 'scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
+		}
+
+		function ValidarInformacion() {
+			var strMensaje = "Por favor ingrese todos los datos.";
+
+			if (isWhitespace(document.form1.txtId.value)) {
+				alert("Debe seleccionar o digitar el codigo.\n" + strMensaje);
+				document.form1.txtId.focus();
+				return false;
+			} else if (isNaN(document.form1.txtId.value)) {
+				alert("El Codigo debe ser numerico.\n" + strMensaje);
+				document.form1.txtId.focus();
+				return false;
+			}
+
+			if ((document.form1.hdBandera.value == "A") || (document.form1.hdBandera.value == "M")) {
+				if (isWhitespace(document.form1.txtNombre.value) ||
+					isWhitespace(document.form1.slc_pnl.value) ||
+					isWhitespace(document.form1.slc_act.value)
+				) {
+					alert(strMensaje);
+					return false;
+				}
+			}
+			if (document.form1.hdBandera.value == "E") {
+				if (confirm("Esta seguro de borrar el registro ?\n")) {
+					document.form1.submit();
+				} else {
+					return false;
+				}
+			}
+			document.form1.submit();
+		}
+
+		<?php
+		// Convertimos los vectores de los paises, dptos y municipios creados en crea_combos_universales.php a vectores en JavaScript.
+		echo arrayToJsArray($v_fenv, 've');
+		?>
+
+		function actualiza_datos(vlr) {
+			var i;
+			for (i = 0; i <= ve.length; i++) {
+				if (ve[i]['id'] == vlr) {
+					break;
+				}
+			}
+			if (form1.sls_idfenv.value > 0) {
+				document.getElementById('txtId').value = ve[i]['id'];
+				document.getElementById('txtNombre').value = ve[i]['nombre'];
+				document.getElementById('slc_pnl').value = ve[i]['planilla'];
+				document.getElementById('slc_act').value = ve[i]['estado'];
+			} else {
+				document.getElementById('txtId').value = '';
+				document.getElementById('txtNombre').value = '';
+				document.getElementById('slc_pnl').value = '';
+				document.getElementById('slc_act').value = '';
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<form name="form1" id="form1" method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
+		<input type='hidden' name='<?= session_name() ?>' value='<?= session_id() ?>'>
+		<input type="hidden" id="hdBandera" name="hdBandera" value="">
+		<input type="hidden" id="krd" name="krd" value="<?= $krd ?>">
+
+		<div class="container-fluid mt-4">
+			<section id="widget-grid">
+				<div class="row justify-content-center">
+					<article class="col-12 ">
+						<div class="card shadow-sm border-secondary">
+							<div class="card-header bg-orfeo text-white d-flex align-items-center">
+								<i class="fa fa-truck me-2"></i>
+								<h5 class="mb-0 fw-bold">Administración de Formas de Envío</h5>
+							</div>
+
+							<div class="card-body bg-light">
+								<div class="row mb-4 align-items-center border-bottom pb-3">
+									<div class="col-auto">
+										<span class="badge bg-secondary rounded-pill">1</span>
+									</div>
+									<div class="col-md-3">
+										<label class="fw-bold text-secondary">Seleccione Envío</label>
+									</div>
+									<div class="col-md-8">
+										<div class="input-group">
+											<span class="input-group-text bg-white"><i class="fa fa-list"></i></span>
+											<?= str_replace('class="select"', 'class="form-select"', $slc_fenv) ?>
+										</div>
+									</div>
+								</div>
+
+								<div class="row mb-4 align-items-start">
+									<div class="col-auto">
+										<span class="badge bg-secondary rounded-pill">2</span>
+									</div>
+									<div class="col-md-3">
+										<label class="fw-bold text-secondary">Modificar o Ingrese datos</label>
+									</div>
+									<div class="col-md-8">
+										<div class="card border-0 shadow-sm">
+											<div class="card-body border rounded bg-white">
+												<div class="row g-3">
+													<div class="col-md-3">
+														<label for="txtId" class="form-label small fw-bold">ID</label>
+														<input class="form-control" type="text" name="txtId" id="txtId" maxlength="3" placeholder="ID">
+													</div>
+													<div class="col-md-9">
+														<label for="txtNombre" class="form-label small fw-bold">NOMBRE</label>
+														<input class="form-control" type="text" name="txtNombre" id="txtNombre" maxlength="80" placeholder="Nombre de la forma de envío">
+													</div>
+
+													<div class="col-md-6">
+														<label for="slc_act" class="form-label small fw-bold">¿Está activa?</label>
+														<select name="slc_act" id="slc_act" class="form-select">
+															<option value="">Seleccione</option>
+															<option value="1"> S I </option>
+															<option value="0"> N O </option>
+														</select>
+													</div>
+													<div class="col-md-6">
+														<label for="slc_pnl" class="form-label small fw-bold">¿Genera Planilla?</label>
+														<select name="slc_pnl" id="slc_pnl" class="form-select">
+															<option value="">Seleccione</option>
+															<option value="1"> S I </option>
+															<option value="0"> N O </option>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<?php if (!empty($msg)): ?>
+									<div class="alert alert-info mt-3">
+										<?= $msg ?>
+									</div>
+								<?php endif; ?>
+							</div>
+
+							<div class="card-footer bg-white border-top-0 pb-4">
+								<div class="row g-2 justify-content-center">
+									<div class="col-6 col-md-2">
+										<input name="btn_accion" type="button" class="btn btn-outline-dark w-100" id="btn_accion" value="Listado" onClick="ver_listado();">
+									</div>
+									<div class="col-6 col-md-2">
+										<input name="btn_accion" type="submit" class="btn btn-success w-100" id="btn_accion" value="Agregar" onClick="document.form1.hdBandera.value='A'; return ValidarInformacion();">
+									</div>
+									<div class="col-6 col-md-2">
+										<input name="btn_accion" type="submit" class="btn btn-primary w-100" id="btn_accion" value="Modificar" onClick="document.form1.hdBandera.value='M'; return ValidarInformacion();">
+									</div>
+									<div class="col-6 col-md-2">
+										<input name="btn_accion" type="submit" class="btn btn-danger w-100" id="btn_accion" value="Eliminar" onClick="document.form1.hdBandera.value='E'; return ValidarInformacion();">
+									</div>
+								</div>
+							</div>
+						</div>
+					</article>
+				</div>
+			</section>
+		</div>
+	</form>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+table
+{
+    width: 80%;
+    margin-left: 7em;
+    border: solid 1px;
+}
+.cab
+{
+    text-align: right;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.cab-td
+{
+    padding-right: 3.5em;
+}
+.bod
+{
+    text-align: justify;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.pagFin
+{
+    text-align: justify;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5em;
+}   

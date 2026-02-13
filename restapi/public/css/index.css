@@ -1,0 +1,89 @@
+
+table.dataTable thead .sorting_asc {
+    background-image: url(../public/img/sort_asc.png);
+}
+
+table.dataTable thead .sorting_desc {
+    background-image: url(../public/img/sort_desc.png);
+}
+
+table.dataTable thead .sorting {
+    background-image: url(../public/img/sort_both.png);
+}
+
+table.table thead .sorting_asc_disabled {
+    background: url(../public/img/sort_asc_disabled.png) no-repeat center right;
+}
+
+table.table thead .sorting_desc_disabled {
+    background: url(../public/img/sort_desc_disabled.png) no-repeat center right;
+}
+
+.infoTypeDocument {
+    font-size: 14px;
+    margin-top: 5px;
+    margin-right: 3px;
+}
+
+.imgTestigoDoc {
+    margin-left: 7px;
+    transform: rotate(35deg);
+}
+
+.col-codigo-documento {
+    white-space: nowrap;
+}
+
+.item-metadatos-task {
+    box-shadow: 0 .125rem .50rem rgba(0,0,0,.075)!important;
+    border-radius: 0.25rem;
+    padding: 6px;
+}
+
+.item-metadatos-task:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+.item-metadatos-task table tbody td:hover {
+    cursor: pointer;
+}
+
+.container-metadata-task {
+    padding: 1.5rem;
+}
+
+.col-task {
+    padding: 15px;
+    float: left !important;
+}
+
+/* Important part */
+.modal-dialog-tasks {
+    overflow-y: initial !important
+}
+.modal-body-tasks {
+    height: 80vh;
+    overflow-y: auto;
+}
+
+.shadow {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+.container-item-tasks {
+    padding: 2rem;
+    margin-top: 17px;
+}
+
+.header-container-item {
+    font-size: 16px;
+}
+
+.header-container-item i {
+    float: right;
+    cursor: pointer;
+}
+
+.table-global-metadata {
+    margin-top: 1rem;
+}

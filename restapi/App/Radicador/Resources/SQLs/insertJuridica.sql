@@ -1,0 +1,29 @@
+INSERT INTO tercerojuridica (
+    rozon_social,
+    nit,
+    id_pais,
+    id_dpto,
+    id_mpcio,
+    direccion,
+    telefono,
+    email,
+    dignatario,
+    cargo,
+    idregistro,
+	estado,
+    fecha_registro
+)  VALUES (
+            '{{razonSocial}}',
+            '{{nit}}',
+            '{{idPais}}',
+            '{{idDpto}}',
+            '{{idMpio}}',         
+            '{{direccion}}',      
+            '{{telefono}}', 
+            '{{email}}',      
+            '{{dignatario}}',     
+            '{{cargo}}', 
+             {{idRegistro}},         
+            '{{estado}}',
+            now()
+    )
