@@ -244,40 +244,40 @@ for ($i=0; $i<3; $i++)	//Ciclo de 0 a 2 para cubrir los 3 vectores de selecciona
 		//recorre el grupo de empresas
 		while (!$rs->EOF )
 		{	$codDepto=$rs->fields['IDPAIS'].'-'.$rs->fields['IDDPTO'];
-			if (strlen(trim($codDepto))==0)	$codDepto="<ESPACIO>";
+			if (strlen(trim($codDepto))==0)	$codDepto=" ";
 
 			$codMuni=$codDepto.'-'.$rs->fields['IDMPIO'];
 
-			if (strlen(trim($codMuni))==0)	$codMuni="<ESPACIO>";
+			if (strlen(trim($codMuni))==0)	$codMuni=" ";
 
 			$depto->departamento_codigo($codDepto);
 			$muni->municipio_codigo($codDepto,$codMuni);
 			$nombDepto=$depto->get_dpto_nomb();
-			if (strlen($nombDepto)==0)	$nombDepto="<ESPACIO>";
+			if (strlen($nombDepto)==0)	$nombDepto=" ";
 
 			$nombMuni=$muni->get_muni_nomb();
-			if (strlen($nombMuni)==0)	$nombMuni="<ESPACIO>";
+			if (strlen($nombMuni)==0)	$nombMuni=" ";
 
 			// Trae nombre del pais
 			$tmp_rs = $this->cursor->query("SELECT NOMBRE_PAIS FROM SGD_DEF_PAISES WHERE ID_PAIS=".$rs->fields['IDPAIS']);
 			if ($tmp_rs)
-			{	(trim($tmp_rs->fields['NOMBRE_PAIS']) == "") ? $nombPais = "<ESPACIO>" : $nombPais = $tmp_rs->fields['NOMBRE_PAIS'];
+			{  	(trim($tmp_rs->fields['NOMBRE_PAIS']) == "") ? $nombPais = " " : $nombPais = $tmp_rs->fields['NOMBRE_PAIS'];
 				$tmp_rs->Close();
 				unset($tmp_rs);
 			}
-			else $nombPais = "<ESPACIO>";
+			else $nombPais = " ";
 
 			$nombESP = $rs->fields['PPAL'];
-			if (strlen(trim($nombESP))==0)	$nombESP="<ESPACIO>";
+			if (strlen(trim($nombESP))==0)	$nombESP=" ";
 
 			$dirESP = $rs->fields['DIR'];
-			if (strlen(trim($dirESP))==0)	$dirESP="<ESPACIO>";
+			if (strlen(trim($dirESP))==0)	$dirESP=" ";
 
 			$nuir =  $rs->fields['ID'];
-			if (strlen(trim($nuir))==0)	$nuir="<ESPACIO>";
+			if (strlen(trim($nuir))==0)	$nuir=" ";
 
 			$nomRepESP = $rs->fields['DESCR'];
-			if (strlen(trim($nomRepESP))==0)	$nomRepESP="<ESPACIO>";
+			if (strlen(trim($nomRepESP))==0)	$nomRepESP=" ";
 
 			// Trae nombre del dignatario
 			reset($arrEmpresas);
@@ -285,14 +285,14 @@ for ($i=0; $i<3; $i++)	//Ciclo de 0 a 2 para cubrir los 3 vectores de selecciona
 			$tmp_vec = explode(",",$contactos);
 			$tmp_rs = $this->cursor->query("SELECT CTT_NOMBRE,CTT_CARGO FROM SGD_DEF_CONTACTOS WHERE CTT_ID=".$tmp_vec[$tmp_var]);
 			if($tmp_rs)
-			{	(trim($tmp_rs->fields['CTT_NOMBRE']) == "") ? $dignatario = "<ESPACIO>" : $dignatario = $tmp_rs->fields['CTT_NOMBRE'];
-				(trim($tmp_rs->fields['CTT_CARGO']) == "") ? $cargo = "<ESPACIO>" : $cargo = $tmp_rs->fields['CTT_CARGO'];
+			{  	(trim($tmp_rs->fields['CTT_NOMBRE']) == "") ? $dignatario = " " : $dignatario = $tmp_rs->fields['CTT_NOMBRE'];
+				(trim($tmp_rs->fields['CTT_CARGO']) == "") ? $cargo = " " : $cargo = $tmp_rs->fields['CTT_CARGO'];
 				$tmp_rs->Close();
 				unset($tmp_rs);
 			}
 			else
-			{	$dignatario = "<ESPACIO>";
-				$cargo = "<ESPACIO>";
+			{	$dignatario = " ";
+				$cargo = " ";
 			}
 
 			$contenido= $contenido ."$i,$com$nombESP$com,$com$dirESP$com,$com$nombMuni$com,$com$nombDepto$com,$com$nombPais$com,$com$nuir$com,$com$nomRepESP$com,$com$dignatario$com,$com$cargo$com\n";
@@ -389,15 +389,19 @@ for ($i=0; $i<3; $i++)	//Ciclo de 0 a 2 para cubrir los 3 vectores de selecciona
 			// Trae nombre del pais
 			$tmp_rs = $this->cursor->query("SELECT NOMBRE_PAIS FROM SGD_DEF_PAISES WHERE ID_PAIS=".$paisCodi);
 			if ($tmp_rs)
-			{	(trim($tmp_rs->fields['NOMBRE_PAIS']) == "") ? $nombPais = "<ESPACIO>" : $nombPais = $tmp_rs->fields['NOMBRE_PAIS'];
+			{	(trim($tmp_rs->fields['NOMBRE_PAIS']) == "") ? $nombPais = " " : $nombPais = $tmp_rs->fields['NOMBRE_PAIS'];
 				$tmp_rs->Close();
 				unset($tmp_rs);
 			}
-			else $nombPais = "<ESPACIO>";
+			else $nombPais = " ";
 			$nombESP = $rs->fields['PPAL'];
+			if (strlen(trim($nombESP))==0)	$nombESP=" ";
 			$dirESP = $rs->fields['DIR'];
+			if (strlen(trim($dirESP))==0)	$dirESP=" ";
 			$nuir =  $rs->fields['ID'];
+			if (strlen(trim($nuir))==0)	$nuir=" ";
 			$nomRepESP = $rs->fields['DESCR'];
+			if (strlen(trim($nomRepESP))==0)	$nomRepESP=" ";
 
 			// Trae nombre del dignatario
 			reset($arrEmpresas);
@@ -405,8 +409,8 @@ for ($i=0; $i<3; $i++)	//Ciclo de 0 a 2 para cubrir los 3 vectores de selecciona
 			$tmp_vec = explode(",",${'sc'.$i});
 			$tmp_rs = $this->cursor->query("SELECT CTT_NOMBRE,CTT_CARGO FROM SGD_DEF_CONTACTOS WHERE CTT_ID=".$tmp_vec[$tmp_var]);
 			if($tmp_rs)
-			{	(trim($tmp_rs->fields['CTT_NOMBRE']) == "") ? $dignatario = "<ESPACIO>" : $dignatario = $tmp_rs->fields['CTT_NOMBRE'];
-				(trim($tmp_rs->fields['CTT_CARGO']) == "") ? $cargo = "<ESPACIO>" : $cargo = $tmp_rs->fields['CTT_CARGO'];
+			{  	(trim($tmp_rs->fields['CTT_NOMBRE']) == "") ? $dignatario = " " : $dignatario = $tmp_rs->fields['CTT_NOMBRE'];
+				(trim($tmp_rs->fields['CTT_CARGO']) == "") ? $cargo = " " : $cargo = $tmp_rs->fields['CTT_CARGO'];
 				$tmp_rs->Close();
 				unset($tmp_rs);
 			}

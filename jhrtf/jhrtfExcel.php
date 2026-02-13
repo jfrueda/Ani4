@@ -245,7 +245,7 @@ class jhrtf {
                   
 
                     if (strlen(trim($this->datos[$ii][$i]))<1 )
-                        $this->datos[$ii][$i]="<ESPACIO>";
+                        $this->datos[$ii][$i]="";
 
                     //Agregamos los radicados de manera automatica
                     //El usuario envia el csv con los demas datos y 
@@ -265,7 +265,12 @@ class jhrtf {
                     if($campos_d=="*SEG_APEL*") $seg_apell_us1          = $dato_r;
                     if($campos_d=="*DIGNATARIO*") $otro_us1             = $dato_r;
                     if($campos_d=="*CARGO*") $cargo_us1                 = $dato_r;
-                    if($campos_d=="*DIR*") $direccion_us1               = $dato_r;
+                    if($campos_d=="*DIR*") {
+                        $direccion_us1 = $dato_r;
+                        if ($direccion_us1 == "<ESPACIO>") {
+                            $direccion_us1 = "";
+                        }
+                    }
                     if($campos_d=="*EMAIL*") $mail_us1                  = $dato_r;
                     if($campos_d=="*TELEFONO*") $telefono_us1           = $dato_r;
                     if($campos_d=="*MUNI*") $muni_codi                  = $dato_r;
@@ -275,9 +280,24 @@ class jhrtf {
                     if($campos_d=="*ANEXOS*") $noAnexos                 = $dato_r;
                     if($campos_d=="*FOLIOS*") $noFolios                 = $dato_r;
                     if($campos_d=="*DESC_ANEXOS*") $descAnexos          = $dato_r;
-                    if($campos_d=="*MUNI_NOMBRE*") $muni_nombre         = $dato_r;
-                    if($campos_d=="*DEPTO_NOMBRE*") $dpto_nombre        = $dato_r;
-                    if($campos_d=="*PAIS_NOMBRE*") $pais                = $dato_r;
+                    if($campos_d=="*MUNI_NOMBRE*") {
+                        $muni_nombre = $dato_r;
+                        if ($muni_nombre == "<ESPACIO>") {
+                            $muni_nombre = "";
+                        }
+                    }
+                    if($campos_d=="*DEPTO_NOMBRE*") {
+                        $dpto_nombre = $dato_r;
+                        if ($dpto_nombre == "<ESPACIO>") {
+                            $dpto_nombre = "";
+                        }
+                    }
+                    if($campos_d=="*PAIS_NOMBRE*") {
+                        $pais = $dato_r;
+                        if ($pais == "<ESPACIO>") {
+                            $pais = "";
+                        }
+                    }
                     if($campos_d=="*TIPO_DOC*") $tdoc                   = $dato_r;
                     if($campos_d=="*NUM_EXPEDIENTE*") $numeroExpediente = $dato_r;
                     if($campos_d=="*ANEX_DIR*") $anexDir                = $dato_r;

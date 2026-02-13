@@ -204,16 +204,36 @@ class jhrtf{
                     if($campos_d == "*SEG_APEL*") $seg_apell_us1          = $dato_r;
                     if($campos_d == "*DIGNATARIO*") $otro_us1             = $dato_r;
                     if($campos_d == "*CARGO*") $cargo_us1                 = $dato_r;
-                    if($campos_d == "*DIR*") $direccion_us1               = $dato_r;
+                    if($campos_d == "*DIR*") {
+                        $direccion_us1 = $dato_r;
+                        if ($direccion_us1 == "<ESPACIO>") {
+                            $direccion_us1 = "";
+                        }
+                    }
                     if($campos_d == "*TELEFONO*") $telefono_us1           = $dato_r;
                     if($campos_d == "*MUNI*") $muni_codi                  = $dato_r;
                     if($campos_d == "*DEPTO*") $dpto_codi                 = $dato_r;
                     if($campos_d == "*ASUNTO*") $asu                      = $dato_r;
                     if($campos_d == "*ID*") $sgd_esp_codigo               = $dato_r;
                     if($campos_d == "*DESC_ANEXOS*") $desc_anexos         = $dato_r;
-                    if($campos_d == "*MUNI_NOMBRE*") $muni_nombre         = $dato_r;
-                    if($campos_d == "*DEPTO_NOMBRE*") $dpto_nombre        = $dato_r;
-                    if($campos_d == "*PAIS_NOMBRE*") $pais                = $dato_r;
+                    if($campos_d == "*MUNI_NOMBRE*") {
+                        $muni_nombre = $dato_r;
+                        if ($muni_nombre == "<ESPACIO>") {
+                            $muni_nombre = "";
+                        }
+                    }
+                    if($campos_d == "*DEPTO_NOMBRE*") {
+                        $dpto_nombre = $dato_r;
+                        if ($dpto_nombre == "<ESPACIO>") {
+                            $dpto_nombre = "";
+                        }
+                    }
+                    if($campos_d == "*PAIS_NOMBRE*") {
+                        $pais = $dato_r;
+                        if ($pais == "<ESPACIO>") {
+                            $pais = "";
+                        }
+                    }
                     if($campos_d == "*TIPO_DOC*") $tdoc                   = trim($dato_r);
                     if($campos_d == "*NUM_EXPEDIENTE*") $numeroExpediente = trim($dato_r);
 
