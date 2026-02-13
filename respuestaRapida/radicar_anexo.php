@@ -287,7 +287,12 @@ if($nurad) $asu = str_replace('USUA_NOMB_S', $usuario, $asu);
 if($nurad) $asu = str_replace('DEPE_NOMB_S', $depenomb, $asu);
 
 if($nurad) {
-    $numradNofi = substr($nurad, 0, 16) . "-" . substr($nurad, -1);
+    // Extraer solo el consecutivo del número de radicado
+    // Tomar los últimos 6 dígitos antes del tipo (último dígito)
+    $numradNofi = ltrim(substr($nurad, -7, 6), '0');
+    // Si todos son ceros, devolver '0'
+    if($numradNofi === '') $numradNofi = '0';
+    
     $respuesta = str_replace('RA_NOTI_S', $numradNofi, $respuesta);
     $asu = str_replace('RA_NOTI_S', $numradNofi, $asu);
 }

@@ -5,6 +5,25 @@ if(!$verradicado) $verradicado = $verrad;
 if(!$verradicado) $verradicado = $numrad;
 include "../ver_datosrad.php";
 
+
+// Extraer año desde la fecha de radicado cuando sea posible.
+// Si no se puede, usar el año actual como respaldo.
+$anio = '';
+if (!empty($radi_fech_radi)) {
+    $ts = strtotime($radi_fech_radi);
+    if ($ts !== false) {
+        $anio = date('Y', $ts);
+    } else {
+        // heurística: buscar un año de 4 dígitos dentro del string
+        if (preg_match('/(19|20)\d{2}/', $radi_fech_radi, $m)) {
+            $anio = $m[0];
+        }
+    }
+}
+if (empty($anio)) {
+    $anio = date('Y');
+}
+
 $dependencia_nombre =  $_SESSION["depe_nomb"];
 $usuario_nombre =  $_SESSION["usua_nomb"];
 
@@ -46,7 +65,7 @@ $plan_plantilla = str_replace("NIT_E",$cc_documento_us3, $plan_plantilla);
 $plan_plantilla = str_replace("NUIR_E",$nuir_e, $plan_plantilla);
 // $plan_plantilla = str_replace("F_RAD_S",$fecha_hoy_corto, $plan_plantilla);
 $plan_plantilla = str_replace("RAD_E",$verrad, $plan_plantilla);
-$plan_plantilla = str_replace("SAN_RADICACION",$radicado_p, $plan_plantilla);			 
+$plan_plantilla = str_replace("SAN_RADICACION",$radicado_p, $plan_plantilla);
 $plan_plantilla = str_replace("SECTOR",$sector_nombre, $plan_plantilla);
 $plan_plantilla = str_replace("NRO_PAGS",$radi_nume_hoja, $plan_plantilla);
 $plan_plantilla = str_replace("DESC_ANEXOS",$radi_desc_anex, $plan_plantilla);
@@ -89,8 +108,12 @@ $plan_plantilla = str_replace("USUA_PROYECTO",$radi_usua_radi_nombre, $plan_plan
 #Memorandos
 $plan_plantilla = str_replace("JEFE_BY_RADICADO",$jefeByRadicado, $plan_plantilla);
 
-# Nueva Logica de cargar destinatarios para Salidas, Memos 
+# Nueva Logica de cargar destinatarios para Salidas, Memos
 $plan_plantilla = str_replace("DESTINATARIO_GEN_R",$destinatrioTotalTrdCodigo, $plan_plantilla);
 $plan_plantilla = str_replace("NOMBRE_GEN_R",$nombreGenR, $plan_plantilla);
 $plan_plantilla = str_replace("CARGO_GEN_R",$cargoGenR, $plan_plantilla);
+
+// Reemplazo adicional: si la plantilla tiene el placeholder "ANIO", lo sustituimos por el año extraído
+// (proveniente de la fecha del radicado cuando fue posible, o el año actual como respaldo)
+$plan_plantilla = str_replace("ANHO_S", $anio, $plan_plantilla);
 ?>
