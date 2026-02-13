@@ -1042,7 +1042,11 @@ while (!$rsSqlJefeByRadicado->EOF) {
     break;
 }
 
-$numradNofi = substr($rad_salida, 0, 16) . "-" . substr($rad_salida, -1);
+// Extraer solo el consecutivo del número de radicado
+// Tomar los últimos 6 dígitos antes del tipo (último dígito)
+$numradNofi = ltrim(substr($rad_salida, -7, 6), '0');
+// Si todos son ceros, devolver '0'
+if($numradNofi === '') $numradNofi = '0';
 
 #Logica nueva para plantillas de salidas y memos
 if($tipo_radicado == 1) {

@@ -216,7 +216,6 @@ if ($radi_a_buscar) {
         $notifica_codi = ""; // Es un nuevo radicado
         $medio_pub = $infoNotificacion["med_public"];
         $caracter_adtvo = $infoNotificacion["caracter_adtvo"];
-        $siad_preestablecido = $infoNotificacion["siad"];
         $prioridad_prestablecido = $infoNotificacion["prioridad"] === "t" ? 1 : 0;
 
         if ($esNotificacionCircular) {
@@ -297,7 +296,6 @@ if ($nurad) {
         $notifica_codi = $infoNotificacion["notifica_codi"];
         $medio_pub = $infoNotificacion["med_public"];
         $caracter_adtvo = $infoNotificacion["caracter_adtvo"];
-        $siad_preestablecido = $infoNotificacion["siad"];
         $prioridad_prestablecido = $infoNotificacion["prioridad"] === "t" ? 1 : 0;
 
         if ($esNotificacionCircular) {
@@ -897,18 +895,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                                 onpaste="limitPaste(this)"
                                                 value="<?= $ane ?>" <?= $blockEntrada ? 'readonly' : '' ?>>
                                         </div>
-
-                                        <?php if ($esNotificacion) { ?>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-semibold">SIAD</label>
-                                                <input type="text" name="siad" id="siad"
-                                                    pattern="[0-9]" maxlength="13"
-                                                    onkeypress="return justNumbers(event);"
-                                                    onpaste="limitPaste(this)"
-                                                    class="form-control"
-                                                    value="<?= $siad_preestablecido ?>">
-                                            </div>
-                                        <?php } ?>
                                     </div>
 
                                     <!-- SEGURIDAD -->
@@ -2465,7 +2451,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     if (cuentai && cuentai.value.length > 0 && cuentai.value.length > 100) {
                         mostrarAlert({
                             type: 'danger',
-                            message: 'SIAD con menos de 13 dígitos'
+                            message: 'Referencia de cuenta mayor a 100 caracteres'
                         });
                         pass = false;
                     }
@@ -2476,16 +2462,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         mostrarAlert({
                             type: 'danger',
                             message: 'Seleccione una dependencia'
-                        });
-                        pass = false;
-                    }
-
-                    //SIAD
-                    const siad = document.getElementById('siad');
-                    if (siad && siad.value.length > 0 && siad.value.length < 13) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'SIAD con menos de 13 dígitos'
                         });
                         pass = false;
                     }
