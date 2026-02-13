@@ -2669,7 +2669,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                 // REMOVER FILA POR data-rel="remove"
                 document.body.addEventListener('click', function(event) {
-                    var target = event.target;
+                    var target = event.target.closest('[data-rel="remove"]');
                     console.log(target);
 
                     if (target.matches('*[data-rel="remove"]')) {
