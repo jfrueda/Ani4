@@ -16,9 +16,36 @@
 		$joinDeUsuario = "";
 	}
 
-	if($busqRadicados == '')
+	// Construir condición de búsqueda por radicados
+	$busq_radicados_tmp = '';
+	
+	if($busqRadicados)
+	{
+		$busqRadicados = trim($busqRadicados);
+		$textElements = explode(",", $busqRadicados);
+		$i = 0;
+		foreach ($textElements as $item) {
+			$item = trim($item);
+			if ($item) { 
+				if ($i != 0) $busq_and = " or "; else $busq_and = " ";
+				if(!$varBuscada) $varBuscada = "r.RADI_NUME_RADI";
+				$busq_radicados_tmp .= " $busq_and cast($varBuscada as varchar(20)) like '%$item%' ";
+				$i++;
+			}
+		}
+		// Agregar paréntesis a la condición de búsqueda
+		if($busq_radicados_tmp) {
+			$busq_radicados_tmp = "($busq_radicados_tmp)";
+		}
+	}
+	else
 	{		
 		$busq_radicados_tmp = '1 = 1 AND r.RADI_PATH IS NULL';
+	}
+	
+	// Si no está definida la variable de búsqueda, establecer valor por defecto
+	if(!isset($busq_radicados_tmp) || empty($busq_radicados_tmp)) {
+		$busq_radicados_tmp = '1 = 1';
 	}
 
 	switch($db->driver)
@@ -43,7 +70,7 @@
 			$sqlFecha as DAT_Fecha_Radicado,
 			RADI_NUME_DERI RADICADO_PADRE,
 			convert(char(14), RADI_NUME_RADI) as HID_RADI_NUME_RADI,
-			RA_ASUN ASUNTO
+			RA_ASUN ASUNTO,
 			convert(varchar(15), radi_nume_radi) CHR_DATO
 			FROM RADICADO
 			 WHERE
