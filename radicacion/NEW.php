@@ -2646,9 +2646,15 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 // REMOVER FILA POR data-rel="remove"
                 document.body.addEventListener('click', function(event) {
                     var target = event.target.closest('[data-rel="remove"]');
-                    console.log(target);
 
-                    if (target.matches('*[data-rel="remove"]')) {
+                    if (target && target.matches('*[data-rel="remove"]')) {
+                        // buscar la clase 'tooltip' o 'ui-tooltip'
+                        var visualTooltips = document.querySelectorAll('.tooltip, .ui-tooltip, .tipsy, .tooltipster-base');
+                        
+                        visualTooltips.forEach(function(el) {
+                            el.remove();
+                        });
+
                         var tr = target.closest('tr.item_usuario');
                         if (tr) tr.remove();
                     }
