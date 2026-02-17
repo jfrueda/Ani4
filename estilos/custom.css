@@ -1,7 +1,7 @@
 .btn-primary {
     --bs-btn-color: #fff;
-    --bs-btn-bg: #043074;
-    --bs-btn-border-color: #043074;
+    --bs-btn-bg: #dc7240;
+    --bs-btn-border-color: #dc7240;
 
     --bs-btn-hover-bg: #032a63;
     --bs-btn-hover-border-color: #032a63;
@@ -71,7 +71,7 @@
 }
 
 :root {
-    --bs-primary: #043074;
+    --bs-primary: #dc7240;
     --bs-secondary: #FDC608;
     --bs-success: #0D5E30;
     --bs-danger: #EE2A24;
@@ -79,7 +79,7 @@
     --bs-light: #FFFFFF;
 
     /* Link colors */
-    --bs-link-color: #043074;
+    --bs-link-color: #dc7240;
     --bs-link-hover-color: #032a63;
 
     /* Focus ring */
@@ -88,10 +88,10 @@
 
 /* ALERT PRIMARY — Azul institucional */
 .alert-primary {
-    --bs-alert-bg: #04307420;
+    --bs-alert-bg: #dc724020;
     /* 12–20% opacity */
-    --bs-alert-border-color: #043074;
-    --bs-alert-color: #043074;
+    --bs-alert-border-color: #dc7240;
+    --bs-alert-color: #dc7240;
 }
 
 /* ALERT SECONDARY — Amarillo institucional */
@@ -131,20 +131,20 @@
 }
 
 .bg-orfeo {
-    background: #043074 !important;
+    background: #dc7240 !important;
     background: linear-gradient(90deg,
-            #1a4a9f 0%,
-            #043074 60%,
-            #031f4d 100%) !important;
+            #904624 0%,
+            #dc7240 60%,
+            #d6a994 100%) !important;
 }
 
 .btn-outline-primary {
-    --bs-btn-color: #043074;
-    --bs-btn-border-color: #043074;
+    --bs-btn-color: #dc7240;
+    --bs-btn-border-color: #dc7240;
 
-    --bs-btn-hover-bg: #043074;
+    --bs-btn-hover-bg: #dc7240;
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-border-color: #043074;
+    --bs-btn-hover-border-color: #dc7240;
 
     --bs-btn-active-bg: #032a63;
     --bs-btn-active-color: #fff;

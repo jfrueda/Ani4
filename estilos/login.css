@@ -4,11 +4,11 @@
 
 .btn-primary {
 	--bs-btn-color: #fff;
-	--bs-btn-bg: #043074;
-	--bs-btn-border-color: #043074;
+	--bs-btn-bg: #f0e59b;
+	--bs-btn-border-color: #f0e59b;
 
-	--bs-btn-hover-bg: #032a63;
-	--bs-btn-hover-border-color: #032a63;
+	--bs-btn-hover-bg: #f0e591;
+	--bs-btn-hover-border-color: #f0e591;
 
 	--bs-btn-active-bg: #02224f;
 	--bs-btn-active-border-color: #02224f;
@@ -75,7 +75,7 @@
 }
 
 :root {
-	--bs-primary: #043074;
+	--bs-primary: #f0e59b;
 	--bs-secondary: #FDC608;
 	--bs-success: #0D5E30;
 	--bs-danger: #EE2A24;
@@ -83,8 +83,8 @@
 	--bs-light: #FFFFFF;
 
 	/* Link colors */
-	--bs-link-color: #043074;
-	--bs-link-hover-color: #032a63;
+	--bs-link-color: #f0e59b;
+	--bs-link-hover-color: #f0e591;
 
 	/* Focus ring */
 	--bs-primary-rgb: 4, 48, 116;
@@ -147,7 +147,7 @@ html {
 
 .left-section {
 	flex: 1;
-	background: #043074;
+	background: #f0e59b;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -246,7 +246,7 @@ html {
 }
 
 .login-form label {
-	color: #043074 !important;
+	color: #f0e59b !important;
 }
 
 /* Login Form */
@@ -312,12 +312,12 @@ html {
 	text-shadow: none !important;
 	margin: 20px auto;
 	/* background: rgb(0, 114, 62); */
-	background: #043074;
+	background: #f0e59b;
 	transition: background 0.5s ease-in-out 0s;
 }
 
 .btn.btn-login:hover {
-	background: #043074bc;
+	background: #f0e59bbc;
 }
 
 .btn.btn-reset {
