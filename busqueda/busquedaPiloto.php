@@ -90,7 +90,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
     </style>
 </head>
 
-<script type="text/javascript">
+<script>
     function downloadXLS() {
         //console.log(data_array);
         headers = ['Radicado', 'Borrador', 'Fecha Radicación', 'Expediente', 'Asunto', 'Referencia', 'Tipo de Documento', 'Direccion contacto', 'Telefono contacto', 'Mail Contacto', 'Dignatario', 'Nombre', 'Documento', 'Usuario Actual', ' Dependencia Actual', ' Usuario Anterior', 'Dias Restante']
@@ -164,8 +164,6 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             document.getElementById("dvWarning").innerHTML = '';
             return true;
         }
-    }
-
     }
 
     $('body').delegate('.paginacion a', 'click', function() {
@@ -1238,27 +1236,11 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                     //Correccion consultas
                                     $sSQL .= $where_circular;
 
-                                    /* Consulta de CRA $sSQL .= " WHERE dir.sgd_dir_tipo = 1 AND dir.RADI_NUME_RADI=r.RADI_NUME_RADI AND r.TDOC_CODI=td.SGD_TPR_CODIGO";*/
-
-                                    /*    $sSQL .= "
-                                        dir.sgd_dir_nombre = (select sgd_dir_nombre from sgd_dir_drecciones
-                                        where cast(radi_nume_radi as varchar(15))  like " . tosql("%".trim($ps_RADI_NUME_RADI) ."%", "Text");
-
-                                        $sSQL .= "
-                                        order by sgd_dir_codigo asc limit 1)  and";
-
-                                        $sSQL .= "
-                                        dir.sgd_dir_direccion = (select sgd_dir_direccion from sgd_dir_drecciones
-                                        where cast(radi_nume_radi as varchar(15))  like " . tosql("%".trim($ps_RADI_NUME_RADI) ."%", "Text");
-
-                                        $sSQL .= "
-                                        order by sgd_dir_codigo asc limit 1)  and";
-                                    */
                                     if (!$esNotificacionCircular) {
                                         $sSQL .= "dir.RADI_NUME_RADI=r.RADI_NUME_RADI";
                                     }
                                     /*Modificación para la CRA, sólo la dependencia 230 puede ver los radicados tipo 4*/
-                                    if ($entidad == "CRA" and  $dependencia != 230)
+                                    if ($entidad == "CRA" &&  $dependencia != 230)
                                         $sWhere .= " and substr(r.radi_nume_radi,-1)!=4";
                                     /**********************************************************************************/
                                     //-------------------------------
@@ -1463,8 +1445,8 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 
             if (
                 $seguridadRadicado == 0
-                or ($seguridadRadicado == 1 && $_SESSION["dependencia"] == $aRADI_DEPE_ACTU)
-                or ($seguridadRadicado == 2 && (($_SESSION["dependencia"] == $aRADI_DEPE_ACTU && ($_SESSION["USUA_JEFE_DE_GRUPO"] == true) || ($_SESSION["dependencia"] == $aRADI_DEPE_ACTU && $_SESSION["codusuario"] == $aRADI_USUA_ACTU)) || ($_SESSION["dependencia"] == $DEPE_CODI_PROYECTO && $_SESSION["codusuario"] == $USUA_CODI_PROYECTO)))
+                || ($seguridadRadicado == 1 && $_SESSION["dependencia"] == $aRADI_DEPE_ACTU)
+                || ($seguridadRadicado == 2 && (($_SESSION["dependencia"] == $aRADI_DEPE_ACTU && ($_SESSION["USUA_JEFE_DE_GRUPO"] == true) || ($_SESSION["dependencia"] == $aRADI_DEPE_ACTU && $_SESSION["codusuario"] == $aRADI_USUA_ACTU)) || ($_SESSION["dependencia"] == $DEPE_CODI_PROYECTO && $_SESSION["codusuario"] == $USUA_CODI_PROYECTO)))
             ) {
                 if ($extension[1] == 'pdf') {
                     //Muestra el pdf en el visor modal
@@ -1607,26 +1589,6 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             }
 
             $_SESSION['arrFitDep'] = $arrFitDep;
-            //$_SESSION['docFilter']=$docFilter;
-            /**********************************************/
-            //debug permiso, dependencias y memos
-            /**********************************************/
-            /*var_dump("PERMISO RESERVA -> ".$_SESSION["perm_rad_reser"].'<hr>');
-            echo "Dependencias Historico";
-            var_dump($_SESSION['arrFitDep']);
-            echo "<hr>";
-            echo "Existe DirDrecciones";
-            var_dump($rsMemorandoMultiple->fields["EXISTE"]);
-            echo "<hr>";
-            echo "Total DirDrecciones - Anexos";
-            var_dump($rsMemorandoMultiple->fields["TOTAL"]);
-            echo "<hr>";
-            echo "Perimso calidad con reserva".'<br>';
-            var_dump($_SESSION["perm_cons_rad_cal"]);
-            echo "<hr>";
-            var_dump($tieneAsignacion);
-            echo "<hr>";
-            /**********************************************/
             /** verificacion si el radicado se encuentra en el usuario Actual*/
             include "$ruta_raiz/tx/verifRelacionados.php";
             if ($valImg == "SI" && $noPermisoFlag == 1) {
@@ -1659,21 +1621,6 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                 }
             }
 
-            //$verImg= $verImg && !($fila['SGD_SPUB_CODIGO']==1);
-
-            //$linkInfGeneralVin = "<a class='vinculos' href='../vinculacion/mod_vinculacion.php?numRadi=$fldRADI_NUME_RADI&carpeta=$carpeAnt&nomcarpeta=$nomcarpeta&verrad=$verrad&".session_name()."=".session_id()."&krd=$krd&carpeta=$carpeAnt&nomcarpeta=$nomcarpeta&tipo_carp=0' >";
-
-            //$linkInfGeneral =
-            //-------------------------------
-            // Process the HTML controls  //Dispaly html de leidos.
-            //-------------------------------
-            /* if ($i == 1) {
-                $formato = "listado1";
-                $i = 2;
-            } else {
-                $formato = "listado2";
-                $i = 1;
-            }*/
             $formato = " ";
             if ($borrador == '1') {
                 $formato = "table-warning";
@@ -1815,49 +1762,6 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             <?= tohtml($fldPAIS); ?>&nbsp;</td>-->
 <?php
 
-            //Calculamos dias HABILES
-            /*
-    $sqlsum="SELECT NOH_FECHA,SUMDIAS FROM SGD_NOH_NOHABILES WHERE NOH_FECHA= '$fvcmto'";
-    //$db->conn->debug = true;
-    $rssum = $db->query($sqlsum);
-    $regfecha            = $rssum->fields['NOH_FECHA'];
-    $sumdia            = $rssum->fields['SUMDIAS'];
-
-    if ($regfecha!=0){
-    $fvcmto=date('Y-m-d', strtotime("$fvcmto + $sumdia days"));
-    }
-
-    $hoy = date("Y-m-d");
-    if ($hoy <= $fvcmto){
-    $sqlnh="select count(NOH_FECHA)AS TD from SGD_NOH_NOHABILES where NOH_FECHA BETWEEN to_date('".date('d/m/y', strtotime("$hoy"))."', 'dd/mm/yy') AND to_date('".date('d/m/y', strtotime("$fvcmto"))."', 'dd/mm/yy')";
-    //$db->conn->debug = true;
-    $rsnh = $db->query($sqlnh);
-    $tnh = $rsnh->fields['TD'];
-    $s = strtotime($fvcmto)-strtotime($hoy);
-    $d = intval($s/86400);
-    $s -= $d*86400;
-    $h = intval($s/3600);
-    $s -= $h*3600;
-    $m = intval($s/60);
-    $s -= $m*60;
-    $drc= $d.$space;
-    $drh= $drc-$tnh;
-    }else {
-    $sqlnh="select count(NOH_FECHA)AS TD from SGD_NOH_NOHABILES where NOH_FECHA BETWEEN to_date('".date('d/m/y', strtotime("$fvcmto"))."', 'dd/mm/yy') AND to_date('".date('d/m/y', strtotime(    "$hoy"))."', 'dd/mm/yy')";
-    $rsnh = $db->query($sqlnh);
-    $tnh = $rsnh->fields['TD'];
-    $s = strtotime($fvcmto)-strtotime($hoy);
-    $d = intval($s/86400);
-    $s -= $d*86400;
-    $h = intval($s/3600);
-    $s -= $h*3600;
-    $m = intval($s/60);
-    $s -= $m*60;
-    $drc= $d.$space;
-    $drh= $drc+$tnh;}
-
-    //fin de CALCULOS DE DIAS HABILES
-     */
 ?>
 
 <td class="leidos">
