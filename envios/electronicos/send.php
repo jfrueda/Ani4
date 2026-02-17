@@ -88,7 +88,7 @@ foreach($ids as $id) {
         $mail->Port = trim($puertoSmtp);
         $mail->Username = trim($correoSaliente);
         $mail->Password = trim($passwordCorreoSaliente);
-        $mail->SMTPSecure = 'tls';
+        $mail->SMTPSecure = trim($SMTPSecure);
         $mail->From = trim($correoSaliente);
         $mail->FromName = 'Supersalud';
         foreach($correos_validos as $correo) {

@@ -38,21 +38,23 @@ $smarty->config_dir=SMARTY_CONFIG;
 $usua_email=$_SESSION["usua_email"];
 if ($_SESSION["passwd_mail"]) $passwd_mail=$_SESSION["passwd_mail"];
 
+
 switch ($server_name){
 	case "gmail":
-		/****Configuración para Gmail, (autenticación SSL)****/
 		$hostname = '{imap.gmail.com:993/imap/ssl}';
         break;
 
 	case "exchange":
-		/***Configuración para Exchange sin autenticación SSL**/
 		$hostname = '{'."$servidor_mail:$puerto_mail/novalidate-cert".'}';
 		$usua_email = current(explode ("@",$usua_email));
         break;
 
 	case "outlook":
-		/****Configuración para Outlook, (autenticación SSL)****/
 		$hostname = '{outlook.office365.com:993/imap/ssl}';
+        break;
+
+    case "hostinger":
+        $hostname = '{imap.hostinger.com:993/imap/ssl}';
         break;
 
     default:
