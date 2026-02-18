@@ -821,7 +821,7 @@ switch ($dataExp['SGD_SEXP_ESTADO']) {
                             <div class="input-group  ">
 
                             <div class="input-group-prepend">
-                                <span class="input-group-text  text-uppercase font-weight-bold" style="width: 180px"><?=$paramsExp[5] ? $paramsExp[5] : "Descriptor 3";?></span>
+							<span class="input-group-text  text-uppercase font-weight-bold" style="width: 180px"><?=$paramsExp[5] ? $paramsExp[5] : "Descriptor 4";?></span>
                             </div>
                             <input type="text" class="form-control" name="SGD_SEXP_PAREXP5" id="SGD_SEXP_PAREXP5" value='<?=$dataExp['SGD_SEXP_PAREXP5'];?>'>
                             <div class="input-group-append">
