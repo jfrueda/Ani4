@@ -124,7 +124,7 @@ include $ruta_raiz . "/include/query/prestamo/builtSQLHistorico.inc";
                      <tr align="center">
                         <td colspan="5">
                            <center>
-                              <input type="submit" class='botones' value="Cerrar" onClick="limpiar();">
+                              <input type="button" class='botones' value="Cerrar" onClick="limpiar();">
                            </center>
                         </td>
                      </tr>
@@ -141,6 +141,7 @@ include $ruta_raiz . "/include/query/prestamo/builtSQLHistorico.inc";
       //Regresa al formulario de b�squeda dejando vac�os los campos
       function limpiar() {
          console.log('entro');
+         // document.busqueda.submit();
          window.history.back();
       }
    </script>
