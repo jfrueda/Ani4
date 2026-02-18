@@ -619,7 +619,7 @@ function Pedidos_Show()
             <input type="hidden" name="FormPedidos_Sorting" value="<?= $iSort ?>">
             <input type="hidden" name="FormPedidos_Sorted" value="<?= $iSorted ?>">
             <input type="hidden" name="s_Direction" value="<?= $sDirection ?>">
-            <div class="table-responsive margin-botton-table" style="max-height: 70vh; overflow-y: auto;">
+            <div class="table-responsive margin-botton-table" style="overflow: auto;">
                 <table class='table table-hover table-striped table-bordered align-middle dataTable no-footer smart-form'>
                     <thead>
                         <tr role="row">
