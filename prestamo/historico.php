@@ -141,7 +141,7 @@ include $ruta_raiz . "/include/query/prestamo/builtSQLHistorico.inc";
       //Regresa al formulario de b�squeda dejando vac�os los campos
       function limpiar() {
          console.log('entro');
-         document.busqueda.submit();
+         window.history.back();
       }
    </script>
 </body>
