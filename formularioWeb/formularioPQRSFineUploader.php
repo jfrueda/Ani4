@@ -225,7 +225,7 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Departamento -->
 											<div class="col-md-6">
-										<label for="slc_depto" class="form-label">Estado <span class="text-danger" aria-hidden="true">*</span></label>
+									<label for="slc_depto" class="form-label">Departamento <span class="text-danger" aria-hidden="true">*</span></label>
 										<select id="slc_depto" name="depto" class="form-select" required aria-required="true">
 													<option value="0" selected>Seleccione</option>
 													<?=$depto ?>
@@ -235,7 +235,7 @@ $log= "https://upload.wikimedia.org/wikipedia/commons/c/c4/LOGO_UMNG.png";
 
 											<!-- Municipio -->
 											<div class="col-md-6">
-										<label for="slc_municipio" class="form-label">Provincia <span class="text-danger" aria-hidden="true">*</span></label>
+									<label for="slc_municipio" class="form-label">Municipio <span class="text-danger" aria-hidden="true">*</span></label>
 										<div id="div-contenidos">
 											<select id="slc_municipio" name="muni" class="form-select" required aria-required="true">
 														<option value="0" selected>Seleccione..</option>
