@@ -595,9 +595,8 @@ if ($_SESSION["USUA_PRAD_TP3"]) {
 if ($_SESSION["USUA_PRAD_TP6"]) {
     $menuRadicacion = 1;
     $enlace6   = "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=6&depende=$dependencia";
-    $radicacion["radica6"] = array('subMenu' => 0, 'url' => "$enlace6", 'nombre' => "$tpDescRad[5]");
+    $radicacion["radica6"] = array('subMenu' => 0, 'url' => "$enlace6", 'nombre' => "$tpDescRad[6]");
 }
-
 
 if ($_SESSION["USUA_PRAD_TP8"]) {
     $menuRadicacion = 1;

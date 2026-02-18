@@ -53,7 +53,7 @@ if($rsPath){
 if($codTx==1983) {
     $asuntoMail =  "Radicado: ".$numeroRadicado;
     $mailDestino = $_SESSION['email'];
-		$asu = "Se ha registrado en el Sistema de Información de la Superintendencia Nacional de Salud la siguiente PQR con el número de radicado ".$numeroRadicado.". Por favor conserve el número para consultar el estado de su solicitud.";
+		$asu = "Se ha registrado en el Sistema de Información de la Universidad Militar Nueva Granada la siguiente PQRD con el número de radicado ".$numeroRadicado.". Por favor conserve el número para consultar el estado de su solicitud.";
 		$radicadosSelText = $numeroRadicado;
 		$mensaje = file_get_contents($ruta_raiz."/conf/envioDigital.html");
 }
