@@ -16,6 +16,7 @@ for($j=1; $j<$numRta; $j++) {
 $j=0;
 if($sFileName=="formEnvio.php") { $j=1; } 
  ?>
+ <tbody>
 <tr  align="center">
     <th id="r19" style="display:<?=$tipoRespuesta[$opcionMenu][19];?>"><input type="checkbox" name="rta_" value="checkbox" onClick="javascript: seleccionarRta();"></small></th>
 	<th id="r0"  style="display:<?=$tipoRespuesta[$opcionMenu][0]; ?>"><small><a  <?=$href[$j][1]?>> <?=$flecha[1]?> Radicado</a></small></th>
@@ -38,3 +39,4 @@ if($sFileName=="formEnvio.php") { $j=1; }
 	<th id="r17" style="display:<?=$tipoRespuesta[$opcionMenu][17];?>"><small><a >Ver Hist&oacute;rico</a></small></th>
 	<th id="r18" style="display:<?=$tipoRespuesta[$opcionMenu][18];?>"><small><a >Acci&oacute;n</a></small></th>
 </tr> 
+</tbody>
