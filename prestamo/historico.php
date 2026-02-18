@@ -142,7 +142,7 @@ include $ruta_raiz . "/include/query/prestamo/builtSQLHistorico.inc";
       function limpiar() {
          console.log('entro');
          // document.busqueda.submit();
-         window.location.href = "menu_prestamo.php?krd=<?= $krd ?>&opcionMenu=0";
+         window.location.href = "prestamo.php?opcionMenu=0";
       }
    </script>
 </body>
