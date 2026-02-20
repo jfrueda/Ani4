@@ -37,6 +37,17 @@ foreach ($_POST as $key => $valor)   ${$key} = $valor;
 function regresar(){   	
 	document.VincDocu.submit();
 }
+
+function cerrarYRefrescarRadicado(){
+	if (window.opener && !window.opener.closed){
+		if (typeof window.opener.regresar === 'function'){
+			window.opener.regresar();
+		} else {
+			window.opener.location.reload();
+		}
+	}
+	window.close();
+}
 </script>
 </head>
 <body>
@@ -164,7 +175,7 @@ function regresar(){
                             <td width="50%" height="25" class="listado2" align="center">
                              <center><input name="insertar_registro" type=submit class="botones_funcion" value="Grabar Cambio "></center></TD>
                             <td width="50%" class="listado2" height="25">
-                             <center><input name="aceptar" type="button" class="botones_funcion" id="envia22" onClick=" opener.regresar();window.close();"value=" Cancelar "></center></TD>
+                             <center><input name="cerrar" type="button" class="botones_funcion" id="envia22" onClick="cerrarYRefrescarRadicado();" value=" Cerrar "></center></TD>
                            </tr>
                         </table>
                         <table class="table table-bordered table-striped">
