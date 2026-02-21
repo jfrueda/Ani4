@@ -90,7 +90,7 @@ $sqlOrderPRES_FECH_DEVO=$db->conn->SQLDate("YmdHis","P.PRES_FECH_DEVO");
   if(!$ps_numeroExpediente){
     $sWhere .= " P.RADI_NUME_RADI=R.RADI_NUME_RADI  ";
     }  else { 
-      $sWhere .= " e.radi_nume_radi = r.radi_nume_radi and P.sgd_exp_numero=e.sgd_exp_numero ";
+      $sWhere .= " P.RADI_NUME_RADI=R.RADI_NUME_RADI and e.radi_nume_radi = p.radi_nume_radi ";
       // echo "$sWhere <hr>";
     }
 		
