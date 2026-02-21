@@ -23,7 +23,7 @@
     Plugin.prototype = {
         init: function() {
             var e = this;
-            e.template = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\"><head><!--[if gte mso 9]><xml>";
+            e.template = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\"><head><meta charset=\"UTF-8\" /><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /><!--[if gte mso 9]><xml>";
             e.template += "<x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions>";
             e.template += "<x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>";
             e.tableRows = "";
@@ -36,9 +36,9 @@
         },
         tableToExcel: function(table, name) {
             var e = this;
-            e.uri = "data:application/vnd.ms-excel;base64,";
+            e.uri = "data:application/vnd.ms-excel;charset=utf-8;base64,";
             e.base64 = function(s) {
-                return window.btoa(unescape(encodeURIComponent(s)));
+                return window.btoa(unescape(encodeURIComponent("\ufeff" + s)));
             };
             e.format = function(s, c) {
                 return s.replace(/{(\w+)}/g, function(m, p) {
