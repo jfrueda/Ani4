@@ -1225,16 +1225,25 @@ function report10() {
     axios({
             method: 'post',
             baseURL: 'rest-est.php',
-            data: 'fn=rp9&depe=' + depe + '&serie=' + serie + '&subserie=' + subserie + '&tpdoc=' + tpdoc + '&usu=' + usuA + '&fini=' + fini + '&ffin=' + ffin+'&tpAds='+tpAds+'&tpRad='+tpRad+'&tpUs='+tpUs
+            data: 'fn=dtrp10&depe=' + depe + '&serie=' + serie + '&subserie=' + subserie + '&tpdoc=' + tpdoc + '&usu=' + usuA + '&fini=' + fini + '&ffin=' + ffin+'&reporte='+idreport+'&tpbusq=T'+'&tpAds='+tpAds+'&btns=1'+'&tpRad='+tpRad
         })
         .then(function (response) {
             // console.log(response);
             $('#processing-modal').modal('show');
-            data = response.data.data;
-            //     console.log(data);
+            var dataDet = response.data.data || [];
+            var cntTramitado = 0;
+            var cntEnTramite = 0;
+
+            for (var i = 0; i < dataDet.length; i++) {
+                if (dataDet[i].EST === 'Finalizado') {
+                    cntTramitado++;
+                } else {
+                    cntEnTramite++;
+                }
+            }
             
             $('#resultado').html(' ');
-            total = (data.tramitado * 1) + (data.entramite * 1);
+            total = cntTramitado + cntEnTramite;
             btnTe = '<button class="btn btn-xs btn-primary btn-rp1det" data-rep="'+idreport+'" data-toggle="modal" data-target="DetEsta" data-id="1" data-btns="1" type="button" ><i class="fa fa-align-justify" data-toggle="tooltip"  data-placement="top"  title="Ver detalles"></i></button>';
             btnEt = '<button class="btn btn-xs btn-primary btn-rp1det" data-rep="'+idreport+'"  data-toggle="modal" data-target="DetEsta" data-id="2" data-btns="1" type="button" ><i class="fa fa-align-justify" data-toggle="tooltip"  data-placement="top"  title="Ver detalles"></i></button>';
             btnTo = '<button class="btn btn-xs btn-primary btn-rp1det" data-rep="'+idreport+'" data-toggle="modal" data-target="DetEsta" data-id="T" data-btns="1" type="button" ><i class="fa fa-align-justify" data-toggle="tooltip"  data-placement="top"  title="Ver detalles"></i></button>';
@@ -1243,8 +1252,8 @@ function report10() {
             btnToS = '<button class="btn btn-xs btn-success btn-rp1detXLS" data-rep="'+idreport+'" data-toggle="modal" data-target="DetEsta" data-id="T" '+datosbtnextra+' type="button" ><i class="fa fa-table" data-toggle="tooltip"  data-placement="top"  title="Descargar detalles en excel"></i></button> <div id="detXLST" class="float-right"></div>';
             htmls = '<table id="tb_rp" class="table table-bordered table-striped table-hover ">'
             htmls += ' <thead class="thead-dark"><tr><th>#</th><th>Tipo</th><th>Cantidad Radicados</th><th></th></tr></thead>';
-            htmls += '<tr><td>1</td><td id="reg1">Finalizado</td><td>' + data.tramitado + '</td><td><div class=" float-right">' + btnTe+' '+ btnTeS+' </div></td></tr>';
-            htmls += '<tr><td>2</td><td id="reg2">En tramite</td><td>' + data.entramite + '</td><td><div class=" float-right">' + btnEt +' '+ btnEtS+' </div></td></tr>';
+            htmls += '<tr><td>1</td><td id="reg1">Finalizado</td><td>' + cntTramitado + '</td><td><div class=" float-right">' + btnTe+' '+ btnTeS+' </div></td></tr>';
+            htmls += '<tr><td>2</td><td id="reg2">En tramite</td><td>' + cntEnTramite + '</td><td><div class=" float-right">' + btnEt +' '+ btnEtS+' </div></td></tr>';
             htmls += '<tr><th colspan=2 id="regT">Total </th><th>' + total + '</th><th><div class=" float-right">' + btnTo+' '+ btnToS+'</div> </th></tr>';
             htmls += '</table>';
          
