@@ -114,33 +114,29 @@ switch ($fn) {
         }
         break;
     case 'usuarios':
-        $whereDep = ($dependencia_busq != 99999) ? "  u.DEPE_CODI = " . $depe : '';
+        $whereDep = ($depe !== '' && $depe != 99999) ? " u.DEPE_CODI = " . $depe : '';
 
         $whereUsSelect = $tpus == '0' ? " u.USUA_ESTA = '1' " : "";
         $whereUsSelect = ($usua_perm_estadistica < 1) ?(($whereUsSelect != "") ? $whereUsSelect . " AND u.USUA_LOGIN='$krd' " : " u.USUA_LOGIN='$krd' ") : $whereUsSelect;
-        if ($depe != 99999) {
 
-            $whereUsSelect = ($whereUsSelect == "") ? $whereDep : $whereUsSelect . " and  " . $whereDep;
-            
-			$iSql = "select lower(u.USUA_NOMB) nomb,u.USUA_CODI cod,u.USUA_ESTA,u.usua_doc from USUARIO u
-                    where  $whereUsSelect
-                    order by u.USUA_NOMB";
-				
-			/*$iSql = "select lower(u.USUA_NOMB) nomb,u.USUA_CODI cod,u.USUA_ESTA,u.usua_doc from USUARIO u
-                    where  u.USUA_ESTA='1' and u.DEPE_CODI=".$depe."
-                    order by u.USUA_NOMB";*/
+        $whereUsSelect = ($whereUsSelect == "") ? $whereDep : (($whereDep != "") ? $whereUsSelect . " and " . $whereDep : $whereUsSelect);
+        if ($whereUsSelect == "") {
+            $whereUsSelect = "1=1";
+        }
 
-            $rs = $db->conn->query($iSql);
-            if (!$rs->EOF) {
-                $i = 0;
-                while (!$rs->EOF) {
-                    foreach ($rs->fields as $key => $value) {
-                        $datos[$i][strtoupper($key)] = $value;
-                    }
-                    $i++;
-                    $rs->MoveNext();
+		$iSql = "select lower(u.USUA_NOMB) nomb,u.USUA_CODI cod,u.USUA_ESTA,u.usua_doc from USUARIO u
+                where $whereUsSelect
+                order by u.USUA_NOMB";
 
+        $rs = $db->conn->query($iSql);
+        if (!$rs->EOF) {
+            $i = 0;
+            while (!$rs->EOF) {
+                foreach ($rs->fields as $key => $value) {
+                    $datos[$i][strtoupper($key)] = $value;
                 }
+                $i++;
+                $rs->MoveNext();
             }
         }
         break;

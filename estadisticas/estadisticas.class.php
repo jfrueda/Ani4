@@ -71,6 +71,9 @@ class estadisiticas
 
         $where = trim($where.$whereAct);
         $where = preg_replace('/^AND\s+/i', '', $where);
+        if ($where == '') {
+            $where = '1=1';
+        }
 
         $iSql = "
             SELECT
