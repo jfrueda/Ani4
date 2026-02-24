@@ -24,10 +24,8 @@ $nombreCarpeta = $_GET["nomcarpeta"];
 //End::Validar si el memorando tienen al usuario
 ?>
 
-<script language="javascript">
+<script>
   function markAll() {
-    console.log('entro');
-
     if (document.form1.elements.checkAll.checked) {
       for (i = 2; i < document.form1.elements.length; i++)
         document.form1.elements[i].checked = 1;
@@ -39,9 +37,10 @@ $nombreCarpeta = $_GET["nomcarpeta"];
   }
 
   function clickTx() {
+    console.log('clickTx');
+
     let varNom = "<?php echo $nombreCarpeta; ?>";
     if (varNom == "Informados") {
-
       sw = 0;
       for (i = 1; i < document.form1.elements.length; i++)
         if (document.form1.elements[i].checked && document.form1.elements[i].name != "checkAll")
@@ -65,7 +64,6 @@ $nombreCarpeta = $_GET["nomcarpeta"];
           sw = 1;
       if (sw == 0) {
         document.getElementById('AccionCaliope').style.display = 'none';
-
         return;
       } else {
         document.getElementById('AccionCaliope').style.display = '';
@@ -96,7 +94,7 @@ $nombreCarpeta = $_GET["nomcarpeta"];
     }
   }
 
-  $(document).ready(function() {
+  document.addEventListener('DOMContentLoaded', function() {
     function returnKrd() {
       return '<?= $krd ?>';
     }
@@ -144,6 +142,8 @@ $nombreCarpeta = $_GET["nomcarpeta"];
     }
 
     function masivaTRD() {
+      console.log('entro a masiva');
+
       sw = 0;
       var radicados = new Array();
       var list = new Array();
@@ -282,7 +282,7 @@ $nombreCarpeta = $_GET["nomcarpeta"];
         window_onload2();
       <? }
 
-      if ($carpeta == 11 and $_SESSION["USUA_JEFE_DE_GRUPO"]) {
+      if ($carpeta == 11 && $_SESSION["USUA_JEFE_DE_GRUPO"]) {
       ?>
         if (document.getElementById('salida') != null)
           document.getElementById('salida').style.display = '';
@@ -294,7 +294,7 @@ $nombreCarpeta = $_GET["nomcarpeta"];
         echo " ";
       }
 
-      if ($carpeta == 11 and !$_SESSION["USUA_JEFE_DE_GRUPO"]) {
+      if ($carpeta == 11 && !$_SESSION["USUA_JEFE_DE_GRUPO"]) {
         echo "document.getElementById('enviara').style.display = 'none'; ";
         echo "document.getElementById('Enviar').style.display = 'none'; ";
       }
@@ -332,12 +332,16 @@ $nombreCarpeta = $_GET["nomcarpeta"];
       }
       return true;
     }
-    // JavaScript Document
-    // <!--Esta funcion esconde el combo de las dependencia e inforados Se activan cuando el menu envie una señal de cambio.-->
+
+    // Esta funcion esconde el combo de las dependencia e inforados Se activan cuando el menu envie una señal de cambio.
     function changedepesel1() {
+      console.log('entro a changedepesel1');
+
       codAccion = $('#AccionCaliope').val();
       carpeta = '<?= $carpeta ?>';
       carpInhabilitada = "10000" + carpeta;
+
+      console.log(codAccion);
 
       //El jefe de area o tramitador solo puede mover radicados entre las carpetas "Entrada" y "Jefe de Area".
       //carp_codi Entrada = 0
@@ -436,6 +440,7 @@ $nombreCarpeta = $_GET["nomcarpeta"];
           }
         }
       }
+
       //Borrar conjunto
       if (enviara == 101) {
         var depe = <?= $dependencia ?>;
@@ -468,7 +473,6 @@ $nombreCarpeta = $_GET["nomcarpeta"];
           }
         }
       }
-
     }
 
     function changeFolder() {
@@ -494,9 +498,24 @@ $nombreCarpeta = $_GET["nomcarpeta"];
       });
     }
 
-    $('#AccionCaliope').on('change', changedepesel1);
-    $('input[name^="checkValue"]').on('change', clickTx);
-    $('#carpper').on('change', changeFolder);
+    // $('#AccionCaliope').on('change', changedepesel1);
+    const accionCaliope = document.getElementById('AccionCaliope');
+    if (accionCaliope) {
+      accionCaliope.addEventListener('change', changedepesel1);
+    }
+
+    // $('input[name^="checkValue"]').on('change', clickTx);
+    document.addEventListener('change', function(event) {
+      if (event.target && event.target.name && event.target.name.startsWith('checkValue')) {
+        clickTx.call(event.target, event);
+      }
+    });
+
+    // $('#carpper').on('change', changeFolder);
+    const carpper = document.getElementById('carpper');
+    if (carpper) {
+      carpper.addEventListener('change', changeFolder);
+    }
   });
 </script>
 
