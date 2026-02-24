@@ -2645,6 +2645,8 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                 // REMOVER FILA POR data-rel="remove"
                 document.body.addEventListener('click', function(event) {
+                    console.log(event);
+                    
                     var removeDetail = event.target.closest('[data-rel="remove"]');
 
                     if (removeDetail && removeDetail.matches('*[data-rel="remove"]')) {
@@ -2660,9 +2662,10 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     }
 
                     var raditDocument = event.target.closest('[title="Radicar documento"]');
+                    console.log(raditDocument);
                     if (raditDocument && raditDocument.matches('*[title="Radicar documento"]')) {
                         // buscar la clase 'tooltip' o 'ui-tooltip'
-                        var visualTooltipsRadiDocument = document.querySelectorAll('.tooltip, .ui-tooltip, .tipsy, .tooltipster-base');
+                        var visualTooltipsRadiDocument = document.querySelectorAll('.ui-tooltip-content');
 
                         visualTooltipsRadiDocument.forEach(function(el) {
                             el.remove();
