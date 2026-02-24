@@ -635,7 +635,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                         <div class="d-flex justify-content-between">
                             <a title="Sticker"
                                 id="sticker"
-                                href="javascript:void(0);"
+                                href="#"
                                 onClick="window.open('./stickerWeb/index.php?<?= $varEnvio ?>&alineacion=Center','sticker<?= $nurad ?>','width=450,height=180');"
                                 class="btn btn-link px-0">
                                 Sticker |
@@ -2645,18 +2645,28 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
 
                 // REMOVER FILA POR data-rel="remove"
                 document.body.addEventListener('click', function(event) {
-                    var target = event.target.closest('[data-rel="remove"]');
+                    var removeDetail = event.target.closest('[data-rel="remove"]');
 
-                    if (target && target.matches('*[data-rel="remove"]')) {
+                    if (removeDetail && removeDetail.matches('*[data-rel="remove"]')) {
                         // buscar la clase 'tooltip' o 'ui-tooltip'
                         var visualTooltips = document.querySelectorAll('.tooltip, .ui-tooltip, .tipsy, .tooltipster-base');
-                        
+
                         visualTooltips.forEach(function(el) {
                             el.remove();
                         });
 
-                        var tr = target.closest('tr.item_usuario');
+                        var tr = removeDetail.closest('tr.item_usuario');
                         if (tr) tr.remove();
+                    }
+
+                    var raditDocument = event.target.closest('[title="Radicar documento"]');
+                    if (raditDocument && raditDocument.matches('*[title="Radicar documento"]')) {
+                        // buscar la clase 'tooltip' o 'ui-tooltip'
+                        var visualTooltipsRadiDocument = document.querySelectorAll('.tooltip, .ui-tooltip, .tipsy, .tooltipster-base');
+
+                        visualTooltipsRadiDocument.forEach(function(el) {
+                            el.remove();
+                        });
                     }
                 });
 
