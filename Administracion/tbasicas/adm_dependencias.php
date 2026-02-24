@@ -261,10 +261,8 @@ if ($db) {
 		$muni_us1 = "0";
 		//Buscamos los datos de una dependencia específica para generar los datos mostrados.
 		if ($_POST['id'] > 0) {
-			print_r($_POST['id']);
 			$sql0 = "SELECT * FROM DEPENDENCIA ";
 			$sql2 = "WHERE DEPE_CODI = " . $_POST['id'];
-			print_r($sql0 . $sql2 . $sql3);
 			$v_def = $db->conn->GetAll($sql0 . $sql2 . ' ' . $sql3);
 			$txtIdDep =	$v_def[0]['DEPE_CODI'];
 			$txtSigla =	$v_def[0]['DEP_SIGLA'];
@@ -278,8 +276,6 @@ if ($db) {
 				$on = 'selected';
 			}
 			$muni_us1 =	$v_def[0]['ID_CONT'] . '-' . $v_def[0]['ID_PAIS'] . '-' . $v_def[0]['DPTO_CODI'] . '-' . $v_def[0]['MUNI_CODI'];
-
-			print_r($v_def[0]['DEPE_NOMB']);
 
 			$txtModelo 	=	$v_def[0]['DEPE_NOMB'];
 			$txtDir 	=	$v_def[0]['DEP_DIRECCION'];
