@@ -1,6 +1,31 @@
 <?php
 session_start();
 $ruta_raiz="../";
+
+$radimailDebug = (getenv('RADIMAIL_DEBUG') === '1') || (isset($_GET['debug_php']) && $_GET['debug_php'] === '1');
+if (!defined('RADIMAIL_DEBUG')) {
+	define('RADIMAIL_DEBUG', $radimailDebug);
+}
+
+if (RADIMAIL_DEBUG) {
+	ini_set('display_errors', '1');
+	ini_set('display_startup_errors', '1');
+	ini_set('log_errors', '1');
+	error_reporting(E_ALL);
+}
+
+if (!function_exists('radimail_log')) {
+	function radimail_log($level, $message, $context = array()) {
+		$prefix = '[radiMail][' . strtoupper($level) . '] ' . $message;
+		if (!empty($context)) {
+			$encoded = json_encode($context);
+			if ($encoded !== false) {
+				$prefix .= ' | ' . $encoded;
+			}
+		}
+		error_log($prefix);
+	}
+}
 if (!$_SESSION['dependencia'])
 	header ("Location: $ruta_raiz/cerrar_session.php");
 

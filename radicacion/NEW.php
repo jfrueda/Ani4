@@ -2572,43 +2572,71 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                             });
                                         }
 
-                                        document.getElementById('showModificar').classList.remove('d-none');
+                                        var showModificarEl = document.getElementById('showModificar');
+                                        if (showModificarEl) {
+                                            showModificarEl.classList.remove('d-none');
+                                        }
                                     }
                                 }
 
                                 if (acction !== "modificaRad") {
 
-                                    var contentstiker = document.getElementById('skeleton').cloneNode(true);
-                                    contentstiker.classList.remove('hide');
-                                    contentstiker = contentstiker.outerHTML.replace(/xxxxxx/g, radicado);
+                                    var skeleton = document.getElementById('skeleton');
+                                    var skeleton8 = document.getElementById('skeleton8');
+                                    var skeleton9 = document.getElementById('skeleton9');
+                                    var skeleton10 = document.getElementById('skeleton10');
+                                    var sticker = document.getElementById('sticker');
+                                    var asociar = document.getElementById('asociar');
+                                    var tipificar = document.getElementById('tipificar');
 
-                                    var contentverrad = document.getElementById('skeleton8').cloneNode(true);
-                                    contentverrad.classList.remove('hide');
-                                    contentverrad = contentverrad.outerHTML.replace(/xxxxxx/g, radicado);
+                                    if (skeleton && skeleton8 && skeleton9 && skeleton10 && sticker && asociar && tipificar) {
+                                        var contentstiker = skeleton.cloneNode(true);
+                                        contentstiker.classList.remove('hide');
+                                        contentstiker = contentstiker.outerHTML.replace(/xxxxxx/g, radicado);
 
-                                    var contentasocia = document.getElementById('skeleton9').cloneNode(true);
-                                    contentasocia.classList.remove('hide');
-                                    contentasocia = contentasocia.outerHTML.replace(/xxxxxx/g, radicado);
+                                        var contentverrad = skeleton8.cloneNode(true);
+                                        contentverrad.classList.remove('hide');
+                                        contentverrad = contentverrad.outerHTML.replace(/xxxxxx/g, radicado);
 
-                                    var contenttipifica = document.getElementById('skeleton10').cloneNode(true);
-                                    contenttipifica.classList.remove('hide');
-                                    contenttipifica = contenttipifica.outerHTML.replace(/xxxxxx/g, radicado);
+                                        var contentasocia = skeleton9.cloneNode(true);
+                                        contentasocia.classList.remove('hide');
+                                        contentasocia = contentasocia.outerHTML.replace(/xxxxxx/g, radicado);
 
-                                    document.getElementById('sticker').innerHTML = contentstiker + contentverrad;
-                                    document.getElementById('asociar').innerHTML = contentasocia;
-                                    document.getElementById('tipificar').innerHTML = contenttipifica;
+                                        var contenttipifica = skeleton10.cloneNode(true);
+                                        contenttipifica.classList.remove('hide');
+                                        contenttipifica = contenttipifica.outerHTML.replace(/xxxxxx/g, radicado);
+
+                                        sticker.innerHTML = contentstiker + contentverrad;
+                                        asociar.innerHTML = contentasocia;
+                                        tipificar.innerHTML = contenttipifica;
+                                    }
                                 }
 
                                 <?php if (isset($uid)) { ?>
-                                    window.parent.filed(radicado, <?= $uid ?>);
+                                    if (window.parent && typeof window.parent.filed === 'function') {
+                                        window.parent.filed(radicado, <?= $uid ?>);
+                                    } else if (
+                                        window.parent &&
+                                        window.parent.parent &&
+                                        typeof window.parent.parent.filed === 'function'
+                                    ) {
+                                        window.parent.parent.filed(radicado, <?= $uid ?>);
+                                    }
                                 <?php } ?>
 
-                                document.getElementById('inforshow').classList.remove('hide');
-                                document.getElementById('showModificar').classList.remove('d-none');
+                                var inforshow = document.getElementById('inforshow');
+                                if (inforshow) {
+                                    inforshow.classList.remove('hide');
+                                }
+
+                                var showModificar = document.getElementById('showModificar');
+                                if (showModificar) {
+                                    showModificar.classList.remove('d-none');
+                                }
 
                                 var copy = document.getElementById('copyradicar');
-                                if (copy) {
-                                    copy.innerHTML = document.getElementById('showModificar').cloneNode(true).outerHTML;
+                                if (copy && showModificar) {
+                                    copy.innerHTML = showModificar.cloneNode(true).outerHTML;
                                 }
                             })
                             .catch(err => {

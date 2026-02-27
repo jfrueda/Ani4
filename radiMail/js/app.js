@@ -236,17 +236,22 @@ $(document).ready(function() {
 	*/
 
 	// SHORT CUT (buttons that appear when clicked on user name)
-	$.shortcut_dropdown.find('a').click(function(e) {
+	if ($.shortcut_dropdown && $.shortcut_dropdown.length) {
+		$.shortcut_dropdown.find('a').click(function(e) {
 
-		e.preventDefault();
+			e.preventDefault();
 
-		window.location = $(this).attr('href');
-		setTimeout(shortcut_buttons_hide, 300);
+			window.location = $(this).attr('href');
+			setTimeout(shortcut_buttons_hide, 300);
 
-	});
+		});
+	}
 
 	// SHORTCUT buttons goes away if mouse is clicked outside of the area
 	$(document).mouseup(function(e) {
+		if (!$.shortcut_dropdown || !$.shortcut_dropdown.length) {
+			return;
+		}
 		if (!$.shortcut_dropdown.is(e.target)// if the target of the click isn't the container...
 		&& $.shortcut_dropdown.has(e.target).length === 0) {
 			shortcut_buttons_hide()
@@ -255,6 +260,9 @@ $(document).ready(function() {
 
 	// SHORTCUT ANIMATE HIDE
 	function shortcut_buttons_hide() {
+		if (!$.shortcut_dropdown || !$.shortcut_dropdown.length) {
+			return;
+		}
 		$.shortcut_dropdown.animate({
 			height : "hide"
 		}, 300, "easeOutCirc");
@@ -264,6 +272,9 @@ $(document).ready(function() {
 
 	// SHORTCUT ANIMATE SHOW
 	function shortcut_buttons_show() {
+		if (!$.shortcut_dropdown || !$.shortcut_dropdown.length) {
+			return;
+		}
 		$.shortcut_dropdown.animate({
 			height : "show"
 		}, 200, "easeOutCirc")
