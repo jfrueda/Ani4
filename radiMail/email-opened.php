@@ -13,7 +13,12 @@ $uid=$_REQUEST["uid"];
 require_once('configRadiMail.php');
 include ("funcionesIMAP.php");
 if($uid){
-	$inbox = imap_open($hostname,$usua_email,$passwd_mail) or die(imap_last_error()); 
+	radimail_log('info', 'Iniciando procesamiento de correo', array('uid' => $uid, 'nurad' => $nurad, 'usuario' => $usua_email));
+	$inbox = imap_open($hostname,$usua_email,$passwd_mail);
+	if (!$inbox) {
+		radimail_log('error', 'No fue posible abrir conexion IMAP', array('imap_error' => imap_last_error(), 'usuario' => $usua_email));
+		die(imap_last_error());
+	}
 	// start define  headers
 	$msgNo=imap_msgno($inbox,$uid);
 	$head = imap_header($inbox,$msgNo);
@@ -37,7 +42,12 @@ if($uid){
 	//$body = getBody($inbox,$msgNo,$section,$charset); 
 	$body = getBody($uid,$inbox); 
 	$attachments = getAttachments($inbox, $msgNo, $structure, "");
+	radimail_log('info', 'Correo cargado', array('uid' => $uid, 'attachments' => count($attachments), 'subject' => $subject));
 	foreach ($attachments as $attachment) {
+		if (!isset($attachment['partNum']) || !isset($attachment['enc'])) {
+			radimail_log('warning', 'Adjunto con estructura invalida', array('uid' => $uid, 'attachment' => $attachment));
+			continue;
+		}
 		$listaAdjuntos.= "<a href='downloadAttachment.php?func=$func&folder=$folder&uid=$uid&part=".$attachment["partNum"]."&enc=".$attachment["enc"]."' target='_blank'>".imap_utf8($attachment["name"])."</a><br>";
 	}
 	if (empty($nurad) or !isset($nurad)){
@@ -55,9 +65,21 @@ if($uid){
 		$nurads[] = $nurad;
 		$codTx = 42;
 		unset($listaAdjuntos);
+		$i = 0;
 		foreach ($attachments as $attachment) {
+			if (!isset($attachment['partNum']) || !isset($attachment['enc'])) {
+				radimail_log('warning', 'Se omite adjunto invalido durante radicacion', array('uid' => $uid, 'nurad' => $nurad));
+				continue;
+			}
 			$anex=fileAdttachments($db,$nurad,$krd,imap_utf8($attachment["name"]),++$i,$dependencia);
-			downloadAttachment($inbox, $uid, $attachment["partNum"], $attachment["enc"], $path, $anex['name'], $nurad);
+			if (!$anex) {
+				radimail_log('error', 'No fue posible crear registro de anexo', array('uid' => $uid, 'nurad' => $nurad, 'filename' => $attachment['name']));
+				continue;
+			}
+			$downloaded = downloadAttachment($inbox, $uid, $attachment["partNum"], $attachment["enc"], $path, $anex['name'], $nurad);
+			if (!$downloaded) {
+				radimail_log('error', 'No fue posible guardar archivo adjunto', array('uid' => $uid, 'nurad' => $nurad, 'filename' => $attachment['name'], 'anexName' => $anex['name']));
+			}
 			$listaAdjuntos.= "<a href='javascript:void(0)' onclick='funlinkArchivo(\"".$anex['code']."\",\"./\")'>".imap_utf8($attachment["name"])."</a><br>";
 		}
 		ob_start();
@@ -69,24 +91,41 @@ if($uid){
 		$data = ob_get_flush();
 		$data = str_replace($links,"",$data);
 		//$data = str_replace("../","",$data);
-		$fp = fopen('../bodega/tmp/'.$date.'.html', 'w');
+		$tmpName = preg_replace('/[^0-9A-Za-z_-]/', '_', $date);
+		$tmpFile = '../bodega/tmp/'.$tmpName.'.html';
+		$fp = fopen($tmpFile, 'w');
+		if (!$fp) {
+			radimail_log('error', 'No fue posible crear archivo temporal del radicado', array('tmpFile' => $tmpFile, 'nurad' => $nurad));
+			die('No fue posible crear el archivo temporal del radicado');
+		}
 		fwrite($fp, $data);
 		fclose($fp);
 		$ano=substr($nurad,0,4);
 		$pathBodega="/$ano/$dependencia/$nurad.html";
-		if (copy("../bodega/tmp/$date.html","../bodega/$pathBodega")){
+		$destFile = "../bodega/$pathBodega";
+		$destDir = dirname($destFile);
+		if (!is_dir($destDir) && !mkdir($destDir, 0775, true)) {
+			radimail_log('error', 'No fue posible crear directorio de imagen principal', array('destDir' => $destDir, 'nurad' => $nurad));
+			die('No fue posible crear el directorio de destino del radicado');
+		}
+		if (copy($tmpFile,$destFile)){
+			radimail_log('info', 'Imagen principal copiada a bodega', array('nurad' => $nurad, 'destFile' => $destFile));
 			$isqlRadicado = "update radicado set RADI_PATH = '$pathBodega' where radi_nume_radi = $nurad";
 			$rs=$db->conn->query($isqlRadicado);
 			if (!$rs)//Si actualizo BD correctamente
 			{	
+				radimail_log('error', 'Fallo actualizacion RADI_PATH', array('sql' => $isqlRadicado, 'nurad' => $nurad));
 				echo "Fallo la Actualizacion del Path en radicado < $isqlRadicado >";
 			}else{
 				$observa = "Radicaci&oacute;n e-mail, se anexa (".count($attachments).") adjunto(s).";
 				$hist->insertarHistorico($nurads,  $dependencia , $codusuario, $dependencia, $codusuario, $observa, $codTx);
+				radimail_log('info', 'Radicacion finalizada', array('nurad' => $nurad, 'adjuntos' => count($attachments)));
 				//include "enviarMail.php";
 			}
 		}
 		else{
+			$copyError = error_get_last();
+			radimail_log('error', 'Error al copiar imagen principal del radicado', array('source' => $tmpFile, 'dest' => $destFile, 'error' => $copyError));
 			echo "Error al copiar imagen de radicado a la bodega";
 		}
 	}

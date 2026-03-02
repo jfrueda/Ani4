@@ -139,17 +139,30 @@ function getAttachments($imap, $mailNum, $part, $partNum) {
 			}
 			$result = getAttachments($imap, $mailNum, $subpart,
 					$newPartNum);
-			if (count($result) != 0) {
-				array_push($attachments, $result);
+			if (!empty($result)) {
+				if (isset($result['partNum'])) {
+					$attachments[] = $result;
+				} else {
+					$attachments = array_merge($attachments, $result);
+				}
 			}
 		}
 	}
 	else if (isset($part->disposition)) {
-		if ($part->disposition == "ATTACHMENT" or $part->disposition == "attachment") {
+		$disposition = strtoupper($part->disposition);
+		if ($disposition == "ATTACHMENT") {
 			$partStruct = imap_bodystruct($imap, $mailNum,
 					$partNum);
+			$name = '';
+			if (isset($part->dparameters[0]->value)) {
+				$name = $part->dparameters[0]->value;
+			} elseif (isset($part->parameters[0]->value)) {
+				$name = $part->parameters[0]->value;
+			} else {
+				$name = 'adjunto_' . str_replace('.', '_', $partNum);
+			}
 			$attachmentDetails = array(
-					"name"    => $part->dparameters[0]->value,
+					"name"    => $name,
 					"partNum" => $partNum,
 					"enc"     => $partStruct->encoding
 					);
@@ -161,7 +174,11 @@ function getAttachments($imap, $mailNum, $part, $partNum) {
 }
 function fileAdttachments($db,$nurad,$user,$filename,$attachNumber,$dependence){
 	//$db->conn->debug=true;
-	$ext=strtolower(array_pop(explode(".",$filename)));
+	$filenameParts = explode('.', $filename);
+	$ext = strtolower(array_pop($filenameParts));
+	if (!$ext) {
+		$ext = 'bin';
+	}
 	//$ext=array_pop(explode(".",$filename));
 	$type = "SELECT ANEX_TIPO_CODI FROM ANEXOS_TIPO WHERE ANEX_TIPO_EXT = '$ext'";
 	$type = $db->conn->query($type);
@@ -189,12 +206,22 @@ function fileAdttachments($db,$nurad,$user,$filename,$attachNumber,$dependence){
 	if ($db->insert("anexos", $record, "true")){
 		return $anex;
 	}
+	radimail_log('error', 'No fue posible insertar anexo en BD', array(
+		'nurad' => $nurad,
+		'filename' => $filename,
+		'attachNumber' => $attachNumber,
+		'dependence' => $dependence
+	));
 	return false;
 	
 }
 function downloadAttachment($imap, $uid, $partNum, $encoding, $path, $anexName=false, $nurad=false) {
 	$partStruct = imap_bodystruct($imap, imap_msgno($imap, $uid), $partNum);
-	$filename = $partStruct->dparameters[0]->value;
+	if (!$partStruct) {
+		radimail_log('error', 'No se pudo obtener estructura de adjunto', array('uid' => $uid, 'partNum' => $partNum));
+		return false;
+	}
+	$filename = isset($partStruct->dparameters[0]->value) ? $partStruct->dparameters[0]->value : ('adjunto_' . str_replace('.', '_', $partNum));
 	$message = imap_fetchbody($imap, $uid, $partNum, FT_UID);
 
 	switch ($encoding) {
@@ -214,24 +241,40 @@ function downloadAttachment($imap, $uid, $partNum, $encoding, $path, $anexName=f
 	}
 	if (!$anexName and !$nurad){
 		$filename=str_replace(' ','',$filename);
-        if(strtolower(explode('.',$filename)[1])=='pdf'){
-            header('Content-type: application/pdf');
-            header("Content-Disposition: inline; filename=" . $filename);   
-        }else{
+		$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+		if($ext=='pdf'){
+			header('Content-type: application/pdf');
+			header("Content-Disposition: inline; filename=" . $filename);   
+		}else{
             header("Content-Description: File Transfer");
             header("Content-Type: application/octet-stream");
             header("Content-Disposition: attachment; filename=" . $filename);
-        }
+		}
         header("Content-Transfer-Encoding: binary");
         header("Expires: 0");
         header("Cache-Control: must-revalidate");
         header("Pragma: public");
         echo $message;
+		return true;
 	}else{
-    $url = "../bodega/".substr($nurad,0,4) ."/".$_SESSION["dependencia"] ."/docs/$anexName";
+		$url = "../bodega/".substr($nurad,0,4) ."/".$_SESSION["dependencia"] ."/docs/$anexName";
+		$dir = dirname($url);
+		if (!is_dir($dir) && !mkdir($dir, 0775, true)) {
+			radimail_log('error', 'No fue posible crear directorio de anexos', array('dir' => $dir, 'uid' => $uid, 'nurad' => $nurad));
+			return false;
+		}
 		$fopen = fopen($url, 'w');
-		fwrite($fopen, $message);
+		if (!$fopen) {
+			radimail_log('error', 'No fue posible abrir archivo de anexo para escritura', array('url' => $url, 'uid' => $uid, 'nurad' => $nurad));
+			return false;
+		}
+		$bytes = fwrite($fopen, $message);
 		fclose($fopen);
+		if ($bytes === false) {
+			radimail_log('error', 'No fue posible escribir archivo de anexo', array('url' => $url, 'uid' => $uid, 'nurad' => $nurad));
+			return false;
+		}
+		return true;
 	}
 }
 function getCharset($section,$structure){

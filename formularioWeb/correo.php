@@ -1,5 +1,5 @@
 <?
-$correo='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+$correo = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -28,7 +28,9 @@ body {
     <td colspan="2"><p><em>Superintendencia de la econom&iacute;a solidaria </em></p>    </td>
   </tr>
   <tr>
-    <td colspan="2"><strong>Estimado Sr(a) :</strong>'; $correo.=utf8_decode($_POST['nombre']); $correo.='</td>
+    <td colspan="2"><strong>Estimado Sr(a) :</strong>';
+$correo .= utf8_decode($_POST['nombre']);
+$correo .= '</td>
   </tr>
   <tr>
     <td colspan="2">&nbsp;</td>
@@ -41,23 +43,33 @@ body {
   </tr>
   <tr>
     <td width="18%"><font color="#1F619B"><strong>Fecha:</strong></font> </td>
-    <td width="82%">';$correo.=date('d-m-Y');$correo.='</td>
+    <td width="82%">';
+$correo .= date('d-m-Y');
+$correo .= '</td>
   </tr>
   <tr>
     <td width="18%"><font color="#1F619B"><strong>Direcci&oacute;n:</strong></font> </td>
-    <td width="82%">';$correo.=utf8_decode($_POST['direccion']);$correo.='</td>
+    <td width="82%">';
+$correo .= utf8_decode($_POST['direccion']);
+$correo .= '</td>
   </tr>
   <tr>
     <td><font color="#1F619B"><strong>E-mail : </strong></font></td>
-    <td>';$correo.=utf8_decode($_POST['mail']);$correo.='</td>
+    <td>';
+$correo .= utf8_decode($_POST['mail']);
+$correo .= '</td>
   </tr>
   <tr>
     <td><font color="#1F619B"><strong>Nit / C.C : </strong></font></td>
-    <td>';$correo.=utf8_decode($_POST['nit']);$correo.='</td>
+    <td>';
+$correo .= utf8_decode($_POST['nit']);
+$correo .= '</td>
   </tr>
   <tr>
     <td><font color="#1F619B"><strong>Queja : </strong></font></td>
-    <td>';$correo.=utf8_decode($_POST['comentario']);$correo.='</td>
+    <td>';
+$correo .= utf8_decode($_POST['comentario']);
+$correo .= '</td>
   </tr>
   <tr>
     <td>&nbsp;</td>
@@ -83,4 +95,3 @@ body {
   </tr>
 </table>
 ';
-?>

@@ -10,7 +10,7 @@ $ruta_raiz = "..";
 if (!$_SESSION['dependencia']) {
     $fallo['session'] = 'off';
     json_encode($fallo);
-    die();//prueba
+    die(); //prueba
 }
 
 $krd = $_SESSION["krd"];
@@ -40,7 +40,7 @@ $reportesClass = new estadisiticas($ruta_raiz);
 $datos = array();
 switch ($fn) {
     case 'serie':
-//echo $dep_busq;
+        //echo $dep_busq;
         //$db->conn->debug =true;
         if ($dep_busq == "" || $dep_busq == "99999") {
             $where = "";
@@ -66,14 +66,13 @@ switch ($fn) {
                 }
                 $i++;
                 $rs->MoveNext();
-
             }
         }
         break;
     case 'subSeries':
         //$db->conn->debug =true;
         $iSql = "SELECT distinct (s.sgd_sbrd_descrip||'-'||s.sgd_sbrd_codigo) as nomb, s.sgd_sbrd_codigo cod,s.id FROM sgd_sbrd_subserierd s,sgd_mrd_matrird m WHERE s.sgd_srd_id='$serie' and  s.sgd_sbrd_estado  = '1' ";
-        $iSql.=" and s.id =m.sgd_sbrd_id and (cast(m.depe_codi as varchar(10)) = '$dep_busq') ";
+        $iSql .= " and s.id =m.sgd_sbrd_id and (cast(m.depe_codi as varchar(10)) = '$dep_busq') ";
         $rsSbrd = $db->conn->query($iSql);
         $rs = $db->conn->query($iSql);
         if (!$rs->EOF) {
@@ -84,7 +83,6 @@ switch ($fn) {
                 }
                 $i++;
                 $rs->MoveNext();
-
             }
         }
         break;
@@ -109,107 +107,101 @@ switch ($fn) {
                 }
                 $i++;
                 $rs->MoveNext();
-
             }
         }
         break;
     case 'usuarios':
-        $whereDep = ($dependencia_busq != 99999) ? "  u.DEPE_CODI = " . $depe : '';
+        $whereDep = ($depe !== '' && $depe != 99999) ? " u.DEPE_CODI = " . $depe : '';
 
         $whereUsSelect = $tpus == '0' ? " u.USUA_ESTA = '1' " : "";
-        $whereUsSelect = ($usua_perm_estadistica < 1) ?(($whereUsSelect != "") ? $whereUsSelect . " AND u.USUA_LOGIN='$krd' " : " u.USUA_LOGIN='$krd' ") : $whereUsSelect;
-        if ($depe != 99999) {
+        $whereUsSelect = ($usua_perm_estadistica < 1) ? (($whereUsSelect != "") ? $whereUsSelect . " AND u.USUA_LOGIN='$krd' " : " u.USUA_LOGIN='$krd' ") : $whereUsSelect;
 
-            $whereUsSelect = ($whereUsSelect == "") ? $whereDep : $whereUsSelect . " and  " . $whereDep;
-            
-			$iSql = "select lower(u.USUA_NOMB) nomb,u.USUA_CODI cod,u.USUA_ESTA,u.usua_doc from USUARIO u
-                    where  $whereUsSelect
-                    order by u.USUA_NOMB";
-				
-			/*$iSql = "select lower(u.USUA_NOMB) nomb,u.USUA_CODI cod,u.USUA_ESTA,u.usua_doc from USUARIO u
-                    where  u.USUA_ESTA='1' and u.DEPE_CODI=".$depe."
-                    order by u.USUA_NOMB";*/
+        $whereUsSelect = ($whereUsSelect == "") ? $whereDep : (($whereDep != "") ? $whereUsSelect . " and " . $whereDep : $whereUsSelect);
+        if ($whereUsSelect == "") {
+            $whereUsSelect = "1=1";
+        }
 
-            $rs = $db->conn->query($iSql);
-            if (!$rs->EOF) {
-                $i = 0;
-                while (!$rs->EOF) {
-                    foreach ($rs->fields as $key => $value) {
-                        $datos[$i][strtoupper($key)] = $value;
-                    }
-                    $i++;
-                    $rs->MoveNext();
+        $iSql = "select lower(u.USUA_NOMB) nomb,u.USUA_CODI cod,u.USUA_ESTA,u.usua_doc from USUARIO u
+                where $whereUsSelect
+                order by u.USUA_NOMB";
 
+        $rs = $db->conn->query($iSql);
+        if (!$rs->EOF) {
+            $i = 0;
+            while (!$rs->EOF) {
+                foreach ($rs->fields as $key => $value) {
+                    $datos[$i][strtoupper($key)] = $value;
                 }
+                $i++;
+                $rs->MoveNext();
             }
         }
         break;
-        case 'depe':
-            $sqlConcat = $db->conn->Concat("depe_codi ", "' - '", " lower(depe_nomb)");
-            if ($usua_perm_estadistica > 1 || $tpd==9) {
-                $sql = "select $sqlConcat nomb ,depe_codi id from dependencia where depe_estado = 1  order by depe_codi";
-            } else {
-                $sql = "select $sqlConcat nomb,depe_codi id from dependencia where DEPE_CODI=$dependencia order by depe_codi"; 
-            }
-                $rs = $db->conn->query($sql);
-                if (!$rs->EOF) {
-                    $i = 1;
-                    $datos[0]=array('ID'=>'99999','NOMB'=>'-- Todas las Dependencias --');
-                    while (!$rs->EOF) {
-                        foreach ($rs->fields as $key => $value) {
-                            $datos[$i][strtoupper($key)] = $value;
-                        }
-                        $i++;
-                        $rs->MoveNext();
-    
-                    }
+    case 'depe':
+        $sqlConcat = $db->conn->Concat("depe_codi ", "' - '", " lower(depe_nomb)");
+        if ($usua_perm_estadistica > 1 || $tpd == 9) {
+            $sql = "select $sqlConcat nomb ,depe_codi id from dependencia where depe_estado = 1  order by depe_codi";
+        } else {
+            $sql = "select $sqlConcat nomb,depe_codi id from dependencia where DEPE_CODI=$dependencia order by depe_codi";
+        }
+        $rs = $db->conn->query($sql);
+        if (!$rs->EOF) {
+            $i = 1;
+            $datos[0] = array('ID' => '99999', 'NOMB' => '-- Todas las Dependencias --');
+            while (!$rs->EOF) {
+                foreach ($rs->fields as $key => $value) {
+                    $datos[$i][strtoupper($key)] = $value;
                 }
-            
-            break;
-    case 'rp':
-        //  print_r($_POST);
-      //  $datos = $reportesClass->rp1($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin);
-        $funct='rp'.$reporte;
-        $datos = $reportesClass->$funct($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin,$tpRad, $tpUs);
-        break;
-    case 'dtrp1':
-      //  print_r($_POST);
-      if($depe==99999 && $tpbusq<>'T')
-         $depe=$btns;
-        $datos=$reportesClass->dtrp1($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
+                $i++;
+                $rs->MoveNext();
+            }
+        }
 
         break;
-        case 'dtrp2':
-            //  print_r($_POST);
-            /*  if($depe==99999 && $tpbusq<>'T')
+    case 'rp':
+        //  print_r($_POST);
+        //  $datos = $reportesClass->rp1($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin);
+        $funct = 'rp' . $reporte;
+        $datos = $reportesClass->$funct($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpRad, $tpUs);
+        break;
+    case 'dtrp1':
+        //  print_r($_POST);
+        if ($depe == 99999 && $tpbusq <> 'T')
+            $depe = $btns;
+        $datos = $reportesClass->dtrp1($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+
+        break;
+    case 'dtrp2':
+        //  print_r($_POST);
+        /*  if($depe==99999 && $tpbusq<>'T')
                 $depe=$btns;*/
-                $d=$reportesClass->dtrp2($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
-                $datos=$d;
-                break;
+        $d = $reportesClass->dtrp2($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+        $datos = $d;
+        break;
     case 'dtrp3':
         //  print_r($_POST);
         /*  if($depe==99999 && $tpbusq<>'T')
             $depe=$btns;*/
-            $d=$reportesClass->dtrp3($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq);
-            $resp['ENVIADOS']=$d['ENVIADOS'];
-            $resp['DEVUELTOS']=$d['DEVUELTOS'];
-            $datos=$d['datos'];
-            break;
+        $d = $reportesClass->dtrp3($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq);
+        $resp['ENVIADOS'] = $d['ENVIADOS'];
+        $resp['DEVUELTOS'] = $d['DEVUELTOS'];
+        $datos = $d['datos'];
+        break;
     case 'dtrp4':
-            //  print_r($_POST);
-            if($depe==99999 && $tpbusq<>'T')
-                $depe=$btns;
-                $datos=$reportesClass->dtrp4($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
-        
-         break;
+        //  print_r($_POST);
+        if ($depe == 99999 && $tpbusq <> 'T')
+            $depe = $btns;
+        $datos = $reportesClass->dtrp4($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+
+        break;
 
     case 'dtrp6':
-      if($depe==99999 && $tpbusq<>'T')
-         $depe=$btns;
-        $datos=$reportesClass->dtrp6($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
+        if ($depe == 99999 && $tpbusq <> 'T')
+            $depe = $btns;
+        $datos = $reportesClass->dtrp6($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
         break;
     case 'dtrp7':
-        $datos=$reportesClass->dtrp7($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
+        $datos = $reportesClass->dtrp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
         break;
 
     case 'rp9':
@@ -220,7 +212,7 @@ switch ($fn) {
         //print_r( $_POST);
         $datos = $reportesClass->dtrp9($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq);
         break;
-/// detalles reporte fa-rotate-180
+    /// detalles reporte fa-rotate-180
     case 'dtrp10':
         $datos = $reportesClass->dtrp10($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq);
         break;
@@ -228,32 +220,32 @@ switch ($fn) {
         //  print_r($_POST);
         $datos = $reportesClass->ConsultaRadi($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, 1);
         break;
-        case 'dtrp11':
-            $datos = $reportesClass->dtrpCons($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq,1);
-            break;
+    case 'dtrp11':
+        $datos = $reportesClass->dtrpCons($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, 1);
+        break;
     case 'rp12':
         //  print_r($_POST);
         $datos = $reportesClass->ConsultaRadi($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, 3);
         break;
-        case 'dtrp12':
-            $datos = $reportesClass->dtrpCons($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq,3);
-            break;
-            case 'rp13':
-                //  print_r($_POST);
-                $datos = $reportesClass->ConsultaRadi($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, 3);
-                break;
-            case 'dtrp13':
-                //  print_r($_POST);
-                /*  if($depe==99999 && $tpbusq<>'T')
+    case 'dtrp12':
+        $datos = $reportesClass->dtrpCons($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, 3);
+        break;
+    case 'rp13':
+        //  print_r($_POST);
+        $datos = $reportesClass->ConsultaRadi($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, 3);
+        break;
+    case 'dtrp13':
+        //  print_r($_POST);
+        /*  if($depe==99999 && $tpbusq<>'T')
                     $depe=$btns;*/
-                    $d=$reportesClass->dtrp2($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
-                    $datos=$d;
-                    break;
+        $d = $reportesClass->dtrp2($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+        $datos = $d;
+        break;
     case 'dtrp30':
-        if($depe==99999 && $tpbusq<>'T')
-            $depe=$btns;
-        $datos=$reportesClass->dtrp30($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
-    
+        if ($depe == 99999 && $tpbusq <> 'T')
+            $depe = $btns;
+        $datos = $reportesClass->dtrp30($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+
         break;
     default:
         $db->conn->Disconnect();

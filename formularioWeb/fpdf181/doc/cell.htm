@@ -8,16 +8,16 @@
 <body>
 <h1>Cell</h1>
 <code>Cell(<b>float</b> w [, <b>float</b> h [, <b>string</b> txt [, <b>mixed</b> border [, <b>int</b> ln [, <b>string</b> align [, <b>boolean</b> fill [, <b>mixed</b> link]]]]]]])</code>
-<h2>Descripción</h2>
-Imprime una celda (de área rectangular) bordes opcionales, color de fondo y secuencia de carácteres
-La esquina superior izquierda de la celda corresponde a la posición actual. El texto puede ser alineado o centrado. Despues de invocar, la posición actual se desplaza a la derecha o la siguietne línea. Es posible poner una referencia en el texto.
+<h2>Descripciï¿½n</h2>
+Imprime una celda (de ï¿½rea rectangular) bordes opcionales, color de fondo y secuencia de carï¿½cteres
+La esquina superior izquierda de la celda corresponde a la posiciï¿½n actual. El texto puede ser alineado o centrado. Despues de invocar, la posiciï¿½n actual se desplaza a la derecha o la siguietne lï¿½nea. Es posible poner una referencia en el texto.
 <br>
-Si esta el salto de página automático habilitado y la celda esta por fuera del límite, es realizado un salto de página antes de producir la salida.
-<h2>Parámetros</h2>
+Si esta el salto de pï¿½gina automï¿½tico habilitado y la celda esta por fuera del lï¿½mite, es realizado un salto de pï¿½gina antes de producir la salida.
+<h2>Parï¿½metros</h2>
 <dl class="param">
 <dt><code>w</code></dt>
 <dd>
-Ancho de Celda. Si es <code>0</code>, la celda se extiende hasta la márgen derecha.
+Ancho de Celda. Si es <code>0</code>, la celda se extiende hasta la mï¿½rgen derecha.
 </dd>
 <dt><code>h</code></dt>
 <dd>
@@ -31,12 +31,12 @@ Valor por defecto: cadena vacia.
 </dd>
 <dt><code>border</code></dt>
 <dd>
-Indica si los bordes deben se dibujados alrededor de la celda. El valor puede ser un número:
+Indica si los bordes deben se dibujados alrededor de la celda. El valor puede ser un nï¿½mero:
 <ul>
 <li><code>0</code>: sin borde</li>
 <li><code>1</code>: marco</li>
 </ul>
-o una cadena que contenga una o una combinación de los siguientes caracteres (en cualquier orden):
+o una cadena que contenga una o una combinaciï¿½n de los siguientes caracteres (en cualquier orden):
 <ul>
 <li><code>L</code>: izquierda</li>
 <li><code>T</code>: superior</li>
@@ -47,10 +47,10 @@ Valor por defecto: <code>0</code>.
 </dd>
 <dt><code>ln</code></dt>
 <dd>
-Indica donde la posición actula debería ir antes de invocar. Los valores posibles son:
+Indica donde la posiciï¿½n actula deberï¿½a ir antes de invocar. Los valores posibles son:
 <ul>
 <li><code>0</code>: a la derecha</li>
-<li><code>1</code>: al comienzo de la siguiente línea</li>
+<li><code>1</code>: al comienzo de la siguiente lï¿½nea</li>
 <li><code>2</code>: debajo</li>
 </ul>
 Poner <code>1</code> es equivalente a poner <code>0</code> y llamar justo despues Ln().
@@ -60,9 +60,9 @@ Valor por defecto: <code>0</code>.
 <dd>
 Permite centrar o alinear el texto. Los posibles valores son:
 <ul>
-<li><code>L</code> o una cadena vacia: alineación izquierda (valor por defecto)</li>
+<li><code>L</code> o una cadena vacia: alineaciï¿½n izquierda (valor por defecto)</li>
 <li><code>C</code>: centro</li>
-<li><code>R</code>: alineación derecha</li>
+<li><code>R</code>: alineaciï¿½n derecha</li>
 </ul>
 </dd>
 <dt><code>fill</code></dt>
@@ -81,10 +81,10 @@ URL o identificador retornado por AddLink().
 $pdf-&gt;SetFont('Arial','B',16);
 // Move to 8 cm to the right
 $pdf-&gt;Cell(80);
-// Texto centrado en una celda con cuadro 20*10 mm y salto de línea
+// Texto centrado en una celda con cuadro 20*10 mm y salto de lï¿½nea
 $pdf-&gt;Cell(20,10,'Title',1,1,'C');</code></pre>
 </div>
-<h2>Vea además</h2>
+<h2>Vea ademï¿½s</h2>
 <a href="setfont.htm">SetFont</a>,
 <a href="setdrawcolor.htm">SetDrawColor</a>,
 <a href="setfillcolor.htm">SetFillColor</a>,

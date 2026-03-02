@@ -7,6 +7,7 @@ $dependencia = $_SESSION["dependencia"];
 
 include_once "htmlheader.inc.php";
 $error=$_SESSION["RADIMAIL"]["ERROR"];
+radimail_log('info', 'Acceso al modulo radiMail', array('usuario' => $usua_email, 'dependencia' => $dependencia, 'error_sesion' => $error));
 if($passwd_mail and !$error) {
 	if (!$page) $page=1;
 	$_SESSION["passwd_mail"]=$passwd_mail;
@@ -16,8 +17,14 @@ if($passwd_mail and !$error) {
 		$_SESSION['inbox']=$inbox;
 	  $error = imap_last_error();
 	  $_SESSION["RADIMAIL"]["ERROR"]=$error;
+	  if ($error) {
+	  	radimail_log('error', 'Error IMAP al abrir inbox', array('usuario' => $usua_email, 'imap_error' => $error));
+	  } else {
+	  	radimail_log('info', 'Conexion IMAP abierta correctamente', array('usuario' => $usua_email));
+	  }
 	}
 	if(!$index and $error){
+	 radimail_log('warning', 'Redireccion por error en autenticacion de correo', array('usuario' => $usua_email));
 	 header('Location: index.php');
 	}else{
          $smarty->display('index.tpl');
@@ -37,6 +44,7 @@ if($passwd_mail and !$error) {
 }
 function error($error){
 	$_SESSION["RADIMAIL"]["ERROR"]=$error;
+	radimail_log('error', 'Error controlado en radiMail/index.php', array('error' => $error));
 	header('Location: index.php');
 }
 

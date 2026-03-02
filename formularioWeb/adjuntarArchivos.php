@@ -15,7 +15,8 @@
 /*** an array to hold messages ***/
 include_once "../processConfig.php";
 
-class Uploader {
+class Uploader
+{
 
 	public $messages = array();
 	public $FILES = array();
@@ -23,39 +24,42 @@ class Uploader {
 	public $sha1sums = array();
 	public $sizes = array();
 	public $nombreOrfeo = array();
-	public $upload_dir= "../bodega/tmp/";
-	public $bodega_dir= "../bodega/";
+	public $upload_dir = "../bodega/tmp/";
+	public $bodega_dir = "../bodega/";
 	public $listadoImprimible = "";
 	public $tieneArchivos = false;
 
-  public function __construct($FilesList){
-    $this->FILES = $FileList;
-  }	
-	
-	public function Uploader($FilesList){
+	public function __construct($FilesList)
+	{
 		$this->FILES = $FileList;
 	}
 
-	public function adjuntarYaSubidos(){
+	public function Uploader($FilesList)
+	{
+		$this->FILES = $FileList;
+	}
+
+	public function adjuntarYaSubidos()
+	{
 		foreach ($this->subidos as $archivosSubidos) {
-			if(is_file($this->upload_dir.$archivosSubidos)){
-			continue;
-			}
-			else{
-			$error=1;
+			if (is_file($this->upload_dir . $archivosSubidos)) {
+				continue;
+			} else {
+				$error = 1;
 			}
 		}
-		if($error > 0 || sizeof($this->subidos) == 0){
+		if ($error > 0 || sizeof($this->subidos) == 0) {
 			$this->tieneArchivos = false;
 			return false;
-		}else{
+		} else {
 			$this->tieneArchivos = true;
 			$this->listadoAdjuntosConHashesYaSubidos();
 			return true;
 		}
 	}
 	//Deprecated Ya no se usa por que se suben con FineUploader
-	public function adjuntarArchivos(){
+	public function adjuntarArchivos()
+	{
 		$error = 0;
 		error_reporting(E_ALL);
 		/*** the upload directory ***/
@@ -67,19 +71,15 @@ class Uploader {
 		/* Added to support a maximun upload size adding all individual file sizes */
 		$uploaded_size = 0;
 		/*** check if a file has been submitted ***/
-		if(isset($this->FILES['userfile']['tmp_name']) && $this->FILES['userfile']['tmp_name'][0]=="")
-		{
+		if (isset($this->FILES['userfile']['tmp_name']) && $this->FILES['userfile']['tmp_name'][0] == "") {
 			return true;
 		}
-		if(isset($this->FILES['userfile']['tmp_name']))
-		{
+		if (isset($this->FILES['userfile']['tmp_name'])) {
 			/** loop through the array of files ***/
-			for($i=0; $i < count($this->FILES['userfile']['tmp_name']);$i++)
-			{
+			for ($i = 0; $i < count($this->FILES['userfile']['tmp_name']); $i++) {
 				// check if there is a file in the array
-				if(!is_uploaded_file($this->FILES['userfile']['tmp_name'][$i]))
-				{
-					if(strlen($this->FILES['userfile']['tmp_name'][$i]) == 0){
+				if (!is_uploaded_file($this->FILES['userfile']['tmp_name'][$i])) {
+					if (strlen($this->FILES['userfile']['tmp_name'][$i]) == 0) {
 						continue;
 					}
 
@@ -87,38 +87,31 @@ class Uploader {
 					$error += 1;
 				}
 				/*** check if the file is less then the max php.ini size ***/
-				elseif($this->FILES['userfile']['size'][$i] + $uploaded_size > $upload_max)
-				{
+				elseif ($this->FILES['userfile']['size'][$i] + $uploaded_size > $upload_max) {
 					$this->messages[] = "Los archivos superan el m&aacute;ximo permitido $upload_max php.ini limit (20M)";
 					$error += 1;
 				}
 				// check the file is less than the maximum file size
-				elseif($this->FILES['userfile']['size'][$i] > $max_file_size)
-				{
+				elseif ($this->FILES['userfile']['size'][$i] > $max_file_size) {
 					$this->messages[] = "El archivo supera el m&aacute;ximo permitido $max_file_size limit (5M)";
 					$error += 1;
-				}
-				else
-				{
+				} else {
 					// Copiar los archivos a un directorio temporal mientras se obtiene un numero de radicado para asociarlos.
-					if(@copy($this->FILES['userfile']['tmp_name'][$i],$this->upload_dir.'/'.basename($this->FILES['userfile']['tmp_name'][$i])))
-					{
+					if (@copy($this->FILES['userfile']['tmp_name'][$i], $this->upload_dir . '/' . basename($this->FILES['userfile']['tmp_name'][$i]))) {
 						/*** give praise and thanks to the php gods ***/
-						$this->messages[] = $this->FILES['userfile']['name'][$i].' uploaded';
+						$this->messages[] = $this->FILES['userfile']['name'][$i] . ' uploaded';
 						$uploaded_size += $this->FILES['userfile']['size'][$i];
 						$this->calcularSHA1SumAnexos(basename($this->FILES['userfile']['tmp_name'][$i]));
-					}
-					else
-					{
+					} else {
 						/*** an error message ***/
-						$this->messages[] = 'Uploading '.$this->FILES['userfile']['name'][$i].' Failed';
+						$this->messages[] = 'Uploading ' . $this->FILES['userfile']['name'][$i] . ' Failed';
 						$error += 1;
 					}
 				}
 			}
-			if($error > 0){
+			if ($error > 0) {
 				return false;
-			}else{
+			} else {
 				$this->tieneArchivos = true;
 				$this->listadoAdjuntosConHashes();
 				return true;
@@ -126,91 +119,83 @@ class Uploader {
 		}
 	}
 
-	public function calcularSHA1SumAnexos($fileName){
-		$this->sha1sums[] = sha1_file($this->upload_dir."/".$fileName);
-		$this->sizes[] = intval(filesize($this->upload_dir."/".$fileName)/1024);
+	public function calcularSHA1SumAnexos($fileName)
+	{
+		$this->sha1sums[] = sha1_file($this->upload_dir . "/" . $fileName);
+		$this->sizes[] = intval(filesize($this->upload_dir . "/" . $fileName) / 1024);
 	}
 
-	public function listadoAdjuntosConHashes(){
-		if(!$this->tieneArchivos)
-		{
+	public function listadoAdjuntosConHashes()
+	{
+		if (!$this->tieneArchivos) {
 			$this->listadoImprimible = "No se adjunta ningún archivo\n";
 			return;
 		}
 		$this->listadoImprimible = "Se adjuntan los siguientes archivos:\n";
-		for($i=0; $i < count($this->FILES['userfile']['name']);$i++)
-		{
-			if(strlen($this->FILES['userfile']['tmp_name'][$i]) == 0){
+		for ($i = 0; $i < count($this->FILES['userfile']['name']); $i++) {
+			if (strlen($this->FILES['userfile']['tmp_name'][$i]) == 0) {
 				continue;
 			}
-			$this->listadoImprimible .= ($i+1).". " . $this->FILES['userfile']['name'][$i] ." \tsha1sum: " . $this->sha1sums[$i]."\n";
+			$this->listadoImprimible .= ($i + 1) . ". " . $this->FILES['userfile']['name'][$i] . " \tsha1sum: " . $this->sha1sums[$i] . "\n";
 		}
-
 	}
-	public function listadoAdjuntosConHashesYaSubidos(){
-		if(isset($this->subidos) and sizeof($this->subidos)==0)
-		{
+	public function listadoAdjuntosConHashesYaSubidos()
+	{
+		if (isset($this->subidos) and sizeof($this->subidos) == 0) {
 			$this->listadoImprimible = "No se adjunta ningún archivo\n";
 			return;
 		}
-		
+
 		$this->listadoImprimible = "Se adjuntan los siguientes archivos:\n";
-		
-		for($i=0; $i < count($this->subidos);$i++)
-		{
-			if(strlen($this->subidos[$i]) == 0){
+
+		for ($i = 0; $i < count($this->subidos); $i++) {
+			if (strlen($this->subidos[$i]) == 0) {
 				continue;
 			}
 			$this->calcularSHA1SumAnexos($this->subidos[$i]);
-			$this->listadoImprimible .= ($i+1).". " . $this->subidos[$i] ." \tsha1sum: " . $this->sha1sums[$i]."\n";
+			$this->listadoImprimible .= ($i + 1) . ". " . $this->subidos[$i] . " \tsha1sum: " . $this->sha1sums[$i] . "\n";
 		}
-
 	}
-	public function moverArchivoCarpetaBodega($numrad){
-		if(!$this->tieneArchivos)
-		{
+	public function moverArchivoCarpetaBodega($numrad)
+	{
+		if (!$this->tieneArchivos) {
 			return;
 		}
 		//Si todo fue bien entonces mover los archivos de la carpeta temporal a  bodega.
-		for($i=0; $i < count($this->FILES['userfile']['name']);$i++)
-		{
-			if(strlen($this->FILES['userfile']['tmp_name'][$i]) == 0){
+		for ($i = 0; $i < count($this->FILES['userfile']['name']); $i++) {
+			if (strlen($this->FILES['userfile']['tmp_name'][$i]) == 0) {
 				continue;
 			}
-			$extension = end(explode('.',$this->FILES['userfile']['name'][$i]));
+			$extension = end(explode('.', $this->FILES['userfile']['name'][$i]));
 			//Bug fix si el archivo no tiene extensión.
-			$extension = $extension?'.'.$extension:'';
-			$this->nombreOrfeo[] = $numrad.'_'.substr('00000'. ($i+1) , -5).$extension;
-			if(@rename($this->upload_dir.'/'.basename($this->FILES['userfile']['tmp_name'][$i]),$this->bodega_dir.'/'.$this->nombreOrfeo[$i])){
+			$extension = $extension ? '.' . $extension : '';
+			$this->nombreOrfeo[] = $numrad . '_' . substr('00000' . ($i + 1), -5) . $extension;
+			if (@rename($this->upload_dir . '/' . basename($this->FILES['userfile']['tmp_name'][$i]), $this->bodega_dir . '/' . $this->nombreOrfeo[$i])) {
 				//echo "Archivo movido exitoso";
-			}
-			else {
+			} else {
 				//echo "Error moviendo a destino final";
 			}
 		}
 	}
-	public function moverArchivoCarpetaBodegaYaSubidos($numrad){
-		if(!$this->tieneArchivos)
-		{
+	public function moverArchivoCarpetaBodegaYaSubidos($numrad)
+	{
+		if (!$this->tieneArchivos) {
 			return;
 		}
 		//Si todo fue bien entonces mover los archivos de la carpeta temporal a  bodega.
-		for($i=0; $i < count($this->subidos);$i++)
-		{
-			if(strlen($this->subidos[$i]) == 0){
+		for ($i = 0; $i < count($this->subidos); $i++) {
+			if (strlen($this->subidos[$i]) == 0) {
 				continue;
 			}
-			$extension = end(explode('.',$this->subidos[$i]));
+			$extension = end(explode('.', $this->subidos[$i]));
 			//Bug fix si el archivo no tiene extensión.
-			$extension = $extension?'.'.$extension:'';
-			$this->nombreOrfeo[] = $numrad.'_'.substr('00000'. ($i+1) , -5).$extension;
-			if(@rename($this->upload_dir.'/'.basename($this->subidos[$i]),$this->bodega_dir.'/'.$this->nombreOrfeo[$i])){
+			$extension = $extension ? '.' . $extension : '';
+			$this->nombreOrfeo[] = $numrad . '_' . substr('00000' . ($i + 1), -5) . $extension;
+			if (@rename($this->upload_dir . '/' . basename($this->subidos[$i]), $this->bodega_dir . '/' . $this->nombreOrfeo[$i])) {
 				//echo "Archivo movido exitoso";
-			}
-			else {
+			} else {
 				//echo "Error moviendo a destino final";
 			}
 		}
 	}
 }
-?>

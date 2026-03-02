@@ -1,6 +1,6 @@
 //table2excel.js
 ;
-(function($, window, document, undefined) {
+(function ($, window, document, undefined) {
     var pluginName = "table2excel",
         defaults = {
             exclude: ".noExl",
@@ -21,27 +21,27 @@
     }
 
     Plugin.prototype = {
-        init: function() {
+        init: function () {
             var e = this;
-            e.template = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\"><head><!--[if gte mso 9]><xml>";
+            e.template = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\"><head><meta charset=\"UTF-8\" /><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /><!--[if gte mso 9]><xml>";
             e.template += "<x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions>";
             e.template += "<x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>";
             e.tableRows = "";
 
             // get contents of table except for exclude
-            $(e.element).find("tr").not(this.settings.exclude).each(function(i, o) {
+            $(e.element).find("tr").not(this.settings.exclude).each(function (i, o) {
                 e.tableRows += "<tr>" + $(o).html() + "</tr>";
             });
             this.tableToExcel(this.tableRows, this.settings.name);
         },
-        tableToExcel: function(table, name) {
+        tableToExcel: function (table, name) {
             var e = this;
-            e.uri = "data:application/vnd.ms-excel;base64,";
-            e.base64 = function(s) {
-                return window.btoa(unescape(encodeURIComponent(s)));
+            e.uri = "data:application/vnd.ms-excel;charset=utf-8;base64,";
+            e.base64 = function (s) {
+                return window.btoa(unescape(encodeURIComponent("\ufeff" + s)));
             };
-            e.format = function(s, c) {
-                return s.replace(/{(\w+)}/g, function(m, p) {
+            e.format = function (s, c) {
+                return s.replace(/{(\w+)}/g, function (m, p) {
                     return c[p];
                 });
             };
@@ -53,8 +53,8 @@
         }
     };
 
-    $.fn[pluginName] = function(options) {
-        this.each(function() {
+    $.fn[pluginName] = function (options) {
+        this.each(function () {
             if (!$.data(this, "plugin_" + pluginName)) {
                 $.data(this, "plugin_" + pluginName, new Plugin(this, options));
             }

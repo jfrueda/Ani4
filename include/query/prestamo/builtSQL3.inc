@@ -1,6 +1,6 @@
 <?PHP
 	if(!$ps_numeroExpediente) $sWhere_non_exp    =$sWhere." and R.RADI_NUME_RADI =P.RADI_NUME_RADI "; 
-	else { $sWhere_exp =$sWhere." and E.SGD_EXP_NUMERO =P.sgd_exp_numero ";  }//radicados con expediente
+	else { $sWhere_exp =$sWhere." and E.RADI_NUME_RADI = P.RADI_NUME_RADI ";  }//radicados con expediente
              // Build SQL statement 
 
             $sSQL_non_exp=$sSelect_non_exp.$sFrom_non_exp.$sWhere_non_exp;  		 

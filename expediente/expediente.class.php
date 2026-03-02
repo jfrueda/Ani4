@@ -1097,30 +1097,35 @@ class expediente
         if ($usua_doc)
             $where .= " and s.usua_doc_responsable='$usua_doc'";
 
-        if ($numExp)
-            $where .= " and s.sgd_exp_numero like '%$numExp%' ";
+        if ($numExp) {
+            $numExpFiltro = strtoupper(trim($numExp));
+            $where .= " and upper(cast(s.sgd_exp_numero as varchar(40))) like '%$numExpFiltro%' ";
+        }
 
         if ($parametro)
             $where .= " and ( upper(s.sgd_sexp_parexp1) like  upper('%$parametro%') or upper(s.sgd_sexp_parexp2) like  upper('%$parametro%') or  upper(s.sgd_sexp_parexp3) like  upper('%$parametro%') or  upper(s.sgd_sexp_parexp4) like  upper('%$parametro%')  or  upper(s.sgd_sexp_parexp5) like  upper('%$parametro%') ) ";
 
-        $iSql = "select s.sgd_exp_numero num,to_char(s.sgd_sexp_fech, 'DD-MM-YYYY HH24:MI') fech,u.usua_nomb creador,s.sgd_sexp_parexp1 titulo,ub.usua_nomb responsable,d.depe_nomb depe,s.sgd_sexp_estado estado,s.sgd_sexp_parexp2 param2,s.sgd_sexp_parexp3 param3,s.sgd_sexp_parexp4 param4,s.sgd_sexp_parexp5 param5
-                from sgd_sexp_secexpedientes s
-                left join usuario u on u.usua_doc=s.usua_doc
-                left join usuario ub on ub.usua_doc=s.usua_doc_responsable
-                left join dependencia d on d.depe_codi=s.depe_codi where $where limit 100";
-
         if ($radicado) {
-            if ($where)
-                $where .= ' AND ' . $where;
-
-            $iSql = "select s.sgd_exp_numero num, to_char(s.sgd_sexp_fech, 'DD-MM-YYYY HH24:MI') fech,u.usua_nomb creador,
-                s.sgd_sexp_parexp1 titulo,ub.usua_nomb responsable,d.depe_nomb depe,s.sgd_sexp_estado estado,s.sgd_sexp_parexp2 param2,s.sgd_sexp_parexp3 param3,s.sgd_sexp_parexp4 param4,s.sgd_sexp_parexp5 param5
-                from sgd_sexp_secexpedientes s
-                left join usuario u on u.usua_doc=s.usua_doc
-                left join usuario ub on ub.usua_doc=s.usua_doc_responsable
-                left join dependencia d on d.depe_codi=s.depe_codi
-                ,sgd_exp_expediente e where e.radi_nume_radi in ($radicado) and s.sgd_exp_numero=e.sgd_exp_numero and e.sgd_exp_estado=0 $where  limit 100";
+            $radicadoFiltro = preg_replace('/[^0-9]/', '', $radicado);
+            if ($radicadoFiltro !== '') {
+                $where .= " and exists (
+                    select 1
+                    from sgd_exp_expediente e
+                    where e.sgd_exp_numero = s.sgd_exp_numero
+                    and e.sgd_exp_estado = 0
+                    and cast(e.radi_nume_radi as varchar(30)) = '$radicadoFiltro'
+                )";
+            }
         }
+
+        $iSql = "select s.sgd_exp_numero num,to_char(s.sgd_sexp_fech, 'DD-MM-YYYY HH24:MI') fech,
+                (select min(u.usua_nomb) from usuario u where u.usua_doc=s.usua_doc) creador,
+                s.sgd_sexp_parexp1 titulo,
+                (select min(ub.usua_nomb) from usuario ub where ub.usua_doc=s.usua_doc_responsable) responsable,
+                (select min(d.depe_nomb) from dependencia d where d.depe_codi=s.depe_codi) depe,
+                s.sgd_sexp_estado estado,s.sgd_sexp_parexp2 param2,s.sgd_sexp_parexp3 param3,s.sgd_sexp_parexp4 param4,s.sgd_sexp_parexp5 param5
+                from sgd_sexp_secexpedientes s
+                where $where limit 100";
 
         $rs = $this->link->conn->query($iSql);
 
@@ -1157,30 +1162,35 @@ class expediente
         if ($usua_doc)
             $where .= " and s.usua_doc_responsable='$usua_doc'";
 
-        if ($numExp)
-            $where .= " and s.sgd_exp_numero like '%$numExp%' ";
+        if ($numExp) {
+            $numExpFiltro = strtoupper(trim($numExp));
+            $where .= " and upper(cast(s.sgd_exp_numero as varchar(40))) like '%$numExpFiltro%' ";
+        }
 
         if ($parametro)
             $where .= " and ( upper(s.sgd_sexp_parexp1) like  upper('%$parametro%') or upper(s.sgd_sexp_parexp2) like  upper('%$parametro%') or  upper(s.sgd_sexp_parexp3) like  upper('%$parametro%') or  upper(s.sgd_sexp_parexp4) like  upper('%$parametro%')  or  upper(s.sgd_sexp_parexp5) like  upper('%$parametro%') ) ";
 
-        $iSql = "select s.sgd_exp_numero num,to_char(s.sgd_sexp_fech, 'DD-MM-YYYY HH24:MI') fech,u.usua_nomb creador,s.sgd_sexp_parexp1 titulo,ub.usua_nomb responsable,d.depe_nomb depe,s.sgd_sexp_estado estado,s.sgd_sexp_parexp2 param2,s.sgd_sexp_parexp3 param3,s.sgd_sexp_parexp4 param4,s.sgd_sexp_parexp5 param5
-                from sgd_sexp_secexpedientes s
-                left join usuario u on u.usua_doc=s.usua_doc
-                left join usuario ub on ub.usua_doc=s.usua_doc_responsable
-                left join dependencia d on d.depe_codi=s.depe_codi where $where";
-
         if ($radicado) {
-            if ($where)
-                $where .= ' AND ' . $where;
-
-            $iSql = "select s.sgd_exp_numero num, to_char(s.sgd_sexp_fech, 'DD-MM-YYYY HH24:MI') fech,u.usua_nomb creador,
-                s.sgd_sexp_parexp1 titulo,ub.usua_nomb responsable,d.depe_nomb depe,s.sgd_sexp_estado estado,s.sgd_sexp_parexp2 param2,s.sgd_sexp_parexp3 param3,s.sgd_sexp_parexp4 param4,s.sgd_sexp_parexp5 param5
-                from sgd_sexp_secexpedientes s
-                left join usuario u on u.usua_doc=s.usua_doc
-                left join usuario ub on ub.usua_doc=s.usua_doc_responsable
-                left join dependencia d on d.depe_codi=s.depe_codi
-                ,sgd_exp_expediente e where e.radi_nume_radi in ($radicado) and s.sgd_exp_numero=e.sgd_exp_numero and e.sgd_exp_estado=0 $where";
+            $radicadoFiltro = preg_replace('/[^0-9]/', '', $radicado);
+            if ($radicadoFiltro !== '') {
+                $where .= " and exists (
+                    select 1
+                    from sgd_exp_expediente e
+                    where e.sgd_exp_numero = s.sgd_exp_numero
+                    and e.sgd_exp_estado = 0
+                    and cast(e.radi_nume_radi as varchar(30)) = '$radicadoFiltro'
+                )";
+            }
         }
+
+        $iSql = "select s.sgd_exp_numero num,to_char(s.sgd_sexp_fech, 'DD-MM-YYYY HH24:MI') fech,
+                (select min(u.usua_nomb) from usuario u where u.usua_doc=s.usua_doc) creador,
+                s.sgd_sexp_parexp1 titulo,
+                (select min(ub.usua_nomb) from usuario ub where ub.usua_doc=s.usua_doc_responsable) responsable,
+                (select min(d.depe_nomb) from dependencia d where d.depe_codi=s.depe_codi) depe,
+                s.sgd_sexp_estado estado,s.sgd_sexp_parexp2 param2,s.sgd_sexp_parexp3 param3,s.sgd_sexp_parexp4 param4,s.sgd_sexp_parexp5 param5
+                from sgd_sexp_secexpedientes s
+                where $where";
 
         $total = $this->link->conn->getOne("SELECT COUNT(*) FROM ($iSql) AS total");
         $iSql .= " limit $length offset $start";

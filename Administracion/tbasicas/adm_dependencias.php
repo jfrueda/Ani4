@@ -263,7 +263,7 @@ if ($db) {
 		if ($_POST['id'] > 0) {
 			$sql0 = "SELECT * FROM DEPENDENCIA ";
 			$sql2 = "WHERE DEPE_CODI = " . $_POST['id'];
-			$v_def = $db->conn->GetAll($sql0 . $sql2 . $sql3);
+			$v_def = $db->conn->GetAll($sql0 . $sql2 . ' ' . $sql3);
 			$txtIdDep =	$v_def[0]['DEPE_CODI'];
 			$txtSigla =	$v_def[0]['DEP_SIGLA'];
 			$txtActoAdmon =	$v_def[0]['ACTO_ADMON'];
@@ -277,14 +277,17 @@ if ($db) {
 			}
 			$muni_us1 =	$v_def[0]['ID_CONT'] . '-' . $v_def[0]['ID_PAIS'] . '-' . $v_def[0]['DPTO_CODI'] . '-' . $v_def[0]['MUNI_CODI'];
 
-			$txtModelo =	$v_def[0]['DEPE_NOMB'];
-			$txtDir =	$v_def[0]['DEP_DIRECCION'];
-			$Slc_dpadre = $v_def[0]['DEPE_CODI_PADRE'];
-			$Slc_dterr =	$v_def[0]['DEPE_CODI_TERRITORIAL'];
+			$txtModelo 	=	$v_def[0]['DEPE_NOMB'];
+			$txtDir 	=	$v_def[0]['DEP_DIRECCION'];
+			$Slc_dpadre = 	$v_def[0]['DEPE_CODI_PADRE'];
+			$Slc_dterr 	=	$v_def[0]['DEPE_CODI_TERRITORIAL'];
+
 			// CREAMOS LA VARIABLE $Slc_dvis QUE CONTINE LAS DEPENDENCIAS QUE PUEDEN VER LA DEPENDENCIA SELECCIONADA.
 			$rs_depvis = $db->conn->Execute("SELECT DEPENDENCIA_OBSERVA FROM DEPENDENCIA_VISIBILIDAD WHERE DEPENDENCIA_VISIBLE=" . $_POST['id']);
 			$Slc_dvis = array();
+
 			$i = 0;
+
 			while ($tmp = $rs_depvis->FetchRow()) {
 				$Slc_dvis[$i] = $tmp['DEPENDENCIA_OBSERVA'];
 				$i += 1;
@@ -377,7 +380,7 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 	<?php include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 	<script language="JavaScript" src="<?php echo $ruta_raiz ?>/js/formchek.js"></script>
 	<script language="JavaScript" src="<?php echo $ruta_raiz ?>/js/crea_combos_2.js"></script>
-	<script language="JavaScript">
+	<script>
 		document.write('<style type="text/css">.tabber{display:none;}<\/style>');
 		var tabberOptions = {
 			/* Optional: instead of letting tabber run during the onload event,
@@ -434,8 +437,10 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 		}
 	</script>
 	<script type="text/javascript" src="<?php echo $ruta_raiz ?>/js/tabber.js"></script>
-	<script language="Javascript">
+	<script>
 		function ver_datos(x) {
+			console.log(x);
+
 			var pos = false;
 			if (x == '') {
 				document.getElementById('txtIdDep').value = '';
@@ -483,6 +488,8 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 		 *	creando las variables en javascript para su uso individual, p.e. para los combos respectivos.
 		 */
 		function crea_var_idlugar_defa(id_mcpio) {
+			console.log(id_mcpio);
+
 			if (id_mcpio == 0) return;
 			var str = id_mcpio.split('-');
 
@@ -503,6 +510,8 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 		?>
 
 		function ValidarInformacion(accion) {
+			console.log(accion);
+
 			var dep = document.getElementById('txtModelo').value;
 			if (!(isPositiveInteger(document.formSeleccion.txtIdDep.value, false))) {
 				alert('Seleccione o digite el codigo de la dependencia');
@@ -551,9 +560,9 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 			window.open('listados.php?<?= session_name() . "=" . session_id() ?>&var=dpc', '', 'scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
 		}
 
-		jQuery(window).load(function() {
+		document.addEventListener("DOMContentLoaded", function() {
 			selectores();
-		});
+		})
 	</script>
 </head>
 

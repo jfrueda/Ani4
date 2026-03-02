@@ -8,35 +8,35 @@
 <body>
 <h1>Output</h1>
 <code><b>string</b> Output([<b>string</b> name, <b>string</b> dest])</code>
-<h2>Descripción</h2>
-Envía el documento a un destino dado: una cadena, un fichero local o al navegador. En el
-último caso, puede utilizarse la extensión -plug in- (si existe) o forzarse un cuadro
-de diálogo de descarga.
+<h2>Descripciï¿½n</h2>
+Envï¿½a el documento a un destino dado: una cadena, un fichero local o al navegador. En el
+ï¿½ltimo caso, puede utilizarse la extensiï¿½n -plug in- (si existe) o forzarse un cuadro
+de diï¿½logo de descarga.
 <br>
-El método invoca ante todo a Close() si es necesario cerrar el documento.
-<h2>Parámetros</h2>
+El mï¿½todo invoca ante todo a Close() si es necesario cerrar el documento.
+<h2>Parï¿½metros</h2>
 <dl class="param">
 <dt><code>name</code></dt>
 <dd>
-El nombre del fichero. Si no se especifica, el documento se envía al navegador
+El nombre del fichero. Si no se especifica, el documento se envï¿½a al navegador
 (destino <code>I</code>) con el nombre <code>doc.pdf</code>.
 </dd>
 <dt><code>dest</code></dt>
 <dd>
 Destino al que enviar el documento. Puede tener uno de los siguientes valores:
 <ul>
-<li><code>I</code>: envía el fichero al navegador de forma que se usa la extensión
-(plug in) si está disponible.
-El nombre dado en <code>nombre</code> se usa si el usuario escoge la opción "Guardar como..." en
+<li><code>I</code>: envï¿½a el fichero al navegador de forma que se usa la extensiï¿½n
+(plug in) si estï¿½ disponible.
+El nombre dado en <code>nombre</code> se usa si el usuario escoge la opciï¿½n "Guardar como..." en
 el enlace que genera el PDF.
-<li><code>D</code>: envía el fichero al navegador y fuerza la descarga del fichero con el
+<li><code>D</code>: envï¿½a el fichero al navegador y fuerza la descarga del fichero con el
 nombre especificado por <code>nombre</code>.
 <li><code>F</code>: guarda el fichero en un fichero local de nombre <code>nombre</code>.
 <li><code>S</code>: devuelve el documento como una cadena. <code>nombre</code> se ignora.
 </ul>
 </dd>
 </dl>
-<h2>Vea además</h2>
+<h2>Vea ademï¿½s</h2>
 <a href="close.htm">Close()</a>.
 <hr style="margin-top:1.5em">
 <div style="text-align:center"><a href="index.htm">Inicio</a></div>

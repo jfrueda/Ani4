@@ -7,6 +7,7 @@
 	    $sqlWHERE_PRES_FECH_PRES    =$db->conn->SQLDate("Ymd","P.PRES_FECH_PRES"); 
 	    $sqlWHERE_PRES_FECH_VENC    =$db->conn->SQLDate("Ymd","P.PRES_FECH_VENC"); 
 	    $sqlWHERE_PRES_FECH_PEDI_HOR=$db->conn->SQLDate("YmdhiA","P.PRES_FECH_PEDI");
+	    $hayBusquedaDirecta = ($ps_RADI_NUME_RADI!="" || $ps_numeroExpediente!="");
 
 
 
@@ -38,15 +39,15 @@
             // condición para limitar por fechas y estado la búsqueda según la opción del menú seleccionada
 
             if ($opcionMenu==0 || $opcionMenu==4) { //reporte y estado de reservas
-   	       if ($ps_PRES_ESTADO=="") { 
-		  if ($fechaInicial!="" || $fechaFinal!="")         { $sWhere.=" and ".$sqlWHERE_PRES_FECH_PEDI; } // Fecha de creación del registro
+    	       if ($ps_PRES_ESTADO=="") { 
+		  if (($fechaInicial!="" || $fechaFinal!="") && !$hayBusquedaDirecta)         { $sWhere.=" and ".$sqlWHERE_PRES_FECH_PEDI; } // Fecha de creación del registro
                }
                else {
 		  if($ps_PRES_ESTADO!=-1){ //diferentes a vencido
 		    // $sWhere.=" and P.PRES_ESTADO=".$ps_PRES_ESTADO." "; 
-		     if ($fechaInicial!="" || $fechaFinal!="") {
+		     if (($fechaInicial!="" || $fechaFinal!="") && !$hayBusquedaDirecta) {
 		        if($ps_PRES_ESTADO==2 || $ps_PRES_ESTADO==5){ $sWhere.=" and ".$sqlWHERE_PRES_FECH_PRES; }
-			elseif($ps_PRES_ESTADO==1)                  { $sWhere.=" and ".$sqlWHERE_PRES_FECH_PEDI; }					 					 						
+			elseif($ps_PRES_ESTADO==1)                  { $sWhere.=" and ".$sqlWHERE_PRES_FECH_PEDI; }					 							
 			elseif($ps_PRES_ESTADO==3)                  { $sWhere.=" and ".$sqlWHERE_PRES_FECH_DEVO; }					 
 			elseif($ps_PRES_ESTADO==4)                  { $sWhere.=" and ".$sqlWHERE_PRES_FECH_CANC; }
 		     }
@@ -69,7 +70,7 @@
 
         // termina la sentencia con el respectivo valor de la fecha	 
           
-  if (($fechaInicial!="" || $fechaFinal!="") && $opcionMenu!=1 && $opcionMenu!=2) {
+  if (($fechaInicial!="" || $fechaFinal!="") && $opcionMenu!=1 && $opcionMenu!=2 && !$hayBusquedaDirecta) {
       $sqlFechaInicial=str_replace('-','',$fechaInicial);
             $sqlFechaFinal  =str_replace('-','',$fechaFinal); 			   
       if ($opcionMenu==3){ $sqlFechaFinal.=$ps_hora_limite.$ps_minuto_limite.$ps_meridiano;  }

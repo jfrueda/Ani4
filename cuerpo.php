@@ -813,230 +813,231 @@ $sqlTotalRad = "select count(1) as TOTAL
                 document.querySelector("#filtro_fechas").submit();
             });
 
-        });
+            function eliminarBorrador(numbor) {
+                if (confirm('Esta seguro que desea eliminar el borrador: ' + numbor)) {
 
-        function eliminarBorrador(numbor) {
-            if (confirm('Esta seguro que desea eliminar el borrador: ' + numbor)) {
-
-                fetch("eliminarBorrador.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: new URLSearchParams({
-                            funcion: '1',
-                            numbor: numbor
-                        })
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        if (result == 200) {
-                            document.querySelector("#borrar_borrador_exc").submit();
-                        } else {
-                            alert("Ha ocurrido un error, por favor comuníquese con el Administrador del sistema.");
-                        }
-                    })
-                    .catch(() => {
-                        alert("Ha ocurrido un error, por favor comuníquese con el Administrador del sistema.");
-                    });
-            }
-        }
-
-        // Muestra las imágenes de los radicados
-        function funlinkArchivo(numrad, rutaRaiz) {
-            const nombreventana = "linkVistArch";
-
-            const url = `${rutaRaiz}/linkArchivo.php?<?php echo session_name() . "=" . session_id() ?>&numrad=${numrad}`;
-
-            window.open(
-                url,
-                nombreventana,
-                "scrollbars=1,height=50,width=250"
-            );
-        }
-
-        // DO NOT REMOVE : GLOBAL FUNCTIONS!
-        pageSetUp();
-
-        // PAGE RELATED SCRIPTS
-
-        loadDataTableScripts();
-
-        function loadDataTableScripts() {
-
-            loadScript("js/plugin/datatables/jquery.dataTables-cust.js", dt_2);
-
-            function dt_2() {
-                loadScript("js/plugin/datatables/ColReorder.min.js", dt_3);
-            }
-
-            function dt_3() {
-                loadScript("js/plugin/datatables/FixedColumns.min.js", dt_4);
-            }
-
-            function dt_4() {
-                loadScript("js/plugin/datatables/ColVis.min.js", dt_5);
-            }
-
-            function dt_5() {
-                loadScript("js/plugin/datatables/ZeroClipboard.js", dt_6);
-            }
-
-            function dt_6() {
-                loadScript("js/plugin/datatables/media/js/TableTools.min.js", dt_7);
-            }
-
-            function dt_7() {
-                loadScript("js/plugin/datatables/DT_bootstrap.js", runDataTables);
-            }
-        }
-
-        function runDataTables() {
-
-            /*
-             * BASIC
-             */
-            $('#dt_basic').dataTable({
-                //"sScrollX": "100%",
-                //"bScrollCollapse": true,
-                "bInfo": null,
-                "aaSorting": [
-                    [3, 'desc']
-                ],
-                "iDisplayLength": 27,
-                "paging": false,
-                "bPaginate": false,
-                "aLengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "Todos"]
-                ],
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
-                ],
-                "oLanguage": {
-                    "oPaginate": {
-                        "sPrevious": "Anterior",
-                        "sNext": "Siguiente",
-                        "sLast": "Ultima",
-                        "sFirst": "Primera"
-                    }
-                }
-            });
-
-            /* END BASIC */
-
-            const filterInputs = document.querySelectorAll("#datatable_fixed_column thead input");
-
-            /* Add the events etc before DataTables hides a column */
-            filterInputs.forEach((input, index) => {
-                input.initVal = input.value;
-
-                input.addEventListener("keyup", () => {
-                    oTable.fnFilter(
-                        input.value,
-                        oTable.oApi._fnVisibleToColumnIndex(oTable.fnSettings(), index)
-                    );
-                });
-
-                input.addEventListener("focus", () => {
-                    if (input.classList.contains("search_init")) {
-                        input.classList.remove("search_init");
-                        input.value = "";
-                    }
-                });
-
-                input.addEventListener("blur", () => {
-                    if (input.value === "") {
-                        input.classList.add("search_init");
-                        input.value = input.initVal;
-                    }
-                });
-            });
-
-            var oTable = $('#datatable_fixed_column').dataTable({
-                "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-                //"sDom" : "t<'row dt-wrapper'<'col-sm-6'i><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'>>",
-                "oLanguage": {
-                    "sSearch": "Search all columns:"
-                },
-                "bSortCellsTop": true
-            });
-
-            /*
-             * COL ORDER
-             */
-            $('#datatable_col_reorder').dataTable({
-                "aLengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "Todos"]
-                ],
-                "paging": false,
-                "bPaginate": false,
-                "sDom": "R<'dt-top-row'Clf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-                "fnInitComplete": function(oSettings, json) {
-                    $('.ColVis_Button').addClass('btn btn-default btn-sm').html('Columns <i class="icon-arrow-down"></i>');
-                }
-            });
-
-            /* END COL ORDER */
-
-            /* TABLE TOOLS */
-            $('#datatable_tabletools').dataTable({
-                "sDom": "<'dt-top-row'Tlf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
-                "oTableTools": {
-                    "aButtons": ["copy", "print", {
-                        "sExtends": "collection",
-                        "sButtonText": 'Save <span class="caret" />',
-                        "aButtons": ["csv", "xls", "pdf"]
-                    }],
-                    "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
-                },
-                "fnInitComplete": function(oSettings, json) {
-                    $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
-                        $(this).addClass('btn-sm btn-default');
-                    });
-                }
-            });
-
-            // Modal Link
-            /* ACCIÓN MASIVA */
-            const accion = document.querySelector("#AccionCaliope");
-
-            if (accion) {
-                accion.addEventListener("change", e => {
-
-                    const value = e.target.value;
-
-                    if (value == 21 || value == 20) {
-
-                        let text = "";
-                        document.querySelectorAll("input[name^='checkValue']:checked")
-                            .forEach((chk, i) => {
-                                text += (i === 0 ? "" : ",") + chk.id;
-                            });
-
-                        if (!text) return;
-
-                        const div = document.createElement("div");
-
-                        $(div).dialog({
-                            modal: true,
-                            open: function() {
-                                if (value == 21) {
-                                    $(this).load('accionesMasivas/masivaAsignarTrd.php?radicados=' + text);
-                                }
-                                if (value == 20) {
-                                    $(this).load('accionesMasivas/masivaIncluirExp.php?radicados=' + text);
-                                }
+                    fetch("eliminarBorrador.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
                             },
-                            title: 'Acción Masiva',
-                            width: "600px"
+                            body: new URLSearchParams({
+                                funcion: '1',
+                                numbor: numbor
+                            })
+                        })
+                        .then(response => response.text())
+                        .then(result => {
+                            if (result == 200) {
+                                document.querySelector("#borrar_borrador_exc").submit();
+                            } else {
+                                alert("Ha ocurrido un error, por favor comuníquese con el Administrador del sistema.");
+                            }
+                        })
+                        .catch(() => {
+                            alert("Ha ocurrido un error, por favor comuníquese con el Administrador del sistema.");
+                        });
+                }
+            }
+
+            // Muestra las imágenes de los radicados
+            function funlinkArchivo(numrad, rutaRaiz) {
+                const nombreventana = "linkVistArch";
+
+                const url = `${rutaRaiz}/linkArchivo.php?<?php echo session_name() . "=" . session_id() ?>&numrad=${numrad}`;
+
+                window.open(
+                    url,
+                    nombreventana,
+                    "scrollbars=1,height=50,width=250"
+                );
+            }
+
+            // DO NOT REMOVE : GLOBAL FUNCTIONS!
+            pageSetUp();
+
+            // PAGE RELATED SCRIPTS
+
+            loadDataTableScripts();
+
+            function loadDataTableScripts() {
+                console.log('loadDataTableScripts');
+
+
+                loadScript("js/plugin/datatables/jquery.dataTables-cust.js", dt_2);
+
+                function dt_2() {
+                    loadScript("js/plugin/datatables/ColReorder.min.js", dt_3);
+                }
+
+                function dt_3() {
+                    loadScript("js/plugin/datatables/FixedColumns.min.js", dt_4);
+                }
+
+                function dt_4() {
+                    loadScript("js/plugin/datatables/ColVis.min.js", dt_5);
+                }
+
+                function dt_5() {
+                    loadScript("js/plugin/datatables/ZeroClipboard.js", dt_6);
+                }
+
+                function dt_6() {
+                    loadScript("js/plugin/datatables/media/js/TableTools.min.js", dt_7);
+                }
+
+                function dt_7() {
+                    loadScript("js/plugin/datatables/DT_bootstrap.js", runDataTables);
+                }
+            }
+
+            function runDataTables() {
+
+                /*
+                 * BASIC
+                 */
+                $('#dt_basic').dataTable({
+                    //"sScrollX": "100%",
+                    //"bScrollCollapse": true,
+                    "bInfo": null,
+                    "aaSorting": [
+                        [3, 'desc']
+                    ],
+                    "iDisplayLength": 27,
+                    "paging": false,
+                    "bPaginate": false,
+                    "aLengthMenu": [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, "Todos"]
+                    ],
+                    "lengthMenu": [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, "All"]
+                    ],
+                    "oLanguage": {
+                        "oPaginate": {
+                            "sPrevious": "Anterior",
+                            "sNext": "Siguiente",
+                            "sLast": "Ultima",
+                            "sFirst": "Primera"
+                        }
+                    }
+                });
+
+                /* END BASIC */
+
+                const filterInputs = document.querySelectorAll("#datatable_fixed_column thead input");
+
+                /* Add the events etc before DataTables hides a column */
+                filterInputs.forEach((input, index) => {
+                    input.initVal = input.value;
+
+                    input.addEventListener("keyup", () => {
+                        oTable.fnFilter(
+                            input.value,
+                            oTable.oApi._fnVisibleToColumnIndex(oTable.fnSettings(), index)
+                        );
+                    });
+
+                    input.addEventListener("focus", () => {
+                        if (input.classList.contains("search_init")) {
+                            input.classList.remove("search_init");
+                            input.value = "";
+                        }
+                    });
+
+                    input.addEventListener("blur", () => {
+                        if (input.value === "") {
+                            input.classList.add("search_init");
+                            input.value = input.initVal;
+                        }
+                    });
+                });
+
+                var oTable = $('#datatable_fixed_column').dataTable({
+                    "sDom": "<'dt-top-row'><'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
+                    //"sDom" : "t<'row dt-wrapper'<'col-sm-6'i><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'>>",
+                    "oLanguage": {
+                        "sSearch": "Search all columns:"
+                    },
+                    "bSortCellsTop": true
+                });
+
+                /*
+                 * COL ORDER
+                 */
+                $('#datatable_col_reorder').dataTable({
+                    "aLengthMenu": [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, "Todos"]
+                    ],
+                    "paging": false,
+                    "bPaginate": false,
+                    "sDom": "R<'dt-top-row'Clf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
+                    "fnInitComplete": function(oSettings, json) {
+                        $('.ColVis_Button').addClass('btn btn-default btn-sm').html('Columns <i class="icon-arrow-down"></i>');
+                    }
+                });
+
+                /* END COL ORDER */
+
+                /* TABLE TOOLS */
+                $('#datatable_tabletools').dataTable({
+                    "sDom": "<'dt-top-row'Tlf>r<'dt-wrapper't><'dt-row dt-bottom-row'<'row'<'col-sm-6'i><'col-sm-6 text-right'p>>",
+                    "oTableTools": {
+                        "aButtons": ["copy", "print", {
+                            "sExtends": "collection",
+                            "sButtonText": 'Save <span class="caret" />',
+                            "aButtons": ["csv", "xls", "pdf"]
+                        }],
+                        "sSwfPath": "js/plugin/datatables/media/swf/copy_csv_xls_pdf.swf"
+                    },
+                    "fnInitComplete": function(oSettings, json) {
+                        $(this).closest('#dt_table_tools_wrapper').find('.DTTT.btn-group').addClass('table_tools_group').children('a.btn').each(function() {
+                            $(this).addClass('btn-sm btn-default');
                         });
                     }
                 });
+
+                // Modal Link
+                /* ACCIÓN MASIVA */
+                const accion = document.querySelector("#AccionCaliope");
+
+                if (accion) {
+                    accion.addEventListener("change", e => {
+
+                        const value = e.target.value;
+
+                        if (value == 21 || value == 20) {
+
+                            let text = "";
+                            document.querySelectorAll("input[name^='checkValue']:checked")
+                                .forEach((chk, i) => {
+                                    text += (i === 0 ? "" : ",") + chk.id;
+                                });
+
+                            if (!text) return;
+
+                            const div = document.createElement("div");
+
+                            $(div).dialog({
+                                modal: true,
+                                open: function() {
+                                    if (value == 21) {
+                                        $(this).load('accionesMasivas/masivaAsignarTrd.php?radicados=' + text);
+                                    }
+                                    if (value == 20) {
+                                        $(this).load('accionesMasivas/masivaIncluirExp.php?radicados=' + text);
+                                    }
+                                },
+                                title: 'Acción Masiva',
+                                width: "600px"
+                            });
+                        }
+                    });
+                }
             }
-        }
+        });
     </script>
 </body>
 

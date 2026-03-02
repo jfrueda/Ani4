@@ -619,185 +619,187 @@ function Pedidos_Show()
             <input type="hidden" name="FormPedidos_Sorting" value="<?= $iSort ?>">
             <input type="hidden" name="FormPedidos_Sorted" value="<?= $iSorted ?>">
             <input type="hidden" name="s_Direction" value="<?= $sDirection ?>">
-            <table class='table table-striped table-bordered table-hover dataTable no-footer smart-form'>
-                <thead>
-                    <tr role="row">
-                        <th colspan="<?= $numCol ?>"><a name="Search"><?= $tituloRespuesta[$opcionMenu] ?></a></th>
-                    </tr>
-                </thead>
-                <?PHP // Titulos de las columnas
-                include_once "inicializarTabla.inc";
+            <div class="table-responsive margin-botton-table" style="overflow: auto;">
+                <table class='table table-hover table-striped table-bordered align-middle dataTable no-footer smart-form'>
+                    <thead>
+                        <tr role="row">
+                            <th colspan="<?= $numCol ?>"><a name="Search"><?= $tituloRespuesta[$opcionMenu] ?></a></th>
+                        </tr>
+                    </thead>
+                    <?PHP // Titulos de las columnas
+                    include_once "inicializarTabla.inc";
 
-                //----------------------
-                // Process page scroller
-                //----------------------
+                    //----------------------
+                    // Process page scroller
+                    //----------------------
 
-                // Inicializa el valor de la pagina actual
+                    // Inicializa el valor de la pagina actual
 
-                // Inicializa los registros a presentar seg�n la p�gina actual
-                $iCounter = 0;
-                $ant = "";
-                $iCounterIni = $iCounter;
-                // Display grid based on recordset
-                $y = 1; // Cantidad de registros presentados
-                include_once "getRtaSQLAntIn.inc"; //Une en un solo campo los expedientes
-                while ($rs && !$rs->EOF) {
-                    // Inicializa las variables con los resultados
-                    include "getRtaSQL.inc";
+                    // Inicializa los registros a presentar seg�n la p�gina actual
+                    $iCounter = 0;
+                    $ant = "";
+                    $iCounterIni = $iCounter;
+                    // Display grid based on recordset
+                    $y = 1; // Cantidad de registros presentados
+                    include_once "getRtaSQLAntIn.inc"; //Une en un solo campo los expedientes
+                    while ($rs && !$rs->EOF) {
+                        // Inicializa las variables con los resultados
+                        include "getRtaSQL.inc";
 
-                    // Fila de la tabla con los resultados
-                    include "getRtaSQLAnt.inc";
+                        // Fila de la tabla con los resultados
+                        include "getRtaSQLAnt.inc";
 
-                    /* */
-                    if ($fldARCH != 'SI') {
-                        $encabARCH = "&buscar_exp=" . tourl($fldEXP) . "&krd=$krd&tipo_archivo=&nomcarpeta=";
-                    }
-
-                    $y++;
-                    include "cuerpoTabla.inc";
-                    $rs->MoveNext();
-                }
-
-                // Fila de la tabla con lso resultados
-                $cantRegPorPagina = $y;
-                $iCounter = $iCounter + $y;
-                ?>
-                <script>
-                    // Inicializa el arreglo con los radicados a procesar
-                    var cantRegPorPagina = <?= $cantRegPorPagina - 1 ?>;
-                    // Marca todas las casillas si la del titulo es marcada
-                    function seleccionarRta() {
-                        if (document.rta.rta_.checked) {
-                            for (i = 2; i < document.rta.elements.length; i++)
-                                document.rta.elements[i].checked = 1;
-                        } else {
-                            for (i = 2; i < document.rta.elements.length; i++)
-                                document.rta.elements[i].checked = 0;
+                        /* */
+                        if ($fldARCH != 'SI') {
+                            $encabARCH = "&buscar_exp=" . tourl($fldEXP) . "&krd=$krd&tipo_archivo=&nomcarpeta=";
                         }
+
+                        $y++;
+                        include "cuerpoTabla.inc";
+                        $rs->MoveNext();
                     }
 
-                    // Valida y envia el formulario
-                    function enviar() {
-                        var cant = 0;
-                        var kk = 1;
-
-                        for (i = 1; i < document.rta.elements.length; i++) {
-                            if (document.rta.elements[i].type == "checkbox") {
-                                if (eval(document.rta.elements[i].checked) == true) {
-                                    cant = 1;
-                                }
-                                kk++;
+                    // Fila de la tabla con lso resultados
+                    $cantRegPorPagina = $y;
+                    $iCounter = $iCounter + $y;
+                    ?>
+                    <script>
+                        // Inicializa el arreglo con los radicados a procesar
+                        var cantRegPorPagina = <?= $cantRegPorPagina - 1 ?>;
+                        // Marca todas las casillas si la del titulo es marcada
+                        function seleccionarRta() {
+                            if (document.rta.rta_.checked) {
+                                for (i = 2; i < document.rta.elements.length; i++)
+                                    document.rta.elements[i].checked = 1;
+                            } else {
+                                for (i = 2; i < document.rta.elements.length; i++)
+                                    document.rta.elements[i].checked = 0;
                             }
                         }
-                        if (cant == 0) {
-                            alert("Debe seleccionar al menos un radicado");
-                        } else {
-                            document.rta.prestado.value = cantRegPorPagina;
-                            //alert (document.getElementById("use_paswor_dmd5").html);
-                            document.rta.action = "formEnvio.php";
+
+                        // Valida y envia el formulario
+                        function enviar() {
+                            var cant = 0;
+                            var kk = 1;
+
+                            for (i = 1; i < document.rta.elements.length; i++) {
+                                if (document.rta.elements[i].type == "checkbox") {
+                                    if (eval(document.rta.elements[i].checked) == true) {
+                                        cant = 1;
+                                    }
+                                    kk++;
+                                }
+                            }
+                            if (cant == 0) {
+                                alert("Debe seleccionar al menos un radicado");
+                            } else {
+                                document.rta.prestado.value = cantRegPorPagina;
+                                //alert (document.getElementById("use_paswor_dmd5").html);
+                                document.rta.action = "formEnvio.php";
+                                document.rta.submit();
+                            }
+                        }
+
+                        // Regresa al menu de prestamos
+                        function regresar() {
+                            document.rta.opcionMenu.value = "";
+                            document.rta.action = "menu_prestamo.php";
                             document.rta.submit();
                         }
-                    }
-
-                    // Regresa al menu de prestamos
-                    function regresar() {
-                        document.rta.opcionMenu.value = "";
-                        document.rta.action = "menu_prestamo.php";
-                        document.rta.submit();
-                    }
-                </script>
-                <?
-                // Build parameters for page
-                if (strcasecmp($sDirection, " DESC ") == 0) {
-                    $sDirectionPages = " ASC ";
-                } else {
-                    $sDirectionPages = " DESC ";
-                }
-                $form_params_page = $form_params_search . "&opcionMenu=" . tourl($opcionMenu) . "&FormPedidos_Sorted=" . tourl($iSort) .
-                    "&s_Direction=" . tourl($sDirectionPages) . "&krd=" . tourl($krd) . "&FormPedidos_Sorting=" . tourl($iSort);
-                // Numero total de registros
-                $ant = $antfldPRESTAMO_ID;
-                while ($rs && !$rs->EOF) {
-                    $new = $rs->fields["PRESTAMO_ID"]; //para el manejo de expedientes
-                    if ($new != $ant) {
-                        $ant = $new;
-                        $iCounter++;
-                    }
-                    $rs->MoveNext();
-                }
-                $iCounter--;
-                if ($totalRegistros) $iCounter = $totalRegistros;
-
-                // Inicializa paginas visualizables
-                $iNumberOfPages = 10;
-                // Inicializa cantidad de p�ginas
-                $iHasPages = intval($iCounter / $iRecordsPerPage);
-                if ($iCounter % $iRecordsPerPage != 0) {
-                    $iHasPages++;
-                }
-                // Determina la p�gina inicial del intervalo
-                $iStartPages = 1;
-                $FormSiguiente = get_param("FormSiguiente"); //Indica si (1) el n�mero de p�ginas es mayor al visualizable
-                if ($FormSiguiente == 0) {
-                    $iStartPages = get_param("FormStarPage");
-                } elseif ($FormSiguiente == -1) {
-                    $iStartPages = $iPage;
-                } else {
-                    if ($iPage > $iNumberOfPages) {
-                        $iStartPages = $iPage - $iNumberOfPages + 1;
-                    }
-                }
-                // Genera las paginas visualizables
-                $sPages = "";
-                if ($iHasPages > $iNumberOfPages) {
-                    if ($iStartPages == 1) {
-                        $sPages .= "|<  <<   ";
+                    </script>
+                    <?
+                    // Build parameters for page
+                    if (strcasecmp($sDirection, " DESC ") == 0) {
+                        $sDirectionPages = " ASC ";
                     } else {
-                        $sPages .= "<a href=\"$sFileName?$form_params_page&FormPedidos_Page=1&FormStarPage=1&FormSiguiente=0&\">
-                                <font class=\"ColumnFONT\" title=\"Ver la primera p&aacute;gina\">|<</font></a>&nbsp;";
-                        $sPages .= "&nbsp;<a href=\"$sFileName?$form_params_page&FormPedidos_Page=" . tourl($iStartPages - 1) . "&FormStarPage=" .
-                            tourl($iStartPages - 1) . "&FormSiguiente=-1&\"><font class=\"ColumnFONT\" title=\"Ver la p&aacute;gina " .
-                            ($iStartPages - 1) . "\"><<</font></a>&nbsp;&nbsp;&nbsp;";
+                        $sDirectionPages = " DESC ";
                     }
-                }
-                for ($iPageCount = $iStartPages; $iPageCount < ($iStartPages + $iNumberOfPages); $iPageCount++) {
-                    if ($iPageCount <= $iHasPages) {
-                        $sPages .= "<a href=\"$sFileName?$form_params_page&FormPedidos_Page=$iPageCount&FormStarPage=" . tourl($iStartPages) . "&FormSiguiente=0&\">
-                                <font class=\"ColumnFONT\" title=\"Ver la p&aacute;gina " . $iPageCount . "\">" . $iPageCount . "</font></a>&nbsp;";
-                    } else {
-                        break;
+                    $form_params_page = $form_params_search . "&opcionMenu=" . tourl($opcionMenu) . "&FormPedidos_Sorted=" . tourl($iSort) .
+                        "&s_Direction=" . tourl($sDirectionPages) . "&krd=" . tourl($krd) . "&FormPedidos_Sorting=" . tourl($iSort);
+                    // Numero total de registros
+                    $ant = $antfldPRESTAMO_ID;
+                    while ($rs && !$rs->EOF) {
+                        $new = $rs->fields["PRESTAMO_ID"]; //para el manejo de expedientes
+                        if ($new != $ant) {
+                            $ant = $new;
+                            $iCounter++;
+                        }
+                        $rs->MoveNext();
                     }
-                }
-                if ($iHasPages > $iNumberOfPages) {
-                    if ($iPageCount - 1 < $iHasPages) {
-                        $sPages .= "...&nbsp;&nbsp;<a href=\"$sFileName?$form_params_page&FormPedidos_Page=$iPageCount&FormStarPage=" . tourl($iStartPages) .
-                            "&FormSiguiente=1&\"><font class=\"ColumnFONT\" title=\"Ver la p&aacute;gina " . $iPageCount . "\">>></font></a>&nbsp;&nbsp;";
-                        $sPages .= "&nbsp;<a href=\"$sFileName?$form_params_page&FormPedidos_Page=$iHasPages&FormStarPage=tourl($iStartPages)
-                                         &FormSiguiente=1&\"><font class=\"ColumnFONT\" title=\"Ver la &uacute;ltima p&aacute;gina\">>|</font></a>";
-                    } else {
-                        $sPages .= " >> |";
-                    }
-                }
-                ?>
-                <tr class="titulos5" align="center">
-                    <td colspan="<?= ($numCol + 1); ?>">
-                        <small>
-                            <center><br><?= $sPages ?> (P&aacute;gina <?= $iPage ?>/<?= $iHasPages ?>)</center>
-                        </small>
-                    </td>
-                </tr>
-                <?php if ($_REQUEST['genearreporte'] != "Generar") {  ?>
+                    $iCounter--;
+                    if ($totalRegistros) $iCounter = $totalRegistros;
 
-                    <? if ($opcionMenu == 1) { ?>
-                        <tr align="center">
-                            <td colspan="11" align="center">
-                                <input type="button" class="btn btn-primary" value="Procesar" onclick="enviar();">
-                                <input type="button" class="btn btn-primary" value="Cancelar" title="Regresa al menú de préstamo y control de documentos" onclick="javascript:regresar();"></center>
-                            </td>
-                        </tr>
-            </table>
+                    // Inicializa paginas visualizables
+                    $iNumberOfPages = 10;
+                    // Inicializa cantidad de p�ginas
+                    $iHasPages = intval($iCounter / $iRecordsPerPage);
+                    if ($iCounter % $iRecordsPerPage != 0) {
+                        $iHasPages++;
+                    }
+                    // Determina la p�gina inicial del intervalo
+                    $iStartPages = 1;
+                    $FormSiguiente = get_param("FormSiguiente"); //Indica si (1) el n�mero de p�ginas es mayor al visualizable
+                    if ($FormSiguiente == 0) {
+                        $iStartPages = get_param("FormStarPage");
+                    } elseif ($FormSiguiente == -1) {
+                        $iStartPages = $iPage;
+                    } else {
+                        if ($iPage > $iNumberOfPages) {
+                            $iStartPages = $iPage - $iNumberOfPages + 1;
+                        }
+                    }
+                    // Genera las paginas visualizables
+                    $sPages = "";
+                    if ($iHasPages > $iNumberOfPages) {
+                        if ($iStartPages == 1) {
+                            $sPages .= "|<  <<   ";
+                        } else {
+                            $sPages .= "<a href=\"$sFileName?$form_params_page&FormPedidos_Page=1&FormStarPage=1&FormSiguiente=0&\">
+                                    <font class=\"ColumnFONT\" title=\"Ver la primera p&aacute;gina\">|<</font></a>&nbsp;";
+                            $sPages .= "&nbsp;<a href=\"$sFileName?$form_params_page&FormPedidos_Page=" . tourl($iStartPages - 1) . "&FormStarPage=" .
+                                tourl($iStartPages - 1) . "&FormSiguiente=-1&\"><font class=\"ColumnFONT\" title=\"Ver la p&aacute;gina " .
+                                ($iStartPages - 1) . "\"><<</font></a>&nbsp;&nbsp;&nbsp;";
+                        }
+                    }
+                    for ($iPageCount = $iStartPages; $iPageCount < ($iStartPages + $iNumberOfPages); $iPageCount++) {
+                        if ($iPageCount <= $iHasPages) {
+                            $sPages .= "<a href=\"$sFileName?$form_params_page&FormPedidos_Page=$iPageCount&FormStarPage=" . tourl($iStartPages) . "&FormSiguiente=0&\">
+                                    <font class=\"ColumnFONT\" title=\"Ver la p&aacute;gina " . $iPageCount . "\">" . $iPageCount . "</font></a>&nbsp;";
+                        } else {
+                            break;
+                        }
+                    }
+                    if ($iHasPages > $iNumberOfPages) {
+                        if ($iPageCount - 1 < $iHasPages) {
+                            $sPages .= "...&nbsp;&nbsp;<a href=\"$sFileName?$form_params_page&FormPedidos_Page=$iPageCount&FormStarPage=" . tourl($iStartPages) .
+                                "&FormSiguiente=1&\"><font class=\"ColumnFONT\" title=\"Ver la p&aacute;gina " . $iPageCount . "\">>></font></a>&nbsp;&nbsp;";
+                            $sPages .= "&nbsp;<a href=\"$sFileName?$form_params_page&FormPedidos_Page=$iHasPages&FormStarPage=tourl($iStartPages)
+                                            &FormSiguiente=1&\"><font class=\"ColumnFONT\" title=\"Ver la &uacute;ltima p&aacute;gina\">>|</font></a>";
+                        } else {
+                            $sPages .= " >> |";
+                        }
+                    }
+                    ?>
+                    <tr class="titulos5" align="center">
+                        <td colspan="<?= ($numCol + 1); ?>">
+                            <small>
+                                <center><br><?= $sPages ?> (P&aacute;gina <?= $iPage ?>/<?= $iHasPages ?>)</center>
+                            </small>
+                        </td>
+                    </tr>
+                    <?php if ($_REQUEST['genearreporte'] != "Generar") {  ?>
+
+                        <? if ($opcionMenu == 1) { ?>
+                            <tr align="center">
+                                <td colspan="11" align="center">
+                                    <input type="button" class="btn btn-primary" value="Procesar" onclick="enviar();">
+                                    <input type="button" class="btn btn-primary" value="Cancelar" title="Regresa al menú de préstamo y control de documentos" onclick="javascript:regresar();"></center>
+                                </td>
+                            </tr>
+                </table>
+            </div>
             <?php } else { #SI el documento se va a devolver
-                        if ($opcionMenu == 2) { ?>
+                            if ($opcionMenu == 2) { ?>
                 <tr align="center">
                     <td colspan="11" align="center">
                         <input type="button" class="botones" value="Devolver" onclick="enviar();">
@@ -805,15 +807,15 @@ function Pedidos_Show()
                     </td>
                 </tr>
             <?php  }
-                        if ($opcionMenu == 3) { ?>
+                            if ($opcionMenu == 3) { ?>
                 <tr align="center">
                     <td colspan="11" align="center">
                         <input type="button" class="botones" value="Cancelar Pedido" onclick="enviar();">
                     </td>
                 </tr>
     <?php  }
-                    }
-                }  ?>
+                        }
+                    }  ?>
     <?php if ($_POST['genearreporte'] == "Generar") {  ?>
         <table align="center" class="table table-bordered table-striped">
             <tr>

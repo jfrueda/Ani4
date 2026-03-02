@@ -8,13 +8,13 @@
 <body>
 <h1>AcceptPageBreak</h1>
 <code><b>boolean</b> AcceptPageBreak()</code>
-<h2>Descripción</h2>
-En cualquier momento que un salto de página es encontrado, es invocado el método, y el salto es emitido o no dependiendo
-del valor retornado. La implementación por defecto retorna un valor de acuerdo a el modo seleccionado por SetAutoPageBreak().
+<h2>Descripciï¿½n</h2>
+En cualquier momento que un salto de pï¿½gina es encontrado, es invocado el mï¿½todo, y el salto es emitido o no dependiendo
+del valor retornado. La implementaciï¿½n por defecto retorna un valor de acuerdo a el modo seleccionado por SetAutoPageBreak().
 <br>
-Este método es invocado automáticamente y no debería ser llamado directamente por la aplicación.
+Este mï¿½todo es invocado automï¿½ticamente y no deberï¿½a ser llamado directamente por la aplicaciï¿½n.
 <h2>Ejemplo</h2>
-El método es anulado por una clase heredada con el propósito de obtener un diseño de tres columnas.
+El mï¿½todo es anulado por una clase heredada con el propï¿½sito de obtener un diseï¿½o de tres columnas.
 <div class="doc-source">
 <pre><code>class PDF extends FPDF
 {
@@ -40,7 +40,7 @@ function AcceptPageBreak()
     }
     else
     {
-        // Regrese a la primera columna y emita un salto de página
+        // Regrese a la primera columna y emita un salto de pï¿½gina
         $this-&gt;SetCol(0);
         return true;
     }
@@ -54,7 +54,7 @@ for($i=1;$i&lt;=300;$i++)
     $pdf-&gt;Cell(0,5,"Line $i",0,1);
 $pdf-&gt;Output();</code></pre>
 </div>
-<h2>Vea además</h2>
+<h2>Vea ademï¿½s</h2>
 <a href="setautopagebreak.htm">SetAutoPageBreak</a>
 <hr style="margin-top:1.5em">
 <div style="text-align:center"><a href="index.htm">Inicio</a></div>

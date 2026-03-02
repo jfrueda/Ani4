@@ -6,21 +6,21 @@ class estadisiticas
     private $depart;
     private $munici;
     private $mesesN = array('01' => "Enero", '02' => "Febrero", '03' => "Marzo", '04' => "Abril", '05' => "Mayo", '06' => "Junio", '07' => "Julio", '08' => "Agosto", '09' => "Septiembre", '10' => "Octubre", '11' => "Noviembre", '12' => "Diciembre");
-    private $bsq = array('&aacute;','&AACUTE;','&aACUTE;','&Aacute;','&eacute;','&EACUTE;','&eACUTE;','&Eacute;','&iacute;','&IACUTE;','&iACUTE;','&Iacute;','&oacute;','&OACUTE;','&oACUTE;','&Oacute;','&uacute;','&UACUTE;','&uacute;','&Uacute;','&ntilde;','&Ntilde','&nTILDE;','&NTILDE;');
-    private $strcambio = array('á','Á','á','Á','é','É','é','É','í','Í','í','Í','ó','Ó','ó','Ó','ú','Ú','ú','Ú','ñ','Ñ','ñ','Ñ');
+    private $bsq = array('&aacute;', '&AACUTE;', '&aACUTE;', '&Aacute;', '&eacute;', '&EACUTE;', '&eACUTE;', '&Eacute;', '&iacute;', '&IACUTE;', '&iACUTE;', '&Iacute;', '&oacute;', '&OACUTE;', '&oACUTE;', '&Oacute;', '&uacute;', '&UACUTE;', '&uacute;', '&Uacute;', '&ntilde;', '&Ntilde', '&nTILDE;', '&NTILDE;');
+    private $strcambio = array('á', 'Á', 'á', 'Á', 'é', 'É', 'é', 'É', 'í', 'Í', 'í', 'Í', 'ó', 'Ó', 'ó', 'Ó', 'ú', 'Ú', 'ú', 'Ú', 'ñ', 'Ñ', 'ñ', 'Ñ');
     private $medioRecp;
     private $depeNombre;
 
-    
+
     public function __construct($ruta_raiz)
     {
         // parent::__construct();
         $this->link = new ConnectionHandler($ruta_raiz);
         $this->medioRecp = $this->medioRecp();
-        $this->depeNombre =$this->dependecias();
-        $this->depart =$this->departamentosFN();
-        $this->munici =$this->municipiosFN();
-      // $this->link->conn->debug =true;
+        $this->depeNombre = $this->dependecias();
+        $this->depart = $this->departamentosFN();
+        $this->munici = $this->municipiosFN();
+        // $this->link->conn->debug =true;
     }
 
     public function rp1($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpRad, $tpUs)
@@ -64,13 +64,16 @@ class estadisiticas
         }
 
 
-        $whereTipoRadicado='';
-        if($tpRad){
+        $whereTipoRadicado = '';
+        if ($tpRad) {
             $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
         }
 
-        $where = trim($where.$whereAct);
+        $where = trim($where . $whereAct);
         $where = preg_replace('/^AND\s+/i', '', $where);
+        if ($where == '') {
+            $where = '1=1';
+        }
 
         $iSql = "
             SELECT
@@ -202,7 +205,7 @@ class estadisiticas
 
         return $datos;
     }
-/***reporte 3 envios */
+    /***reporte 3 envios */
     public function rp3($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpRad, $tpUs)
     {
 
@@ -278,13 +281,13 @@ class estadisiticas
 	AND b.usua_doc::varchar <> ''
 	--and (m.sgd_fenv_codigo<>106 OR m.sgd_fenv_codigo=106 AND radi_nume_grupo is null)
     group by sgd_fenv_descrip,m.sgd_fenv_codigo ";
-         //$this->link->conn->debug =true;
+        //$this->link->conn->debug =true;
         $rs = $this->link->conn->query($iSql);
 
         if (!$rs->EOF) {
             $i = 1;
             while (!$rs->EOF) {
-	//	    var_dump($rs->fields);
+                //	    var_dump($rs->fields);
                 foreach ($rs->fields as $key => $value) {
                     $dd[$rs->fields['COD']][strtoupper($key)] = $value;
                 }
@@ -292,7 +295,7 @@ class estadisiticas
             }
             //  $resp['titulo'] = $campot;
         }
-/*  */
+        /*  */
 
         $Sql2 = "select m.sgd_fenv_codigo cod , count(2) dev
         from SGD_FENV_FRMENVIO m, SGD_RENV_REGENVIO b,hist_eventos h
@@ -334,9 +337,9 @@ AND (m.sgd_fenv_codigo<>106 OR m.sgd_fenv_codigo=106 and radi_nume_grupo is null
         }
         return $datos;
     }
-/**
- * rp4 tra los radicado sin digitalizar
- */
+    /**
+     * rp4 tra los radicado sin digitalizar
+     */
     public function rp4($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpRad, $tpUs)
     {
         $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
@@ -367,7 +370,7 @@ AND (m.sgd_fenv_codigo<>106 OR m.sgd_fenv_codigo=106 and radi_nume_grupo is null
 
         //     echo $whereI;
 
-       /* if ($usu && $usu != 0) {
+        /* if ($usu && $usu != 0) {
             $whereU = " and r.radi_usua_actu=$usu ";
             $whereUH = " and h.usua_codi=$usu ";
         }*/
@@ -420,7 +423,7 @@ AND (m.sgd_fenv_codigo<>106 OR m.sgd_fenv_codigo=106 and radi_nume_grupo is null
     {
         $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
         $whereDependencia = $depe != '99999' ? " and r.radi_depe_actu = $depe " : '';
-	$queryE = "SELECT
+        $queryE = "SELECT
 	    da.DEPE_CODI || ' - ' || da.DEPE_NOMB as DEPENDENCIA_ACTUAL,
 	    count(DISTINCT r.radi_nume_radi)as RADICADOS,
 	    da.DEPE_CODI as CODI_DEPE_ACTUAL
@@ -455,46 +458,46 @@ AND (m.sgd_fenv_codigo<>106 OR m.sgd_fenv_codigo=106 and radi_nume_grupo is null
         return $datos;
     }
     /**
- * rp7 tra 
- */
-public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpRad, $tpUs)
-{
-    $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
-    if ($tpAds == 1) {
-        $depe = $this->depahijas($depe);
-    }
-    $whereADD = $where2 = '';
-    $where = '';
-    $where2TB = '';
-    $resp['depe'] = $depe;
-    if ($depe != 99999) {
-        //$where = "and r.radi_depe_radi in ($depe) ";
-        $whereDependencia = "	r.radi_depe_actu = $depe";
-    }
-    if ($tpdoc != 0) {
-        $whereTipoRadicado .= " and r.TDOC_CODI=$tpdoc ";
-    }
+     * rp7 tra 
+     */
+    public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpRad, $tpUs)
+    {
+        $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
+        if ($tpAds == 1) {
+            $depe = $this->depahijas($depe);
+        }
+        $whereADD = $where2 = '';
+        $where = '';
+        $where2TB = '';
+        $resp['depe'] = $depe;
+        if ($depe != 99999) {
+            //$where = "and r.radi_depe_radi in ($depe) ";
+            $whereDependencia = "	r.radi_depe_actu = $depe";
+        }
+        if ($tpdoc != 0) {
+            $whereTipoRadicado .= " and r.TDOC_CODI=$tpdoc ";
+        }
 
-    $whereU = $whereI = $ddsubserie = '';
-    if ($subserie && $subserie != 0) {
-        $ddsubserie = " and mrd.sgd_sbrd_id=$subserie ";
-    }
+        $whereU = $whereI = $ddsubserie = '';
+        if ($subserie && $subserie != 0) {
+            $ddsubserie = " and mrd.sgd_sbrd_id=$subserie ";
+        }
 
-    if ($serie != 0) {
-        $whereI .= "INNER JOIN  sgd_rdf_retdocf rdf on rdf.radi_nume_radi=r.radi_nume_radi
+        if ($serie != 0) {
+            $whereI .= "INNER JOIN  sgd_rdf_retdocf rdf on rdf.radi_nume_radi=r.radi_nume_radi
           INNER JOIN sgd_mrd_matrird mrd on mrd.sgd_mrd_codigo=rdf.sgd_mrd_codigo and  mrd.sgd_srd_id=$serie $ddsubserie";
-    }
+        }
 
-    //     echo $whereI;
+        //     echo $whereI;
 
-    if ($usu && $usu != 0) {
-        $whereU = " and r.radi_usua_actu=$usu ";
-        $whereUH = " and h.usua_codi=$usu ";
-    }
-    //   $this->link->conn->debug =true;
-		$COD_RADICACION = 2;
-		$COD_DIGITALIZACION = 42;
-		$queryE = "SELECT 
+        if ($usu && $usu != 0) {
+            $whereU = " and r.radi_usua_actu=$usu ";
+            $whereUH = " and h.usua_codi=$usu ";
+        }
+        //   $this->link->conn->debug =true;
+        $COD_RADICACION = 2;
+        $COD_DIGITALIZACION = 42;
+        $queryE = "SELECT 
 			u3.usua_nomb as USUARIO,
 			count(distinct r.radi_nume_radi) as RADICADOS,
 			MIN(u3.depe_codi) as HID_DEPE_USUA,
@@ -503,8 +506,8 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
 		FROM dependencia df,dependencia da, RADICADO r
 		LEFT OUTER JOIN SGD_TPR_TPDCUMENTO t ON r.tdoc_codi=t.SGD_TPR_CODIGO 
 		LEFT OUTER JOIN SGD_DIR_DRECCIONES dir ON r.radi_nume_radi = dir.radi_nume_radi	and dir.sgd_dir_tipo = '1'
-		LEFT JOIN hist_eventos he1 ON r.radi_nume_radi = he1.radi_nume_radi AND he1.sgd_ttr_codigo = ".$COD_DIGITALIZACION."
-			LEFT JOIN hist_eventos he2 ON r.radi_nume_radi = he2.radi_nume_radi AND he2.sgd_ttr_codigo = ".$COD_RADICACION."
+		LEFT JOIN hist_eventos he1 ON r.radi_nume_radi = he1.radi_nume_radi AND he1.sgd_ttr_codigo = " . $COD_DIGITALIZACION . "
+			LEFT JOIN hist_eventos he2 ON r.radi_nume_radi = he2.radi_nume_radi AND he2.sgd_ttr_codigo = " . $COD_RADICACION . "
 			LEFT JOIN USUARIO u1 ON u1.usua_codi = he1.usua_codi_dest and u1.depe_codi = he1.depe_codi_dest
 			LEFT JOIN USUARIO u2 ON u2.usua_codi = he2.usua_codi_dest and u2.depe_codi = he2.depe_codi_dest
 			LEFT JOIN USUARIO u3 ON u3.usua_codi = he2.usua_codi and u3.depe_codi = he2.depe_codi
@@ -520,25 +523,25 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
 		u3.usua_codi,
 		u3.depe_codi,
 		u3.usua_nomb";
-    $rs = $this->link->conn->query($queryE);
+        $rs = $this->link->conn->query($queryE);
 
-    if (!$rs->EOF) {
-        $i = 1;
-        while (!$rs->EOF) {
-            $dd['NUM'] = $i;
-            foreach ($rs->fields as $key => $value) {
-                if ($key != 'RADI') {
-                    $dd[strtoupper($key)] = $value;
+        if (!$rs->EOF) {
+            $i = 1;
+            while (!$rs->EOF) {
+                $dd['NUM'] = $i;
+                foreach ($rs->fields as $key => $value) {
+                    if ($key != 'RADI') {
+                        $dd[strtoupper($key)] = $value;
+                    }
                 }
+                $datos[] = $dd;
+                $i++;
+                $rs->MoveNext();
             }
-            $datos[] = $dd;
-            $i++;
-            $rs->MoveNext();
         }
-    }
 
-    return $datos;
-}
+        return $datos;
+    }
     public function rp9($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpUs)
     {
 
@@ -610,7 +613,7 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
         where r.sgd_trad_codigo = 2 and r.radi_fech_radi between  ('$fini 00:00:00') and ('$ffin 23:59:59')
         and r.radi_depe_actu <> 999  $where $whereADD $whereU $whereAct";
         // echo $resp['SQL'] = $iSql2;
-        $rs = $this->link->conn->query($iSql);//--and a.anex_salida = 1
+        $rs = $this->link->conn->query($iSql); //--and a.anex_salida = 1
         $rs2 = $this->link->conn->query($iSql2);
 
         $datos['tramitado'] = 0;
@@ -624,12 +627,12 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
         //  print_r($datos);
         return $datos;
     }
-//detalles reporte 1
+    //detalles reporte 1
     public function dtrp1($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad)
     {
 
         //    echo "$depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq";
-       //    $this->link->conn->debug =true;
+        //    $this->link->conn->debug =true;
         //tpbusq id de usuario
         if ($tpAds == 1 && $tpbusq == 'T') {
             $depe = $this->depahijas($depe);
@@ -644,7 +647,6 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
             if ($depe != 99999) {
                 $where = "and h1.depe_codi in ($depe) ";
             }
-
         }
         if ($tpdoc != 0) {
             $whereADD .= " and r.TDOC_CODI=$tpdoc ";
@@ -666,12 +668,12 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
             $whereU = " and r.radi_usua_actu=$usu ";
             $whereUH = " and h.usua_codi=$usu ";
         }
-        
-        
-            $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
-        
 
-   /*     $iSql = "SELECT *
+
+        $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
+
+
+        /*     $iSql = "SELECT *
                 FROM  radicado r
                 INNER JOIN
                     (	select h1.radi_nume_radi as radi_nume_radi,  h1.id,  h1.sgd_ttr_codigo as sgd_ttr_codigo,  h1.usua_doc as usua_doc,  h1.depe_codi as depe_codi from hist_eventos h1
@@ -682,7 +684,7 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
 				left join sgd_tpr_tpdcumento td on r.TDOC_CODI=td.SGD_TPR_CODIGO 
         where  r.radi_fech_radi between ('2021-04-01 00:00:00') and ('2021-04-30 23:59:59')    and r.sgd_trad_codigo = 2 --and b.usua_doc='8235' 
 		and b.USUA_CODI=11604 and b.depe_codi=8235";*/
-    $iSql=" 
+        $iSql = " 
     select  distinct h.radi_nume_radi as radi, r.radi_depe_radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech, td.sgd_tpr_descrip tpnomb, r.ra_asun asunto, b.USUA_NOMB as USUAR,
     b.depe_codi as DEPEI, r.radi_depe_actu DPA, u.usua_nomb usuaa, 
    radi_nume_folio FOL,  '' dig , mrec_codi mrec,'' FECHADig , '' usud,r.radi_nume_deri ASOCIADO,'' dpto,'' proyecto,'' muni,'' EMAIL,'' REM
@@ -693,8 +695,8 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
         LEFT JOIN usuario b ON h.usua_doc = b.usua_doc 
         where h.sgd_ttr_codigo = 2 
         and r.radi_nume_radi=h.radi_nume_radi  and (r.sgd_eanu_codigo not in (1,2) or   r.sgd_eanu_codigo is null)
-        and r.radi_fech_radi between  ('$fini 00:00:00') and ('$ffin 23:59:59') $where  $whereTipoRadicado order by rfech desc ";   
-        $iSql=" 
+        and r.radi_fech_radi between  ('$fini 00:00:00') and ('$ffin 23:59:59') $where  $whereTipoRadicado order by rfech desc ";
+        $iSql = " 
         select  distinct r.radi_nume_radi as radi, r.radi_depe_radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech, td.sgd_tpr_descrip tpnomb, r.ra_asun asunto, b.USUA_NOMB as USUAR,
         b.depe_codi as DEPEI, r.radi_depe_actu DPA, u.usua_nomb usuaa, 
        radi_nume_folio FOL,  '' dig , mrec_codi mrec,'' FECHADig , '' usud,r.radi_cuentai  ||' '||r.radi_nume_deri ||' ' ASOCIADO,'' dpto,'' proyecto,'' muni,'' EMAIL,'' REM
@@ -705,11 +707,11 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
        left join sgd_tpr_tpdcumento td on r.TDOC_CODI=td.SGD_TPR_CODIGO  left join usuario u on u.usua_codi = r.radi_usua_actu and u.depe_codi=r.radi_depe_actu 
        where  (r.sgd_eanu_codigo not in (1,2) or   r.sgd_eanu_codigo is null)
             and r.radi_fech_radi between  ('$fini 00:00:00') and ('$ffin 23:59:59')   $whereTipoRadicado order by rfech desc ";
-      
+
         //trae info de total
         //trae la informacion de los radicados
 
-      // die($iSql);
+        // die($iSql);
         $rs = $this->link->conn->query($iSql);
         $nomdebe = $this->dependecias();
 
@@ -728,15 +730,14 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
                     } elseif ($key == 'DPA') {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $nomdebe[$value]);
                     } elseif ($key == 'MREC') {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->medioRecp [$value]);
-                    }elseif($key == 'ASUNTO') {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '',str_replace($this->bsq,$this->strcambio,htmlentities( str_replace(array('<','>','','','',"\u23FD"),'', $value))));
+                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->medioRecp[$value]);
+                    } elseif ($key == 'ASUNTO') {
+                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', str_replace($this->bsq, $this->strcambio, htmlentities(str_replace(array('<', '>', '', '', '', "\u23FD"), '', $value))));
                     } else {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                     }
-
                 }
-             //   $datoss[$rs->fields['RADI']]['NUM'] = $i;
+                //   $datoss[$rs->fields['RADI']]['NUM'] = $i;
                 //$datoss[$rs->fields['RADI']]['DPAN'] = $nomdebe[$rs->fields['DPA']];
                 $i++;
                 $coma = ',';
@@ -759,22 +760,20 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
 
                 foreach ($rs->fields as $key => $value) {
                     if ($key != 'RADI') {
-                       if($key=='DPTO')
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->depart[$value]);
-                       else if($key=='MUNI')
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->munici[$rs->fields['DPTO']][$value]);
-                        else if($key=='DREM')
-                        $datoss[$rs->fields['RADI']]['REM'] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value.' '.$rs->fields['AREM']);
+                        if ($key == 'DPTO')
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->depart[$value]);
+                        else if ($key == 'MUNI')
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->munici[$rs->fields['DPTO']][$value]);
+                        else if ($key == 'DREM')
+                            $datoss[$rs->fields['RADI']]['REM'] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value . ' ' . $rs->fields['AREM']);
                         else
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
-
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                     }
                 }
                 $i++;
                 $coma = ',';
                 $rs->MoveNext();
             }
-
         }
 
         //buscar historico fecha de digitalizacion 
@@ -802,28 +801,28 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
                 //  $resp['titulo'] = $campot;
             }
 
-     
-        $selectA = "select  a.radi_nume_salida radi, anex_creador proyecto
+
+            $selectA = "select  a.radi_nume_salida radi, anex_creador proyecto
          from  anexos a 
           where   a.radi_nume_salida in ($arrayRAD)  ";
-        $rs = $this->link->conn->query($selectA);
-    //  echo "$selectA";
-        if (!$rs->EOF) {
-            $i = 0;
-            while (!$rs->EOF) {
+            $rs = $this->link->conn->query($selectA);
+            //  echo "$selectA";
+            if (!$rs->EOF) {
+                $i = 0;
+                while (!$rs->EOF) {
 
-                foreach ($rs->fields as $key => $value) {
-                    if ($key != 'RADI') {                        
+                    foreach ($rs->fields as $key => $value) {
+                        if ($key != 'RADI') {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
+                        }
                     }
+                    $i++;
+                    $coma = ',';
+                    $rs->MoveNext();
                 }
-                $i++;
-                $coma = ',';
-                $rs->MoveNext();
+                //  $resp['titulo'] = $campot;
             }
-            //  $resp['titulo'] = $campot;
         }
-      }
         /*
         $selectB = "select distinct  r.radi_nume_deri radi, r.radi_nume_radi ASOCIADO
         from  radicado r where  r.radi_nume_deri in ($arrayRAD) ";
@@ -844,9 +843,9 @@ public function rp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin
         }
         //  $resp['titulo'] = $campot;
     }*/
-$i=1;
+        $i = 1;
         foreach ($datoss as $key => $value) {
-            $value['NUM']=$i;
+            $value['NUM'] = $i;
             $datos[] = $value;
             $i++;
         }
@@ -866,8 +865,8 @@ $i=1;
         $where = '';
         $where2TB = '';
         $resp['depe'] = $depe;
-        if ($tpbusq != 'T') 
-        $where = "and c.mrec_codi=$tpbusq  ";
+        if ($tpbusq != 'T')
+            $where = "and c.mrec_codi=$tpbusq  ";
         if ($depe != 99999) {
             $where .= "and r.radi_depe_radi in ($depe) ";
         }
@@ -892,10 +891,10 @@ $i=1;
             $whereU = " and r.radi_usua_actu=$usu ";
             $whereUH = " and h.usua_codi=$usu ";
         }
-        
-        
-            $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
-        
+
+
+        $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
+
 
         $iSql = "SELECT distinct r.radi_nume_radi radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech,r.RA_ASUN 	AS ASUNTO  ,c.MREC_DESC 	AS MEDIO_RECEPCION        ,b.usua_nomb 	AS USUARIO        ,r.RADI_PATH 	AS HID_RADI_PATH
             FROM   MEDIO_RECEPCION c, radicado r 
@@ -908,13 +907,13 @@ $i=1;
         ON 
             htev.usua_doc = b.usua_doc
         where  r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') AND r.mrec_codi=c.mrec_codi   $where  $whereTipoRadicado ";
-		
+
 
 
         //trae info de total
         //trae la informacion de los radicados
 
-   
+
         $rs = $this->link->conn->query($iSql);
         $nomdebe = $this->dependecias();
 
@@ -932,16 +931,15 @@ $i=1;
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = $nomdebe[$value];
                     } elseif ($key == 'DPA') {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = $nomdebe[$value];
-                    }elseif ($key == 'USUARIO') {
-                        $nomss='USUARIO DE ARCHIVO';
-                        if($value)$nomss=$value;
+                    } elseif ($key == 'USUARIO') {
+                        $nomss = 'USUARIO DE ARCHIVO';
+                        if ($value) $nomss = $value;
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = $nomss;
-                    } elseif($key == 'ASUNTO') {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] =htmlentities( str_replace(array('<','>','','','',"\u23FD"),'', $value));
+                    } elseif ($key == 'ASUNTO') {
+                        $datoss[$rs->fields['RADI']][strtoupper($key)] = htmlentities(str_replace(array('<', '>', '', '', '', "\u23FD"), '', $value));
                     } else {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
                     }
-
                 }
                 $datoss[$rs->fields['RADI']]['NUM'] = $i;
                 //$datoss[$rs->fields['RADI']]['DPAN'] = $nomdebe[$rs->fields['DPA']];
@@ -953,7 +951,7 @@ $i=1;
         }
 
         //trae info de sgd_dir_Dreciones
-  /*      $selectB = "select dir.radi_nume_radi radi, dir.SGD_DIR_DIRECCION dir,dir.SGD_DIR_MAIL email,dir.SGD_DIR_NOMREMDES dig,
+        /*      $selectB = "select dir.radi_nume_radi radi, dir.SGD_DIR_DIRECCION dir,dir.SGD_DIR_MAIL email,dir.SGD_DIR_NOMREMDES dig,
         dir.SGD_DIR_TELEFONO tel,dir.sgd_dir_mail, dir.sgd_dir_nombre||' '||dir.sgd_dir_apellido rem
          from  sgd_dir_drecciones dir
         where  dir.radi_nume_radi  in ($arrayRAD) ";
@@ -982,7 +980,7 @@ $i=1;
         return $datos;
     }
 
-//detalles reporte 3
+    //detalles reporte 3
     public function dtrp3($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq)
     {
 
@@ -1000,7 +998,6 @@ $i=1;
             if ($depe != 99999) {
                 $where = "and rh.radi_depe_radi in ($depe) ";
             }
-
         }
         if ($tpdoc != 0) {
             $whereADD .= " and r.TDOC_CODI=$tpdoc ";
@@ -1022,7 +1019,7 @@ $i=1;
             $whereU = " and r.radi_usua_actu=$usu ";
             $whereUH = " and h.usua_codi=$usu ";
         }
-	$iSql = "	select distinct 
+        $iSql = "	select distinct 
 		rp.radi_nume_radi radi_p,
 		to_char(rp.radi_fech_radi, 'YYYY-MM-DD HH24:MI') rpfecha,
 		b.radi_nume_sal radi_sal,
@@ -1053,28 +1050,28 @@ $i=1;
 	    AND	(b.sgd_renv_planilla != '00' or b.sgd_renv_planilla is null)
 	    AND (b.sgd_renv_observa not like 'Masiva%' or  b.sgd_renv_observa is null) 
 	     $where ";
-/*if($tpbusq=='106'){
+        /*if($tpbusq=='106'){
 	$iSql.=" AND m.sgd_fenv_codigo=106 and radi_nume_grupo is null";
 
 }
 elseif($tpbusq!='T'){
 	$iSql.=" AND  m.sgd_fenv_codigo=$tpbusq";
 }*/
-        $iSql.=" AND  m.sgd_fenv_codigo=$tpbusq";
+        $iSql .= " AND  m.sgd_fenv_codigo=$tpbusq";
         //trae info de total
         //trae la informacion de los radicados
 
-//$this->link->conn->debug=true;
+        //$this->link->conn->debug=true;
         $rs = $this->link->conn->query($iSql);
 
         //$nomdebe = $this->dependecias();
         if (!$rs->EOF) {
             $i = 1;
             while (!$rs->EOF) {
-                 $datoss[$rs->fields['RADI_SAL'].$i]['NUM'] = $i;
+                $datoss[$rs->fields['RADI_SAL'] . $i]['NUM'] = $i;
                 foreach ($rs->fields as $key => $value) {
 
-                    $datoss[$rs->fields['RADI_SAL'].$i][strtoupper($key)] = $value;
+                    $datoss[$rs->fields['RADI_SAL'] . $i][strtoupper($key)] = $value;
                 }
                 $i++;
                 $rs->MoveNext();
@@ -1082,11 +1079,10 @@ elseif($tpbusq!='T'){
         }
 
         foreach ($datoss as $key => $value) {
-                $dataw[] = $value;
+            $dataw[] = $value;
             if ($value['ENV']) {
             }
-
-	}
+        }
         $datos['datos'] = $dataw;
         return $datos;
     }
@@ -1096,10 +1092,10 @@ elseif($tpbusq!='T'){
     public function dtrp4($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad)
     {
 
-         //   echo "$depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq";
-           //$this->link->conn->debug =true;
+        //   echo "$depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq";
+        //$this->link->conn->debug =true;
         //tpbusq id de usuario
-        $whereTipoRadicadoD='';
+        $whereTipoRadicadoD = '';
         if ($tpAds == 1 && $tpbusq == 'T') {
             $depe = $this->depahijas($depe);
         }
@@ -1107,12 +1103,12 @@ elseif($tpbusq!='T'){
         $where = '';
         $where2TB = '';
         $resp['depe'] = $depe;
-            $where = '';
-            if ($depe != 99999) {
-                $where = "	AND h.DEPE_CODI=$depe AND b.depe_codi = $depe ";	
-            }
+        $where = '';
+        if ($depe != 99999) {
+            $where = "	AND h.DEPE_CODI=$depe AND b.depe_codi = $depe ";
+        }
 
-        
+
         if ($tpdoc != 0) {
             $whereADD .= " and r.TDOC_CODI=$tpdoc ";
         }
@@ -1130,10 +1126,10 @@ elseif($tpbusq!='T'){
         if ($usu && $usu != 0) {
             $whereU = " and r.radi_usua_actu=$usu ";
             $whereUH = " and h.usua_codi=$usu ";
-        }       
-         $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
+        }
+        $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
 
-    		$iSql = "SELECT 
+        $iSql = "SELECT 
             r.radi_nume_radi AS RADI
             , b.USUA_NOMB AS USUARIO_DIGITALIZADOR
             , h.HIST_OBSE AS OBSERVACIONES,
@@ -1153,7 +1149,7 @@ elseif($tpbusq!='T'){
             AND  r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') 
             $whereTipoRadicadoD 
                 ";
-                  
+
 
         //trae info de total
         //trae la informacion de los radicados
@@ -1172,8 +1168,7 @@ elseif($tpbusq!='T'){
                 $arrayRAD .= $coma . $rs->fields['RADI'];
                 foreach ($rs->fields as $key => $value) {
 
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
-                 
+                    $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
                 }
                 $datoss[$rs->fields['RADI']]['NUM'] = $i;
                 //$datoss[$rs->fields['RADI']]['DPAN'] = $nomdebe[$rs->fields['DPA']];
@@ -1182,9 +1177,9 @@ elseif($tpbusq!='T'){
                 $rs->MoveNext();
             }
             //  $resp['titulo'] = $campot;
-          //  print_r( $datoss);
+            //  print_r( $datoss);
         }
-/*
+        /*
         //trae info de sgd_dir_Dreciones
         $selectB = "select dir.radi_nume_radi radi, dir.SGD_DIR_DIRECCION dir,dir.SGD_DIR_MAIL email,dir.SGD_DIR_NOMREMDES dig,
         dir.SGD_DIR_TELEFONO tel,dir.sgd_dir_mail, dir.sgd_dir_nombre||' '||dir.sgd_dir_apellido rem
@@ -1217,16 +1212,16 @@ elseif($tpbusq!='T'){
     //detalles reporte 6
     public function dtrp6($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad)
     {
-	    
+
         $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
         $whereDependencia = $depe != '99999' ? " and r.radi_depe_actu = $depe " : '';
-	$redondeo="date_part('days', r.radi_fech_radi-".$this->link->conn->sysTimeStamp.")+floor(t.sgd_tpr_termino * 7/5)+(select count(1) from sgd_noh_nohabiles where NOH_FECHA between r.radi_fech_radi and ".$this->link->conn->sysTimeStamp.")";
+        $redondeo = "date_part('days', r.radi_fech_radi-" . $this->link->conn->sysTimeStamp . ")+floor(t.sgd_tpr_termino * 7/5)+(select count(1) from sgd_noh_nohabiles where NOH_FECHA between r.radi_fech_radi and " . $this->link->conn->sysTimeStamp . ")";
 
         if ($tpAds == 1 && $tpbusq == 'T') {
             $depe = $this->depahijas($depe);
         }
 
-	$queryEDetalle = "SELECT
+        $queryEDetalle = "SELECT
 	    DISTINCT cast(r.radi_nume_radi as varchar(20)) as RADICADO ,
 	    r.RADI_FECH_RADI as FECHA_RADICADO,
 	    r.RA_ASUN as ASUNTO ,
@@ -1265,7 +1260,7 @@ elseif($tpbusq!='T'){
             $coma = '';
             while (!$rs->EOF) {
                 foreach ($rs->fields as $key => $value) {
-                        $datoss[$rs->fields['RADICADO']][strtoupper($key)] = $value;
+                    $datoss[$rs->fields['RADICADO']][strtoupper($key)] = $value;
                 }
                 $datoss[$rs->fields['RADICADO']]['NUM'] = $i;
                 $i++;
@@ -1282,22 +1277,22 @@ elseif($tpbusq!='T'){
     //detalles reporte 7
     public function dtrp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad)
     {
-	    
-	    if($tpbusq!='T')
-		$whereUsu=" AND u3.usua_doc='$tpbusq'";
-	    else
-		$whereUsu="";
+
+        if ($tpbusq != 'T')
+            $whereUsu = " AND u3.usua_doc='$tpbusq'";
+        else
+            $whereUsu = "";
         $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
         $whereDependencia = $depe != '99999' ? " and r.radi_depe_actu = $depe " : '';
-	$redondeo="date_part('days', r.radi_fech_radi-".$this->link->conn->sysTimeStamp.")+floor(t.sgd_tpr_termino * 7/5)+(select count(1) from sgd_noh_nohabiles where NOH_FECHA between r.radi_fech_radi and ".$this->link->conn->sysTimeStamp.")";
+        $redondeo = "date_part('days', r.radi_fech_radi-" . $this->link->conn->sysTimeStamp . ")+floor(t.sgd_tpr_termino * 7/5)+(select count(1) from sgd_noh_nohabiles where NOH_FECHA between r.radi_fech_radi and " . $this->link->conn->sysTimeStamp . ")";
 
         if ($tpAds == 1 && $tpbusq == 'T') {
             $depe = $this->depahijas($depe);
         }
 
-		$COD_RADICACION = 2;
-		$COD_DIGITALIZACION = 42;
-		$queryEDetalle = "SELECT DISTINCT ON (r.radi_nume_radi) r.radi_nume_radi as RADICADO
+        $COD_RADICACION = 2;
+        $COD_DIGITALIZACION = 42;
+        $queryEDetalle = "SELECT DISTINCT ON (r.radi_nume_radi) r.radi_nume_radi as RADICADO
 			,r.RADI_FECH_RADI as FECHA_RADICADO
 			,t.SGD_TPR_DESCRIP as TIPO_DE_DOCUMENTO
 			,r.RA_ASUN as ASUNTO 
@@ -1323,8 +1318,8 @@ elseif($tpbusq!='T'){
 			LEFT OUTER JOIN SGD_TPR_TPDCUMENTO t ON r.tdoc_codi=t.SGD_TPR_CODIGO 
 			LEFT OUTER JOIN SGD_DIR_DRECCIONES dir ON r.radi_nume_radi = dir.radi_nume_radi	and dir.sgd_dir_tipo = '1'
 			LEFT JOIN medio_recepcion mr ON r.mrec_codi = mr.mrec_codi
-			LEFT  JOIN hist_eventos he1 ON r.radi_nume_radi = he1.radi_nume_radi AND he1.sgd_ttr_codigo = ".$COD_DIGITALIZACION."
-			LEFT JOIN hist_eventos he2 ON r.radi_nume_radi = he2.radi_nume_radi AND he2.sgd_ttr_codigo = ".$COD_RADICACION."
+			LEFT  JOIN hist_eventos he1 ON r.radi_nume_radi = he1.radi_nume_radi AND he1.sgd_ttr_codigo = " . $COD_DIGITALIZACION . "
+			LEFT JOIN hist_eventos he2 ON r.radi_nume_radi = he2.radi_nume_radi AND he2.sgd_ttr_codigo = " . $COD_RADICACION . "
 			LEFT JOIN USUARIO u1 ON u1.usua_codi = he1.usua_codi_dest and u1.depe_codi = he1.depe_codi_dest
 			LEFT JOIN USUARIO u2 ON u2.usua_codi = he2.usua_codi_dest and u2.depe_codi = he2.depe_codi_dest
 			LEFT JOIN USUARIO u3 ON u3.usua_codi = he2.usua_codi and u3.depe_codi = he2.depe_codi
@@ -1343,7 +1338,7 @@ elseif($tpbusq!='T'){
             $coma = '';
             while (!$rs->EOF) {
                 foreach ($rs->fields as $key => $value) {
-                        $datoss[$rs->fields['RADICADO']][strtoupper($key)] = $value;
+                    $datoss[$rs->fields['RADICADO']][strtoupper($key)] = $value;
                 }
                 $datoss[$rs->fields['RADICADO']]['NUM'] = $i;
                 $i++;
@@ -1360,8 +1355,8 @@ elseif($tpbusq!='T'){
     public function dtrp9($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq)
     {
 
-        $where=$btns = '';
-        $ddcamp=$ddcamp2 = '';
+        $where = $btns = '';
+        $ddcamp = $ddcamp2 = '';
         if ($tpdoc != 0) {
             $where .= " and r.TDOC_CODI=$tpdoc ";
         }
@@ -1376,14 +1371,14 @@ elseif($tpbusq!='T'){
 
             if ($tpbusq == '2' || $tpbusq == 'T') {
                 $where2 = " and r.radi_depe_actu!=999 and r.radi_depe_actu in ($depe) ";
-                $hcamp2 =', r.radi_depe_actu dpclose';
+                $hcamp2 = ', r.radi_depe_actu dpclose';
             }
 
             if ($tpbusq == '1' || $tpbusq == 'T') {
                 $tbwh = " hist_eventos h ";
                 $whereA = " and r.radi_depe_actu=999 and h.depe_codi_dest=999 and h.depe_codi  in ($depe) and r.radi_nume_Radi=h.radi_nume_Radi and h.sgd_ttr_codigo  in (13,65) ";
-                $hcamp = $ddcamp.',h.depe_codi dpclose';
-              //  $hcamp2 = $ddcamp2;
+                $hcamp = $ddcamp . ',h.depe_codi dpclose';
+                //  $hcamp2 = $ddcamp2;
                 $whereJ = " left join dependencia dh on  dh.depe_codi = h.depe_codi  and dh.depe_codi is not null
                             left join usuario uh on uh.usua_codi = h.usua_codi ,";
             }
@@ -1432,7 +1427,7 @@ elseif($tpbusq!='T'){
                 $iSql = $iSql2 . ' UNION ' . $iSql1 . 'order by 2';
             }
 
-           //  echo $iSql;
+            //  echo $iSql;
         } else {
 
             if ($tpbusq == 'T') {
@@ -1444,7 +1439,6 @@ elseif($tpbusq!='T'){
 
             if ($tpbusq == '2') {
                 $where2 = " and r.radi_depe_actu!=999 ";
-
             }
 
             $whereI = '';
@@ -1471,21 +1465,20 @@ elseif($tpbusq!='T'){
         //trae info de total
         //trae la informacion de los radicados
         $nomdebe = $this->depeNombre;
-        $arrayRADF='';
+        $arrayRADF = '';
         $rs = $this->link->conn->query($iSql);
         if (!$rs->EOF) {
             $i = 0;
             $arrayRAD = '';
             $coma = '';
             // echo "hd";
-            $arrayRADa='';
+            $arrayRADa = '';
             while (!$rs->EOF) {
 
                 $arrayRAD .= $coma . $rs->fields['RADI'];
                 if ($rs->fields['DPCLOSE'] == 999) {
                     $arrayRADFa[$rs->fields['RADI']] = $rs->fields['RADI'];
-
-                } 
+                }
                 foreach ($rs->fields as $key => $value) {
                     if ($key == 'MES') {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = $this->mesesN[$value];
@@ -1495,10 +1488,9 @@ elseif($tpbusq!='T'){
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = trim($value);
                         $datoss[$rs->fields['RADI']]['DPCLOSEN'] = $this->depeNombre[$value];
                     } else {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = trim($value); 
-                       // $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
+                        $datoss[$rs->fields['RADI']][strtoupper($key)] = trim($value);
+                        // $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
                     }
-
                 }
 
                 $datoss[$rs->fields['RADI']]['DPAN'] = $nomdebe[$rs->fields['DPA']];
@@ -1541,7 +1533,6 @@ elseif($tpbusq!='T'){
                 }
                 //  $resp['titulo'] = $campot;
             }
-
         }
         //trae la info de los anexos --     left join sgd_dir_drecciones dir on dir.radi_nume_radi=a.radi_nume_salida
         $selectA = "select  a.anex_radi_nume radi ,d.depe_nomb depeaa,a.radi_nume_salida as resp,anex_creador proy,anex_estado estresp,
@@ -1574,7 +1565,6 @@ elseif($tpbusq!='T'){
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
                             //trim(preg_replace("[\n|\r|\n\r|\t|\0|\x0B]", "",$value))
                         }
-
                     }
                 }
                 $i++;
@@ -1613,55 +1603,50 @@ elseif($tpbusq!='T'){
                             if (trim($value) == trim($datoss[$rs->fields['RADI']]['OEM2'])) {
                                 $datoss[$rs->fields['RADI']]['NUMREXT'] = $datoss[$rs->fields['RADI']]['RESP'];
                                 $datoss[$rs->fields['RADI']]['RESP'] = '';
-
                             }
                             //    $datoss[$rs->fields['RADI']]['NOBRENT'] = '¡'.trim($value).'¡'.trim($datoss[$rs->fields['RADI']]['OEM2']).'¡';
                             //else
                             // $datoss[$rs->fields['RADI']]['NOBRENT'] = '';
                         } elseif ($key == 'REM' && !$value) {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = $rs->fields['DIG'];
-
                         } else {
-                            $datoss[$rs->fields['RADI']][strtoupper($key)] =  preg_replace('([^A-Za-z0-9 ])', '', $value); 
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] =  preg_replace('([^A-Za-z0-9 ])', '', $value);
                         }
-
                     }
                 }
                 $i++;
                 $coma = ',';
                 $rs->MoveNext();
             }
-
         }
         //buscar historicofecha de asignacion ultima
-    $arrayRADF = implode(',', $arrayRADFa);
-    //consulta de ultimo historico asignacion
-    if ($arrayRADF) {
-        $selectA = " select radi_nume_radi radi, hist_fech fechn,depe_codi dpclose from hist_eventos where 
+        $arrayRADF = implode(',', $arrayRADFa);
+        //consulta de ultimo historico asignacion
+        if ($arrayRADF) {
+            $selectA = " select radi_nume_radi radi, hist_fech fechn,depe_codi dpclose from hist_eventos where 
         radi_nume_radi in  ($arrayRADF) and sgd_ttr_codigo in (13,65) order by 1,2 asc";
 
-        $rs = $this->link->conn->query($selectA);
+            $rs = $this->link->conn->query($selectA);
 
-        if (!$rs->EOF) {
-            $i = 0;
-            while (!$rs->EOF) {
-                foreach ($rs->fields as $key => $value) {
-                    if ($key != 'RADI') {
-                        
-           
-                         
-                        $datoss[$rs->fields['RADI']][strtoupper($key).'N'] = $this->depeNombre[$value];
-                        $datoss[$rs->fields['RADI']]['DPCLOSE'] = trim($value);
+            if (!$rs->EOF) {
+                $i = 0;
+                while (!$rs->EOF) {
+                    foreach ($rs->fields as $key => $value) {
+                        if ($key != 'RADI') {
+
+
+
+                            $datoss[$rs->fields['RADI']][strtoupper($key) . 'N'] = $this->depeNombre[$value];
+                            $datoss[$rs->fields['RADI']]['DPCLOSE'] = trim($value);
+                        }
                     }
+                    $i++;
+                    $coma = ',';
+                    $rs->MoveNext();
                 }
-                $i++;
-                $coma = ',';
-                $rs->MoveNext();
+                //  $resp['titulo'] = $campot;
             }
-            //  $resp['titulo'] = $campot;
         }
-
-    }
         //busca los asociados
         if ($btns == '3') {
             $selectB = "select distinct  r.radi_nume_deri radi, r.radi_nume_radi ASOCIADO
@@ -1805,11 +1790,11 @@ elseif($tpbusq!='T'){
         //trae la informacion de los radicados
 
         $rs = $this->link->conn->query($iSql);
-     //echo   $resp['SQL2'] = $iSql;
-  //   die();
+        //echo   $resp['SQL2'] = $iSql;
+        //   die();
         if (!$rs->EOF) {
             $i = 0;
-            $arrayRADa=array();
+            $arrayRADa = array();
             $arrayRAD = '';
             $arrayRAD1 = '';
             $arrayRADF = '';
@@ -1821,7 +1806,6 @@ elseif($tpbusq!='T'){
                 $arrayRADa[$rs->fields['RADI']] = $rs->fields['RADI'];
                 if ($rs->fields['DEPEACOD'] == 999) {
                     $arrayRADFa[$rs->fields['RADI']] = $rs->fields['RADI'];
-
                 } /*else {
                 $arrayRADNFa[$rs->fields['RADI']]= $rs->fields['RADI'];
                 }*/
@@ -1832,17 +1816,16 @@ elseif($tpbusq!='T'){
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->mesesN[$value]);
                     } elseif ($key == 'MERC') {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->medioRecp[$value]);
-                    }elseif ($key == 'USUAA') {
-                        $datom=$value;
-                        if(!$value && $rs->fields['DPA']==999 )
-                           $datom='ARCHIVO NRR';
+                    } elseif ($key == 'USUAA') {
+                        $datom = $value;
+                        if (!$value && $rs->fields['DPA'] == 999)
+                            $datom = 'ARCHIVO NRR';
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $datom);
-                    } elseif($key == 'ASUNTO') {
+                    } elseif ($key == 'ASUNTO') {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                     } else {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                     }
-
                 }
 
                 if ($rs->fields['DPA'] == '999') {
@@ -1859,7 +1842,7 @@ elseif($tpbusq!='T'){
         //  $datos['SQL'] =$arrayRADa;
         //$a=explode(',',$arrayRAD);
         $arrayRAD = implode(',', $arrayRADa);
-//$arrayRADNF=implode(',',$arrayRADNFa);
+        //$arrayRADNF=implode(',',$arrayRADNFa);
         $arrayRADF = implode(',', $arrayRADFa);
         // trae datos de finalizados
         if ($arrayRADF) {
@@ -1885,9 +1868,8 @@ elseif($tpbusq!='T'){
                 }
                 //  $resp['titulo'] = $campot;
             }
-
         }
-//firmante
+        //firmante
         $arrayRADF = implode(',', $arrayRADFa);
         if ($arrayRADF) {
             $selectAs = "select  h.radi_nume_radi radi ,uh.usua_nomb FIRMA
@@ -1912,7 +1894,6 @@ elseif($tpbusq!='T'){
                 }
                 //  $resp['titulo'] = $campot;
             }
-
         }
 
         //consulta de ultimo historico
@@ -1929,7 +1910,7 @@ elseif($tpbusq!='T'){
                 while (!$rs->EOF) {
                     foreach ($rs->fields as $key => $value) {
                         if ($key != 'RADI') {
-                            $datoss[$rs->fields['RADI']][strtoupper($key)] =preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                         }
                     }
                     $i++;
@@ -1938,7 +1919,6 @@ elseif($tpbusq!='T'){
                 }
                 //  $resp['titulo'] = $campot;
             }
-
         }
 
         //trae la info de los anexos
@@ -1958,13 +1938,12 @@ elseif($tpbusq!='T'){
                         if ($key == 'ESTRESP') {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $estados[$value]);
                         } else if ($key == 'ENVIO') {
-                            $valuex='';
-                            if($rs->fields['ESTRESP']==4 ) $valuex=$value;
+                            $valuex = '';
+                            if ($rs->fields['ESTRESP'] == 4) $valuex = $value;
                             $datoss[$rs->fields['RADI']][strtoupper($key)] =  preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $valuex);
                         } else {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                         }
-
                     }
                 }
                 $i++;
@@ -1991,11 +1970,9 @@ elseif($tpbusq!='T'){
                             if (!$datoss[$rs->fields['RADI']]['REM']) {
                                 $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $rs->fields['DIG']);
                             }
-
                         } else {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                         }
-
                     }
                 }
                 $i++;
@@ -2031,7 +2008,7 @@ elseif($tpbusq!='T'){
 
             $datos[] = $value;
         }
-       // $datos['SQL'] =$resp;
+        // $datos['SQL'] =$resp;
         return $datos;
     }
 
@@ -2082,7 +2059,7 @@ elseif($tpbusq!='T'){
         group by 1 ";*/
         $rs = $this->link->conn->query($iSql);
         $rs2 = $this->link->conn->query($iSql2);
-       /* $datos['sql'] = $iSql;
+        /* $datos['sql'] = $iSql;
         $datos['sql2'] = $iSql2;*/
         $datos['tramitado'] = 0;
         $datos['entramite'] = 0;
@@ -2100,7 +2077,7 @@ elseif($tpbusq!='T'){
     {
         //    $this->link->conn->debug =true;
         $where = '';
-        $ddcamp =$whereADD = '';
+        $ddcamp = $whereADD = '';
         if ($tpdoc != 0) {
             $where .= " and r.TDOC_CODI=$tpdoc ";
         }
@@ -2227,7 +2204,7 @@ elseif($tpbusq!='T'){
 
         if (!$rs->EOF) {
             $i = 0;
-            $arrayRADa=array();
+            $arrayRADa = array();
             $arrayRAD = '';
             $arrayRAD1 = '';
             $arrayRADF = '';
@@ -2235,56 +2212,53 @@ elseif($tpbusq!='T'){
 
             // echo "hd";
             while (!$rs->EOF) {
-                if ($rs->fields['RADI']){
-                $arrayRADa[$rs->fields['RADI']] = $rs->fields['RADI'];
-                if ($rs->fields['DEPEACOD'] == 999) {
-                    $arrayRADFa[$rs->fields['RADI']] = $rs->fields['RADI'];
-
-                } /*else {
+                if ($rs->fields['RADI']) {
+                    $arrayRADa[$rs->fields['RADI']] = $rs->fields['RADI'];
+                    if ($rs->fields['DEPEACOD'] == 999) {
+                        $arrayRADFa[$rs->fields['RADI']] = $rs->fields['RADI'];
+                    } /*else {
                 $arrayRADNFa[$rs->fields['RADI']]= $rs->fields['RADI'];
                 }*/
 
-                foreach ($rs->fields as $key => $value) {
+                    foreach ($rs->fields as $key => $value) {
 
-                    /*if ($key == 'MES') {
+                        /*if ($key == 'MES') {
                     $datoss[$rs->fields['RADI']][strtoupper($key)] = $mesesN[$value];
                     } else*/
 
-                    if ($key == 'ASOCIADO') {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = $value == '0' ? '' : $value;
-                    } else
+                        if ($key == 'ASOCIADO') {
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = $value == '0' ? '' : $value;
+                        } else
                     if ($key == 'MERC') {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = $this->medioRecp[$value];
-                    } elseif ($key == 'USUAA') {
-                        $datom=$value;
-                        if(!$value && $rs->fields['DEPEAC']==999 )
-                           $datom='ARCHIVO NRR';
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = $datom;
-                     } elseif($key == 'ASUNTO') {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] =htmlentities( str_replace(array('<','>','','','',"\u23FD"),'', $value));
-                    }else {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
-                    } 
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = $this->medioRecp[$value];
+                        } elseif ($key == 'USUAA') {
+                            $datom = $value;
+                            if (!$value && $rs->fields['DEPEAC'] == 999)
+                                $datom = 'ARCHIVO NRR';
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = $datom;
+                        } elseif ($key == 'ASUNTO') {
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = htmlentities(str_replace(array('<', '>', '', '', '', "\u23FD"), '', $value));
+                        } else {
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
+                        }
+                    }
 
-                  
+                    if ($rs->fields['DPA'] == '999') {
+                        $datoss[$rs->fields['RADI']]['EST'] = 'Finalizado';
+                    } else {
+                        $datoss[$rs->fields['RADI']]['EST'] = 'En Trámite';
+                    }
                 }
-
-                if ($rs->fields['DPA'] == '999') {
-                    $datoss[$rs->fields['RADI']]['EST'] = 'Finalizado';
-                } else {
-                    $datoss[$rs->fields['RADI']]['EST'] = 'En Trámite';
-                }
-            }
                 $i++;
                 $rs->MoveNext();
             }
             //  $resp['titulo'] = $campot;
         }
-//$a=explode(',',$arrayRAD);
+        //$a=explode(',',$arrayRAD);
         $arrayRAD = implode(',', $arrayRADa);
-//$arrayRADNF=implode(',',$arrayRADNFa);
+        //$arrayRADNF=implode(',',$arrayRADNFa);
         $arrayRADF = implode(',', $arrayRADFa);
-      if ($arrayRADF) {
+        if ($arrayRADF) {
             $selectA = "select  h.radi_nume_radi radi ,to_char(h.hist_fech, 'DD-MM-YYYY HH24:MI') FTX, h.hist_obse comen,uh.usua_nomb usuafin,dh.depe_nomb DEPEFIN
           from  hist_eventos h
           left join dependencia dh on  dh.depe_codi = h.depe_codi  and dh.depe_codi is not null
@@ -2298,7 +2272,7 @@ elseif($tpbusq!='T'){
                 while (!$rs->EOF) {
                     foreach ($rs->fields as $key => $value) {
                         if ($key != 'RADI') {
-                            $datoss[$rs->fields['RADI']][strtoupper($key)] =preg_replace('/</i','',str_replace(array('<','>','&lt;','&gt;','','<'),'', $value));
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/</i', '', str_replace(array('<', '>', '&lt;', '&gt;', '', '<'), '', $value));
                         }
                     }
                     $i++;
@@ -2307,9 +2281,8 @@ elseif($tpbusq!='T'){
                 }
                 //  $resp['titulo'] = $campot;
             }
-
         }
-//medio de envio
+        //medio de envio
         $arrayRADF = implode(',', $arrayRADFa);
         if ($arrayRADF) {
             $selectAs = "select  to_char(a.SGD_RENV_FECH, 'DD-MM-YYYY HH24:MI') envio ,a.RADI_NUME_SAL RADI,c.SGD_FENV_DESCRIP NENV
@@ -2334,18 +2307,17 @@ elseif($tpbusq!='T'){
                 }
                 //  $resp['titulo'] = $campot;
             }
-
         }
-if($tpRAD==1 ){
-    //select anex_radi_nume radi,radi_nume_salida respsal from anexos  where anex_radi_nume in  ($arrayRAD) and anex_radi_nume<>radi_nume_salida and anex_estado=4 and  substring(cast(anex_radi_nume as char(18)) from 15 for 1)='1'
- $sqlt="
+        if ($tpRAD == 1) {
+            //select anex_radi_nume radi,radi_nume_salida respsal from anexos  where anex_radi_nume in  ($arrayRAD) and anex_radi_nume<>radi_nume_salida and anex_estado=4 and  substring(cast(anex_radi_nume as char(18)) from 15 for 1)='1'
+            $sqlt = "
  select a.anex_radi_nume radi,a.radi_nume_salida respsal,to_char(r.SGD_RENV_FECH, 'DD-MM-YYYY HH24:MI') envio ,c.SGD_FENV_DESCRIP NENV 
  from anexos  a
  ,sgd_renv_regenvio r  
  , sgd_fenv_frmenvio c 
  where anex_radi_nume in  ($arrayRAD) and a.anex_radi_nume<>a.radi_nume_salida and anex_estado=4 and  substring(cast(a.anex_radi_nume as char(18)) from 15 for 1)='1' 
  and r.radi_nume_sal = a.radi_nume_salida and r.sgd_fenv_codigo = c.sgd_fenv_codigo ";
-$rs = $this->link->conn->query($sqlt);
+            $rs = $this->link->conn->query($sqlt);
 
             if (!$rs->EOF) {
                 $i = 0;
@@ -2353,9 +2325,8 @@ $rs = $this->link->conn->query($sqlt);
                     foreach ($rs->fields as $key => $value) {
                         if ($key != 'RADI') {
                             if ($value) {
-                                $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;// ($datoss[$rs->fields['RADI']][strtoupper($key)] ?  $datoss[$rs->fields['RADI']][strtoupper($key)].','.$value: $value);
+                                $datoss[$rs->fields['RADI']][strtoupper($key)] = $value; // ($datoss[$rs->fields['RADI']][strtoupper($key)] ?  $datoss[$rs->fields['RADI']][strtoupper($key)].','.$value: $value);
                             }
-
                         }
                     }
                     $i++;
@@ -2364,8 +2335,7 @@ $rs = $this->link->conn->query($sqlt);
                 }
                 //  $resp['titulo'] = $campot;
             }
-
-}
+        }
 
         //consultar proeycto
         if ($arrayRAD) {
@@ -2384,7 +2354,6 @@ $rs = $this->link->conn->query($sqlt);
                             if ($value) {
                                 $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
                             }
-
                         }
                     }
                     $i++;
@@ -2393,7 +2362,6 @@ $rs = $this->link->conn->query($sqlt);
                 }
                 //  $resp['titulo'] = $campot;
             }
-
         }
 
         //consulta de ultimo historico
@@ -2420,7 +2388,6 @@ $rs = $this->link->conn->query($sqlt);
                 }
                 //  $resp['titulo'] = $campot;
             }
-
         }
 
         //trae la info de los anexos
@@ -2428,12 +2395,12 @@ $rs = $this->link->conn->query($sqlt);
         $selectA = "select  a.radi_nume_salida radi ,anex_creador proyi2,anex_estado estresp,to_char(anex_fech_envio, 'DD-MM-YYYY HH24:MI') envio
          from  anexos a,dependencia d
           where  a.radi_nume_salida in ($arrayRAD) and d.depe_codi = a.anex_depe_creador and a.anex_salida = 1 and a.radi_nume_salida is not null ";
-          $selectA = "select  a.radi_nume_salida radi ,anex_creador proyi2,anex_estado estresp,to_char( case when (a.anex_fech_envio is not null)  THEN 
+        $selectA = "select  a.radi_nume_salida radi ,anex_creador proyi2,anex_estado estresp,to_char( case when (a.anex_fech_envio is not null)  THEN 
           a.anex_fech_envio ELSE e.sgd_Renv_FECH END, 'DD-MM-YYYY HH24:MI') envio  
            from  anexos a left join sgd_renv_regenvio e on e.radi_nume_sal=a.radi_nume_salida and sgd_renv_estado=1
            ,dependencia d
             where  a.radi_nume_salida in ($arrayRAD) and d.depe_codi = a.anex_depe_creador and a.anex_salida = 1 and a.radi_nume_salida is not null  order by  estresp";
-   
+
         if ($tpRAD == 3) {
             $selectA = "select  a.anex_radi_nume radi ,anex_creador proyi2,a.radi_nume_salida RESP
          from  anexos a,dependencia d
@@ -2451,30 +2418,27 @@ $rs = $this->link->conn->query($sqlt);
                         if ($key == 'ESTRESP') {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = $estados[$value];
                         } else if ($key == 'ENVIO') { //NENV
-                            $valuex='';
-                            if($rs->fields['ESTRESP']==4 ){
-                                $valuex=$value;
-                                if($value)                                
-                                  $datoss[$rs->fields['RADI']][strtoupper($key)] = $valuex;
-                                  if(!$datoss[$rs->fields['RADI']]['RESPSAL'])
-                                    $datoss[$rs->fields['RADI']]['RESPSAL'] =$rs->fields['RADI'];
-                            }
-                            else{
-                            $datoss[$rs->fields['RADI']][strtoupper($key)] = $valuex;
-                            $datoss[$rs->fields['RADI']]['NENV']='';
-                            /*if($datoss[$rs->fields['RADI']]['NENV'] ) {
+                            $valuex = '';
+                            if ($rs->fields['ESTRESP'] == 4) {
+                                $valuex = $value;
+                                if ($value)
+                                    $datoss[$rs->fields['RADI']][strtoupper($key)] = $valuex;
+                                if (!$datoss[$rs->fields['RADI']]['RESPSAL'])
+                                    $datoss[$rs->fields['RADI']]['RESPSAL'] = $rs->fields['RADI'];
+                            } else {
+                                $datoss[$rs->fields['RADI']][strtoupper($key)] = $valuex;
+                                $datoss[$rs->fields['RADI']]['NENV'] = '';
+                                /*if($datoss[$rs->fields['RADI']]['NENV'] ) {
                                // if(!$rs->fields['RADI']['ENVIO']) $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
                                 if(!$rs->fields['RADI']['RESPSAL'])$datoss[$rs->fields['RADI']]['RESPSAL'] =$rs->fields['RADI'];
                             } */
-                           
-                        }
-                        }else {
+                            }
+                        } else {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
                         }
-
                     }
                 }
-              
+
                 $i++;
                 $coma = ',';
                 $rs->MoveNext();
@@ -2497,22 +2461,20 @@ $rs = $this->link->conn->query($sqlt);
                 foreach ($rs->fields as $key => $value) {
                     if ($key != 'RADI') {
                         if ($key == 'REM' && (!$value || $value == ' ' || $value == '')) {
-                            
+
                             if (!$datoss[$rs->fields['RADI']]['REM']) {
                                 $datoss[$rs->fields['RADI']][strtoupper($key)] = $rs->fields['DIG'];
                             }
-
                         }
-                       /* else if($key=='DEPTO')
+                        /* else if($key=='DEPTO')
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = $this->depart[$value];  
                         else if($key=='MUNI')
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = $this->munici[$rs->fields['DEPTO']][$value];*/
-                         if($key=='DREM')
-                            $datoss[$rs->fields['RADI']]['REM'] = $value.' '.$rs->fields['AREM'];
+                        if ($key == 'DREM')
+                            $datoss[$rs->fields['RADI']]['REM'] = $value . ' ' . $rs->fields['AREM'];
                         else {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = $value;
                         }
-
                     }
                 }
                 $i++;
@@ -2547,12 +2509,12 @@ $rs = $this->link->conn->query($sqlt);
 
         foreach ($datoss as $key => $value) {
 
-		if(!isset($value['EMAIL']))
-			$value['EMAIL']='';
-		if(!isset($value['MUNI']))
-			$value['MUNI']='';
-		if(!isset($value['DEPTO']))
-			$value['DEPTO']='';
+            if (!isset($value['EMAIL']))
+                $value['EMAIL'] = '';
+            if (!isset($value['MUNI']))
+                $value['MUNI'] = '';
+            if (!isset($value['DEPTO']))
+                $value['DEPTO'] = '';
 
             $datos[] = $value;
         }
@@ -2574,7 +2536,6 @@ $rs = $this->link->conn->query($sqlt);
                 //$coma = ',';
                 $rs->MoveNext();
             }
-
         }
         $selectB = "select depe_codi from dependencia where depe_codi_territorial in ($depes) ";
 
@@ -2588,7 +2549,6 @@ $rs = $this->link->conn->query($sqlt);
                 //$coma = ',';
                 $rs->MoveNext();
             }
-
         }
 
         return $depes2;
@@ -2606,7 +2566,6 @@ $rs = $this->link->conn->query($sqlt);
                 //$coma = ',';
                 $rs->MoveNext();
             }
-
         }
         return $mrec;
     }
@@ -2623,7 +2582,6 @@ $rs = $this->link->conn->query($sqlt);
                 //$coma = ',';
                 $rs->MoveNext();
             }
-
         }
         return $mrec;
     }
@@ -2640,7 +2598,6 @@ $rs = $this->link->conn->query($sqlt);
                 //$coma = ',';
                 $rs->MoveNext();
             }
-
         }
         return $mrec;
     }
@@ -2656,7 +2613,6 @@ $rs = $this->link->conn->query($sqlt);
                 //$coma = ',';
                 $rs->MoveNext();
             }
-
         }
         return $mrec;
     }
@@ -2703,12 +2659,12 @@ $rs = $this->link->conn->query($sqlt);
         }
 
 
-        $whereTipoRadicado='';
-        if($tpRad){
+        $whereTipoRadicado = '';
+        if ($tpRad) {
             $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
         }
 
-        $where = trim($where.$whereAct);
+        $where = trim($where . $whereAct);
         $where = preg_replace('/^AND\s+/i', '', $where);
 
         $iSql = "
@@ -2774,7 +2730,7 @@ $rs = $this->link->conn->query($sqlt);
 
     public function dtrp30($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad)
     {
-        
+
         if ($tpAds == 1 && $tpbusq == 'T') {
             $depe = $this->depahijas($depe);
         }
@@ -2788,7 +2744,6 @@ $rs = $this->link->conn->query($sqlt);
             if ($depe != 99999) {
                 $where = "and h1.depe_codi in ($depe) ";
             }
-
         }
         if ($tpdoc != 0) {
             $whereADD .= " and r.TDOC_CODI=$tpdoc ";
@@ -2811,8 +2766,8 @@ $rs = $this->link->conn->query($sqlt);
             $whereUH = " and h.usua_codi=$usu ";
         }
         $whereTipoRadicado = $tpRad ? " and r.sgd_trad_codigo = $tpRad " : '';
-        
-        $iSql=" 
+
+        $iSql = " 
         select  distinct 
             r.radi_nume_radi as radi, 
             r.radi_nume_borrador as borra, 
@@ -2855,7 +2810,7 @@ $rs = $this->link->conn->query($sqlt);
         //trae info de total
         //trae la informacion de los borradores
 
-      // die($iSql);
+        // die($iSql);
         $rs = $this->link->conn->query($iSql);
         $nomdebe = $this->dependecias();
 
@@ -2874,15 +2829,14 @@ $rs = $this->link->conn->query($sqlt);
                     } elseif ($key == 'DPA') {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $nomdebe[$value]);
                     } elseif ($key == 'MREC') {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->medioRecp [$value]);
-                    }elseif($key == 'ASUNTO') {
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '',str_replace($this->bsq,$this->strcambio,htmlentities( str_replace(array('<','>','','','',"\u23FD"),'', $value))));
+                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->medioRecp[$value]);
+                    } elseif ($key == 'ASUNTO') {
+                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', str_replace($this->bsq, $this->strcambio, htmlentities(str_replace(array('<', '>', '', '', '', "\u23FD"), '', $value))));
                     } else {
                         $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                     }
-
                 }
-             //   $datoss[$rs->fields['RADI']]['NUM'] = $i;
+                //   $datoss[$rs->fields['RADI']]['NUM'] = $i;
                 //$datoss[$rs->fields['RADI']]['DPAN'] = $nomdebe[$rs->fields['DPA']];
                 $i++;
                 $coma = ',';
@@ -2905,22 +2859,20 @@ $rs = $this->link->conn->query($sqlt);
 
                 foreach ($rs->fields as $key => $value) {
                     if ($key != 'RADI') {
-                       if($key=='DPTO')
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->depart[$value]);
-                       else if($key=='MUNI')
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->munici[$rs->fields['DPTO']][$value]);
-                        else if($key=='DREM')
-                        $datoss[$rs->fields['RADI']]['REM'] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value.' '.$rs->fields['AREM']);
+                        if ($key == 'DPTO')
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->depart[$value]);
+                        else if ($key == 'MUNI')
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $this->munici[$rs->fields['DPTO']][$value]);
+                        else if ($key == 'DREM')
+                            $datoss[$rs->fields['RADI']]['REM'] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value . ' ' . $rs->fields['AREM']);
                         else
-                        $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
-
+                            $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
                     }
                 }
                 $i++;
                 $coma = ',';
                 $rs->MoveNext();
             }
-
         }
 
         //buscar historico fecha de digitalizacion 
@@ -2948,39 +2900,39 @@ $rs = $this->link->conn->query($sqlt);
                 //  $resp['titulo'] = $campot;
             }
 
-     
-        $selectA = "select  a.radi_nume_salida radi, anex_creador proyecto
+
+            $selectA = "select  a.radi_nume_salida radi, anex_creador proyecto
          from  anexos a 
           where   a.radi_nume_salida in ($arrayRAD)  ";
-        $rs = $this->link->conn->query($selectA);
-    //  echo "$selectA";
-        if (!$rs->EOF) {
-            $i = 0;
-            while (!$rs->EOF) {
+            $rs = $this->link->conn->query($selectA);
+            //  echo "$selectA";
+            if (!$rs->EOF) {
+                $i = 0;
+                while (!$rs->EOF) {
 
-                foreach ($rs->fields as $key => $value) {
-                    if ($key != 'RADI') {                        
+                    foreach ($rs->fields as $key => $value) {
+                        if ($key != 'RADI') {
                             $datoss[$rs->fields['RADI']][strtoupper($key)] = preg_replace('/[^^a-zA-Z0-9#@:_(),.!@"\/\- ]/', '', $value);
+                        }
                     }
+                    $i++;
+                    $coma = ',';
+                    $rs->MoveNext();
                 }
-                $i++;
-                $coma = ',';
-                $rs->MoveNext();
+                //  $resp['titulo'] = $campot;
             }
-            //  $resp['titulo'] = $campot;
         }
-      }
-      
-        $i=1;
+
+        $i = 1;
         foreach ($datoss as $key => $value) {
-            $value['NUM']=$i;
+            $value['NUM'] = $i;
             $datos[] = $value;
             $i++;
         }
         return $datos;
     }
 
-    
+
 
     public function __destruct()
     {

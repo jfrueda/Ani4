@@ -1202,7 +1202,7 @@ $(function () {
 
     $('.btn-o-bsq').click(function () {
         numExp = $('#bsq_nume_expe').val();
-        radicado = $('#bsq_nume_radi').val();
+        radicado = ($('#bsq_nume_radi').val() || '').replace(/\D/g, '');
         parametro = $('#bsq_nomexpe').val();
         depe = $('#bsq_dep').val();
         usuar = $('#bsq_usuaDoc').val();
@@ -1297,7 +1297,7 @@ $(function () {
 
     $('.herr-o-bsq').click(function () {
         numExp = $('#herr_nume_expe').val();
-        radicado = $('#herr_nume_radi').val();
+        radicado = ($('#herr_nume_radi').val() || '').replace(/\D/g, '');
         parametro = $('#herr_nomexpe').val();
         depe = $('#herr_dep').val();
         usuar = $('#herr_usuaDoc').val();
@@ -1848,11 +1848,11 @@ $(function () {
         e.preventDefault();
         $('#generar_indice_electronico').prop('disabled', true);
         $('#modal_indice_electronico').modal('hide');
-        
+
         // Mostrar mensaje de procesamiento
         $('#processing-modal .modal-text').text('Generando índice electrónico, espere por favor...');
         $('#processing-modal').modal('show');
-        
+
         var request = $.get($(this).data('rel'));
         request.done(function () {
             console.log('done');
@@ -1871,11 +1871,11 @@ $(function () {
         e.preventDefault();
         $('#regenerar_indice_electronico').prop('disabled', true);
         $('#modal_regenerar_indice_electronico').modal('hide');
-        
+
         // Mostrar mensaje de procesamiento
         $('#processing-modal .modal-text').text('Regenerando índice electrónico, espere por favor...');
         $('#processing-modal').modal('show');
-        
+
         var request = $.get($(this).data('rel'));
         request.done(function () {
             console.log('Índice regenerado exitosamente');
