@@ -82,7 +82,12 @@ if (!isset($ValidacionKrd) || $ValidacionKrd !== 'Si') {
     failSso('No fue posible iniciar sesion en Orfeo con el usuario autenticado.');
 }
 
-$defaultRedirect = '/index_frames.php';
+$scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+if ($scriptDir === '') {
+    $scriptDir = '/';
+}
+
+$defaultRedirect = ($scriptDir === '/' ? '' : $scriptDir) . '/index_frames.php';
 $target = $defaultRedirect;
 
 if ($relayState !== '') {
@@ -90,7 +95,13 @@ if ($relayState !== '') {
     $currentHost = $_SERVER['HTTP_HOST'] ?? '';
 
     if ($relayUrl !== false && isset($relayUrl['host']) && strcasecmp($relayUrl['host'], $currentHost) === 0 && isset($relayUrl['path'])) {
-        $target = $relayUrl['path'];
+        $relayPath = $relayUrl['path'];
+        $relayBasename = strtolower((string)basename($relayPath));
+
+        if ($relayBasename !== 'login.php' && $relayBasename !== 'index.php') {
+            $target = $relayPath;
+        }
+
         if (isset($relayUrl['query'])) {
             $target .= '?' . $relayUrl['query'];
         }

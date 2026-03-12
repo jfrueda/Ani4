@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (!empty($_SESSION['dependencia'])) {
+  header('Location: ./index_frames.php');
+  exit();
+}
+
 /**
  * @module index_frame
  *
