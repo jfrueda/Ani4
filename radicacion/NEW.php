@@ -1587,6 +1587,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     /* 6️⃣ Botón eliminar */
                     dom.querySelectorAll('button').forEach(btn => {
                         btn.classList.add('btn', 'btn-outline-danger', 'btn-sm');
+                        btn.setAttribute('type', 'button');
                         btn.setAttribute('data-rel', 'remove');
                         btn.innerHTML = '<i class="fa fa-minus" aria-hidden="true"></i>';
                     });
@@ -2678,6 +2679,9 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                     var removeDetail = event.target.closest('[data-rel="remove"]');
 
                     if (removeDetail && removeDetail.matches('*[data-rel="remove"]')) {
+                        event.preventDefault();
+                        event.stopPropagation();
+
                         // buscar la clase 'tooltip' o 'ui-tooltip'
                         var visualTooltips = document.querySelectorAll('.tooltip, .ui-tooltip, .tipsy, .tooltipster-base');
 
@@ -2704,6 +2708,15 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 // ELIMINAR USUARIO DESDE ICONO DE BÚSQUEDA
                 document.body.addEventListener('click', function(event) {
                     var target = event.target;
+                    var iconContainer = target.closest('.search-table-icon');
+
+                    if (iconContainer) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        var itemRow = iconContainer.closest('.item_usuario');
+                        if (itemRow) itemRow.remove();
+                        return;
+                    }
 
                     if (target.matches('.search-table-icon')) {
                         var item = target.closest('.item_usuario');

@@ -463,6 +463,34 @@ class Usuario {
         return true;
     }
 
+    private function buscarDireccionExistente($user, $nurad, $coduser){
+        $where = array();
+        $where[] = "radi_nume_radi = " . intval($nurad);
+
+        $sgdTrd = intval($user['sgdTrd']);
+        if(($sgdTrd == 0 || $sgdTrd == 6) && is_numeric($coduser) && intval($coduser) > 0){
+            $where[] = "sgd_ciu_codigo = " . intval($coduser);
+        } elseif($sgdTrd == 2 && is_numeric($coduser) && intval($coduser) > 0){
+            $where[] = "sgd_oem_codigo = " . intval($coduser);
+        } else {
+            $doc = trim($user['cedula']);
+            if($doc !== '') {
+                $doc = str_replace("'", "''", $doc);
+                $where[] = "sgd_dir_doc = '" . $doc . "'";
+            } else {
+                return 0;
+            }
+        }
+
+        $isql = "select sgd_dir_codigo from sgd_dir_drecciones where " . implode(' and ', $where) . " order by sgd_dir_codigo desc";
+        $rs = $this->db->conn->query($isql);
+        if($rs && !$rs->EOF){
+            return intval($rs->fields['SGD_DIR_CODIGO']);
+        }
+
+        return 0;
+    }
+
     /**
      * consecutivo _ sgdTrd _ id_sgd_dir_dre _ id_table
      * 1) Un usuario nuevo (0_0_XX_XX)....
@@ -479,6 +507,7 @@ class Usuario {
         $idUser       = intval($user['id_table']); //Id del usuario
         $idInRadicado = intval($user['id_sgd_dir_dre']);//Id usuario registrado en radicado
         $sgdDirTipo   = intval($user['sgdDirTipo']);
+        $coduser      = 0;
         $esUpdate     = "";
         $esNuevo = true;
         $labels=['MUNI_CODI'=>'Municipio','DPTO_CODI'=>'Departamento','ID_PAIS'=>'Pais','ID_CONT'=>'Continente',
@@ -498,11 +527,21 @@ class Usuario {
 
         //agregar usuario al radicado
         if(empty($idInRadicado)){
+            // En modificación puede llegar sin el codigo de SGD_DIR_DRECCIONES
+            // y terminar creando un nuevo registro en vez de actualizar.
+            // Intentamos resolver el codigo existente por radicado + tercero.
+            $idInRadicado = $this->buscarDireccionExistente($user, $nurad, $coduser);
+            if(!empty($idInRadicado)) {
+                $nextval = $idInRadicado;
+                $esUpdate = array('SGD_DIR_CODIGO', 'RADI_NUME_RADI');
+                $prev_dir = $this->db->conn->query("Select * from sgd_dir_drecciones where SGD_DIR_CODIGO=$idInRadicado and radi_nume_radi=$nurad")->fields;
+            } else {
             $nextval = $this->db->nextId("sec_dir_drecciones");
             if ($nextval==-1){
                 $this->db->log_error ("001-- $nurad ","No se encontro la secuencia para grabar el usuario seleccionado");
                 $this->result[] = array( "error"  => 'No se encontr&oacute; la secuencia para grabar el usuario seleccionado');
                 return false;
+            }
             }
             //Modificar usuario ya registrado
         }else{
@@ -577,7 +616,7 @@ class Usuario {
     {
         $record['BORRABLE'] = 0;
     }
-    
+
         //APELLIDO
         if(strlen($user['apellido'])>=499){$user['apellido']= substr($user['apellido'],0,499);}
         $sgd_dir_apellido_var  = $user['apellido'];
@@ -899,7 +938,7 @@ class Usuario {
                                             data-placement="right"
                                             data-original-title="Eliminar Usuario"
                                         >
-                                            <button title="eliminar destinatario">
+                                            <button type="button" data-rel="remove" title="eliminar destinatario">
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                         </span>
