@@ -202,6 +202,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
         }
 
         if (!tieneCriterio) {
+            alert("Debe diligenciar al menos un criterio de busqueda diferente al rango de fechas.")
             mostrarError('Debe diligenciar al menos un criterio de busqueda diferente al rango de fechas.');
             return false;
         }
@@ -217,12 +218,14 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
         var hastaUTC = Date.UTC(hastaAno, hastaMes - 1, hastaDia);
 
         if (desdeUTC > hastaUTC) {
+            alert("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.")
             mostrarError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.");
             return false;
         }
 
         var diasRango = (hastaUTC - desdeUTC) / (1000 * 60 * 60 * 24);
         if (diasRango > 365) {
+            alert('El rango de fechas no puede superar 365 dias.')
             mostrarError('El rango de fechas no puede superar 365 dias.');
             return false;
         }
