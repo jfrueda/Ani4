@@ -141,29 +141,100 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
     }
 
     function busquedaValidacion() {
-        let fromDateobj = new Date();
-        fromDateobj.setFullYear(document.Search.elements['s_desde_ano'].value, document.Search.elements['s_desde_mes'].value - 1, document.Search.elements['s_desde_dia'].value);
-        let toDateobj = new Date();
-        toDateobj.setFullYear(document.Search.elements['s_hasta_ano'].value, document.Search.elements['s_hasta_mes'].value - 1, document.Search.elements['s_hasta_dia'].value);
-        if (fromDateobj > toDateobj) {
-            document.getElementById("dvWarning").innerHTML = "La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'";
-            document.getElementById("dvWarning").style.display = 'block';
-            if (document.getElementById("dvResultados") !== null) {
-                document.getElementById("dvResultados").style.display = 'none';
-            }
+        var form = document.Search;
+        var warning = document.getElementById("dvWarning");
+        var resultados = document.getElementById("dvResultados");
 
-            return false;
-        } else {
-            // ELIMINADA: Validación de límite de 1 año - permite búsquedas de cualquier duración
-            if (document.getElementById("dvResultados") !== null) {
-                document.getElementById("dvResultados").style.display = 'block';
+        function mostrarError(msg) {
+            warning.innerHTML = msg;
+            warning.style.display = 'block';
+            if (resultados !== null) {
+                resultados.style.display = 'none';
             }
-            $("input[name='Busqueda']").addClass("disabled");
-            waitMe();
-            document.getElementById("dvWarning").style.display = 'none';
-            document.getElementById("dvWarning").innerHTML = '';
-            return true;
         }
+
+        function getTrimmedValue(name) {
+            return (form.elements[name].value || '').trim();
+        }
+
+        var camposTexto = [{
+                name: 's_RADI_NUME_RADI',
+                label: 'Radicado o Borrador'
+            },
+            {
+                name: 's_DOCTO',
+                label: 'Identificacion'
+            },
+            {
+                name: 's_SGD_EXP_SUBEXPEDIENTE',
+                label: 'Expediente'
+            },
+            {
+                name: 's_CUENTAINTERNA',
+                label: 'Referencia'
+            },
+            {
+                name: 's_GUIA',
+                label: 'Numero de Guia'
+            },
+            {
+                name: 's_RADI_NOMB',
+                label: 'Asunto'
+            }
+        ];
+
+        var tieneCriterio = false;
+        var i;
+
+        for (i = 0; i < camposTexto.length; i++) {
+            var valorCampo = getTrimmedValue(camposTexto[i].name);
+            if (valorCampo.length > 0) {
+                tieneCriterio = true;
+                if (valorCampo.length < 5) {
+                    mostrarError("El campo '" + camposTexto[i].label + "' debe tener minimo 5 caracteres.");
+                    return false;
+                }
+            }
+        }
+
+        if (getTrimmedValue('s_entrada') !== '9999' || getTrimmedValue('s_TDOC_CODI') !== '9999' || getTrimmedValue('s_RADI_DEPE_ACTU') !== '') {
+            tieneCriterio = true;
+        }
+
+        if (!tieneCriterio) {
+            mostrarError('Debe diligenciar al menos un criterio de busqueda diferente al rango de fechas.');
+            return false;
+        }
+
+        var desdeAno = parseInt(form.elements['s_desde_ano'].value, 10);
+        var desdeMes = parseInt(form.elements['s_desde_mes'].value, 10);
+        var desdeDia = parseInt(form.elements['s_desde_dia'].value, 10);
+        var hastaAno = parseInt(form.elements['s_hasta_ano'].value, 10);
+        var hastaMes = parseInt(form.elements['s_hasta_mes'].value, 10);
+        var hastaDia = parseInt(form.elements['s_hasta_dia'].value, 10);
+
+        var desdeUTC = Date.UTC(desdeAno, desdeMes - 1, desdeDia);
+        var hastaUTC = Date.UTC(hastaAno, hastaMes - 1, hastaDia);
+
+        if (desdeUTC > hastaUTC) {
+            mostrarError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.");
+            return false;
+        }
+
+        var diasRango = (hastaUTC - desdeUTC) / (1000 * 60 * 60 * 24);
+        if (diasRango > 365) {
+            mostrarError('El rango de fechas no puede superar 365 dias.');
+            return false;
+        }
+
+        if (resultados !== null) {
+            resultados.style.display = 'block';
+        }
+        $("input[name='Busqueda']").addClass("disabled");
+        waitMe();
+        warning.style.display = 'none';
+        warning.innerHTML = '';
+        return true;
     }
 
     $('body').delegate('.paginacion a', 'click', function() {
@@ -255,52 +326,111 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
     <header class="page-title txt-color-blueDark"> </header>
     <?php Search_show() ?>
     <?php
+    $searchValidationError = '';
     if (isset($Busqueda) || isset($s_entrada)) {
-        if ($s_Listado == "VerListado") {
-            if ($flds_ciudadano == "CIU") {
-                $whereFlds .= "1,";
-            }
+        $camposTextoValidar = array(
+            's_RADI_NUME_RADI' => 'Radicado o Borrador',
+            's_DOCTO' => 'Identificacion',
+            's_SGD_EXP_SUBEXPEDIENTE' => 'Expediente',
+            's_CUENTAINTERNA' => 'Referencia',
+            's_GUIA' => 'Numero de Guia',
+            's_RADI_NOMB' => 'Asunto'
+        );
 
-            if ($flds_empresaESP == "ESP") {
-                $whereFlds .= "2,";
-            }
+        $tieneCriterio = false;
 
-            if ($flds_oEmpresa == "OEM") {
-                $whereFlds .= "3,";
-            }
-
-            if ($flds_FUNCIONARIO == "FUN") {
-                $whereFlds .= "4,";
-            }
-
-            $whereFlds .= "0";
-            Ciudadano_show($nivelus, 9, $whereFlds);
-        } else {
-            if (!$etapa) {
-                if ($flds_ciudadano == "CIU") {
-                    Ciudadano_show($nivelus, 1, 1);
-                } else {
-                    if (
-                        !strlen($flds_ciudadano)
-                        && !strlen($flds_empresaESP)
-                        && !strlen($flds_oEmpresa)
-                        && !strlen($flds_FUNCIONARIO)
-                    ) {
-                        Ciudadano_show($nivelus, 9, 1);
-                    }
+        foreach ($camposTextoValidar as $nombreCampo => $etiquetaCampo) {
+            $valorCampo = isset($_GET[$nombreCampo]) ? trim($_GET[$nombreCampo]) : '';
+            if (strlen($valorCampo) > 0) {
+                $tieneCriterio = true;
+                if (strlen($valorCampo) < 5) {
+                    $searchValidationError = "El campo '$etiquetaCampo' debe tener minimo 5 caracteres.";
+                    break;
                 }
             }
+        }
 
-            if ($flds_empresaESP == "ESP") {
-                Ciudadano_show($nivelus, 3, 3);
+        if (!$searchValidationError) {
+            $entradaSel = isset($_GET['s_entrada']) ? $_GET['s_entrada'] : '9999';
+            $tipoDocSel = isset($_GET['s_TDOC_CODI']) ? $_GET['s_TDOC_CODI'] : '9999';
+            $depeSel = isset($_GET['s_RADI_DEPE_ACTU']) ? trim($_GET['s_RADI_DEPE_ACTU']) : '';
+
+            if ($entradaSel !== '9999' || $tipoDocSel !== '9999' || $depeSel !== '') {
+                $tieneCriterio = true;
             }
 
-            if ($flds_oEmpresa == "OEM") {
-                Ciudadano_show($nivelus, 2, 2);
+            if (!$tieneCriterio) {
+                $searchValidationError = 'Debe diligenciar al menos un criterio de busqueda diferente al rango de fechas.';
             }
+        }
 
-            if ($flds_FUNCIONARIO == "FUN") {
-                Ciudadano_show($nivelus, 4, 4);
+        if (!$searchValidationError) {
+            $desdeDia = isset($_GET['s_desde_dia']) ? intval($_GET['s_desde_dia']) : 0;
+            $desdeMes = isset($_GET['s_desde_mes']) ? intval($_GET['s_desde_mes']) : 0;
+            $desdeAno = isset($_GET['s_desde_ano']) ? intval($_GET['s_desde_ano']) : 0;
+            $hastaDia = isset($_GET['s_hasta_dia']) ? intval($_GET['s_hasta_dia']) : 0;
+            $hastaMes = isset($_GET['s_hasta_mes']) ? intval($_GET['s_hasta_mes']) : 0;
+            $hastaAno = isset($_GET['s_hasta_ano']) ? intval($_GET['s_hasta_ano']) : 0;
+
+            if (checkdate($desdeMes, $desdeDia, $desdeAno) && checkdate($hastaMes, $hastaDia, $hastaAno)) {
+                $desdeTimestamp = mktime(0, 0, 0, $desdeMes, $desdeDia, $desdeAno);
+                $hastaTimestamp = mktime(0, 0, 0, $hastaMes, $hastaDia, $hastaAno);
+
+                if ($desdeTimestamp > $hastaTimestamp) {
+                    $searchValidationError = "La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.";
+                } elseif ((($hastaTimestamp - $desdeTimestamp) / 86400) > 365) {
+                    $searchValidationError = 'El rango de fechas no puede superar 365 dias.';
+                }
+            }
+        }
+
+        if (!$searchValidationError) {
+            if ($s_Listado == "VerListado") {
+                if ($flds_ciudadano == "CIU") {
+                    $whereFlds .= "1,";
+                }
+
+                if ($flds_empresaESP == "ESP") {
+                    $whereFlds .= "2,";
+                }
+
+                if ($flds_oEmpresa == "OEM") {
+                    $whereFlds .= "3,";
+                }
+
+                if ($flds_FUNCIONARIO == "FUN") {
+                    $whereFlds .= "4,";
+                }
+
+                $whereFlds .= "0";
+                Ciudadano_show($nivelus, 9, $whereFlds);
+            } else {
+                if (!$etapa) {
+                    if ($flds_ciudadano == "CIU") {
+                        Ciudadano_show($nivelus, 1, 1);
+                    } else {
+                        if (
+                            !strlen($flds_ciudadano)
+                            && !strlen($flds_empresaESP)
+                            && !strlen($flds_oEmpresa)
+                            && !strlen($flds_FUNCIONARIO)
+                        ) {
+                            Ciudadano_show($nivelus, 9, 1);
+                        }
+                    }
+                }
+
+                if ($flds_empresaESP == "ESP") {
+                    Ciudadano_show($nivelus, 3, 3);
+                }
+
+                if ($flds_oEmpresa == "OEM") {
+                    Ciudadano_show($nivelus, 2, 2);
+                }
+
+                if ($flds_FUNCIONARIO == "FUN") {
+                    Ciudadano_show($nivelus, 4, 4);
+                }
             }
         }
     } ?>
@@ -446,7 +576,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                     <div class="card-body">
                         <form method="get"
                             action="busquedaPiloto.php?<?= session_name() . "=" . session_id() ?>&indiVinculo=<?= $indiVinculo ?>&verrad=<?= $verrad ?>&carpeAnt=<?= $carpeAnt ?>&nomcarpeta=<?= $nomcarpeta ?>"
-                            name="Search">
+                            name="Search" onsubmit="return busquedaValidacion();">
 
                             <input type="hidden" name="<?= session_name() ?>" value="<?= session_id() ?>">
                             <input type="hidden" name="FormName" value="Search">
@@ -582,7 +712,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                             Limpiar
                                         </button>
 
-                                        <button type="submit" onclick="return busquedaValidacion();" class="btn btn-warning busqueda" disabled>
+                                        <button type="submit" class="btn btn-warning busqueda" disabled>
                                             Buscar
                                         </button>
                                     </div>
@@ -2053,36 +2183,6 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-argo modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-orfeo">
-                <h5 class="modal-title" id="staticBackdropLabel">Importante!!!</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-secondary" role="alert">
-                    LAS CONDICIONES DE BÚSQUEDA HAN CAMBIADO<br />
-                    -- El rango de fechas <u>PUEDE</u> estar entre dos años diferentes pero <u>NO</u> puede superar más de 365 días desde la fecha de inicio y la fecha final.<br />
-                    -- La fecha desde NO puede ser mayor a la fecha Hasta, aquí unos ejemplos:
-                </div>
-                <div class="alert alert-primary" role="alert">
-                    Desde Fecha (01/12/2023) -- Hasta Fecha (31/12/2023) -- Correcto<br />
-                    Desde Fecha (21/04/2022) -- Hasta Fecha (18/04/2023) -- Correcto<br />
-                    Desde Fecha (30/12/2021) -- Hasta Fecha (15/11/2022) -- Correcto<br />
-                </div>
-                <div class="alert alert-danger" role="alert">
-                    Desde Fecha (10/01/2022) -- Hasta Fecha (24/08/2023) -- Incorrecto<br />
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btnModalMensaje">Entendido</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript" src="<?= $ruta_raiz ?>/js/jquery-3.6.0.min.js"></script>
 <script language="JavaScript" src="<?= $ruta_raiz ?>/js/loader/waitMe.js"></script>
 <script type="text/javascript" src="../js/bootstrap/popper.min.js"></script>
@@ -2090,10 +2190,12 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
-        let sAction = "<?php echo $sAction; ?>";
-        if (sAction == '') {
-            $('#staticBackdrop').modal('show');
-        }
+        <?php if (!empty($searchValidationError)) { ?>
+            $('#dvWarning').html('<?= addslashes($searchValidationError) ?>').show();
+            if ($('#dvResultados').length) {
+                $('#dvResultados').hide();
+            }
+        <?php } ?>
 
         var checkExist = setInterval(function() {
             var waitMeContainer = $('.waitMe_container');
@@ -2121,9 +2223,6 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             $(visorId).dialog('destroy');
         });
 
-        $('#btnModalMensaje').click(function() {
-            $('#staticBackdrop').modal('hide');
-        });
     });
 
     $("#tb-resp").on("click", ".btn-visorimage", function() {
