@@ -33,7 +33,7 @@ foreach($ids as $id) {
     $registro = json_decode($rad_envio['REGISTRO'] ?? '[]', true);
     $correos = explode(';', $sgd_dir_direccion['SGD_DIR_MAIL']);
     $radicado = $db->conn->getRow('SELECT * FROM radicado WHERE radi_nume_radi = ?', [$anexo['RADI_NUME_SALIDA']]);
-    $certificador = $rad_envio['CERTIFICADO'] == 't' ? $proveedor_correo_certificado : $proveedor_generico;
+    $certificador = $proveedor_generico;
 
     $registro = array_filter($registro, function($entry) {
         return $entry['status'] !== 'error';
