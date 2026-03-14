@@ -20,6 +20,15 @@ $proveedor_correo_certificado = 'certicamara';
 $proveedor_generico = 'generico';
 $erroresGlobales = [];
 
+$fromNameCorreo = '';
+if (!empty($_SESSION['entida_largo'])) {
+    $fromNameCorreo = trim($_SESSION['entida_largo']);
+} elseif (!empty($entidad)) {
+    $fromNameCorreo = trim($entidad);
+} else {
+    $fromNameCorreo = 'Universidad Militar Nueva Granada';
+}
+
 foreach($ids as $id) {
     $linkImagenes = '';
     $rad_envio = $db->conn->getRow('SELECT * FROM sgd_rad_envios WHERE id = ?', [$id]);
@@ -97,7 +106,7 @@ foreach($ids as $id) {
             $smtpTrace[] = "[$level] $str";
         };
         $mail->From = trim($correoSaliente);
-        $mail->FromName = 'Supersalud';
+        $mail->FromName = $fromNameCorreo;
 
         if (empty($correos_validos)) {
             throw new Exception('No hay destinatarios válidos para enviar (correo inválido, ya enviado o vacío).');
