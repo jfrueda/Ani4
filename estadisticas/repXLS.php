@@ -11,7 +11,7 @@ $ruta_raiz = "..";
 if (!$_SESSION['dependencia']) {
     $fallo['session'] = 'off';
     json_encode($fallo);
-    die();//valida si tiene session
+    die(); //valida si tiene session
 }
 
 $krd = $_SESSION["krd"];
@@ -48,43 +48,41 @@ switch ($fn) {
         }
 
         $datos = $reportesClass->dtrp1($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
-        
+
         $nomR = 'dtrp1';
         break;
     case 'dtrp2':
-            $tipoEstadistica = 'Medio de Recepción ';
-            $datos= $reportesClass->dtrp2($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);          
-            $nomR = 'dtrp2';
+        $tipoEstadistica = 'Medio de Recepción ';
+        $datos = $reportesClass->dtrp2($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+        $nomR = 'dtrp2';
         break;
     case 'dtrp3':
-            $tipoEstadistica = 'Envios de Radicados ';
-            $dat= $reportesClass->dtrp3($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq);
-            $datos=$dat['datos'];
-            $ENVIADOS=$dat['ENVIADOS'];
-            $DEVUELTOS=$dat['DEVUELTOS'] ? $dat['DEVUELTOS']:0;
-            $nomR = 'dtrp3';
-            break;
+        $tipoEstadistica = 'Envios de Radicados ';
+        $dat = $reportesClass->dtrp3($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq);
+        $datos = $dat['datos'];
+        $ENVIADOS = $dat['ENVIADOS'];
+        $DEVUELTOS = $dat['DEVUELTOS'] ? $dat['DEVUELTOS'] : 0;
+        $nomR = 'dtrp3';
+        break;
     case 'dtrp4':
-
-                $datos=$reportesClass->dtrp4($tit,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
-                $nomR = 'dtrp4';
-                break;
+        $datos = $reportesClass->dtrp4($tit, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+        $nomR = 'dtrp4';
+        break;
     case 'dtrp6':
-
-                $datos=$reportesClass->dtrp6($tpbusq,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
-                $nomR = 'dtrp6';
-            	$tipoEstadistica = 'Radicados de la dependencia ' . $tit;
-                break;
+        $datos = $reportesClass->dtrp6($tpbusq, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+        $nomR = 'dtrp6';
+        $tipoEstadistica = 'Radicados de la dependencia ' . $tit;
+        break;
     case 'dtrp7':
 
-                $datos=$reportesClass->dtrp7($depe,$tpAds,$tpdoc,$serie,$subserie,$usu,$fini,$ffin,$tpbusq, $tpRad);
-		$nomR = 'dtrp7';
-            	$tipoEstadistica = 'Radicados de la dependencia ' . $tit;
-                break;
+        $datos = $reportesClass->dtrp7($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
+        $nomR = 'dtrp7';
+        $tipoEstadistica = 'Radicados de la dependencia ' . $tit;
+        break;
     case 'rp9':
         //  print_r($_POST);
         $datos = $reportesClass->rp9($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin);
-//      $tipoEstadistica='Detalles '+$tupid[$tpbusq];
+        //      $tipoEstadistica='Detalles '+$tupid[$tpbusq];
         $nomR = 'rp9';
         break;
     case 'dtrp9':
@@ -93,7 +91,7 @@ switch ($fn) {
         $tipoEstadistica = 'Detalles ' . $tupid[$tpbusq];
         $nomR = 'dtrp9';
         break;
-/// detalles reporte fa-rotate-180
+    /// detalles reporte fa-rotate-180
     case 'dtrp10':
         $datos = $reportesClass->dtrp10($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq);
         $tipoEstadistica = 'Detalles ' . $tupid[$tpbusq];
@@ -101,28 +99,27 @@ switch ($fn) {
         $nomR = 'dtrp10';
         break;
     case 'rp11':
-        //  print_r($_POST);
         $datos = $reportesClass->rp11($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, 1);
-        $tipoEstadistica = 'Detalles '+$tupid[$tpbusq];
+        $tipoEstadistica = 'Detalles ' + $tupid[$tpbusq];
         $nomR = 'rp11';
         break;
     case 'dtrp11':
         $datos = $reportesClass->dtrpCons($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, 1);
         $titulo = 'Gestión de Radicados de Salida';
-        $tipoEstadistica = 'Detalles '+$tupid[$tpbusq];
+        $tipoEstadistica = 'Detalles ' + $tupid[$tpbusq];
         $nomR = 'dtrp11';
         break;
     case 'rp12':
         //  print_r($_POST);
         $datos = $reportesClass->rp12($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, 2);
         $titulo = 'Gestión de Radicados de Memorandos';
-        $tipoEstadistica = 'Detalles '+$tupid[$tpbusq];
+        $tipoEstadistica = 'Detalles ' + $tupid[$tpbusq];
         $nomR = 'rp12';
         break;
     case 'dtrp12':
         $datos = $reportesClass->dtrpCons($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, 3);
         $titulo = 'Gestión de Radicados de Memorando';
-        $tipoEstadistica = 'Detalles '+$tupid[$tpbusq];
+        $tipoEstadistica = 'Detalles ' + $tupid[$tpbusq];
         $nomR = 'dtrp12';
         break;
     case 'dtrp30':
@@ -134,7 +131,7 @@ switch ($fn) {
         }
 
         $datos = $reportesClass->dtrp30($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRad);
-        
+
         $nomR = 'dtrp30';
         break;
     default:
@@ -143,18 +140,13 @@ switch ($fn) {
         die();
         break;
 }
-//echo "dd";
-//print_r($datos);
-//var_dump($datos);
-//die();
+
 //Se incluye nuevo tratamiento de exportacion del resultado
 include_once $ruta_raiz . '/include/tbs/tbs_class.php'; // Load the TinyButStrong template engine
 include_once $ruta_raiz . '/include/tbs/tbs_plugin_opentbs.php'; // Load the OpenTBS plugin
 // prevent from a PHP configuration problem when using mktime() and date()
-if (version_compare(PHP_VERSION, '5.1.0') >= 0) {
-    if (ini_get('date.timezone') == '') {
-        date_default_timezone_set('UTC');
-    }
+if (version_compare(PHP_VERSION, '5.1.0') >= 0 && ini_get('date.timezone') == '') {
+    date_default_timezone_set('UTC');
 }
 
 // Initialize the TBS instance
@@ -188,7 +180,8 @@ if (isset($_POST['debug']) && ($_POST['debug'] == 'show')) {
 // Tells TBS to display information when the document is merged. No exit.
 
 $data = $datos;
-/*$data[] = array('rank'=> 'A', 'firstname'=>'Sandra' , 'name'=>'Hill'      , 'number'=>'1523d', 'score'=>200, 'visits'=>15, 'email_1'=>'sh@tbs.com',  'email_2'=>'sandra@tbs.com',  'email_3'=>'s.hill@tbs.com');
+/*
+$data[] = array('rank'=> 'A', 'firstname'=>'Sandra' , 'name'=>'Hill'      , 'number'=>'1523d', 'score'=>200, 'visits'=>15, 'email_1'=>'sh@tbs.com',  'email_2'=>'sandra@tbs.com',  'email_3'=>'s.hill@tbs.com');
 $data[] = array('rank'=> 'A', 'firstname'=>'Roger'  , 'name'=>'Smith'     , 'number'=>'1234f', 'score'=>800, 'visits'=>33, 'email_1'=>'rs@tbs.com',  'email_2'=>'robert@tbs.com',  'email_3'=>'r.smith@tbs.com' );
 $data[] = array('rank'=> 'B', 'firstname'=>'William', 'name'=>'Mac Dowell', 'number'=>'5491y', 'score'=>130, 'visits'=>16, 'email_1'=>'wmc@tbs.com', 'email_2'=>'william@tbs.com', 'email_3'=>'w.m.dowell@tbs.com' );
  */
