@@ -154,7 +154,7 @@ try {
     }
    
     $encripted = $encrypted_string = encrypt_decrypt('encrypt',$radicadoPadreGen,$secret_key);
-    $linkAnexos = $link.'/2/lista_anexos_consulta.php?radiNume='.$encripted;
+    $linkAnexos = $link.'/nuevo/lista_anexos_consulta.php?radiNume='.$encripted;
    
     $mensaje      = str_replace("*RAD_S*", $radicadosSelText, $mensaje);
     $mensaje      = str_replace("*USUARIO*", $krd, $mensaje);
