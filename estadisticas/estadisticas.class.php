@@ -1984,19 +1984,6 @@ class estadisiticas
 
     public function dtrpCons($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRAD = 1)
     {
-        print_r([
-            '$depe' => $depe,
-            '$tpAds' => $tpAds,
-            '$tpdoc' => $tpdoc,
-            '$serie' => $serie,
-            '$subserie' => $subserie,
-            '$usu' => $usu,
-            '$fini' => $fini,
-            '$ffin' => $ffin,
-            '$tpbusq' => $tpbusq,
-            '$tpRAD' => $tpRAD
-        ]);
-
         $datos = array();
         $datoss = array();
         $arrayRADa = array();
@@ -2081,8 +2068,6 @@ class estadisiticas
             if ($tpbusq == 'T') {
                 $iSql = $iSql2 . ' UNION ' . $iSql1 . 'order by 1,2';
             }
-
-            print_r($iSql) ;
         } else {
             $where2 = '';
             if ($tpbusq == '1') {
@@ -2111,8 +2096,6 @@ class estadisiticas
                         $whereI
                         where r.sgd_trad_codigo = $tpRAD  $where2 $where and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') 
                         and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2)) and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' order by 2 ";
-
-            // print_r($iSql);
         }
 
         $rs = $this->link->conn->query($iSql);
