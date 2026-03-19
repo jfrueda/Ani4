@@ -2036,26 +2036,26 @@ class estadisiticas
             }
 
             $iSql1 = "select distinct r.radi_nume_radi radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech,td.sgd_tpr_descrip tpnomb,
-                            r.ra_asun asunto, '' est,upper(du.depe_nomb) depeac,u.usua_nomb usuaa ,'' rem,r.radi_nume_deri ASOCIADO,ur.usua_nomb proyi $campos $ddcamp2
-                            from   $tbwh  radicado r
+                        r.ra_asun asunto, '' est,upper(du.depe_nomb) depeac,u.usua_nomb usuaa ,'' rem,r.radi_nume_deri ASOCIADO,ur.usua_nomb proyi $campos $ddcamp2
+                        from   $tbwh  radicado r
+                        left join sgd_tpr_tpdcumento td on r.TDOC_CODI=td.SGD_TPR_CODIGO
+                        left join usuario u on u.usua_codi = r.radi_usua_actu and u.depe_codi= r.radi_depe_actu
+                        left join dependencia du on  du.depe_codi = r.radi_depe_actu  and du.depe_codi is not null
+                        left join usuario ur on ur.usua_codi = r.radi_usua_radi and ur.depe_codi= r.radi_depe_radi and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2'
+                    $whereI
+                        where r.sgd_trad_codigo = $tpRAD  and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') and r.radi_depe_actu = 999
+                        and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2)) $where2 $whereA  $whereADD  $whereUH ";
+
+            $iSql2 = "select distinct r.radi_nume_radi radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech,td.sgd_tpr_descrip tpnomb,
+                        r.ra_asun asunto,'' est,upper(du.depe_nomb) depeac,u.usua_nomb usuaa,'' rem,r.radi_nume_deri ASOCIADO,ur.usua_nomb proyi $campos $ddcamp2
+                        from  radicado r
                             left join sgd_tpr_tpdcumento td on r.TDOC_CODI=td.SGD_TPR_CODIGO
                             left join usuario u on u.usua_codi = r.radi_usua_actu and u.depe_codi= r.radi_depe_actu
                             left join dependencia du on  du.depe_codi = r.radi_depe_actu  and du.depe_codi is not null
-                            left join usuario ur on ur.usua_codi = r.radi_usua_radi and ur.depe_codi= r.radi_depe_radi and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2'
-                        $whereI
-                            where r.sgd_trad_codigo = $tpRAD  and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') and r.radi_depe_actu = 999
-                            and r.radi_depe_radi <> 900  and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2)) $where2 $whereA  $whereADD  $whereUH ";
-
-            $iSql2 = "select distinct r.radi_nume_radi radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech,td.sgd_tpr_descrip tpnomb,
-                            r.ra_asun asunto,'' est,upper(du.depe_nomb) depeac,u.usua_nomb usuaa,'' rem,r.radi_nume_deri ASOCIADO,ur.usua_nomb proyi $campos $ddcamp2
-                            from  radicado r
-                                left join sgd_tpr_tpdcumento td on r.TDOC_CODI=td.SGD_TPR_CODIGO
-                                left join usuario u on u.usua_codi = r.radi_usua_actu and u.depe_codi= r.radi_depe_actu
-                                left join dependencia du on  du.depe_codi = r.radi_depe_actu  and du.depe_codi is not null
-                                left join usuario ur on ur.usua_codi = r.radi_usua_radi and ur.depe_codi= r.radi_depe_radi
-                        $whereI
-                            where r.sgd_trad_codigo = $tpRAD  and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') and r.radi_depe_actu <> 999
-                            and r.radi_depe_radi <> 900 and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2))   $where  $whereADD  $whereU";
+                            left join usuario ur on ur.usua_codi = r.radi_usua_radi and ur.depe_codi= r.radi_depe_radi
+                    $whereI
+                        where r.sgd_trad_codigo = $tpRAD  and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') and r.radi_depe_actu <> 999
+                        and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2))   $where  $whereADD  $whereU";
 
             if ($tpbusq == '1') {
                 $iSql = $iSql1 . 'order by 2';
