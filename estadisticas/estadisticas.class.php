@@ -1437,15 +1437,14 @@ class estadisiticas
             //  $resp['titulo'] = $campot;
         }
 
-
         //buscar historico fecha de asignacion quien da respuesta
         // trae datos de finalizados
         if ($arrayRADF) {
             $selectA = "select  h.radi_nume_radi radi ,to_char(h.hist_fech, 'DD-MM-YYYY HH24:MI') FTX, hist_obse comen,uh.usua_nomb usuafin,dh.depe_nomb DEPEFIN
-        from  hist_eventos h
-        left join dependencia dh on  dh.depe_codi = h.depe_codi  and dh.depe_codi is not null
-        left join usuario uh on uh.usua_doc = h.usua_doc
-        where  h.radi_nume_radi in ($arrayRADF) and h.sgd_ttr_codigo in (13,65)  "; //left join usuario uh on uh.usua_codi = h.usua_codi and h.depe_codi=uh.depe_codi
+                    from  hist_eventos h
+                    left join dependencia dh on  dh.depe_codi = h.depe_codi  and dh.depe_codi is not null
+                    left join usuario uh on uh.usua_doc = h.usua_doc
+                    where  h.radi_nume_radi in ($arrayRADF) and h.sgd_ttr_codigo in (13,65)  "; //left join usuario uh on uh.usua_codi = h.usua_codi and h.depe_codi=uh.depe_codi
 
             $rs = $this->link->conn->query($selectA);
 
@@ -1466,11 +1465,11 @@ class estadisiticas
         }
         //trae la info de los anexos --     left join sgd_dir_drecciones dir on dir.radi_nume_radi=a.radi_nume_salida
         $selectA = "select  a.anex_radi_nume radi ,d.depe_nomb depeaa,a.radi_nume_salida as resp,anex_creador proy,anex_estado estresp,
-        to_char(anex_fech_envio, 'DD-MM-YYYY ') envio ,dir.SGD_DIR_NOMREMDES NOBRENT,dir.sgd_ciu_codigo cui2, dir.sgd_oem_codigo oem2
-             from  anexos a
-             left join sgd_dir_drecciones dir on dir.radi_nume_radi=a.radi_nume_salida
-             ,dependencia d
-             where  a.anex_radi_nume in ($arrayRAD) and d.depe_codi = a.anex_depe_creador and a.anex_salida = 1 and a.radi_nume_salida is not null ";
+                    to_char(anex_fech_envio, 'DD-MM-YYYY ') envio ,dir.SGD_DIR_NOMREMDES NOBRENT,dir.sgd_ciu_codigo cui2, dir.sgd_oem_codigo oem2
+                        from  anexos a
+                        left join sgd_dir_drecciones dir on dir.radi_nume_radi=a.radi_nume_salida
+                        ,dependencia d
+                        where  a.anex_radi_nume in ($arrayRAD) and d.depe_codi = a.anex_depe_creador and a.anex_salida = 1 and a.radi_nume_salida is not null ";
         $rs = $this->link->conn->query($selectA);
         $estados = array(1 => 'Anexado', 2 => 'Radicado', 3 => 'Firmado', 4 => 'Enviado');
         if (!$rs->EOF) {
@@ -1505,11 +1504,11 @@ class estadisiticas
         }
         //trae info de sgd_dir_Dreciones
         $selectB = "select dir.radi_nume_radi radi,dir.sgd_ciu_codigo cui, dir.sgd_oem_codigo oem, dir.SGD_DIR_DIRECCION dir,dir.SGD_DIR_MAIL email,dir.sgd_dir_nombre||' '||dir.sgd_dir_apellido rem,dir.SGD_DIR_NOMREMDES dig,
-         trim(dir.SGD_DIR_TELEFONO) tel,dir.sgd_dir_mail, m2.muni_nomb muni,d2.dpto_nomb depto
-             from  sgd_dir_drecciones dir
-            left join municipio m2 on dir.dpto_codi = m2.dpto_codi and dir.muni_codi = m2.muni_codi
-            left join departamento d2 on d2.dpto_codi = m2.dpto_codi
-            where  dir.radi_nume_radi  in ($arrayRAD) and dir.sgd_dir_nombre is not null ";
+                    trim(dir.SGD_DIR_TELEFONO) tel,dir.sgd_dir_mail, m2.muni_nomb muni,d2.dpto_nomb depto
+                        from  sgd_dir_drecciones dir
+                        left join municipio m2 on dir.dpto_codi = m2.dpto_codi and dir.muni_codi = m2.muni_codi
+                        left join departamento d2 on d2.dpto_codi = m2.dpto_codi
+                        where  dir.radi_nume_radi  in ($arrayRAD) and dir.sgd_dir_nombre is not null ";
         $rs = $this->link->conn->query($selectB);
 
         if (!$rs->EOF) {
@@ -1554,7 +1553,7 @@ class estadisiticas
         //consulta de ultimo historico asignacion
         if ($arrayRADF) {
             $selectA = " select radi_nume_radi radi, hist_fech fechn,depe_codi dpclose from hist_eventos where 
-        radi_nume_radi in  ($arrayRADF) and sgd_ttr_codigo in (13,65) order by 1,2 asc";
+                         radi_nume_radi in  ($arrayRADF) and sgd_ttr_codigo in (13,65) order by 1,2 asc";
 
             $rs = $this->link->conn->query($selectA);
 
@@ -1985,6 +1984,19 @@ class estadisiticas
 
     public function dtrpCons($depe, $tpAds, $tpdoc, $serie, $subserie, $usu, $fini, $ffin, $tpbusq, $tpRAD = 1)
     {
+        print_r([
+            '$depe' => $depe,
+            '$tpAds' => $tpAds,
+            '$tpdoc' => $tpdoc,
+            '$serie' => $serie,
+            '$subserie' => $subserie,
+            '$usu' => $usu,
+            '$fini' => $fini,
+            '$ffin' => $ffin,
+            '$tpbusq' => $tpbusq,
+            '$tpRAD' => $tpRAD
+        ]);
+
         $datos = array();
         $datoss = array();
         $arrayRADa = array();
@@ -2003,6 +2015,7 @@ class estadisiticas
         $ddcamp2 = ",'' fechf, '' comen,'' usuafin,'' DEPEFIN ";
 
         if ($depe != 99999) {
+            echo "if";
             if ($tpAds == 1) {
                 $depe = $this->depahijas($depe);
             }
@@ -2018,8 +2031,7 @@ class estadisiticas
                 $whereA = " and r.radi_depe_actu=999 and h.depe_codi_dest=999 and h.depe_codi  in ($depe) and r.radi_nume_Radi=h.radi_nume_Radi and h.sgd_ttr_codigo  in (13,65)";
                 $hcamp = $ddcamp;
                 $hcamp2 = $ddcamp2;
-                $whereJ = " left join dependencia dh on  dh.depe_codi = h.depe_codi  and dh.depe_codi is not null
-                         left join usuario uh on uh.usua_codi = h.usua_codi ,";
+                $whereJ = " left join dependencia dh on  dh.depe_codi = h.depe_codi  and dh.depe_codi is not null left join usuario uh on uh.usua_codi = h.usua_codi ,";
             }
             $whereI = '';
             if ($subserie && $subserie != 0) {
@@ -2028,7 +2040,7 @@ class estadisiticas
 
             if ($serie != 0) {
                 $whereI .= "INNER JOIN  sgd_rdf_retdocf rdf on rdf.radi_nume_radi=r.radi_nume_radi
-               INNER JOIN sgd_mrd_matrird mrd on mrd.sgd_mrd_codigo=rdf.sgd_mrd_codigo and  mrd.sgd_srd_id=$serie $ddsubserie";
+                            INNER JOIN sgd_mrd_matrird mrd on mrd.sgd_mrd_codigo=rdf.sgd_mrd_codigo and  mrd.sgd_srd_id=$serie $ddsubserie";
             }
 
             if ($usu && $usu != 0) {
@@ -2037,26 +2049,26 @@ class estadisiticas
             }
 
             $iSql1 = "select distinct r.radi_nume_radi radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech,td.sgd_tpr_descrip tpnomb,
-                        r.ra_asun asunto, '' est,upper(du.depe_nomb) depeac,u.usua_nomb usuaa ,'' rem,r.radi_nume_deri ASOCIADO,ur.usua_nomb proyi $campos $ddcamp2
-                        from   $tbwh  radicado r
-                        left join sgd_tpr_tpdcumento td on r.TDOC_CODI=td.SGD_TPR_CODIGO
-                        left join usuario u on u.usua_codi = r.radi_usua_actu and u.depe_codi= r.radi_depe_actu
-                        left join dependencia du on  du.depe_codi = r.radi_depe_actu  and du.depe_codi is not null
-                        left join usuario ur on ur.usua_codi = r.radi_usua_radi and ur.depe_codi= r.radi_depe_radi and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2'
-                    $whereI
-                        where r.sgd_trad_codigo = $tpRAD  and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') and r.radi_depe_actu = 999
-                        and r.radi_depe_radi <> 900  and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2)) $where2 $whereA  $whereADD  $whereUH ";
-
-            $iSql2 = "select distinct r.radi_nume_radi radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech,td.sgd_tpr_descrip tpnomb,
-                        r.ra_asun asunto,'' est,upper(du.depe_nomb) depeac,u.usua_nomb usuaa,'' rem,r.radi_nume_deri ASOCIADO,ur.usua_nomb proyi $campos $ddcamp2
-                        from  radicado r
+                            r.ra_asun asunto, '' est,upper(du.depe_nomb) depeac,u.usua_nomb usuaa ,'' rem,r.radi_nume_deri ASOCIADO,ur.usua_nomb proyi $campos $ddcamp2
+                            from   $tbwh  radicado r
                             left join sgd_tpr_tpdcumento td on r.TDOC_CODI=td.SGD_TPR_CODIGO
                             left join usuario u on u.usua_codi = r.radi_usua_actu and u.depe_codi= r.radi_depe_actu
                             left join dependencia du on  du.depe_codi = r.radi_depe_actu  and du.depe_codi is not null
-                            left join usuario ur on ur.usua_codi = r.radi_usua_radi and ur.depe_codi= r.radi_depe_radi
-                    $whereI
-                        where r.sgd_trad_codigo = $tpRAD  and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') and r.radi_depe_actu <> 999
-                        and r.radi_depe_radi <> 900 and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2))   $where  $whereADD  $whereU";
+                            left join usuario ur on ur.usua_codi = r.radi_usua_radi and ur.depe_codi= r.radi_depe_radi and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2'
+                        $whereI
+                            where r.sgd_trad_codigo = $tpRAD  and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') and r.radi_depe_actu = 999
+                            and r.radi_depe_radi <> 900  and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2)) $where2 $whereA  $whereADD  $whereUH ";
+
+            $iSql2 = "select distinct r.radi_nume_radi radi, to_char(r.radi_fech_radi, 'DD-MM-YYYY HH24:MI') rfech,td.sgd_tpr_descrip tpnomb,
+                            r.ra_asun asunto,'' est,upper(du.depe_nomb) depeac,u.usua_nomb usuaa,'' rem,r.radi_nume_deri ASOCIADO,ur.usua_nomb proyi $campos $ddcamp2
+                            from  radicado r
+                                left join sgd_tpr_tpdcumento td on r.TDOC_CODI=td.SGD_TPR_CODIGO
+                                left join usuario u on u.usua_codi = r.radi_usua_actu and u.depe_codi= r.radi_depe_actu
+                                left join dependencia du on  du.depe_codi = r.radi_depe_actu  and du.depe_codi is not null
+                                left join usuario ur on ur.usua_codi = r.radi_usua_radi and ur.depe_codi= r.radi_depe_radi
+                        $whereI
+                            where r.sgd_trad_codigo = $tpRAD  and  substring(cast(r.radi_nume_radi as char(18)) from 1 for 1)='2' and r.radi_fech_radi between ('$fini 00:00:00') and ('$ffin 23:59:59') and r.radi_depe_actu <> 999
+                            and r.radi_depe_radi <> 900 and (r.sgd_eanu_codigo is null or  r.sgd_eanu_codigo not in (1,2))   $where  $whereADD  $whereU";
 
             if ($tpbusq == '1') {
                 $iSql = $iSql1 . 'order by 2';
@@ -2070,7 +2082,7 @@ class estadisiticas
                 $iSql = $iSql2 . ' UNION ' . $iSql1 . 'order by 1,2';
             }
 
-            // echo $iSql;
+            print_r($iSql) ;
         } else {
             $where2 = '';
             if ($tpbusq == '1') {
