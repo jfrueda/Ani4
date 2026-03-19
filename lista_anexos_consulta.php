@@ -344,7 +344,7 @@ $tieneAsignacion = true;
                 <br>
                 <p style='font-size:13px; text-align:justify;'>
                     Apreciado Usuario:<br/><br/>
-                    La Superintendencia Nacional de Salud se permite gestionar la solicitud radicada con el número <?=$decrypted_string?>, para lo cual se evindencian los archivos correspondientes a su solicitud.
+                    La Universidad Militar Nueva Granada se permite gestionar la solicitud radicada con el número <?=$decrypted_string?>, para lo cual se evindencian los archivos correspondientes a su solicitud.
                 </p>
             </div>
             <div class="form-pqrs-contInput" >
