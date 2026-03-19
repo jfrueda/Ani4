@@ -138,6 +138,12 @@ if($rsAnexoSalida){
     $tieneAnexoSalida = $rsAnexoSalida->fields["NANEXOS"];
 }
 
+$radicadoPrincipalPath = '';
+$rsRadicadoPrincipal = $db->conn->query("SELECT RADI_PATH FROM RADICADO WHERE RADI_NUME_RADI = '$verrad'");
+if ($rsRadicadoPrincipal && !$rsRadicadoPrincipal->EOF) {
+    $radicadoPrincipalPath = trim($rsRadicadoPrincipal->fields["RADI_PATH"]);
+}
+
 //Start::Validar si el memorando tienen al usuarrio
 
 $tieneAsignacion = true;
@@ -377,6 +383,27 @@ $tieneAsignacion = true;
                         $verrad = $_REQUEST['radiNumeSalida'];
                     }
                     $swRadDesdeAnex=$anex->radGeneradoDesdeAnexo($verrad);
+
+                    if (!empty($radicadoPrincipalPath)) {
+                        if (strpos($radicadoPrincipalPath, "/") !== 0) {
+                            $radicadoPrincipalPath = "/" . $radicadoPrincipalPath;
+                        }
+
+                        $rutaPrincipalAbsoluta = $directoriobase . ltrim($radicadoPrincipalPath, '/');
+                        $tamPrincipalKb = file_exists($rutaPrincipalAbsoluta) ? round(filesize($rutaPrincipalAbsoluta) / 1024, 2) : '-';
+                        $extPrincipal = strtolower(pathinfo($radicadoPrincipalPath, PATHINFO_EXTENSION));
+                        if (empty($extPrincipal)) {
+                            $extPrincipal = 'pdf';
+                        }
+
+                        echo "<tr id='principal_$verrad'>";
+                        echo "<td height='21'></td>";
+                        echo "<td><a class=\"vinculos\" href=\"#2\" onclick=\"funlinkArchivo('$verrad','$ruta_raiz');\"><img src='img/icono_{$extPrincipal}.jpg' title='Documento principal' width='25'> $verrad</a></td>";
+                        echo "<td><font size=1>$tamPrincipalKb</font></td>";
+                        echo "<td><font size=1>Documento principal del radicado</font></td>";
+                        echo "<td></td><td></td><td></td><td></td>";
+                        echo "</tr>";
+                    }
 
                     if($rs){
 
