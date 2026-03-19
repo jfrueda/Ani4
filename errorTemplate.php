@@ -149,7 +149,7 @@ h1, h2 {
 
 <link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
 <div class="center" >
- <img alt="Universidad Militar Nueva Granada" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Escudo_oficial_Universidad_Militar_Nueva_Granada.svg/960px-Escudo_oficial_Universidad_Militar_Nueva_Granada.svg.png"></img>
+ <img  width="100px" alt="Universidad Militar Nueva Granada" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Escudo_oficial_Universidad_Militar_Nueva_Granada.svg/960px-Escudo_oficial_Universidad_Militar_Nueva_Granada.svg.png"></img>
 </div>
 <body class="loading">
  <h1><?=$codigo?></h1>
