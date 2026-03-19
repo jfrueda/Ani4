@@ -103,7 +103,7 @@ $bac = "$ruta_raiz/bodega/$background";
 //$header = "$ruta_raiz/bodega/$headerRtaPdf";
 $imgLogin = "$ruta_raiz/bodega/sys_img/imgLogin.png";
 $imgPie = "$ruta_raiz/bodega/sys_img/pie_login.png";
-$leftSection = "$ruta_raiz/bodega/sys_img/logo.png";
+$leftSection = "$ruta_raiz/imagenes/logo-claro.png";
 $rightSection = "$ruta_raiz/bodega/sys_img/login.png";
 
 if ($logoEntidad) {
