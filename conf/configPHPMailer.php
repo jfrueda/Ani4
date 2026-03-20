@@ -2,7 +2,7 @@
 if(!$ruta_raiz) $ruta_raiz = "..";
 include "$ruta_raiz/processConfig.php";
 
-if(!$debugPHPMailer)  $debugPHPMailer=2;
+if(!isset($debugPHPMailer) || $debugPHPMailer === "")  $debugPHPMailer=0;
 if(!$SMTPSecure)  $SMTPSecure="tls";
 $smtpAuth             = trim($smtpAuth);
 $admPHPMailer         = trim($correoSaliente);

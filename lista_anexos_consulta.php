@@ -138,6 +138,12 @@ if($rsAnexoSalida){
     $tieneAnexoSalida = $rsAnexoSalida->fields["NANEXOS"];
 }
 
+$radicadoPrincipalPath = '';
+$rsRadicadoPrincipal = $db->conn->query("SELECT RADI_PATH FROM RADICADO WHERE RADI_NUME_RADI = '$verrad'");
+if ($rsRadicadoPrincipal && !$rsRadicadoPrincipal->EOF) {
+    $radicadoPrincipalPath = trim($rsRadicadoPrincipal->fields["RADI_PATH"]);
+}
+
 //Start::Validar si el memorando tienen al usuarrio
 
 $tieneAsignacion = true;
@@ -338,13 +344,13 @@ $tieneAsignacion = true;
         <fieldset>
             <div CLASS="form-pqrs-contInput" >
                 <div CLASS="form-pqrs-contImg">
-                    <img alt="Super Salud" src="./bodega/sys_img/logosupersalud.png" longdesc="http://www.example.com/description.txt"></img>
+                    <img width="100px" alt="Universidad Militar Nueva Granada" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Escudo_oficial_Universidad_Militar_Nueva_Granada.svg/960px-Escudo_oficial_Universidad_Militar_Nueva_Granada.svg.png"></img>
                 </div>
                 <br>
                 <br>
                 <p style='font-size:13px; text-align:justify;'>
                     Apreciado Usuario:<br/><br/>
-                    La Superintendencia Nacional de Salud se permite gestionar la solicitud radicada con el número <?=$decrypted_string?>, para lo cual se evindencian los archivos correspondientes a su solicitud.
+                    La Universidad Militar Nueva Granada se permite gestionar la solicitud radicada con el número <?=$decrypted_string?>, para lo cual se evindencian los archivos correspondientes a su solicitud.
                 </p>
             </div>
             <div class="form-pqrs-contInput" >
@@ -377,6 +383,27 @@ $tieneAsignacion = true;
                         $verrad = $_REQUEST['radiNumeSalida'];
                     }
                     $swRadDesdeAnex=$anex->radGeneradoDesdeAnexo($verrad);
+
+                    if (!empty($radicadoPrincipalPath)) {
+                        if (strpos($radicadoPrincipalPath, "/") !== 0) {
+                            $radicadoPrincipalPath = "/" . $radicadoPrincipalPath;
+                        }
+
+                        $rutaPrincipalAbsoluta = $directoriobase . ltrim($radicadoPrincipalPath, '/');
+                        $tamPrincipalKb = file_exists($rutaPrincipalAbsoluta) ? round(filesize($rutaPrincipalAbsoluta) / 1024, 2) : '-';
+                        $extPrincipal = strtolower(pathinfo($radicadoPrincipalPath, PATHINFO_EXTENSION));
+                        if (empty($extPrincipal)) {
+                            $extPrincipal = 'pdf';
+                        }
+
+                        echo "<tr id='principal_$verrad'>";
+                        echo "<td height='21'></td>";
+                        echo "<td><a class=\"vinculos\" href=\"#2\" onclick=\"funlinkArchivo('$verrad','$ruta_raiz');\"><img src='img/icono_{$extPrincipal}.jpg' title='Documento principal' width='25'> $verrad</a></td>";
+                        echo "<td><font size=1>$tamPrincipalKb</font></td>";
+                        echo "<td><font size=1>Documento principal del radicado</font></td>";
+                        echo "<td></td><td></td><td></td><td></td>";
+                        echo "</tr>";
+                    }
 
                     if($rs){
 
@@ -1108,4 +1135,3 @@ $tieneAsignacion = true;
     }
 
 </script>
-

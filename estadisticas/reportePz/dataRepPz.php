@@ -22,9 +22,8 @@ class DataRepPz
 		$rs = $this->db->conn->Execute($sql);
 		$dependencias = [];
 
-		foreach($rs as $value)
-		{
-			$dependencias[]=$value;
+		foreach ($rs as $value) {
+			$dependencias[] = $value;
 		}
 		return $dependencias;
 	}
@@ -41,12 +40,11 @@ class DataRepPz
 		foreach ($rs as $value) {
 			$usuarios[] = $value['USUARIOS'];
 		}
-		echo json_encode(['resp'=>$usuarios]);
+		echo json_encode(['resp' => $usuarios]);
 	}
 
 	public function getData($codiUsua, $docUsua, $depeUsua)
 	{
-
 		$sql = "SELECT c.carp_desc,
 				COUNT(*) ,
 				COUNT(CASE WHEN r.carp_per IN (0, 1) THEN 1 END) AS General,
@@ -79,81 +77,76 @@ class DataRepPz
 			GROUP BY c.carp_desc
 			order by c.carp_desc ASC";
 
-			$rs = $this->db->conn->Execute($sql);
+		$rs = $this->db->conn->Execute($sql);
 
-			$datos = [];
+		$datos = [];
 
-			foreach($rs as $value)
-			{
-				$datos[] = $value;
-			}
+		foreach ($rs as $value) {
+			$datos[] = $value;
+		}
 
-			$rad = [];
-			$borr = [];
+		$rad = [];
+		$borr = [];
 
-			for ($i = 0; $i < count($datos); $i++) 
-			{
-				for ($j = 0; $j < count($datos[$i]); $j++) 
-				{
-					if ($j == 1) 
-					{
-						$rad [] =$datos[$i];
-						$borr [] = $datos[$i]['BORRADORES'];
-						$memMultNorm [] = $datos[$i]['MEMONORMAL'];
-					}
+		for ($i = 0; $i < count($datos); $i++) {
+			for ($j = 0; $j < count($datos[$i]); $j++) {
+				if ($j == 1) {
+					$rad[] = $datos[$i];
+					$borr[] = $datos[$i]['BORRADORES'];
+					$memMultNorm[] = $datos[$i]['MEMONORMAL'];
 				}
 			}
+		}
 
-			$this->memo_multipNorm = (isset($memMultNorm)) ?  max($memMultNorm) : '';
-			$total_radicados = 0;
-			foreach ($rad as $key => $value) 
-			{
-				if (isset($value['GENERAL'])) {
-					$rad_gen += $value['GENERAL'] ;
-				}
-			
-				switch ($value['CARP_DESC']) {
-					case 'Entrada':
-						$rad_ent = $value['RADICADOS'] + $this->memo_multipNorm;
-						break;
-					case 'Salida':
-						$rad_sal = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					case 'Memorandos':
-						$rad_mem = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					case 'Resoluciones':
-						$rad_resol = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					case 'Circular Interna':
-						$circ_int = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					case 'Circular Externa':
-						$cir_ext = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					case 'Autos':
-						$autos = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					case 'Vo.Bo.':
-						$vobo = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					case 'Devueltos':
-						$devueltos = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					case 'Jefe de Area':
-						$jefe_area = $value['RADICADOS']=="0"?null:$value['RADICADOS'];
-						break;
-					default:
-						$rad_ent[] = "";
-						break;
-				}
+		$this->memo_multipNorm = (isset($memMultNorm)) ?  max($memMultNorm) : '';
+		$total_radicados = 0;
+		foreach ($rad as $key => $value) {
+			if (isset($value['GENERAL'])) {
+				$rad_gen += $value['GENERAL'];
 			}
 
-			$sqlExp = "SELECT count(*) as cntExp from sgd_sexp_secexpedientes where usua_doc_responsable = '{$docUsua}' and (sgd_sexp_estado = 0 or sgd_sexp_estado is null)";
-			$rs2 = $this->db->conn->Execute($sqlExp);
-			$exp = $rs2->fields['CNTEXP'];
+			switch ($value['CARP_DESC']) {
+				case 'Entrada':
+					$rad_ent = $value['RADICADOS'] + $this->memo_multipNorm;
+					break;
+				case 'Salida':
+					$rad_sal = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				case 'Memorandos':
+					$rad_mem = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				case 'Resoluciones':
+					$rad_resol = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				case 'Circular Interna':
+					$circ_int = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				case 'Circular Externa':
+					$cir_ext = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				case 'Autos':
+					$autos = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				case 'Vo.Bo.':
+					$vobo = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				case 'Devueltos':
+					$devueltos = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				case 'Jefe de Area':
+					$jefe_area = $value['RADICADOS'] == "0" ? null : $value['RADICADOS'];
+					break;
+				default:
+					$rad_ent[] = "";
+					break;
+			}
+		}
 
-			$sqlInfor = "
+		$sqlExp = "SELECT count(*) as cntExp from sgd_sexp_secexpedientes where usua_doc_responsable = '{$docUsua}' and (sgd_sexp_estado = 0 or sgd_sexp_estado is null)";
+		$rs2 = $this->db->conn->Execute($sqlExp);
+		$exp = $rs2->fields['CNTEXP'];
+
+		$sqlInfor = "
 				SELECT SUM(cntInf) AS cntInf
 					FROM (
 						SELECT COUNT(DISTINCT i.radi_nume_radi) AS cntInf
@@ -166,54 +159,91 @@ class DataRepPz
 						GROUP BY i.radi_nume_radi
 					) subquery;
 				";
-			$rs3 = $this->db->conn->Execute($sqlInfor);
-			$infor = $rs3->fields['CNTINF'];
+		$rs3 = $this->db->conn->Execute($sqlInfor);
+		$infor = $rs3->fields['CNTINF'];
 
-			$sqlMemNorm = "SELECT count(*) cntInf from tramiteconjunto i inner join radicado r2 on r2.radi_nume_radi  = i.radi_nume_radi and r2.is_borrador = false
+		$sqlMemNorm = "SELECT count(*) cntInf from tramiteconjunto i inner join radicado r2 on r2.radi_nume_radi  = i.radi_nume_radi and r2.is_borrador = false
 						where i.depe_codi = '{$depeUsua}' and i.usua_codi = {$codiUsua} and i.info_codi is not null ";
-			$rs4 = $this->db->conn->Execute($sqlMemNorm);
-			$memMultInfr = $rs4->fields['CNTINF'];
+		$rs4 = $this->db->conn->Execute($sqlMemNorm);
+		$memMultInfr = $rs4->fields['CNTINF'];
 
 		echo json_encode([
-			'general'=>intval($rad_gen) + intval($this->memo_multipNorm),
-			'entrada'=>$rad_ent,
-			'Salida'=>$rad_sal,
-			'Memos'=>$rad_mem,
-			'Resol'=>$rad_resol,
-			'circul_int'=>$circ_int,
-			'cir_ext'=>$cir_ext,
-			'autos'=>$autos,
-			'vobo'=>$vobo,
-			'devueltos'=>$devueltos,
-			'jefe_area'=>$jefe_area,
-			'mem_multi'=>$this->memo_multipNorm,
+			'general' => intval($rad_gen) + intval($this->memo_multipNorm),
+			'entrada' => $rad_ent,
+			'Salida' => $rad_sal,
+			'Memos' => $rad_mem,
+			'Resol' => $rad_resol,
+			'circul_int' => $circ_int,
+			'cir_ext' => $cir_ext,
+			'autos' => $autos,
+			'vobo' => $vobo,
+			'devueltos' => $devueltos,
+			'jefe_area' => $jefe_area,
+			'mem_multi' => $this->memo_multipNorm,
 			'mem_multInform' => $memMultInfr,
 			'informados' => $infor,
 			'expedientes' => $exp,
-			'status'=>($rs->EOF || $rs2->EOF || $rs3->EOF || $rs4->EOF) ? TRUE : FALSE,
-			'query'=>$sql,
+			'status' => ($rs->EOF || $rs2->EOF || $rs3->EOF || $rs4->EOF) ? TRUE : FALSE,
+			'query' => $sql,
 		]);
 	}
 
-
 	public function getDetalle($codiUsua, $docUsua, $depeUsua, $tp_rad)
 	{
-		if($tp_rad == 19) {$filtro = ''; $msm = 'general';}
-		if($tp_rad == 1) {$filtro = 'AND c.carp_codi = 1'; $msm = 'salida';}
-		if($tp_rad == 2) {$filtro = 'AND c.carp_codi = 0'; $msm = 'entrada';}
-		if($tp_rad == 3) {$filtro = 'AND c.carp_codi = 3'; $msm = 'memorando';}
-		if($tp_rad == 6) {$filtro = 'AND c.carp_codi = 6'; $msm = 'resolucion';}
-		if($tp_rad == 8) {$filtro = 'AND c.carp_codi = 4'; $msm = 'cir_int';}
-		if($tp_rad == 9) {$filtro = 'AND c.carp_codi = 5 AND carp_per = 0'; $msm = 'cir_ext';}
-		if($tp_rad == 7) {$filtro = 'AND c.carp_codi = 7'; $msm = 'autos';}
-		if($tp_rad == 11) {$filtro = 'AND c.carp_codi = 11'; $msm = 'vobo';}
-		if($tp_rad == 12) {$filtro = 'AND c.carp_codi = 12'; $msm = 'devueltos';}
-		if($tp_rad == 13) {$filtro = 'AND c.carp_codi = 13'; $msm = 'jefe_area';}
-		if($tp_rad == 30) {$like = "AND CAST(r.radi_nume_radi as varchar(20)) LIKE '30%' AND c.carp_codi = 1"; $msm = 'borradores';}
-		if($tp_rad == 18) {$filtro = 'AND c.carp_codi = 18'; $msm = 'memo_multip';}
+		if ($tp_rad == 19) {
+			$filtro = '';
+			$msm = 'general';
+		}
+		if ($tp_rad == 1) {
+			$filtro = 'AND c.carp_codi = 1';
+			$msm = 'salida';
+		}
+		if ($tp_rad == 2) {
+			$filtro = 'AND c.carp_codi = 0';
+			$msm = 'entrada';
+		}
+		if ($tp_rad == 3) {
+			$filtro = 'AND c.carp_codi = 3';
+			$msm = 'memorando';
+		}
+		if ($tp_rad == 6) {
+			$filtro = 'AND c.carp_codi = 6';
+			$msm = 'resolucion';
+		}
+		if ($tp_rad == 8) {
+			$filtro = 'AND c.carp_codi = 4';
+			$msm = 'cir_int';
+		}
+		if ($tp_rad == 9) {
+			$filtro = 'AND c.carp_codi = 5 AND carp_per = 0';
+			$msm = 'cir_ext';
+		}
+		if ($tp_rad == 7) {
+			$filtro = 'AND c.carp_codi = 7';
+			$msm = 'autos';
+		}
+		if ($tp_rad == 11) {
+			$filtro = 'AND c.carp_codi = 11';
+			$msm = 'vobo';
+		}
+		if ($tp_rad == 12) {
+			$filtro = 'AND c.carp_codi = 12';
+			$msm = 'devueltos';
+		}
+		if ($tp_rad == 13) {
+			$filtro = 'AND c.carp_codi = 13';
+			$msm = 'jefe_area';
+		}
+		if ($tp_rad == 30) {
+			$like = "AND CAST(r.radi_nume_radi as varchar(20)) LIKE '30%' AND c.carp_codi = 1";
+			$msm = 'borradores';
+		}
+		if ($tp_rad == 18) {
+			$filtro = 'AND c.carp_codi = 18';
+			$msm = 'memo_multip';
+		}
 
-		if($tp_rad == 4)
-		{
+		if ($tp_rad == 4) {
 			$sql = "SELECT DISTINCT
 					inf.radi_nume_radi radicado,
 					us.usua_nomb usuario,
@@ -229,10 +259,7 @@ class DataRepPz
 					AND inf.usua_codi = {$codiUsua} 
 					AND us.usua_doc = '{$docUsua}'";
 			$msm = 'informados';
-			
-		}
-		elseif($tp_rad == 5)
-		{
+		} elseif ($tp_rad == 5) {
 			$sql = "SELECT 
 					exp.sgd_exp_numero numero_exp, 
 					exp.sgd_sexp_fech fecha_exp, 
@@ -244,9 +271,7 @@ class DataRepPz
 					INNER JOIN dependencia dep on dep.depe_codi = exp.depe_codi 
 					where exp.usua_doc_responsable = '{$docUsua}' and (exp.sgd_sexp_estado = 0 or exp.sgd_sexp_estado is null)";
 			$msm = 'expedientes';
-		}
-		elseif($tp_rad == 18)
-		{
+		} elseif ($tp_rad == 18) {
 			$sql = "SELECT *
 							from radicado b
 							inner join usuario u on b.radi_usua_actu = u.usua_codi and b.radi_depe_actu = u.depe_codi
@@ -270,10 +295,7 @@ class DataRepPz
 											WHERE radi_nume_radi =  b.radi_nume_radi and usua_doc = '{$docUsua}'  and sgd_ttr_codigo = '13'
 								) = 0";
 			$msm = 'memo_multip';
-
-		}
-		elseif($tp_rad == 20)
-		{
+		} elseif ($tp_rad == 20) {
 			$sql = "SELECT DISTINCT
 					inf.radi_nume_radi radicado,
 					inf.info_fech fecha_informado,
@@ -290,10 +312,7 @@ class DataRepPz
 					AND inf.usua_codi = {$codiUsua} 
 					AND us.usua_doc = '{$docUsua}'";
 			$msm = 'informados';
-			
-		}
-		else
-		{
+		} else {
 			$memo_multiple_general = (in_array($tp_rad, [19, 2])) ? "union all
 				(SELECT 
 					distinct b.radi_nume_radi radicado,
@@ -325,7 +344,7 @@ class DataRepPz
 										FROM hist_eventos t
 										WHERE radi_nume_radi =  b.radi_nume_radi and usua_doc = '{$docUsua}'  and sgd_ttr_codigo = '13'
 							) = 0)" : "";
-			$sql= "(SELECT DISTINCT
+			$sql = "(SELECT DISTINCT
 					r.radi_nume_radi radicado,
 					r.radi_fech_radi fecha_rad,
 					u.usua_nomb usuario,
@@ -349,8 +368,7 @@ class DataRepPz
 
 		$rs = $this->db->conn->Execute($sql);
 
-		$resp = array("resp"=>$msm,"query"=>$rs);
+		$resp = array("resp" => $msm, "query" => $rs);
 		return $resp;
 	}
-
 }

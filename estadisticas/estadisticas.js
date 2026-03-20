@@ -48,7 +48,6 @@ function limpiaselect(campo, valor = 0, txtoption = '- Seleccione --') {
 }
 
 function sortselect(campo) {
-
     var options = $("#" + campo + " option ");
     options.detach().sort(function (a, b) {
         /*var at = $(a).text();
@@ -58,13 +57,11 @@ function sortselect(campo) {
         return (at > bt) ? 1 : ((at < bt) ? -1 : 0);
     });
     options.appendTo("#" + campo);
-
 }
 
 function tipodoc() {
     $("#selTipoDoc").empty();
-    /*   $("#selTipoDoc" ).empty();
-       $("#selTipoDoc" ).append('<option value="0">-- Selecione --</option>');*/
+
     campos = new Array();
     campos['codigo'] = 'codserie';
     campos['nombre'] = 'descrip';
@@ -188,7 +185,6 @@ function dependencia2() {
 
 }
 
-
 function subSeries() {
     selectID = 'selSubSerie';
     /*
@@ -265,9 +261,8 @@ function usuario() {
             }
             //toastr.error(data.message, 'Error al Modificar ');
         });
-
-
 }
+
 $(function () {
     $('#tipoEstadistica').change(function () {
         var titulo = $('#tipoEstadistica option:selected').text();
@@ -308,7 +303,6 @@ $(function () {
 
                 break;
         }
-
     });
 });
 
@@ -334,11 +328,8 @@ function busquedaValidacion() {
     }
 }
 
-
 $(function () {
     $('#generar').click(function () {
-        //fecha_ini
-        //fecha_fin
 
         if ($('#tipoEstadistica').val() == 0) {
             $('.INFOalert').html('Debe seleccionar un Tipo de Estadistica');
@@ -386,8 +377,6 @@ $(function () {
             default:
                 break;
         }
-
-
     });
 });
 
@@ -923,6 +912,8 @@ $("#resultado").on("click", ".btn-rp1detXLS", function () {
         data: 'fn=dtrp' + reporte + '&rp=' + reporte + '&depe=' + depe + '&depeN=' + depeN + '&titulo=' + titulo + '&serie=' + serie + '&subserie=' + subserie + '&tpdoc=' + tpdoc + '&usu=' + usuA + '&fini=' + fini + '&ffin=' + ffin + '&reporte=' + reporte + '&tpbusq=' + tpbusq + '&tpAds=' + tpAds + '&btns=' + btns + '&tit=' + tit + '&tpRad=' + tpRad + '&'
     })
         .then(function (response) {
+            console.log(response);
+
             $('#processing-modal').modal('hide');
             data = response.data;
             if (data.error == 'FAIL') {
@@ -940,7 +931,10 @@ $("#resultado").on("click", ".btn-rp1detXLS", function () {
 
         })
         .catch(function (error) {
-            $('#processing-modal').modal('hide');
+            console.log(error);
+            console.log(error?.response);
+
+            $('#processing-modal').modal('d-none');
             $(".btn-rp1detXLS").prop("disabled", false);
             $('#detXLS' + tpbusq).html('ERROR: No se Genero el Archivo');
             if (error.hasOwnProperty('response') && Object.keys(error.response).length > 0) {
@@ -953,7 +947,6 @@ $("#resultado").on("click", ".btn-rp1detXLS", function () {
 });
 
 function detallesrp(tpbusq, reporte, btns) {
-
     dt = $('#reg' + tpbusq).text();
     //console.log(dt);
     $('#titDet').html('Detalles ' + dt);
@@ -1199,7 +1192,6 @@ function detallesrp9(tpbusq, reporte, btns) {
 
 }
 
-
 function report10() {
     selectIDu = 'selUsuario';
     /*$("#"+selectIDu).empty();
@@ -1398,7 +1390,6 @@ function report12() {
 
 }
 
-
 function detallesrp10(tpbusq, reporte, btns) {
     dt = $('#reg' + tpbusq).text();
     //console.log(dt);
@@ -1469,8 +1460,6 @@ function detallesrp10(tpbusq, reporte, btns) {
             //toastr.error(data.message, 'Error al Modificar ');
         });
 }
-
-
 
 function detallesrp11x12(tpbusq, reporte, btns) {
     dt = $('#reg' + tpbusq).text();
@@ -1583,9 +1572,7 @@ function tablefun(tbA) {
     });
 };
 
-
 function number_format(amount, decimals) {
-
     amount += ''; // por si pasan un numero en vez de un string
     amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
 

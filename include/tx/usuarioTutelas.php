@@ -798,7 +798,7 @@ class Usuario {
                                             data-placement="right"
                                             data-original-title="Eliminar Usuario"
                                         >
-                                            <button title="eliminar destinatario">
+                                            <button type="button" data-rel="remove" title="eliminar destinatario">
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                         </span>

@@ -24,6 +24,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 if(!$ruta_raiz) $ruta_raiz= ".";
+$autenticaExterna = isset($autenticaExterna) && $autenticaExterna === true;
 // Esto es para darle al usuario acceso al menu Opciones
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/processConfig.php";
@@ -135,14 +136,18 @@ while(!$rs->EOF){
     $rs->MoveNext();
 }
 
-if (!isset($_SESSION['dependencia']) && !Utils::check_token($_POST['csrf_token'])) {
+if (!$autenticaExterna && !isset($_SESSION['dependencia']) && !Utils::check_token($_POST['csrf_token'])) {
     $validacionUsuario = true;
     $recOrfeo="loginWeb";
     $mensajeError = '';
 }
 else {
     // autenticar usuario
-    $auth = Utils::auth($krd,$drd);
+    if ($autenticaExterna) {
+        $auth = true;
+    } else {
+        $auth = Utils::auth($krd,$drd);
+    }
     if ($auth === true || isset($_SESSION['dependencia'])) {
         $roles->traerPermisos($krd);
     }

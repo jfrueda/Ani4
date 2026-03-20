@@ -38,11 +38,16 @@ unset($_SESSION['INCREMENTAL1']);
 $_SESSION['INCREMENTAL1'] = 0;
 
 $ruta_raiz = "..";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
     header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-foreach ($_GET as $key => $valor) ${$key} = $valor;
-foreach ($_POST as $key => $valor) ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+    ${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+    ${$key} = $valor;
+}
 
 if (!empty($fecha_gen_doc)) {
     $fecha_gen_doc = date('Y-m-d', strtotime(str_replace('/', '-', $fecha_gen_doc)));
@@ -51,10 +56,10 @@ if (!empty($fecha_gen_doc)) {
 }
 
 /**  Fin variables de session de Radicacion de Mail. **/
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
-include_once("$ruta_raiz/include/tx/usuario.php");
-include_once("$ruta_raiz/include/tx/notificacion.php");
-include_once("$ruta_raiz/processConfig.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
+include_once "$ruta_raiz/include/tx/usuario.php";
+include_once "$ruta_raiz/include/tx/notificacion.php";
+include_once "$ruta_raiz/processConfig.php";
 
 $db = new ConnectionHandler("$ruta_raiz");
 
@@ -94,7 +99,10 @@ $_name_4 = "Destinatarios Circular Interna";
 $_name_5 = "Destinatarios Circular Externa";
 $_show_type_doc = true;
 $nivelSeguridadSeleccionado = isset($nivelSeguridad) ? $nivelSeguridad : null;
-if (!$ent && $nurad) $ent = substr($nurad, -1);
+if (!$ent && $nurad) {
+    $ent = substr($nurad, -1);
+}
+
 //Mostrar el tipo de radicacion que se esta realizando
 $selTipoRad = "select
                   sgd_trad_codigo,
@@ -150,9 +158,9 @@ if ($ent == CIRC_INTERNA || $ent == CIRC_EXTERNA) {
 // Bloqueo de edición en Entradas (modificación) salvo excepciones
 $isModEntrada = ($ent == ENTRADA && !empty($nurad));
 $depNameSess = isset($_SESSION['DEPENDENCIA_NOMB']) ? $_SESSION['DEPENDENCIA_NOMB'] : (
-    (isset($_SESSION['depe_nomb']) ? $_SESSION['depe_nomb'] : (
-        (isset($_SESSION['dependencia_nombre']) ? $_SESSION['dependencia_nombre'] : '')
-    ))
+    isset($_SESSION['depe_nomb']) ? $_SESSION['depe_nomb'] : (
+        isset($_SESSION['dependencia_nombre']) ? $_SESSION['dependencia_nombre'] : ''
+    )
 );
 
 $depNameSessNorm = strtolower(trim((string)$depNameSess));
@@ -314,7 +322,7 @@ if ($nurad) {
 //****************************************************************************************************************************************
 // Se agrega filtro para la dependencias que solo traiga ese valor
 //****************************************************************************************************************************************
-if ($dependencia == '95000' || $dependencia == '95001' and $ent != 2) {
+if ($dependencia == '95000' || $dependencia == '95001' && $ent != 2) {
     $filtDep = "AND d.DEPE_CODI = {$dependencia}";
     $filtNvSeg1 = 'checked';
 }
@@ -337,7 +345,7 @@ $rs = $db->conn->query($query);
 
 if ($_TIPO_INFORMADO != 2) {
     $depselect = $rs->GetMenu2("coddepe", $nurad || $radicadopadre || $esNotificacion || in_array($ent, [MEMORANDO, SALIDA]) ? $coddepe : false, "0:-- Seleccione una Dependencia --", false, false, "class='form-control'  title='seleccione una dependencia'  id='dep-control'");
-} else if ($_TIPO_INFORMADO == 2) {
+} elseif ($_TIPO_INFORMADO == 2) {
     $depselect = $rs->GetMenu2("coddepe", false, false, false, "class='form-control'", "id='dep-control' ");
 }
 
@@ -394,7 +402,10 @@ if ($ent == MEMORANDO) {
 }
 
 $rs = $db->conn->query($query);
-if ($tipoMedio == "eMail") $med = 4;
+
+if ($tipoMedio == "eMail") {
+    $med = 4;
+}
 
 $medioRec = $rs->GetMenu2(
     "med",
@@ -406,7 +417,6 @@ $medioRec = $rs->GetMenu2(
 );
 
 // Si se debe bloquear edición en Entrada, deshabilitar el select y enviar valor oculto
-
 
 $query = "SELECT
                   SGD_TPR_DESCRIP
@@ -614,42 +624,32 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 </div>
 
                 <!-- ACTIONS -->
-                <div class="row g-3 align-items-center mb-1 mx-2">
-                    <div id="showRadicar" class="col-12 col-md-6 <?= $hidetable ?>">
-                        <a
-                            title="Radicar documento"
-                            class="btn btn-primary btn-lg w-50 radicarNuevo">
-                            <i class="fa fa-circle-arrow-up me-2"></i>
-                            Radicar documento
-                        </a>
-                    </div>
+                <div id="showRadicar" class="col col-2 <?= $hidetable ?>">
+                    <a title='radicar documento' data-toggle="modal" name='Submit3' value='Radicar'
+                        class="btn btn-primary btn-lg pull-right header-btn radicarNuevo">
+                        <i class="fa fa-circle-arrow-up fa-lg"></i>
+                        Radicar documento
+                    </a>
+                </div>
 
-                    <div id="showModificar" class="col-12 col-md-6 <?= $modificar ?> d-flex ">
-                        <a
-                            title="Modificar"
-                            id="modificaRad"
-                            class="btn btn-success btn-lg w-50">
-                            Modificar <?= $nurad ?> <?= $senddata ?>
-                        </a>
+                <div id="showModificar" class="col col-2 <?= $modificar ?>">
+                    <a title='modificar' data-toggle="modal" id="modificaRad" name="Submit44"
+                        class="btn bg-color-greenDark txt-color-white btn-lg btn-block">
+                        Modificar <?= $nurad ?>
+                        <?= $senddata ?>
+                    </a>
 
-                        <div class="d-flex justify-content-between">
-                            <a title="Sticker"
-                                id="sticker"
-                                href="#"
-                                onClick="window.open('./stickerWeb/index.php?<?= $varEnvio ?>&alineacion=Center','sticker<?= $nurad ?>','width=450,height=180');"
-                                class="btn btn-link px-0">
-                                Sticker |
-                            </a>
+                    <label id="sticker">
+                        <a title='sticker' href="javascript:void(0);"
+                            onClick="window.open ('./stickerWeb/index.php?<?= $varEnvio ?>&alineacion=Center','sticker<?= $nurad ?>','menubar=0,resizable=0,scrollbars=0,width=450,height=180,toolbar=0,location=0');"
+                            class="btn btn-link">Sticker</a>
+                    </label>
 
-                            <!-- <a title="Asociar Imagen"
-                                id="asociar"
-                                href="javascript:void(0);"
-                                onClick="window.open('../uploadFiles/uploadFileRadicado.php?busqRadicados=<?= $nurad ?>&Buscar=Buscar&<?= $varEnvio ?>','asociar<?= $nurad ?>','width=550,height=280');"
-                                class="btn btn-link px-0">
-                                Asociar Imagen
-                            </a> -->
-                        </div>
-                    </div>
+                    <!-- <label id="asociar">
+                        <a title='asociar' href="javascript:void(0);"
+                            onClick="window.open ('../uploadFiles/uploadFileRadicado.php?busqRadicados=<?= $nurad ?>&Buscar=Buscar&<?= $varEnvio ?>&alineacion=Center','busqRadicados=<?= $nurad ?>','menubar=0,resizable=0,scrollbars=0,width=550,height=280,toolbar=0,location=0');"
+                            class="btn btn-link">Asociar Imagen</a>
+                    </label> -->
                 </div>
             </div>
 
@@ -739,7 +739,6 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                                 <?php } ?>
 
                                                 <!-- BOTONES -->
-                                                <!-- href="javascript:void(0);" -->
                                                 <div class="col-auto">
                                                     <button id="idnuevo"
                                                         title="Solo si su destinatario no se encuentra en la búsqueda ingrese uno nuevo."
@@ -1037,8 +1036,7 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
             <a title="Sticker"
                 id="skeleton"
                 href="javascript:void(0);"
-                onclick="window.open('./stickerWeb/index.php?<?= $idsession ?>&nurad=xxxxxx&ent=<?= $ent ?>',
-            'stickerxxxxxx','menubar=0,resizable=0,scrollbars=0,width=450,height=180,toolbar=0,location=0');"
+                onclick="window.open('./stickerWeb/index.php?<?= $idsession ?>&nurad=xxxxxx&ent=<?= $ent ?>', 'stickerxxxxxx','menubar=0,resizable=0,scrollbars=0,width=450,height=180,toolbar=0,location=0');"
                 class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1 hide"
                 data-bs-toggle="tooltip">
                 <i class="fa fa-tag"></i>
@@ -1107,8 +1105,10 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 <input type="checkbox" class="form-check-input" checked name="radio[]" value="">
             </label>
         </div>
+    </div>
 
-        <script type="text/javascript">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
             //************************************************************************************************
             // Bloquea el nivel de seguridad según la dependencia.
             //************************************************************************************************
@@ -1116,11 +1116,10 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 nvPublico = document.getElementById('publico'),
                 nvConfidencial = document.getElementById('confidencial'),
                 nvClasificada = document.getElementById('clasificada');
-            var cntRes = document.getElementById('cntRes');
+            cntRes = document.getElementById('cntRes');
 
             idDep.addEventListener("change", (e) => {
                 nvConfidencial.innerHTML = '';
-
                 if (idDep.value == 95000 || idDep.value == 95001) {
                     nvPublico.removeAttribute("checked");
                     nvPublico.setAttribute("disabled", true);
@@ -1143,691 +1142,487 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                 return /\d/.test(String.fromCharCode(keynum));
             }
 
-            document.addEventListener('DOMContentLoaded', function() {
-                var TIPO_RADICADO = '<?= $ent ?>';
+            var TIPO_RADICADO = '<?= $ent ?>';
 
-                if (TIPO_RADICADO == 1) {
-                    document.getElementById("asu").setAttribute('maxlength', '510');
-                }
+            if (TIPO_RADICADO == 1) {
+                document.getElementById("asu").setAttribute('maxlength', '510');
+            }
 
-                var dependencia_usuario = <?= $_SESSION['dependencia'] ?>;
-                var dependencias_clasificadas_trigger = <?= $dependencias_clasificadas_trigger; ?>;
-                var dependencias_clasificadas = [<?= $dependencias_clasificadas; ?>];
+            var dependencia_usuario = <?= $_SESSION['dependencia'] ?>;
+            var dependencias_clasificadas_trigger = <?= $dependencias_clasificadas_trigger; ?>;
+            var dependencias_clasificadas = [<?= $dependencias_clasificadas; ?>];
 
-                function showAlertModal(message, title = 'Alerta') {
-                    const modalEl = document.getElementById('alertModal');
-                    const modalTitle = document.getElementById('alertModalLabel');
-                    const modalBody = document.getElementById('alertModalBody');
+            function showAlertModal(message, title = "Alerta") {
+                $('#alertModalLabel').text(title);
+                $('#alertModalBody').html(message);
+                $('#alertModal').modal('show');
+            }
 
-                    if (!modalEl || !modalTitle || !modalBody) return;
-
-                    modalTitle.textContent = title;
-                    modalBody.innerHTML = message;
-
-                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                    modal.show();
-                }
-
-                if (dependencias_clasificadas_trigger && dependencias_clasificadas.includes(dependencia_usuario)) {
-                    const radios = document.querySelectorAll('input[name="nivelSeguridad"]');
-                    const radioClasificado = document.querySelector('input[name="nivelSeguridad"][value="2"]');
-
-                    // Desmarcar todos
-                    radios.forEach(radio => {
-                        radio.checked = false;
-                    });
-
-                    // Marcar el nivel clasificado
-                    if (radioClasificado) {
-                        radioClasificado.checked = true;
-                    }
-
-                    // Bloquear cambios
-                    radios.forEach(radio => {
-                        radio.addEventListener('click', (e) => {
-                            showAlertModal(
-                                'El cambio del nivel de seguridad está restringido para usuarios de las dependencias <?= $dependencias_clasificadas; ?> por políticas de la entidad.'
-                            );
-                            e.preventDefault();
-                        });
-                    });
-                }
-
-                var ALLDATA;
-                var INCREMENTAL1 = 0;
-                var EJECUCION = false;
-                var RADICACION_NOTIFICACION = '<?= $esNotificacion ?>';
-                var RADICACION_CIRCULAR = '<?= $esNotificacionCircular ?>';
-
-                // DO NOT REMOVE : GLOBAL FUNCTIONS!
-                pageSetUp();
-
-                const source = document.getElementById('showRadicar');
-                const target = document.getElementById('copyradicar');
-
-                if (source && target) {
-                    target.innerHTML = ''; // Limpia el contenido previo (equivalente a .html())
-                    target.appendChild(source.cloneNode(true)); // true = clonado profundo
-                }
-
-                //Datepicker muestra fecha
-                $('#fecha_gen_doc').datepicker({
-                    dateFormat: 'dd-mm-yy',
-                    onSelect: function(selectedDate) {
-                        $('#date').datepicker('option', 'maxDate', selectedDate);
-                    }
-                });
-
-                /**
-                 * Generacion de eventos para los usuarios seleccionados
-                 * permitiendo cambiar la informacion antes de ser enviada al
-                 * servidor. Guardando de esta manera los datos del usuario con
-                 * las modificiaciones necesarias
-                 */
-                document.body.addEventListener('click', function(e) {
-                    const target = e.target;
-
-                    if (!target.classList.contains('fa-check')) {
-                        return;
-                    }
-
-                    // Oculta labels inp_*
-                    document.querySelectorAll('label[name^="inp_"]').forEach(el => {
-                        el.classList.add('hide');
-                    });
-
-                    // Muestra divs div_*
-                    document.querySelectorAll('div[name^="div_"]').forEach(el => {
-                        el.classList.remove('hide');
-                    });
-
-                    // Obtiene el id dinámico
-                    const parent = target.parentElement;
-                    if (!parent || !parent.getAttribute('name')) return;
-
-                    const iddiv = parent.getAttribute('name').substring(4);
-
-                    // Obtiene el valor del input
-                    const label = document.querySelector(`label[name="inp_${iddiv}"]`);
-                    const input = label ? label.querySelector('input') : null;
-                    const tex_nuevo = input ? input.value : '';
-
-                    // Clona el div original
-                    const divOriginal = document.querySelector(`div[name="div_${iddiv}"]`);
-                    if (!divOriginal) return;
-
-                    const divClonado = divOriginal.cloneNode(true);
-
-                    // Reemplaza el texto y conserva los hijos
-                    divOriginal.textContent = tex_nuevo;
-
-                    Array.from(divClonado.children).forEach(child => {
-                        divOriginal.appendChild(child);
-                    });
-                });
-
-                /**
-                 * Si el formulario es llamado desde anexos para modificar la información
-                 * o si se acaba de radicar y debemos modificar datos mostrarmos el boton
-                 * de modificacion duplicado en la parte superior y en la inferior.
-                 */
-                <?php if ($modificar != 'hide') { ?>
-                    const copyRadicar = document.getElementById('copyradicar');
-                    const showModificar = document.getElementById('showModificar');
-
-                    if (copyRadicar && showModificar) {
-                        copyRadicar.innerHTML = '';
-                        copyRadicar.appendChild(showModificar.cloneNode(true));
-                    }
-
-                <?php } ?>
-
-                /**
-                 * Generacion de eventos para los usuarios seleccionados
-                 * permitiendo cambiar la informacion antes de ser enviada al
-                 * servidor. Guardando de esta manera los datos del usuario con
-                 * las modificiaciones necesarias
-                 */
-                document.body.addEventListener('change', function(e) {
-                    if (e.target && e.target.id === 'informar') {
-                        const values = e.target.value;
-
-                        <?php if ($_TIPO_INFORMADO == 1) { ?>
-                            fetch('./ajax_buscarUsuario.php', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded'
-                                    },
-                                    body: new URLSearchParams({
-                                        searchUserInDep: values
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    const cont = document.getElementById('informarUsuario');
-                                    if (cont) cont.innerHTML = data[0];
-                                });
-
-                        <?php } else if ($_TIPO_INFORMADO == 2) { ?>
-
-                            fetch('./ajax_buscarUsuario.php', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded'
-                                    },
-                                    body: new URLSearchParams({
-                                        MsearchUserInDep: values
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    const cont = document.getElementById('showusers');
-                                    if (cont) cont.innerHTML = data[0];
-                                });
-
-                        <?php } ?>
-                    }
-                });
-
-                /**
-                 * Generacion de eventos para los usuarios seleccionados
-                 * Selecciona los usuarios y los muestra para informar con
-                 * el radicado seleccionado.
-                 */
-                <?php if ($_TIPO_INFORMADO == 1) { ?>
-                    document.body.addEventListener('change', function(e) {
-                        if (e.target && e.target.id === 'informarUsuario') {
-
-                            const select = e.target;
-                            const selectedOptions = select.querySelectorAll('option:checked');
-                            const showUsers = document.getElementById('showusers');
-                            const informar = document.getElementById('informar');
-
-                            selectedOptions.forEach(option => {
-                                const lastUser = document.querySelector('.userinfo:last-of-type');
-                                if (!lastUser) return;
-
-                                const newUser = lastUser.cloneNode(true);
-
-                                newUser.classList.remove('hide');
-                                newUser.append(document.createTextNode(option.text));
-
-                                const input = newUser.querySelector('input');
-                                if (input) {
-                                    input.value = informar.value + '_' + option.value;
-                                }
-
-                                showUsers.appendChild(newUser);
-                            });
-                        }
-                    });
-                <?php } ?>
-
-                document.body.addEventListener('click', function(e) {
-                    if (e.target && e.target.id === 'accioninfousua') {
-
-                        const text = [];
-                        const showUsers = document.getElementById('showusers');
-
-                        <?php if ($_TIPO_INFORMADO == 1) { ?>
-                            showUsers.querySelectorAll('input').forEach(input => {
-                                text.push(input.value);
-                            });
-                        <?php } elseif ($_TIPO_INFORMADO == 2) { ?>
-                            showUsers.querySelectorAll('input:checked').forEach(input => {
-                                text.push(input.value);
-                            });
-                        <?php } ?>
-
-                        const nuradInput = document.querySelector('input[name="nurad"]');
-                        const nurad = nuradInput ? nuradInput.value : '';
-
-                        fetch('./ajax_informarUsuario.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                                },
-                                body: new URLSearchParams({
-                                    addUser: JSON.stringify(text),
-                                    radicado: nurad
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                const showResult = document.getElementById('showresult');
-                                if (showResult && data.true !== undefined) {
-                                    showResult.textContent = data.true;
-                                    showResult.parentElement.classList.remove('hide');
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error al informar usuario:', error);
-                            });
-                    }
-                });
-
-                document.body.addEventListener('click', function(e) {
-                    if (e.target && e.target.classList.contains('fa-pencil')) {
-
-                        const parent = e.target.parentElement;
-                        if (!parent) return;
-
-                        const texto = parent.getAttribute('name');
-                        if (!texto) return;
-
-                        // Mostrar inputs
-                        document
-                            .querySelectorAll('[name^="inp_' + texto + '"]')
-                            .forEach(el => el.classList.remove('hide'));
-
-                        // Ocultar divs
-                        document
-                            .querySelectorAll('[name^="div_' + texto + '"]')
-                            .forEach(el => el.classList.add('hide'));
-                    }
-                });
-
-                <?php if ($_TIPO_INFORMADO == 1) { ?>
-                    document.body.addEventListener('change', function(e) {
-                        if (e.target && e.target.classList.contains('informarusuarios')) {
-
-                            const content = e.target.value;
-                            const showUsers = document.getElementById('showusers');
-
-                            const label = document.createElement('label');
-                            label.className = 'radio';
-
-                            label.innerHTML = `
-                                            <input type="radio" name="radio-inline" checked>
-                                            <i></i> ${content}
-                                        `;
-
-                            showUsers.appendChild(label);
-                        }
-                    });
-                <?php } ?>
-
-                /**
-                 * Permite crear un nuevo usurio mostrando los campos vacíos y
-                 * dejando que el usuario registre los datos de la persona que necesita.
-                 * las modificiaciones necesarias
-                 * Se envia en el codigo dos xx para identificar que es un usuario nuevo.
-                 * Cuando se carga el usuario de un radicado ya existente en cambio de las dos xx
-                 * se muestra el codigo con el cual se guardo.
-                 */
-                const btnNuevo = document.getElementById('idnuevo');
-
-                if (!btnNuevo) return;
-
-                btnNuevo.addEventListener('click', function(e) {
+            if (dependencias_clasificadas_trigger && dependencias_clasificadas.indexOf(dependencia_usuario) != -1) {
+                $('input[name="nivelSeguridad"]').prop('checked', false);
+                $('input[name="nivelSeguridad"][value=2]').prop('checked', true);
+                $('input[name="nivelSeguridad"]').on('click', function(e) {
+                    showAlertModal('El cambio del nivel de seguridad esta restringido para usuarios de las dependencias <?= $dependencias_clasificadas; ?> por politicas de la entidad.');
                     e.preventDefault();
-
-                    const tipoUsuario = document.getElementById('tipo_usuario').value;
-
-                    if (!tipoUsuario) {
-                        alert('Por favor seleccione el tipo de usuario que desea crear.');
-                        return;
-                    }
-
-                    let payload = new FormData();
-
-                    if (RADICACION_CIRCULAR) {
-                        const iddata = [{
-                            CODIGO_DESTINATARIOS: "",
-                            DESTINATARIOS: "",
-                            TIPO_CIRCULAR: tipoUsuario
-                        }];
-
-                        payload.append(
-                            'addDestinatariosCircular',
-                            JSON.stringify(iddata)
-                        );
-                    } else {
-                        const iddata = [{
-                            CODIGO: 'XX' + INCREMENTAL1,
-                            NOMBRE: "",
-                            TELEF: "",
-                            EMAIL: "",
-                            CEDULA: "",
-                            PAIS: "COLOMBIA",
-                            PAIS_CODIGO: "170",
-                            DEP: "D.C.",
-                            DEP_CODIGO: "11",
-                            MUNI: "BOGOTA",
-                            MUNI_CODIGO: "1",
-                            TIPO: tipoUsuario,
-                            APELLIDO: "",
-                            NECESITA_NOTIFICACION: RADICACION_NOTIFICACION,
-                            TIPO_RADICADO: TIPO_RADICADO,
-                            CARGO: ""
-                        }];
-
-                        payload.append(
-                            'addUser',
-                            JSON.stringify(iddata)
-                        );
-                    }
-
-                    fetch('./ajax_buscarUsuario.php', {
-                            method: 'POST',
-                            body: payload
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            const tableShow = document.getElementById('tableshow');
-                            const tableSection = document.getElementById('tableSection');
-
-                            if (data && data[0]) {
-                                const improvedHTML = beautifyUsuarioHTML(data[0]);
-                                // tableShow.insertAdjacentHTML('beforeend', improvedHTML);
-                                tableShow.append(improvedHTML);
-                                tableSection.classList.remove('d-none');
-                                INCREMENTAL1++;
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error en la petición:', error);
-                        });
-
                 });
+            }
 
-                /**
-                 * Parsea un string HTML y lo convierte en un DOM manipulable
-                 *
-                 * @param   htmlString    html retornado del back
-                 */
-                function parseHTML(htmlString) {
-                    const wrapper = document.createElement('div');
-                    wrapper.innerHTML = htmlString.trim();
-                    return wrapper;
+            var ALLDATA;
+            var INCREMENTAL1 = 0;
+            var EJECUCION = false;
+            var RADICACION_NOTIFICACION = '<?= $esNotificacion ?>';
+            var RADICACION_CIRCULAR = '<?= $esNotificacionCircular ?>';
+
+            // DO NOT REMOVE : GLOBAL FUNCTIONS!
+            pageSetUp();
+
+            $('#copyradicar').html($('#showRadicar').clone());
+
+            //Datepicker muestra fecha
+            $('#fecha_gen_doc').datepicker({
+                dateFormat: 'dd-mm-yy',
+                onSelect: function(selectedDate) {
+                    $('#date').datepicker('option', 'maxDate', selectedDate);
                 }
+            });
 
-                /**
-                 * Formatear la tabla para mejorar la UI
-                 *
-                 * @param   htmlString    html retornado del back
-                 */
-                function beautifyUsuarioHTML(htmlString) {
-                    // const dom = parseHTML(htmlString);
-                    const template = document.createElement('template');
-                    template.innerHTML = htmlString.trim();
-                    const dom = template.content;
+            /**
+             * Generacion de eventos para los usuarios seleccionados
+             * permitiendo cambiar la informacion antes de ser enviada al
+             * servidor. Guardando de esta manera los datos del usuario con
+             * las modificiaciones necesarias
+             */
+            $("body").on("click", '.fa-check', function() {
+                $('label[name^="inp_"]').addClass('hide');
+                $('div[name^="div_"]').removeClass('hide');
+                var iddiv = $(this).parent().attr('name').substring(4);
+                var tex_nuevo = $('label[name=inp_' + iddiv + ']').find('input').val();
+                var div_nuevo = $('div[name=div_' + iddiv + ']').clone();
+                $('div[name=div_' + iddiv + ']').text(tex_nuevo);
+                $('div[name=div_' + iddiv + ']').append(div_nuevo.children());
+            });
 
-                    /* 1️⃣ Tabla principal */
-                    dom.querySelectorAll('table').forEach(table => {
-                        table.classList.add(
-                            'table',
-                            'table-bordered',
-                            'table-sm',
-                            'align-middle',
-                            'mb-3'
-                        );
-                    });
+            /**
+             * Si el formulario es llamado desde anexos para modificar la información
+             * o si se acaba de radicar y debemos modificar datos mostrarmos el boton
+             * de modificacion duplicado en la parte superior y en la inferior.
+             */
+            <?php if ($modificar != 'hide') { ?>
+                $('#copyradicar').html($('#showModificar').clone());
+            <?php } ?>
 
-                    /* 2️⃣ Filas como cards visuales */
-                    dom.querySelectorAll('tr.item_usuario').forEach(tr => {
-                        tr.classList.add('border', 'rounded', 'p-2', 'mb-3');
-                    });
-
-                    /* 3️⃣ Inputs Bootstrap */
-                    dom.querySelectorAll('input[type="text"], input[type="email"]').forEach(input => {
-                        input.classList.add('form-control', 'form-control-sm');
-                    });
-
-                    /* 4️⃣ Selects Bootstrap */
-                    dom.querySelectorAll('select').forEach(select => {
-                        select.classList.add('form-select', 'form-select-sm');
-                    });
-
-                    /* 5️⃣ Labels */
-                    dom.querySelectorAll('label').forEach(label => {
-                        label.classList.add('form-label', 'fw-semibold');
-                    });
-
-                    /* 6️⃣ Botón eliminar */
-                    dom.querySelectorAll('button').forEach(btn => {
-                        btn.classList.add('btn', 'btn-outline-danger', 'btn-sm');
-                        btn.setAttribute('data-rel', 'remove');
-                        btn.innerHTML = '<i class="fa fa-minus" aria-hidden="true"></i>';
-                    });
-
-                    /* 7️⃣ Ocultos */
-                    dom.querySelectorAll('.hide').forEach(el => {
-                        el.classList.add('d-none');
-                        el.classList.remove('hide');
-                    });
-
-                    /* 8️⃣ row-fluid → row */
-                    dom.querySelectorAll('.row-fluid').forEach(el => {
-                        el.classList.add('row');
-                        el.classList.remove('row-fluid');
-                    });
-
-                    return dom;
-                }
-
-                $("body").on("keyup", 'input[name$="muni"], input[name$="dep"], input[name$="pais"]', function() {
-                    if ($(this).attr('autocomplete') === undefined) {
-                        addAutocomple(this);
-                    };
-                });
-
-                $("#asu").keypress(function() {
-                    if ($("#asu").val().length <= 10) {
-                        $('#asu').parent().removeClass('state-success').addClass('state-error');
-                    } else {
-
-                        $('#asu').parent().removeClass('state-error').addClass('state-success');
-                    }
-                });
-
-                function addAutocomple(element) {
-                    var accion = $(element).attr('name').split("_")[4];
-                    var group = $(element).attr('name').split("_")[2] + "_" + $(element).attr('name').split("_")[3];
-
-                    $(element).autocomplete({
-                        source: function(request, response) {
-                            if (accion == "muni" && $('input[name$="' + group + '_dep_codigo"]').val() == 0) {
-                                alert("Debe seleccionar primero un Departamento de manera correcta." + accion);
-                                $('input[name$="' + group + '_dep"]').focus();
-                            }
-                            $.ajax({
-                                url: "./ajax_buscarDivipola.php",
-                                dataType: "json",
-                                type: 'POST',
-                                maxRows: 12,
-                                data: {
-                                    'action': accion,
-                                    'search': request.term,
-                                    'muni': $('input[name$="' + group + '_muni"]').val(),
-                                    'dep': $('input[name$="' + group + '_dep"]').val(),
-                                    'pais': $('input[name$="' + group + '_pais"]').val()
-                                },
-                                success: function(data) {
-                                    response($.map(data, function(item) {
-                                        return {
-                                            label: item.NOMBRE,
-                                            id: item.CODIGO
-                                        }
-                                    }));
-                                    if (accion == "dep") {
-                                        $('input[name$="' + group + '_dep_codigo"]').val('0');
-                                        $('input[name$="' + group + '_dep"]').parent().removeClass('state-success').addClass('state-error');
-                                    }
-                                    if (accion == "muni") {
-                                        $('input[name$="' + group + '_muni_codigo"]').val('0');
-                                        $('input[name$="' + group + '_muni"]').parent().removeClass('state-success').addClass('state-error');
-                                    }
-
-                                    $('.ui-autocomplete-input').removeClass('ui-autocomplete-loading');
-                                }
-                            });
-                        },
-                        minLength: 1,
-                        select: function(event, ui) {
-                            var setempty = $(this).attr('name').split("_")[4];
-                            var namehiddent = $(this).attr('name') + "_codigo";
-                            var nameinput = $(this).attr('name');
-                            $("input[name=" + namehiddent + "]").val(ui.item.id);
-                            switch (setempty) {
-                                case 'muni':
-                                    $('input[name$="' + group + '_muni"]').parent().removeClass('state-error').addClass('state-success');
-                                    $('#asu').focus();
-                                    break;
-                                case 'dep':
-                                    $('input[name$="' + group + '_muni"]').val('');
-                                    $('input[name$="' + group + '_muni_codigo"]').val('');
-                                    $('input[name$="' + group + '_dep"]').parent().removeClass('state-error').addClass('state-success');
-                                    $('input[name$="' + group + '_muni"]').focus();
-                                    break;
-
-                                case 'pais':
-                                    $('input[name$="' + group + '_muni"]').val('');
-                                    $('input[name$="' + group + '_muni_codigo"]').val('');
-                                    $('input[name$="' + group + '_dep"]').val('');
-                                    $('input[name$="' + group + '_dep_codigo"]').val('');
-                                    $('input[name$="' + group + '_pais"]').parent().removeClass('state-error').addClass('state-success');
-                                    $('input[name$="' + group + '_dep"]').focus();
-                                    break;
-                            }
+            /**
+             * Generacion de eventos para los usuarios seleccionados
+             * permitiendo cambiar la informacion antes de ser enviada al
+             * servidor. Guardando de esta manera los datos del usuario con
+             * las modificiaciones necesarias
+             */
+            $("body").on("change", '#informar', function() {
+                var values = $(this).val();
+                <?php if ($_TIPO_INFORMADO == 1) { ?>
+                    $.post("./ajax_buscarUsuario.php", {
+                        searchUserInDep: values
+                    }).done(
+                        function(data) {
+                            $('#informarUsuario').html(data[0]);
                         }
+                    );
+                <?php } else if ($_TIPO_INFORMADO == 2) { ?>
+                    $.post("./ajax_buscarUsuario.php", {
+                        MsearchUserInDep: values
+                    }).done(
+                        function(data) {
+                            $('#showusers').html(data[0]);
+                        }
+                    );
+                <?php } ?>
+            });
+
+            /**
+             * Generacion de eventos para los usuarios seleccionados
+             * Selecciona los usuarios y los muestra para informar con
+             * el radicado seleccionado.
+             */
+            <?php if ($_TIPO_INFORMADO == 1) { ?>
+                $("body").on("change", '#informarUsuario', function() {
+                    $('#informarUsuario :selected').each(function(i, selected) {
+                        var newUser = $('.userinfo').last().clone();
+                        var text = $(selected).text();
+                        var value = $(selected).val();
+
+                        newUser.removeClass('hide');
+                        newUser.append(text);
+                        newUser.find('input').val($('#informar').val() + '_' + value);
+
+                        $('#showusers').append(newUser);
                     });
-                }
+                });
+            <?php } ?>
 
-                //Deja en blanco los campos de busqueda al seleccionar
-                //un nuevo usuario.
-                document.getElementById('tipo_usuario').addEventListener('change', function() {
-                    const fields = ['documento_us', 'nombre_us', 'telefono_us', 'mail_us'];
-
-                    fields.forEach(id => {
-                        const input = document.getElementById(id);
-                        input.value = '';
-
-                        const parent = input.parentElement;
-                        parent.classList.remove('state-success', 'state-error');
+            $("body").on("click", '#accioninfousua', function() {
+                var text = [];
+                <?php if ($_TIPO_INFORMADO == 1) { ?>
+                    $('#showusers').find('input').each(function(index, value) {
+                        text.push($(value).val());
                     });
+                <?php } else if ($_TIPO_INFORMADO == 2) { ?>
+                    $('#showusers').find('input:checked').each(function(index, value) {
+                        text.push($(value).val());
+                    });
+                <?php } ?>
+                var nurad = $('input[name="nurad"]').val();
 
-                    document.getElementById('resBusqueda').innerHTML = '';
+                $.post("./ajax_informarUsuario.php", {
+                    addUser: text,
+                    radicado: nurad
+                }).done(
+                    function(data) {
+                        $('#showresult').text(data['true']);
+                        $('#showresult').parent().removeClass('hide')
+                    }
+                );
+            });
 
-                    document.getElementById('showAnswer').classList.add('d-none');
+            $("body").on("click", '.fa-pencil', function() {
+                var texto = $(this).parent().attr('name');
+                $.each($('[name^="inp_' + texto + '"]'), function(index, value) {
+                    $(value).removeClass('hide');
                 });
 
-                /* Capitaliza la primera letra de un texto */
-                function uppFirs(txt = '') {
-                    if (!txt) return '';
-                    return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
-                }
+                $.each($('[name^="div_' + texto + '"]'), function(index, value) {
+                    $(value).addClass('hide');
+                });
+            });
 
-                /**
-                 * Valida los campos antes de ser enviados al servidor
-                 * @objData array de los datos a validar
-                 * @returns boolean true si pasa la validacion, false si no la pasa
-                 */
-                function validate(objData) {
-                    let pass = false;
-                    const min = 3;
-                    let allEmpty = 0;
-                    let allData = 0;
+            <?php if ($_TIPO_INFORMADO == 1) { ?>
+                $("body").on("change", '.informarusuarios', function() {
+                    var content = $(this).val();
+                    $('#showusers').append("<label class='radio'><input type='radio' name='radio-inline' checked=''><i></i>" +
+                        content + "</label>");
+                });
+            <?php } ?>
 
-                    if (!objData || Object.keys(objData).length === 0) {
-                        return false;
+            /**
+             * Permite crear un nuevo usurio mostrando los campos vacíos y
+             * dejando que el usuario registre los datos de la persona que necesita.
+             * las modificiaciones necesarias
+             * Se envia en el codigo dos xx para identificar que es un usuario nuevo.
+             * Cuando se carga el usuario de un radicado ya existente en cambio de las dos xx
+             * se muestra el codigo con el cual se guardo.
+             */
+            $("#idnuevo").on("click", function(e) {
+                e.preventDefault();
+                var tipo = $('#tipo_usuario').val();
+                if (tipo != '') {
+                    if (RADICACION_CIRCULAR) {
+                        var iddata = [{
+                            "CODIGO_DESTINATARIOS": "",
+                            "DESTINATARIOS": "",
+                            "TIPO_CIRCULAR": $('#tipo_usuario').val()
+                        }];
+
+                        $.post("./ajax_buscarUsuario.php", {
+                            addDestinatariosCircular: JSON.stringify(iddata)
+                        }).done(
+                            function(data) {
+                                $('#tableshow').append(data[0]);
+                                $('#tableSection').removeClass('d-none');
+                            }
+                        );
+
+                        INCREMENTAL1++;
+
+                    } else {
+                        var iddata = [{
+                            "CODIGO": 'XX' + INCREMENTAL1,
+                            "NOMBRE": "",
+                            "TELEF": "",
+                            "EMAIL": "",
+                            "CEDULA": "",
+                            "PAIS": "COLOMBIA",
+                            "PAIS_CODIGO": "170",
+                            "DEP": "D.C.",
+                            "DEP_CODIGO": "11",
+                            "MUNI": "BOGOTA",
+                            "MUNI_CODIGO": "1",
+                            "TIPO": $('#tipo_usuario').val(),
+                            "APELLIDO": "",
+                            "NECESITA_NOTIFICACION": RADICACION_NOTIFICACION,
+                            "TIPO_RADICADO": TIPO_RADICADO,
+                            "CARGO": ""
+                        }];
+
+                        $.post("./ajax_buscarUsuario.php", {
+                            addUser: JSON.stringify(iddata)
+                        }).done(
+                            function(data) {
+                                $('#tableshow').append(data[0]);
+                                $('#tableSection').removeClass('d-none');
+                            }
+                        );
+
+                        INCREMENTAL1++;
                     }
+                } else {
+                    alert('Por favor seleccione el tipo de usuario que desea crear.');
+                }
+            });
 
-                    Object.keys(objData).forEach(key => {
-                        const field = objData[key];
-                        const value = field.value || '';
-                        const input = document.getElementById(field.id);
-                        const parent = input?.parentElement;
+            $("body").on("keyup", 'input[name$="muni"], input[name$="dep"], input[name$="pais"]', function() {
+                if ($(this).attr('autocomplete') === undefined) {
+                    addAutocomple(this);
+                };
+            });
 
-                        allData++;
+            $("#asu").keypress(function() {
+                if ($("#asu").val().length <= 10) {
+                    $('#asu').parent().removeClass('state-success').addClass('state-error');
+                } else {
 
-                        // ❗ Regex corregida (la original estaba mal)
-                        const invalidChars = !/^[a-zA-Z0-9áéíóúÁÉÍÓÚÑñ\s]+$/.test(value);
+                    $('#asu').parent().removeClass('state-error').addClass('state-success');
+                }
+            });
 
-                        if ((value.length < min && value.length !== 0) || invalidChars) {
-                            parent?.classList.remove('state-success');
-                            parent?.classList.add('state-error');
+            function addAutocomple(element) {
+                var accion = $(element).attr('name').split("_")[4];
+                var group = $(element).attr('name').split("_")[2] + "_" + $(element).attr('name').split("_")[3];
+                console.log(group);
+                $(element).autocomplete({
+                    source: function(request, response) {
+                        if (accion == "muni" && $('input[name$="' + group + '_dep_codigo"]').val() == 0) {
+                            alert("Debe seleccionar primero un Departamento de manera correcta." + accion);
+                            $('input[name$="' + group + '_dep"]').focus();
+                        }
+                        $.ajax({
+                            url: "./ajax_buscarDivipola.php",
+                            dataType: "json",
+                            type: 'POST',
+                            maxRows: 12,
+                            data: {
+                                'action': accion,
+                                'search': request.term,
+                                'muni': $('input[name$="' + group + '_muni"]').val(),
+                                'dep': $('input[name$="' + group + '_dep"]').val(),
+                                'pais': $('input[name$="' + group + '_pais"]').val()
+                            },
+                            success: function(data) {
+
+                                response($.map(data, function(item) {
+                                    return {
+                                        label: item.NOMBRE,
+                                        id: item.CODIGO
+                                    }
+
+                                }));
+                                if (accion == "dep") {
+                                    $('input[name$="' + group + '_dep_codigo"]').val('0');
+                                    $('input[name$="' + group + '_dep"]').parent().removeClass('state-success').addClass('state-error');
+                                }
+                                if (accion == "muni") {
+                                    $('input[name$="' + group + '_muni_codigo"]').val('0');
+                                    $('input[name$="' + group + '_muni"]').parent().removeClass('state-success').addClass('state-error');
+                                }
+
+
+                                $('.ui-autocomplete-input').removeClass('ui-autocomplete-loading');
+                            }
+
+                        });
+                    },
+                    minLength: 1,
+                    select: function(event, ui) {
+                        var setempty = $(this).attr('name').split("_")[4];
+                        var namehiddent = $(this).attr('name') + "_codigo";
+                        var nameinput = $(this).attr('name');
+                        $("input[name=" + namehiddent + "]").val(ui.item.id);
+                        switch (setempty) {
+                            case 'muni':
+                                $('input[name$="' + group + '_muni"]').parent().removeClass('state-error').addClass('state-success');
+                                $('#asu').focus();
+                                break;
+                            case 'dep':
+                                $('input[name$="' + group + '_muni"]').val('');
+                                $('input[name$="' + group + '_muni_codigo"]').val('');
+                                $('input[name$="' + group + '_dep"]').parent().removeClass('state-error').addClass('state-success');
+                                $('input[name$="' + group + '_muni"]').focus();
+                                break;
+
+                            case 'pais':
+                                $('input[name$="' + group + '_muni"]').val('');
+                                $('input[name$="' + group + '_muni_codigo"]').val('');
+                                $('input[name$="' + group + '_dep"]').val('');
+                                $('input[name$="' + group + '_dep_codigo"]').val('');
+                                $('input[name$="' + group + '_pais"]').parent().removeClass('state-error').addClass('state-success');
+                                $('input[name$="' + group + '_dep"]').focus();
+                                break;
+
+                        }
+                    }
+                });
+            }
+
+            //Deja en blanco los campos de busqueda al seleccionar
+            //un nuevo usuario.
+            $("#tipo_usuario").on('change', function() {
+                $('#documento_us, #nombre_us, #telefono_us, #mail_us').val("").parent().removeClass('state-success state-error');
+                $('#resBusqueda').empty();
+                $('#showAnswer').addClass('d-none');
+            });
+
+            function uppFirs(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+
+            //Valida los campos antes de ser enviados al servidor
+            function validate(objData) {
+                var pass = false;
+                var min = 3;
+                var allempty =
+                    alldata = 0;
+                if (!$.isEmptyObject(objData)) {
+
+                    $.each(objData, function(key, val) {
+                        var valdata = val.value;
+                        alldata++;
+                        if ((valdata.length < min && valdata.length != 0) || /^a-zA-Z0-9áéíóúÁÉÍÓÚÑñ ]+$/.test(valdata)) {
+                            $('#' + objData[key].id).parent().removeClass('state-success').addClass('state-error');
                             delete objData[key];
-
-                        } else if (value.length === 0) {
-                            parent?.classList.remove('state-success', 'state-error');
+                        } else if (valdata.length == 0) {
+                            $('#' + objData[key].id).parent().removeClass('state-success state-error');
                             delete objData[key];
-                            allEmpty++;
-
+                            allempty++;
                         } else {
-                            parent?.classList.remove('state-error');
-                            parent?.classList.add('state-success');
+                            $('#' + objData[key].id).parent().removeClass('state-error').addClass('state-success');
                             pass = true;
                         }
                     });
 
-                    // Si todos están vacíos
-                    if (allData === allEmpty) {
-                        document.getElementById('resBusqueda').innerHTML = '';
-                        document.getElementById('showAnswer').classList.add('d-none');
-                    }
-
-                    return pass;
                 }
 
-                /**
-                 * Funcion para retornar los usuarios seleccionados y mostrarlos
-                 * en la tabla seleccionado con las opciónes de modificaciones individuales
-                 * @iddata array de los datos ya seleccionados
-                 * @returns inserta html procesado a la tabla de usuarios seleccionados
-                 */
-                function passDataToTable(iddata) {
-                    ALLDATA[iddata]["NECESITA_NOTIFICACION"] = RADICACION_NOTIFICACION;
-                    ALLDATA[iddata]["TIPO_RADICADO"] = TIPO_RADICADO;
-
-                    const trTable = [ALLDATA[iddata]];
-
-                    fetch("./ajax_buscarUsuario.php", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-                            },
-                            body: new URLSearchParams({
-                                addUser: JSON.stringify(trTable)
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            const improvedHTML = beautifyUsuarioHTML(data[0]);
-
-                            // document.getElementById("tableshow").insertAdjacentHTML("beforeend", data[0]);
-                            document.getElementById("tableshow").append(improvedHTML);
-                            document.getElementById("tableSection").classList.remove("d-none");
-                        })
-                        .catch(error => {
-                            console.error("Error:", error);
-                        });
+                if (alldata === allempty) {
+                    $('#resBusqueda').empty();
+                    $('#showAnswer').addClass('d-none');
                 }
+                return pass;
+            };
 
-                //Modifica respuesta del servidor para presentarla con formato.
-                function formatAnswer(data) {
-                    const indiv = document.getElementById('resBusqueda');
-                    indiv.innerHTML = '';
+            function beautifyUsuarioHTML(htmlString) {
+                // const dom = parseHTML(htmlString);
+                const template = document.createElement('template');
+                template.innerHTML = htmlString.trim();
+                const dom = template.content;
 
-                    data.forEach((item, i) => {
-                        const li = document.createElement('li');
-                        indiv.appendChild(li);
+                /* Tabla principal */
+                dom.querySelectorAll('table').forEach(table => {
+                    table.classList.add(
+                        'table',
+                        'table-bordered',
+                        'table-sm',
+                        'align-middle',
+                        'mb-3'
+                    );
+                });
 
-                        const nombre = item.NOMBRE ? item.NOMBRE.replace(/\w\S*/g, uppFirs) : '';
+                /* Filas como cards visuales */
+                dom.querySelectorAll('tr.item_usuario').forEach(tr => {
+                    tr.classList.add('rounded', 'p-2', 'mb-3');
+                });
 
-                        const apell = item.APELLIDO ? item.APELLIDO.replace(/\w\S*/g, uppFirs) : '';
+                /* Inputs Bootstrap */
+                dom.querySelectorAll('input[type="text"], input[type="email"]').forEach(input => {
+                    input.classList.add('form-control', 'form-control-sm');
+                });
 
-                        const telef = item.TELEF || '';
-                        const email = item.EMAIL ? item.EMAIL.toLowerCase() : '';
-                        const cedula = item.CEDULA || '';
-                        const direccion = item.DIRECCION || '';
+                /* Selects Bootstrap */
+                dom.querySelectorAll('select').forEach(select => {
+                    select.classList.add('form-select', 'form-select-sm');
+                });
 
-                        const div = document.createElement('div');
-                        div.className = 'col-12 col-md-4';
-                        div.setAttribute('name', 'cod_' + i);
-                        div.setAttribute('tabindex', '5');
+                /* Labels */
+                dom.querySelectorAll('label').forEach(label => {
+                    label.classList.add('form-label', 'fw-semibold');
+                });
 
-                        div.innerHTML = `
+                /* Botón eliminar */
+                dom.querySelectorAll('button').forEach(btn => {
+                    btn.classList.add('btn', 'btn-outline-danger', 'btn-sm');
+                    btn.setAttribute('type', 'button');
+                    btn.setAttribute('data-rel', 'remove');
+                    btn.innerHTML = '<i class="fa fa-minus" aria-hidden="true"></i>';
+                });
+
+                /* Ocultos */
+                dom.querySelectorAll('.hide').forEach(el => {
+                    el.classList.add('d-none');
+                    el.classList.remove('hide');
+                });
+
+                /* row-fluid → row */
+                dom.querySelectorAll('.row-fluid').forEach(el => {
+                    el.classList.add('row');
+                    el.classList.remove('row-fluid');
+                });
+
+                return dom;
+            }
+
+            /**
+             * Funcion para retornar los usuarios seleccionados y mostrarlos
+             * en la tabla seleccionado con las opciónes de modificaciones individuales
+             * @iddata array de los datos ya seleccionados
+             * @returns inserta html procesado a la tabla de usuarios seleccionados
+             */
+            function passDataToTable(iddata) {
+                ALLDATA[iddata]["NECESITA_NOTIFICACION"] = RADICACION_NOTIFICACION;
+                ALLDATA[iddata]["TIPO_RADICADO"] = TIPO_RADICADO;
+
+                const trTable = [ALLDATA[iddata]];
+
+                fetch("./ajax_buscarUsuario.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                        },
+                        body: new URLSearchParams({
+                            addUser: JSON.stringify(trTable)
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const improvedHTML = beautifyUsuarioHTML(data[0]);
+
+                        document.getElementById("tableshow").append(improvedHTML);
+                        document.getElementById("tableSection").classList.remove("d-none");
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+            }
+
+            //Modifica respuesta del servidor para presentarla con formato.
+            function formatAnswer(data) {
+                const indiv = document.getElementById('resBusqueda');
+                indiv.innerHTML = '';
+
+                data.forEach((item, i) => {
+                    const li = document.createElement('li');
+                    indiv.appendChild(li);
+
+                    const nombre = item.NOMBRE ? item.NOMBRE.replace(/\w\S*/g, uppFirs) : '';
+
+                    const apell = item.APELLIDO ? item.APELLIDO.replace(/\w\S*/g, uppFirs) : '';
+
+                    const telef = item.TELEF || '';
+                    const email = item.EMAIL ? item.EMAIL.toLowerCase() : '';
+                    const cedula = item.CEDULA || '';
+                    const direccion = item.DIRECCION || '';
+
+                    const div = document.createElement('div');
+                    div.className = 'col-12 col-md-4';
+                    div.setAttribute('name', 'cod_' + i);
+                    div.setAttribute('tabindex', '5');
+
+                    div.innerHTML = `
                                     <div class="col col-12">
                                         <h6 class="text-success semi-bold">
                                             ${cedula}
@@ -1840,965 +1635,731 @@ if ($nivelSeguridadSeleccionado !== null && $nivelSeguridadSeleccionado !== '') 
                                     <div class="showdot176">${direccion}</div>
                                 `;
 
-                        div.addEventListener('click', function() {
-                            const codUser = this.getAttribute('name').substring(4);
-                            passDataToTable(codUser);
+                    div.addEventListener('click', function() {
+                        const codUser = this.getAttribute('name').substring(4);
+                        passDataToTable(codUser);
 
-                            this.classList.add('d-none');
+                        this.classList.add('d-none');
 
-                            const datali = document.querySelectorAll('#showAnswer ul li');
-                            let count = 0;
+                        const datali = document.querySelectorAll('#showAnswer ul li');
+                        let count = 0;
 
-                            datali.forEach(li => {
-                                const childDiv = li.querySelector('div');
-                                if (childDiv && childDiv.classList.contains('d-none')) {
+                        datali.forEach(li => {
+                            const childDiv = li.querySelector('div');
+                            if (childDiv && childDiv.classList.contains('d-none')) {
+                                count++;
+                            }
+                        });
+
+                        document.getElementById('showAnswer').classList.add('d-none');
+                    });
+
+                    li.appendChild(div);
+                });
+
+                document.getElementById('showAnswer').classList.remove('d-none');
+            }
+
+            /**
+             * Funcion para retornar los destinatarios seleccionados y mostrarlos
+             * en la tabla con las opciónes de modificaciones individuales
+             * @iddata int indice del array correspondiente al destinatario escogido
+             * @returns inserta html procesado al campo de destinarios seleccionados
+             */
+            function passDestinatariosDataToTable(iddata) {
+                var trTable = [ALLDATA[iddata]];
+                $.post("./ajax_buscarUsuario.php", {
+                    addDestinatariosCircular: JSON.stringify(trTable)
+                }).done(
+                    function(data) {
+                        $('#tableshow').append(data[0]);
+                        $('#tableSection').removeClass('hide');
+                    }
+                );
+            }
+
+            //Modifica respuesta del servidor para presentarla
+            //con formato.
+            function formatAnswerDestinatario(data) {
+                var dataformat;
+                var indiv = $('#resBusqueda');
+                var boton = "Usar destinatarios";
+
+                indiv.empty();
+
+                $.each(data, function(i) {
+                    var li = $('<li style="display:inline; list-style-type:none;"/>').appendTo(indiv);
+                    var div = $('<div style="width:100%;"/>')
+                        .addClass('well well-sm')
+                        .html('<div  class="col col-12">' +
+                            '<h6 class=" text-success semi-bold">' +
+                            boton +
+                            ' <i class="fa fa-plus-square"></i>' +
+                            '</h6>' +
+                            '</div>' +
+                            '<div><b>' + data[i].DESTINATARIOS + '</b></div>')
+                        .attr('name', 'cod_' + i)
+                        .on("click", function() {
+                            var codUser = $(this).attr('name').substring(4);
+                            var count = 0;
+                            var datali = $('#showAnswer').children('ul').children('li');
+                            passDestinatariosDataToTable(codUser);
+                            $(this).addClass('hide');
+
+                            datali.each(function() {
+                                var ishide = $(this).children('div').hasClass("hide");
+                                if (ishide) {
                                     count++;
                                 }
                             });
 
-                            document.getElementById('showAnswer').classList.add('d-none');
-                        });
+                            $('#showAnswer').addClass('hide');
 
-                        li.appendChild(div);
-                    });
+                        })
+                        .appendTo(li);
+                });
+                $('#showAnswer').removeClass('hide');
+            };
 
-                    document.getElementById('showAnswer').classList.remove('d-none');
+            //Autocomplete busqueda de usuarios
+            $("#documento_us, #nombre_us, #telefono_us, #mail_us").on('keyup', function(e) {
+                var tipo = $('#tipo_usuario').val();
+                if (tipo == '') {
+                    e.preventDefault();
+                    alert('Por favor seleccione el tipo de usuario que desea buscar.');
                 }
+            });
 
-                /**
-                 * Funcion para retornar los destinatarios seleccionados y mostrarlos
-                 * en la tabla con las opciónes de modificaciones individuales
-                 * @iddata int indice del array correspondiente al destinatario escogido
-                 * @returns inserta html procesado al campo de destinarios seleccionados
-                 */
-                function passDestinatariosDataToTable(iddata) {
-                    const trTable = [ALLDATA[iddata]];
+            document.getElementById('idconsulta').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                let data = {};
+
+                data.docu = {
+                    value: document.getElementById('documento_us').value,
+                    id: 'documento_us'
+                };
+                data.name = {
+                    value: document.getElementById('nombre_us').value,
+                    id: 'nombre_us'
+                };
+                data.tele = {
+                    value: document.getElementById('telefono_us').value,
+                    id: 'telefono_us'
+                };
+                data.mail = {
+                    value: document.getElementById('mail_us').value,
+                    id: 'mail_us'
+                };
+
+                if (validate(data)) {
+                    data.tdoc = document.getElementById('tipo_usuario').value;
 
                     fetch('./ajax_buscarUsuario.php', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                                'Content-Type': 'application/x-www-form-urlencoded'
                             },
                             body: new URLSearchParams({
-                                addDestinatariosCircular: JSON.stringify(trTable)
+                                search: JSON.stringify(data)
                             })
                         })
                         .then(response => response.json())
-                        .then(data => {
-                            if (!data || !data[0]) return;
+                        .then(responseData => {
+                            ALLDATA = responseData;
 
-                            document.getElementById('tableshow')
-                                .insertAdjacentHTML('beforeend', data[0]);
-
-                            document.getElementById('tableSection')
-                                .classList.remove('d-none');
+                            if (responseData !== null) {
+                                formatAnswer(responseData);
+                            }
                         })
                         .catch(error => {
-                            console.error('Error al agregar destinatarios:', error);
+                            console.error('Error en la consulta:', error);
                         });
-                }
-
-                // Modifica respuesta del servidor para presentarla con formato.
-                function formatAnswerDestinatario(data) {
-                    const indiv = document.getElementById('resBusqueda');
-                    const boton = 'Usar destinatarios';
-
-                    indiv.innerHTML = '';
-
-                    data.forEach((item, i) => {
-                        // <li>
-                        const li = document.createElement('li');
-                        li.style.display = 'inline';
-                        li.style.listStyleType = 'none';
-
-                        // <div>
-                        const div = document.createElement('div');
-                        div.style.width = '100%';
-                        div.classList.add('well', 'well-sm');
-                        div.setAttribute('name', 'cod_' + i);
-
-                        div.innerHTML = `
-                                    <div class="col-12">
-                                        <h6 class="text-success semi-bold">
-                                            ${boton} <i class="fa fa-plus-square"></i>
-                                        </h6>
-                                    </div>
-                                    <div><b>${item.DESTINATARIOS}</b></div>
-                                `;
-
-                        div.addEventListener('click', function() {
-                            const codUser = this.getAttribute('name').substring(4);
-                            const datali = document.querySelectorAll('#showAnswer ul li');
-
-                            passDestinatariosDataToTable(codUser);
-                            this.classList.add('d-none');
-
-                            let count = 0;
-                            datali.forEach(li => {
-                                const childDiv = li.querySelector('div');
-                                if (childDiv && childDiv.classList.contains('d-none')) {
-                                    count++;
-                                }
-                            });
-
-                            document.getElementById('showAnswer').classList.add('d-none');
-                        });
-
-                        li.appendChild(div);
-                        indiv.appendChild(li);
-                    });
-
-                    document.getElementById('showAnswer').classList.remove('d-none');
-                }
-
-                //Autocomplete busqueda de usuarios
-                const camposBusqueda = [
-                    'documento_us',
-                    'nombre_us',
-                    'telefono_us',
-                    'mail_us'
-                ];
-
-                camposBusqueda.forEach(id => {
-                    const input = document.getElementById(id);
-
-                    if (!input) return;
-
-                    input.addEventListener('keyup', function(e) {
-                        const tipo = document.getElementById('tipo_usuario')?.value;
-
-                        if (!tipo) {
-                            e.preventDefault();
-                            alert('Por favor seleccione el tipo de usuario que desea buscar.');
-                        }
-                    });
-                });
-
-                document.getElementById('idconsulta').addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    let data = {};
-
-                    data.docu = {
-                        value: document.getElementById('documento_us').value,
-                        id: 'documento_us'
-                    };
-                    data.name = {
-                        value: document.getElementById('nombre_us').value,
-                        id: 'nombre_us'
-                    };
-                    data.tele = {
-                        value: document.getElementById('telefono_us').value,
-                        id: 'telefono_us'
-                    };
-                    data.mail = {
-                        value: document.getElementById('mail_us').value,
-                        id: 'mail_us'
-                    };
-
-                    if (validate(data)) {
-                        data.tdoc = document.getElementById('tipo_usuario').value;
-
-                        fetch('./ajax_buscarUsuario.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                },
-                                body: new URLSearchParams({
-                                    search: JSON.stringify(data)
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(responseData => {
-                                ALLDATA = responseData;
-
-                                if (responseData !== null) {
-                                    formatAnswer(responseData);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error en la consulta:', error);
-                            });
-                    }
-                });
-
-                /**
-                 * Autocomplete busqueda de destinatarios para circulares
-                 */
-                // const destinatarioInput = document.getElementById('destinatario_us');
-
-                document.body.addEventListener('keyup', function(e) {
-                    const el = e.target;
-
-                    // ⬅️ Validación AQUÍ: solo si el elemento existe y es el correcto
-                    if (!el || el.id !== 'destinatario_us') return;
-
-                    const data = {};
-                    data.name = {
-                        value: destinatarioInput.value,
-                        id: 'destinatario_us'
-                    };
-
-                    if (validate(data)) {
-                        const tipoUsuario = document.getElementById('tipo_usuario');
-                        if (!tipoUsuario) return;
-
-                        data.tdoc = tipoUsuario.value;
-
-                        fetch('./ajax_buscarUsuario.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-                                },
-                                body: new URLSearchParams({
-                                    searchDestinatarios: JSON.stringify(data)
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(responseData => {
-                                ALLDATA = responseData;
-
-                                if (responseData !== null) {
-                                    formatAnswerDestinatario(responseData);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error en la búsqueda de destinatarios:', error);
-                            });
-                    }
-                });
-
-                // Mostrar validacion del formulario
-                function mostrarAlert(objAlert) {
-                    const {
-                        type,
-                        message
-                    } = objAlert;
-
-                    const alertContainer = document.getElementById('alertmessage');
-
-                    const div = document.createElement('div');
-                    div.className = `alert alert-${type} alert-dismissible `;
-                    div.role = 'alert';
-
-                    div.innerHTML = `
-                                <strong>${message}</strong>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            `;
-
-                    alertContainer.appendChild(div);
-                }
-
-                // Borrar alertas
-                function borrarAlert() {
-                    const alertContainer = document.getElementById('alertmessage');
-                    alertContainer.innerHTML = '';
-                }
-
-                //****************************************************************************************//
-                // Validacion de correos electronicos
-                function validarEmail(idxEmail, emailId) {
-                    console.log('validarEmail');
-                    console.log(idxEmail, emailId);
-
-                    const valEmaile = document.getElementById('errormail');
-                    let correosValid = [];
-                    const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                    const regex = /^[^ ]+$/;
-
-                    const correosProhibidos = [
-                        'sarlaft@almamater.hospital',
-                    ];
-                    const correosPermitidos = [
-                        'yulicita1982-@hotmail.com',
-                        'corporativo@almamater.hospital',
-                        'cocampo@diazyocampo.legal',
-                        'notificaciones@diazyocampo.legal',
-                        'contabilidad@fracturasyfracturas.com.co',
-                        'juridico@fracturasyfracturas.com.co',
-                        'notificaciones@diazyocampo.legal',
-                        'ALCALDIA@OROCUE-CASANARE.GOV.CO',
-                        'CONTACTENOS@CABUYARO-META.GOV.CO'
-                    ];
-
-                    if (correosProhibidos.includes(idxEmail)) {
-                        swal({
-                            title: "Advertencia!",
-                            text: `El correo: [${idxEmail}] No es permitido en el sistema, este correo se eliminará del campo!!`,
-                            icon: "warning",
-                        })
-                        emailId.focus();
-                        valEmaile.value = 1;
-                    } else if (!correosPermitidos.includes(idxEmail) && idxEmail.match(regex) == null) {
-                        swal({
-                            title: "Advertencia!",
-                            text: `La estructura del correo: [${idxEmail}] solo permite -_`,
-                            icon: "warning",
-                        })
-                        emailId.focus()
-                        valEmaile.value = 1
-
-                    } else if (!correosPermitidos.includes(idxEmail) && idxEmail.match(mailRegex) == null || !idxEmail) {
-                        //alert(`El correo: [${idxEmail}] No cumple con la estructura para ser un correo electronico`);
-                        swal({
-                            title: "Advertencia!",
-                            text: `El correo: [${idxEmail}] No cumple con la estructura para ser un correo electronico`,
-                            icon: "warning",
-                        })
-                        emailId.focus()
-                        valEmaile.value = 1;
-                    } else {
-                        correosValid.push(idxEmail)
-                        valEmaile.value = 0
-                    }
-
-                    // Expresión regular para los dominios permitidos
-                    const dominiosNoPermitidos = /^(?:[a-zA-Z0-9._%+-]+@(hotmaill\.com|gmaill\.com|outlookk\.com|yaoo\.com|yahooo\.es|almmamater\.hospitall|fracturasfracturas\.com\.co|ORCUE-CASANARE\.gov\.co|CABULLARO-META\.gov\.co))$/;
-
-                    // Verifica si el correo pertenece a uno de los dominios permitidos
-                    if (dominiosNoPermitidos.test(idxEmail)) {
-                        swal({
-                            title: "Advertencia!",
-                            text: `El correo: [${idxEmail}] no tiene el dominio adecuado. Los dominios permitidos son @hotmail.com, @gmail.com, @outlook.com, @yahoo.com, @yahoo.es, @almamater.hospital, @fracturasyfracturas.com.co, @OROCUE-CASANARE.gov.co, o @CABUYARO-META.gov.co.....`,
-                            icon: "warning",
-                        })
-                        valEmaile.value = 1;
-                    }
-                    //emailId.value = idxEmail.replace(/;+$/, '');
-                }
-
-                //Radicar documento nuevo
-                document.body.addEventListener('click', function(e) {
-                    if (!e.target.closest('.radicarNuevo, #modificaRad')) return;
-
-                    if (EJECUCION) return;
-
-                    const btn = e.target.closest('.radicarNuevo, #modificaRad');
-                    const acction = btn.id;
-                    let pass = true;
-                    const idsession = '<?= $idsession ?>';
-
-                    borrarAlert();
-
-                    // Eliminar correos duplicados
-                    function eliminarCorreosDuplicados(correo) {
-                        console.log('eliminarCorreosDuplicados');
-                        console.log(correo);
-
-                        // Divide la cadena en correos separados por ';'
-                        let correos = correo.split(';');
-                        // Usa un Set para almacenar solo correos únicos
-                        let correosUnicos = new Set();
-                        // Itera sobre los correos y agrega solo los que no están duplicados
-                        correos.forEach(correo => {
-                            // Elimina espacios adicionales
-                            correo = correo.trim();
-                            // Verifica que el correo tenga un formato válido (opcional)
-                            if (/^[\w\.-]+@[\w\.-]+\.\w+$/.test(correo)) {
-                                correosUnicos.add(correo);
-                            }
-                        });
-                        // Une los correos únicos de vuelta a una cadena separada por ';'
-                        return Array.from(correosUnicos).join(';');
-                    }
-
-                    /*************************************************************************************************************************************************/
-                    // Validaciones Campo de correo eléctronico y VALIDACIONES MEDIO DE RECEPCION
-                    /*************************************************************************************************************************************************/
-                    let medi_recepcion = document.getElementById('mrecep');
-                    let ent = <?= $ent ?>;
-
-                    for (let i = 1; i <= 50; i++) {
-
-                        const emailInput = document.getElementById(`id_ema_${i}`);
-                        const dirInput = document.getElementById(`id_dir_${i}`);
-
-                        if (!emailInput) continue;
-
-                        if (emailInput.value) {
-                            emailInput.value = eliminarCorreosDuplicados(emailInput.value);
-                        }
-
-                        console.log('emailInput', emailInput.value);
-
-                        const emails = emailInput.value.split(';');
-
-                        console.log('emails', emails);
-
-                        emails.forEach(email => {
-                            if ((ent === 6 || ent === 7) && !email && !dirInput.value.trim()) {
-                                swal({
-                                    title: "Advertencia!",
-                                    text: "Debe digitar el correo electronico o la direccion",
-                                    icon: "warning",
-                                });
-
-                                mostrarAlert({
-                                    type: 'danger',
-                                    message: `Error: destinatario No. ${i} sin correo ni dirección`
-                                });
-
-                                pass = false;
-                            }
-
-                            if (email) {
-                                validarEmail(email, emailInput)
-                            };
-                        });
-                    }
-
-                    /*************************************************************************************************************************************************/
-                    //Folios y Anexos
-                    const nofolios = document.getElementById('nofolios');
-                    const noanexos = document.getElementById('noanexos');
-
-                    console.log('nofolios', nofolios);
-                    console.log('noanexos', noanexos);
-
-                    if (
-                        (nofolios && /[A-Za-z]+$/.test(nofolios.value)) ||
-                        (noanexos && /[A-Za-z]+$/.test(noanexos.value))
-                    ) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'Escriba un número válido en No de folios o anexos.'
-                        });
-                        pass = false;
-                    }
-
-                    //Fecha del radicado
-                    const fecha_doc = document.getElementById('fecha_gen_doc')?.value;
-                    console.log('fecha_doc', fecha_doc);
-
-                    const fechaFormateada = fecha_doc ?
-                        fecha_doc.split('-').reverse().join('-') :
-                        null;
-
-                    console.log('fechaFormateada', fechaFormateada);
-
-                    if (fechaFormateada) {
-                        const fechaActual = new Date();
-                        const d = fechaFormateada.substring(0, 2);
-                        const m = fechaFormateada.substring(3, 5);
-                        const y = fechaFormateada.substring(6, 10);
-                        const fecha = new Date(y, m - 1, d);
-                        const dias = Math.floor((fechaActual - fecha) / 86400000);
-
-                        if (dias > 960 && dias < 1500) {
-                            mostrarAlert({
-                                type: 'danger',
-                                message: 'El documento tiene fecha anterior a 60 días.'
-                            });
-                            pass = false;
-                        } else if (dias > 1500) {
-                            mostrarAlert({
-                                type: 'danger',
-                                message: 'Verifique la fecha del documento.'
-                            });
-                            pass = false;
-                        } else if (dias < 0) {
-                            mostrarAlert({
-                                type: 'danger',
-                                message: 'La fecha es superior a la actual.'
-                            });
-                            pass = false;
-                        }
-                    }
-
-                    console.log('RADICACION_CIRCULAR', RADICACION_CIRCULAR);
-
-                    if (RADICACION_CIRCULAR) {
-                        if (!document.getElementById('id_destinatario')) {
-                            mostrarAlert({
-                                type: 'danger',
-                                message: 'Seleccione un destinatario'
-                            });
-                            pass = false;
-                        }
-                    } else {
-                        if (!document.querySelector('input[name^="usuario"]')) {
-                            mostrarAlert({
-                                type: 'danger',
-                                message: 'Seleccione un usuario'
-                            });
-                            pass = false;
-                        }
-                    }
-
-                    //Asunto
-                    const asuInput = document.getElementById('asu');
-                    const BLOQUEO_ENTRADA = <?= $blockEntrada ? 'true' : 'false' ?>;
-
-                    if (!BLOQUEO_ENTRADA && asuInput) {
-                        let asu = asuInput.value;
-
-                        if (asu.length < 5) {
-                            mostrarAlert({
-                                type: 'danger',
-                                message: 'Asunto muy corto.'
-                            });
-                            pass = false;
-                        }
-
-                        const max = (TIPO_RADICADO == 1) ? 510 : 350;
-                        if (asu.length > max) {
-                            mostrarAlert({
-                                type: 'danger',
-                                message: 'Asunto demasiado largo.'
-                            });
-                            pass = false;
-                        }
-                    }
-
-                    //Email
-                    if (document.getElementById('errormail')?.value == 1) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'Error en el correo electrónico ingresado.'
-                        });
-                        pass = false;
-                    }
-
-                    //DIRECCION Ò EMAIL EN UN USUARIO NUEVO
-                    /******************************************************************************************************/
-                    if (!RADICACION_CIRCULAR) {
-                        document.querySelectorAll("tr[name='item_usuario']").forEach((tr, index) => {
-
-                            let apellidoInput = tr.querySelector("input[id^='id_apellido_']");
-                            let apellido = apellidoInput?.value || '';
-                            let direccion = tr.querySelector("input[id^='id_dir_']")?.value || '';
-                            let email = tr.querySelector("input[id^='id_ema_']")?.value || '';
-                            let nombre = tr.querySelector("input[id^='id_nombre_']")?.value || '';
-                            let municipio = tr.querySelector("input[id^='id_muni_']")?.value;
-                            let municipioCod = tr.querySelector("input[id^='id_muni_cod_']")?.value;
-                            let departamento = tr.querySelector("input[id^='id_dep_']")?.value;
-                            let departamentoCod = tr.querySelector("input[id^='id_dep_cod_']")?.value;
-
-                            if (!email.trim() && [1, 2, 3].includes(ent) && medi_recepcion.value == 4) {
-                                let textoEmail = ((index + 1) == 1) ? 'El campo correo electrónico esta vacio por favor verificar' : 'Los campos del correo electrónicos estan vacios por favor verificar';
-                                swal({
-                                    title: "Advertencia!",
-                                    text: textoEmail,
-                                    icon: "warning"
-                                });
-                                mostrarAlert({
-                                    type: 'danger',
-                                    message: `Destinatario No. ${index + 1} le falta correo electrónico - Por favor digitarlo, es obligatorio`
-                                });
-                                pass = false;
-                            }
-
-                            if (!direccion.trim() && [1, 2, 3].includes(ent) && [1, 2].includes(+medi_recepcion.value)) {
-                                swal({
-                                    title: "Advertencia!",
-                                    text: "Para el medio de recepción / envio seleccionado el campo dirección es obligatorio y no debe estar vacío!",
-                                    icon: "warning"
-                                });
-                                mostrarAlert({
-                                    type: 'danger',
-                                    message: `Destinatario No. ${index + 1} le falta Dirección - Si no reporta escribir Desconocida`
-                                });
-                                pass = false;
-                            }
-
-                            if (!nombre.trim()) {
-                                mostrarAlert({
-                                    type: 'danger',
-                                    message: `Destinatario No. ${index + 1} le falta Nombre - Si no reporta escribir Anónimo`
-                                });
-                                pass = false;
-                            }
-
-                            if (!apellido.trim() && !apellidoInput?.dataset.role) {
-                                mostrarAlert({
-                                    type: 'danger',
-                                    message: `Destinatario No. ${index + 1} le falta Apellido - Si no reporta escribir Anónimo`
-                                });
-                                pass = false;
-                            }
-
-                            if (!municipio || !municipioCod) {
-                                mostrarAlert({
-                                    type: 'danger',
-                                    message: `Destinatario No. ${index + 1} sin municipio`
-                                });
-                                pass = false;
-                            }
-
-                            if (!departamento || !departamentoCod) {
-                                mostrarAlert({
-                                    type: 'danger',
-                                    message: `Destinatario No. ${index + 1} sin departamento`
-                                });
-                                pass = false;
-                            }
-                        });
-                    }
-
-                    /******************************************************************************************************/
-                    //GUIA
-                    const guia = document.getElementById('guia');
-                    if (guia && guia.value.length > 20) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'Guía con más de 20 caracteres'
-                        });
-                        pass = false;
-                    }
-
-                    //REFERENCIA CUENTA_I
-                    const cuentai = document.getElementById('cuentai');
-                    if (cuentai && cuentai.value.length > 0 && cuentai.value.length > 100) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'Referencia de cuenta mayor a 100 caracteres'
-                        });
-                        pass = false;
-                    }
-
-                    //Dependencia
-                    const dep = document.querySelector('select[name="coddepe"]');
-                    if (dep && parseInt(dep.value) === 0) {
-                        mostrarAlert({
-                            type: 'danger',
-                            message: 'Seleccione una dependencia'
-                        });
-                        pass = false;
-                    }
-
-                    if (!pass) {
-                        document.querySelectorAll('.radicarNuevo').forEach(b => b.classList.remove('d-none'));
-                        return;
-                    }
-
-                    if (pass && !EJECUCION) {
-                        console.log('pass & EJECUTION');
-                        console.log(pass, EJECUCION);
-
-                        // Limpiar alertas
-                        borrarAlert();
-                        EJECUCION = true;
-
-                        // Serializar formulario (equivalente a $("form").serialize())
-                        var form = document.querySelector('form');
-                        var formData = new FormData(form);
-
-                        /* Obtener fecha original YYYY-MM-DD */
-                        var fechaISO = formData.get('fecha_gen_doc');
-
-                        /* Formatear a DD-MM-YYYY */
-                        if (fechaISO) {
-                            var partes = fechaISO.split('-'); // [YYYY, MM, DD]
-                            var newFecha = partes[2] + '-' + partes[1] + '-' + partes[0];
-
-                            /* Reemplazar valor en el FormData */
-                            formData.set('fecha_gen_doc', newFecha);
-                        }
-
-                        var datos = new URLSearchParams(formData).toString();
-                        var radicado = '';
-
-                        console.log(datos);
-
-
-                        <?php
-                        if ($datos) {
-                            echo "datos = datos + '&$javascriptCapDatos';";
-                        }
-                        ?>
-
-                        console.log("datos");
-                        console.log(datos);
-                        console.log("acction");
-                        console.log(acction);
-
-                        // Eliminar elementos
-                        var showRadicar = document.getElementById('showRadicar');
-                        if (showRadicar) showRadicar.remove();
-
-                        var copyRadicar = document.getElementById('copyradicar');
-                        if (copyRadicar) copyRadicar.remove();
-
-                        // Acción modificar
-                        if (acction === "modificaRad") {
-                            datos += "&modificar=true";
-                        }
-
-                        // Notificación
-                        if (RADICACION_NOTIFICACION) {
-                            <?php if (!empty($notifica_codi)) { ?>
-                                datos += "&notifica_codi=<?= $notifica_codi ?>";
-                            <?php } ?>
-                        }
-
-                        // Envío AJAX nativo (fetch)
-                        fetch("./ajax_radicarNuevo.php", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-                                },
-                                body: datos
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('response server');
-                                console.log(data);
-
-                                for (var k in data) {
-                                    if (data[k].error !== undefined) {
-                                        mostrarAlert({
-                                            type: 'danger',
-                                            message: data[k].error
-                                        });
-                                    } else {
-                                        if (acction !== "modificaRad") {
-                                            radicado = data[k].answer;
-
-                                            console.log('radicado');
-                                            console.log(radicado);
-
-                                            var modificaRad = document.getElementById('modificaRad');
-                                            modificaRad.insertAdjacentHTML('beforeend', data[k].answer);
-                                            modificaRad.insertAdjacentHTML(
-                                                'beforeend',
-                                                '<input type="hidden" name="nurad" value="' + data[k].answer + '" />'
-                                            );
-
-                                            document.getElementById('idrad').insertAdjacentHTML('beforeend', data[k].answer);
-                                        } else {
-                                            mostrarAlert({
-                                                type: 'success',
-                                                message: data[k].answer
-                                            });
-                                        }
-
-                                        var showModificarEl = document.getElementById('showModificar');
-                                        if (showModificarEl) {
-                                            showModificarEl.classList.remove('d-none');
-                                        }
-                                    }
-                                }
-
-                                if (acction !== "modificaRad") {
-
-                                    var skeleton = document.getElementById('skeleton');
-                                    var skeleton8 = document.getElementById('skeleton8');
-                                    var skeleton9 = document.getElementById('skeleton9');
-                                    var skeleton10 = document.getElementById('skeleton10');
-                                    var sticker = document.getElementById('sticker');
-                                    var asociar = document.getElementById('asociar');
-                                    var tipificar = document.getElementById('tipificar');
-
-                                    if (skeleton && skeleton8 && skeleton9 && skeleton10 && sticker && asociar && tipificar) {
-                                        var contentstiker = skeleton.cloneNode(true);
-                                        contentstiker.classList.remove('hide');
-                                        contentstiker = contentstiker.outerHTML.replace(/xxxxxx/g, radicado);
-
-                                        var contentverrad = skeleton8.cloneNode(true);
-                                        contentverrad.classList.remove('hide');
-                                        contentverrad = contentverrad.outerHTML.replace(/xxxxxx/g, radicado);
-
-                                        var contentasocia = skeleton9.cloneNode(true);
-                                        contentasocia.classList.remove('hide');
-                                        contentasocia = contentasocia.outerHTML.replace(/xxxxxx/g, radicado);
-
-                                        var contenttipifica = skeleton10.cloneNode(true);
-                                        contenttipifica.classList.remove('hide');
-                                        contenttipifica = contenttipifica.outerHTML.replace(/xxxxxx/g, radicado);
-
-                                        sticker.innerHTML = contentstiker + contentverrad;
-                                        asociar.innerHTML = contentasocia;
-                                        tipificar.innerHTML = contenttipifica;
-                                    }
-                                }
-
-                                <?php if (isset($uid)) { ?>
-                                    if (window.parent && typeof window.parent.filed === 'function') {
-                                        window.parent.filed(radicado, <?= $uid ?>);
-                                    } else if (
-                                        window.parent &&
-                                        window.parent.parent &&
-                                        typeof window.parent.parent.filed === 'function'
-                                    ) {
-                                        window.parent.parent.filed(radicado, <?= $uid ?>);
-                                    }
-                                <?php } ?>
-
-                                var inforshow = document.getElementById('inforshow');
-                                if (inforshow) {
-                                    inforshow.classList.remove('hide');
-                                }
-
-                                var showModificar = document.getElementById('showModificar');
-                                if (showModificar) {
-                                    showModificar.classList.remove('d-none');
-                                }
-
-                                var copy = document.getElementById('copyradicar');
-                                if (copy && showModificar) {
-                                    copy.innerHTML = showModificar.cloneNode(true).outerHTML;
-                                }
-                            })
-                            .catch(err => {
-                                console.log("err server");
-                                console.log(err);
-
-                                var errMsg = 'Error de creación/modificación del radicado. Reporte al administrador código http: ' + err.status;
-                                /*mostrarAlert({
-                                    type: 'danger',
-                                    message: errMsg
-                                });*/
-                            })
-                            .finally(() => {
-                                EJECUCION = false;
-                            });
-                    }
-                });
-
-                // SOLO TEXTO (delegación en body)
-                document.body.addEventListener('keypress', function(event) {
-                    var target = event.target;
-
-                    if (target.matches('*[data-rel="solo-text"]')) {
-                        var regex = /^[a-zA-ZáÁéÉíÍóÓúÚñÑ ]+$/;
-                        var charCode = event.charCode || event.which;
-                        var key = String.fromCharCode(charCode);
-
-                        if (!regex.test(key)) {
-                            event.preventDefault();
-                            return false;
-                        }
-                    }
-                });
-
-                // REMOVER FILA POR data-rel="remove"
-                document.body.addEventListener('click', function(event) {
-                    console.log(event);
-
-                    var removeDetail = event.target.closest('[data-rel="remove"]');
-
-                    if (removeDetail && removeDetail.matches('*[data-rel="remove"]')) {
-                        // buscar la clase 'tooltip' o 'ui-tooltip'
-                        var visualTooltips = document.querySelectorAll('.tooltip, .ui-tooltip, .tipsy, .tooltipster-base');
-
-                        visualTooltips.forEach(function(el) {
-                            el.remove();
-                        });
-
-                        var tr = removeDetail.closest('tr.item_usuario');
-                        if (tr) tr.remove();
-                    }
-
-                    var raditDocument = event.target.closest('[title="Radicar documento"]');
-                    console.log(raditDocument);
-                    if (raditDocument && raditDocument.matches('*[title="Radicar documento"]')) {
-                        // buscar la clase 'tooltip' o 'ui-tooltip'
-                        var visualTooltipsRadiDocument = document.querySelectorAll('.ui-tooltip-content');
-
-                        visualTooltipsRadiDocument.forEach(function(el) {
-                            el.remove();
-                        });
-                    }
-                });
-
-                // ELIMINAR USUARIO DESDE ICONO DE BÚSQUEDA
-                document.body.addEventListener('click', function(event) {
-                    var target = event.target;
-
-                    if (target.matches('.search-table-icon')) {
-                        var item = target.closest('.item_usuario');
-                        if (item) item.remove();
-                    }
-                });
-
-                // CONTADOR DE ASUNTO
-                var asu = document.getElementById('asu');
-                if (asu) {
-                    asu.addEventListener('input', function(e) {
-                        var textoAsunto = '';
-
-                        if (TIPO_RADICADO >= 4) {
-                            textoAsunto = '* Asunto / ep&iacute;grafe ';
-                        } else {
-                            textoAsunto = '* Asunto ';
-                        }
-
-                        textoAsunto += asu.value.length + "/" + e.target.maxLength;
-
-                        var lbAsunto = document.getElementById('lbAsunto');
-                        if (lbAsunto) {
-                            lbAsunto.innerHTML = textoAsunto;
-                        }
-                    });
-                }
-
-                // SOLO NÚMEROS EN documento_us
-                var documentoUs = document.getElementById('documento_us');
-                if (documentoUs) {
-                    documentoUs.addEventListener('keydown', function(e) {
-                        var key = e.keyCode;
-
-                        if (
-                            !(
-                                key === 8 || // backspace
-                                key === 9 || // tab
-                                key === 32 || // space
-                                key === 46 || // delete
-                                (key >= 35 && key <= 40) || // arrows/home/end
-                                (key >= 48 && key <= 57) || // numbers
-                                (key >= 96 && key <= 105) // numpad
-                            ) ||
-                            key === 81 || // Q
-                            key === 225 || // AltGr
-                            key === 16 // Shift
-                        ) {
-                            e.preventDefault();
-                        }
-                    });
-                }
-
-                // CONTROL DE PEGADO (PASTE)
-                document.body.addEventListener('paste', function(event) {
-                    var target = event.target;
-
-                    if (
-                        target.matches('[data-rel="solo-text"]') ||
-                        target.matches('[id^="id_telefono"]') ||
-                        target.matches('[id^="id_dir"]') ||
-                        target.matches('#asu, #ane, #telefono_us, #mail_us')
-                    ) {
-                        event.preventDefault();
-
-                        var regex = /[^a-zA-Z0-9áÁéÉíÍóÓúÚñÑ!@#$%^&*()_+\-=\[\]{}|;:,.<>¿?/\\'"\s]/g;
-
-                        if (target.matches('[data-rel="solo-text"]')) {
-                            regex = /[^a-zA-ZáÁéÉíÍóÓúÚñÑ ]/g;
-                        }
-
-                        var clipboardData = event.clipboardData || window.clipboardData;
-                        var paste = clipboardData.getData('text');
-
-                        paste = paste
-                            .replace(regex, '')
-                            .replace(/\s+/g, ' ')
-                            .trim();
-
-                        target.setRangeText(
-                            paste,
-                            target.selectionStart,
-                            target.selectionEnd,
-                            'end'
-                        );
-                    }
-                });
-
-                const select = document.querySelector("select[name='empTrans']");
-                if (select) {
-                    select.classList.add("form-select");
                 }
             });
-        </script>
-    </div>
+
+            $("#destinatario_us").on('keyup', function(e) {
+                var data = {};
+                data.name = {
+                    value: $("#destinatario_us").val(),
+                    id: "destinatario_us"
+                };
+
+                if (validate(data)) {
+                    data.tdoc = $("#tipo_usuario").val();
+                    $.post("./ajax_buscarUsuario.php", {
+                        searchDestinatarios: JSON.stringify(data)
+                    }).done(
+                        function(data) {
+                            ALLDATA = data;
+                            if (data !== null) {
+                                formatAnswerDestinatario(data);
+                            }
+                        }
+                    );
+                }
+            });
+
+            //Mostrar validacion del formulario
+            function mostrarAlert(objAlert) {
+                var type = objAlert.type;
+                var message = objAlert.message;
+
+                var div = $('<div/>')
+                    .addClass('alert alert-block alert-' + type)
+                    .html(
+                        '<a class="close" data-dismiss="alert" href="#">×</a>' +
+                        '<h4 class="alert-heading">' + message + '</h4>'
+                    ).appendTo('#alertmessage');
+            };
+
+            function borrarAlert() {
+                $('#alertmessage').empty();
+            }
+
+            //****************************************************************************************//
+            function validarEmail(idxEmail, emailId) {
+                const valEmaile = document.getElementById('errormail');
+                let correosValid = [];
+                const mailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                const regex = /^[^ ]+$/;
+
+                const correosProhibidos = [
+                    'sarlaft@almamater.hospital',
+                ];
+                const correosPermitidos = [
+                    'yulicita1982-@hotmail.com',
+                    'corporativo@almamater.hospital',
+                    'cocampo@diazyocampo.legal',
+                    'notificaciones@diazyocampo.legal',
+                    'contabilidad@fracturasyfracturas.com.co',
+                    'juridico@fracturasyfracturas.com.co',
+                    'notificaciones@diazyocampo.legal',
+                    'ALCALDIA@OROCUE-CASANARE.GOV.CO',
+                    'CONTACTENOS@CABUYARO-META.GOV.CO'
+                ];
+
+                if (correosProhibidos.includes(idxEmail)) {
+                    swal({
+                        title: "Advertencia!",
+                        text: `El correo: [${idxEmail}] No es permitido en el sistema, este correo se eliminará del campo!!`,
+                        icon: "warning",
+                    })
+                    emailId.focus();
+                    valEmaile.value = 1;
+                } else if (!correosPermitidos.includes(idxEmail) && idxEmail.match(regex) == null) {
+                    swal({
+                        title: "Advertencia!",
+                        text: `La estructura del correo: [${idxEmail}] solo permite -_`,
+                        icon: "warning",
+                    })
+                    emailId.focus()
+                    valEmaile.value = 1
+
+                } else if (!correosPermitidos.includes(idxEmail) && idxEmail.match(mailRegex) == null || !idxEmail) {
+                    //alert(`El correo: [${idxEmail}] No cumple con la estructura para ser un correo electronico`);
+                    swal({
+                        title: "Advertencia!",
+                        text: `El correo: [${idxEmail}] No cumple con la estructura para ser un correo electronico`,
+                        icon: "warning",
+                    })
+                    emailId.focus()
+                    valEmaile.value = 1;
+                } else {
+                    correosValid.push(idxEmail)
+                    valEmaile.value = 0
+                }
+
+                const dominiosNoPermitidos = /^(?:[a-zA-Z0-9._%+-]+@(hotmaill\.com|gmaill\.com|outlookk\.com|yaoo\.com|yahooo\.es|almmamater\.hospitall|fracturasfracturas\.com\.co|ORCUE-CASANARE\.gov\.co|CABULLARO-META\.gov\.co))$/;
+
+                // Verifica si el correo pertenece a uno de los dominios permitidos
+                if (dominiosNoPermitidos.test(idxEmail)) {
+                    swal({
+                        title: "Advertencia!",
+                        text: `El correo: [${idxEmail}] no tiene el dominio adecuado. Los dominios permitidos son @hotmail.com, @gmail.com, @outlook.com, @yahoo.com, @yahoo.es, @almamater.hospital, @fracturasyfracturas.com.co, @OROCUE-CASANARE.gov.co, o @CABUYARO-META.gov.co.....`,
+                        icon: "warning",
+                    })
+                    valEmaile.value = 1;
+                }
+            }
+
+            //Radicar documento nuevo
+            $('body').on("click", '.radicarNuevo, #modificaRad', EJECUCION, function() {
+
+                var acction = $(this).attr("id");
+                var pass = true;
+                var idsession = '<?= $idsession ?>';
+
+                /* Realizar validaciones antes de enviar el radicado*/
+
+                $('#alertmessage').empty();
+
+                // Validaciones Campo de correo eléctronico y VALIDACIONES MEDIO DE RECEPCION
+                let medi_recepcion = document.getElementById('mrecep');
+                let ent = <?= $ent ?>;
+
+                for (let idxmail = 1; idxmail <= 50; idxmail++) {
+                    let emailId = document.getElementById(`id_ema_${idxmail}`);
+                    let direccion = document.getElementById(`id_dir_${idxmail}`);
+
+                    if (emailId && emailId.value) {
+                        let valEmails = eliminarCorreosDuplicados(emailId.value);
+                        emailId.value = valEmails;
+                    }
+
+                    if (emailId) {
+                        let valEmail = emailId.value.split(';');
+
+                        valEmail.forEach((idxEmail, idx) => {
+                            if ((ent == 6 || ent == 7) && (!idxEmail && !direccion.value.trim())) {
+                                alert('auiuiui');
+                                idxmail.trim() = (idxmail == 0) ? 1 : idxmail;
+                                swal({
+                                    title: "Advertencia!",
+                                    text: `Debe digitar el correo electronio o la direccion`,
+                                    icon: "warning",
+                                })
+                                mostrarAlert({
+                                    type: 'danger',
+                                    message: `Error el campo direccion o correo electronico del destinatario número ${idxmail} esta vacío y es obligatorio`
+                                });
+                                pass = false;
+                            }
+                            if (idxEmail) {
+                                validarEmail(idxEmail, emailId)
+                            }
+                        })
+                    }
+                }
+                /*********************************************************************************************************************************************** */
+                function eliminarCorreosDuplicados(correo) {
+                    // Divide la cadena en correos separados por ';'
+                    let correos = correo.split(';');
+                    // Usa un Set para almacenar solo correos únicos
+                    let correosUnicos = new Set();
+                    // Itera sobre los correos y agrega solo los que no están duplicados
+                    correos.forEach(correo => {
+                        // Elimina espacios adicionales
+                        correo = correo.trim();
+                        // Verifica que el correo tenga un formato válido (opcional)
+                        if (/^[\w\.-]+@[\w\.-]+\.\w+$/.test(correo)) {
+                            correosUnicos.add(correo);
+                        }
+                    });
+                    // Une los correos únicos de vuelta a una cadena separada por ';'
+                    return Array.from(correosUnicos).join(';');
+                }
+
+                /*************************************************************************************************************************************************/
+                //Folios y Anexos
+                if (/[A-Za-z]+$/.test($("#nofolios").val()) ||
+                    /[A-Za-z]+$/.test($("#noanexos").val())) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'Escriba un número válido en No de folios o anexos.'
+                    });
+                    pass = false;
+                }
+
+                //Fecha del radicado
+                var fechaActual = new Date();
+                var fecha_doc = $('#fecha_gen_doc').val();
+                var dias_doc = fecha_doc.substring(0, 2);
+                var mes_doc = fecha_doc.substring(3, 5);
+                var ano_doc = fecha_doc.substring(6, 10);
+
+                var fecha = new Date(ano_doc, mes_doc - 1, dias_doc);
+                var tiempoRestante = fechaActual.getTime() - fecha.getTime();
+                var dias = Math.floor(tiempoRestante / (1000 * 60 * 60 * 24));
+
+
+                if (dias > 960 && dias < 1500) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'El documento tiene fecha anterior a 60 dias!!.'
+                    });
+                    pass = false;
+                } else if (dias > 1500) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'Verifique la fecha del documento!!'
+                    });
+                    pass = false;
+                } else if (dias < 0) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'Verifique la fecha del documento !!, es Una fecha Superior a la Del dia de Hoy'
+                    });
+                    pass = false;
+                };
+
+                if (RADICACION_CIRCULAR) {
+                    if ($("#id_destinatario").length === 0) {
+                        mostrarAlert({
+                            type: 'danger',
+                            message: 'Seleccione un destinatario'
+                        });
+                        pass = false;
+                    }
+                } else {
+                    //Usuarios
+                    if ($('input[name^="usuario"]').length === 0) {
+                        mostrarAlert({
+                            type: 'danger',
+                            message: 'Seleccione un usuario'
+                        });
+                        pass = false;
+                    };
+                }
+
+                //Asunto
+                var asu = $('#asu').val();
+                var BLOQUEO_ENTRADA = <?= $blockEntrada ? 'true' : 'false' ?>;
+
+                // Solo validar asunto si NO es una modificación de entrada
+                if (!BLOQUEO_ENTRADA) {
+                    //Tamanao del asunto Constante
+                    var min = 5;
+                    if (asu.length < min) {
+                        mostrarAlert({
+                            type: 'danger',
+                            message: 'Asunto no es mayor de ' + min + ' Caracteres. '
+                        });
+                        pass = false;
+                    } else {
+                        asu = asu.replace(/[^\x20-\x7E]+/g, '');
+                    }
+
+                    if (TIPO_RADICADO == 1) {
+                        var max = 510;
+                    } else {
+                        var max = 350;
+                    }
+                    if (asu.length > max) {
+                        mostrarAlert({
+                            type: 'danger',
+                            message: 'Asunto no es mayor de ' + max + ' Caracteres. '
+                        });
+                        pass = false;
+                    }
+                };
+
+                //Email
+                var emaile = $('#errormail').val();
+                if (emaile == 1) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'Error en el correo electrónico ingresado. '
+                    });
+                    pass = false;
+                }
+
+                //DIRECCION Ò EMAIL EN UN USUARIO NUEVO
+                /******************************************************************************************************/
+                if (!RADICACION_CIRCULAR) {
+                    // Iterar sobre las filas con el atributo name='item_usuario'
+                    $("tr[name='item_usuario']").each(function(index) {
+                        // Selección dinámica de inputs dentro de la fila actual
+                        let apellidoInput = $(this).find("input[id^='id_apellido_']");
+                        let apellido = apellidoInput.val();
+                        let direccion = $(this).find("input[id^='id_dir_']").val();
+                        let email = $(this).find("input[id^='id_ema_']").val();
+                        let nombre = $(this).find("input[id^='id_nombre_']").val();
+                        let municipio = $(this).find("input[id^='id_muni_']").val();
+                        let municipioCod = $(this).find("input[id^='id_muni_cod_']").val();
+                        let departamento = $(this).find("input[id^='id_dep_']").val();
+                        let departamentoCod = $(this).find("input[id^='id_dep_cod_']").val();
+                        let documento = $(this).find("input[id^='id_documen_']").val();
+
+                        /*console.log(`Fila ${index + 1}: 
+                            Apellido: ${apellido}, 
+                            Dirección: ${direccion}, 
+                            Nombre: ${nombre}, 
+                            Municipio: ${municipio}, 
+                            Departamento: ${departamento}`);*/
+                        // Validar dirección y correo electrónico
+                        if (!email.trim() && (ent == 1 || ent == 2 || ent == 3) && (medi_recepcion.value == 4)) {
+
+                            let textoEmail = ((index + 1) == 1) ? 'El campo correo electrónico esta vacio por favor verificar' : 'Los campos del correo electrónicos estan vacios por favor verificar';
+                            swal({
+                                title: "Advertencia!",
+                                text: textoEmail,
+                                icon: "warning",
+                            })
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'El destinatario No. ' + (index + 1) + ' le falta correo electrónico - Por favor digitarlo, es obligatorio'
+                            });
+                            pass = false;
+
+                        }
+                        if (!direccion.trim() && (ent == 1 || ent == 2 || ent == 3) && (medi_recepcion.value == 1 || medi_recepcion.value == 2)) {
+                            swal({
+                                title: "Advertencia!",
+                                text: "Para el medio de recepción / envio seleccionado el campo dirección es obligatorio y no debe estar vacío!",
+                                icon: "warning",
+                            })
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'El destinatario No. ' + (index + 1) + ' le falta Dirección - Si no reporta escribir Desconocida'
+                            });
+                            pass = false;
+                        }
+
+                        if ((!email.trim() || !direccion.trim()) && (ent == 1 || ent == 2 || ent == 3) && (medi_recepcion.value == 7)) {
+                            let textoEmail = ((index + 1) == 1) ? 'El campo correo electrónico esta vacio por favor verificar' : 'Los campos del correo electrónicos estan vacios por favor verificar';
+                            swal({
+                                title: "Advertencia!",
+                                text: textoEmail,
+                                icon: "warning",
+                            })
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'El destinatario No. ' + (index + 1) + ' le falta correo electrónico o la dirección - Uno de estos campos es obligatorio por favor digitarlos'
+                            });
+                            pass = false;
+                        }
+                        // Validar nombre
+                        if (!nombre.trim()) {
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'El destinatario No. ' + (index + 1) + ' le falta Nombre - Si no reporta escribir Anónimo'
+                            });
+                            pass = false;
+                        }
+
+                        if (apellido.trim() === '' && !apellidoInput.is("[data-role='representante-legal']")) {
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'El destinatario No. ' + (index + 1) + ' le falta Apellido - Si no reporta escribir Anónimo'
+                            });
+                            pass = false;
+                        }
+                        // Validar municipio
+                        if (!municipio || municipio === '0' || municipioCod === '0') {
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'El destinatario No. ' + (index + 1) + ' le falta el Municipio'
+                            });
+                            pass = false;
+                        }
+
+                        // Validar departamento
+                        if (!departamento || departamento === '0' || departamentoCod === '0') {
+                            mostrarAlert({
+                                type: 'danger',
+                                message: 'El destinatario No. ' + (index + 1) + ' le falta el Departamento'
+                            });
+                            pass = false;
+                        }
+                        // Validar documento 
+                        /*if (!documento.trim() || documento.trim() === '0') { 
+                            mostrarAlert({ 
+                                type: 'danger', 
+                                message: 'El destinatario No. ' + (index + 1) + ' le falta el documento - Si no reporta crear un usuario Anonimo' 
+                            }); 
+                            pass = false;
+                        }*/
+                    });
+                }
+                /******************************************************************************************************/
+                //GUIA
+                if ($('#guia').length > 0 && $('#guia').val().length > 20) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'Gu&iacute;a con mas de 20 caracteres'
+                    });
+                    pass = false;
+                }
+
+                //REFERENCIA CUENTA_I
+                if ($('#cuentai').length > 0 && $('#cuentai').val().length > 100) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'Referencia con mas de 100 caracteres'
+                    });
+                    pass = false;
+                }
+
+                //Dependencia
+                if (parseInt($('select[name="coddepe"]').val()) === 0) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'Selecciona una dependencia'
+                    });
+                    pass = false;
+                }
+
+                //SIAD
+                if ($('#siad').length > 0 &&
+                    $('#siad').val().length > 0 &&
+                    $('#siad').val().length < 13) {
+                    mostrarAlert({
+                        type: 'danger',
+                        message: 'SIAD con menos de 13 d&iacute;gitos'
+                    });
+                    pass = false;
+                }
+
+                if (!pass && acction == 'nuevobtnradicar') {
+                    $(".radicarNuevo").show();
+                }
+
+                if (pass && !EJECUCION) {
+                    //Dejar alertas en blanco
+                    borrarAlert();
+                    EJECUCION = true;
+
+                    // Serializar formulario (equivalente a $("form").serialize())
+                    var form = document.querySelector('form');
+                    var formData = new FormData(form);
+
+                    /* Obtener fecha original YYYY-MM-DD */
+                    var fechaISO = formData.get('fecha_gen_doc');
+
+                    /* Formatear a DD-MM-YYYY */
+                    if (fechaISO) {
+                        var partes = fechaISO.split('-'); // [YYYY, MM, DD]
+                        var newFecha = partes[2] + '-' + partes[1] + '-' + partes[0];
+
+                        /* Reemplazar valor en el FormData */
+                        formData.set('fecha_gen_doc', newFecha);
+                    }
+
+                    var datos = new URLSearchParams(formData).toString();
+                    var radicado = '';
+
+                    <?php
+                    if (datos) {
+                        echo "datos = datos + '&$javascriptCapDatos;'";
+                    }
+                    ?>
+
+                    $('#showRadicar').remove();
+                    $('#copyradicar').remove();
+
+                    if (acction === "modificaRad") {
+                        datos = datos + "&modificar=true";
+                    }
+
+                    if (RADICACION_NOTIFICACION) {
+                        <?php if (!empty($notifica_codi)) { ?>
+                            datos = datos + "&notifica_codi=<?= $notifica_codi ?>";
+                        <?php } ?>
+                    }
+
+                    //console.log("datos: ", datos); return
+
+                    var jqxhr = $.post("./ajax_radicarNuevo.php", datos, function(data) {
+                        for (var k in data) {
+                            if (data[k].error !== undefined) {
+                                mostrarAlert({
+                                    type: 'danger',
+                                    message: data[k].error
+                                });
+                            } else {
+                                if (acction !== "modificaRad") {
+                                    radicado = data[k].answer;
+                                    $('#modificaRad').append(data[k].answer);
+                                    $('#modificaRad').append("<input type=\"hidden\" name=\"nurad\" value=\"" + data[k].answer + "\" />");
+
+                                    $('#idrad').append(data[k].answer);
+                                } else {
+                                    mostrarAlert({
+                                        type: 'success',
+                                        message: data[k].answer
+                                    });
+                                }
+
+                                $('#showModificar').removeClass('d-none');
+                            }
+                        }
+
+                        if (acction !== "modificaRad") {
+                            var contentstiker = $('#skeleton').clone().removeClass('hide')[0].outerHTML.replace(/xxxxxx/g, radicado);
+                            var contentverrad = $('#skeleton8').clone().removeClass('hide')[0].outerHTML.replace(/xxxxxx/g, radicado);
+                            var contentasocia = $('#skeleton9').clone().removeClass('hide')[0].outerHTML.replace(/xxxxxx/g, radicado);
+                            var contenttipifica = $('#skeleton10').clone().removeClass('hide')[0].outerHTML.replace(/xxxxxx/g, radicado);
+                            $('#sticker').html(contentstiker + contentverrad);
+                            $('#asociar').html(contentasocia);
+                            $('#tipificar').html(contenttipifica);
+                        }
+
+                        <? if (isset($uid)) { //El uid representa una radicadion de email, la siguiente linea permite automatizar la radicacion de emails
+                        ?>
+                            window.parent.filed(radicado, <?= $uid ?>);
+                        <? } ?>
+
+                        $("#inforshow").removeClass('hide');
+                        $('#showModificar').removeClass('hide');
+                        $('#copyradicar').html($('#showModificar').clone());
+
+                    }).fail(function(err) {
+                        var errMsg = 'Error de creación/modificación del radicado. Reporte al administrador código http: ' + err.status;
+                        mostrarAlert({
+                            type: 'danger',
+                            message: errMsg
+                        })
+                    })
+
+                    EJECUCION = false;
+                }
+            });
+
+            $('body').on('keypress', '*[data-rel="solo-text"]', function(event) {
+                var regex = /^[a-zA-ZáÁéÉíÍóÓúÚñÑ ]+$/;
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                if (!regex.test(key)) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+
+            $('body').on('click', '*[data-rel="remove"]', function(e) {
+                $(this).parent('tr.item_usuario').remove();
+            });
+
+            //Eliminar usuarios y borrar el campo de seleccionados
+            //si no existe ningun usuario
+            $("body").on("click", ".search-table-icon", function() {
+                $(this).closest('.item_usuario').remove();
+            });
+
+            //No permitir escribir sino numeros
+            $('#asu').on('input', function(e) {
+                let textoAsunto = '';
+                if (TIPO_RADICADO >= 4) {
+                    textoAsunto = '* Asunto / ep&iacute;grafe ';
+                } else {
+                    textoAsunto = '* Asunto ';
+                }
+                textoAsunto = textoAsunto + $('#asu').val().length + "/" + e.target.maxLength;
+                $("#lbAsunto").empty();
+                $("#lbAsunto").append(textoAsunto);
+            });
+
+            $('#documento_us').keydown(function(e) {
+                var key = e.keyCode;
+                if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) ||
+                        (key >= 48 && key <= 57) || (key >= 96 && key <= 105) ||
+                        (key == 9)) || (key == 81) || (key == 225) || (key == 16)) {
+                    e.preventDefault();
+                }
+            });
+
+            $('body').on('paste', '[data-rel="solo-text"], [id^="id_telefono"], [id^="id_dir"],' +
+                '#asu, #ane, #telefono_us, #mail_us',
+                function(event) {
+                    event.preventDefault();
+                    var regex = /[^a-zA-Z0-9áÁéÉíÍóÓúÚñÑ!@#$%^&*()_+\-=\[\]{}|;:,.<>¿?/\\'"\s]/g;
+                    if ($(this).is('[data-rel="solo-text"]'))
+                        regex = /[^a-zA-ZáÁéÉíÍóÓúÚñÑ ]/g;
+                    var paste = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
+                    paste = paste.replace(regex, '').replace(/\s+/g, ' ').trim();
+                    this.setRangeText(paste, this.selectionStart, this.selectionEnd, "end");
+                });
+        });
+    </script>
 </body>
 
 </html>

@@ -54,9 +54,9 @@ if ($rsPath) {
 if ($codTx == 1983) {
     $asuntoMail =  "Radicado: " . $numeroRadicado;
     $mailDestino = $_SESSION['email'];
-    $asu = "Se ha registrado en el Sistema de Información de la Universidad Militar Nueva Granada la siguiente PQRD con el número de radicado " . $numeroRadicado . ". Por favor conserve el número para consultar el estado de su solicitud.";
-    $radicadosSelText = $numeroRadicado;
-    $mensaje = file_get_contents($ruta_raiz . "/conf/envioDigital.html");
+		$asu = "Se ha registrado en el Sistema de Información de la Universidad Militar Nueva Granada la siguiente PQRSDF con el número de radicado ".$numeroRadicado.". Por favor conserve el número para consultar el estado de su solicitud.";
+		$radicadosSelText = $numeroRadicado;
+		$mensaje = file_get_contents($ruta_raiz."/conf/envioDigital.html");
 }
 
 if ($codTx == 6) {
@@ -152,10 +152,10 @@ try {
     if ($rsPadre) {
         $radicadoPadreGen = $rsPadre->fields["ANEX_RADI_NUME"];
     }
-
-    $encripted = $encrypted_string = encrypt_decrypt('encrypt', $radicadoPadreGen, $secret_key);
-    $linkAnexos = $link . '/2/lista_anexos_consulta.php?radiNume=' . $encripted;
-
+   
+    $encripted = $encrypted_string = encrypt_decrypt('encrypt',$radicadoPadreGen,$secret_key);
+    $linkAnexos = $link.'/nuevo/lista_anexos_consulta.php?radiNume='.$encripted;
+   
     $mensaje      = str_replace("*RAD_S*", $radicadosSelText, $mensaje);
     $mensaje      = str_replace("*USUARIO*", $krd, $mensaje);
     $linkImagenes = str_replace("*SERVIDOR_IMAGEN*", $servidorOrfeoBodega, $linkImagenes);

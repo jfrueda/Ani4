@@ -18,8 +18,19 @@ $ids = is_array($_REQUEST['id']) ? $_REQUEST['id'] : [$_REQUEST['id']];
 $respuesta = [];
 $proveedor_correo_certificado = 'certicamara';
 $proveedor_generico = 'generico';
+$erroresGlobales = [];
 
-foreach ($ids as $id) {
+$fromNameCorreo = '';
+if (!empty($_SESSION['entida_largo'])) {
+    $fromNameCorreo = trim($_SESSION['entida_largo']);
+} elseif (!empty($entidad)) {
+    $fromNameCorreo = trim($entidad);
+} else {
+    $fromNameCorreo = 'Universidad Militar Nueva Granada';
+}
+
+foreach($ids as $id) {
+    $linkImagenes = '';
     $rad_envio = $db->conn->getRow('SELECT * FROM sgd_rad_envios WHERE id = ?', [$id]);
     $anexo = $db->conn->getRow('SELECT * FROM anexos WHERE id = ?', [$rad_envio['ID_ANEXO']]);
     $sgd_dir_direccion = $db->conn->getRow('SELECT * FROM sgd_dir_drecciones WHERE id = ?', [$rad_envio['ID_DIRECCION']]);
@@ -30,7 +41,7 @@ foreach ($ids as $id) {
     $registro = json_decode($rad_envio['REGISTRO'] ?? '[]', true);
     $correos = explode(';', $sgd_dir_direccion['SGD_DIR_MAIL']);
     $radicado = $db->conn->getRow('SELECT * FROM radicado WHERE radi_nume_radi = ?', [$anexo['RADI_NUME_SALIDA']]);
-    $certificador = $rad_envio['CERTIFICADO'] == 't' ? $proveedor_correo_certificado : $proveedor_generico;
+    $certificador = $proveedor_generico;
 
     $registro = array_filter($registro, function ($entry) {
         return $entry['status'] !== 'error';
@@ -64,13 +75,14 @@ foreach ($ids as $id) {
         }
     }
 
+    $smtpTrace = [];
     try {
         $subject = "$entidad: radicado " . $radicado['RADI_NUME_RADI'];
         $msgHtml = file_get_contents($ruta_raiz . "/conf/envioDigital.html");
         $reemplazos = [
             "*RAD_S*" => $radicado['RADI_NUME_RADI'],
             "*USUARIO*" => $_SESSION["krd"],
-            "*LINK_ANEXOS*" => getBaseUrl() . '/2/lista_anexos_consulta.php?radiNume=' . encrypt_decrypt('encrypt', $radicado['RADI_NUME_RADI'], '97SUP3RC0R33UDKA7128409EJA'),
+            "*LINK_ANEXOS*" => getBaseUrl().'/nuevo/lista_anexos_consulta.php?radiNume='.encrypt_decrypt('encrypt', $radicado['RADI_NUME_RADI'], '97SUP3RC0R33UDKA7128409EJA'),
             "*IMAGEN*" => str_replace("*SERVIDOR_IMAGEN*", $servidorOrfeoBodega, $linkImagenes),
             "*ASUNTO*" => htmlentities($subject, ENT_QUOTES | ENT_IGNORE, "UTF-8"),
             "*ENTIDAD_LARGO*" => $_SESSION["entida_largo"],
@@ -87,9 +99,18 @@ foreach ($ids as $id) {
         $mail->Username = trim($correoSaliente);
         $mail->Password = trim($passwordCorreoSaliente);
         $mail->SMTPSecure = trim($SMTPSecure);
+        $mail->SMTPDebug = isset($debugPHPMailer) ? intval($debugPHPMailer) : 0;
+        $mail->Debugoutput = function($str, $level) use (&$smtpTrace) {
+            $smtpTrace[] = "[$level] $str";
+        };
         $mail->From = trim($correoSaliente);
-        $mail->FromName = 'Supersalud';
-        foreach ($correos_validos as $correo) {
+        $mail->FromName = $fromNameCorreo;
+
+        if (empty($correos_validos)) {
+            throw new Exception('No hay destinatarios válidos para enviar (correo inválido, ya enviado o vacío).');
+        }
+
+        foreach($correos_validos as $correo) {
             $mail = aplicarCertificador($mail, $correo, $certificador);
         }
 
@@ -112,12 +133,29 @@ foreach ($ids as $id) {
                 ];
             }
         }
-    } catch (Exception $e) {
-        foreach ($correos_validos as $correo) {
+    } catch(Exception $e) {
+        $errorDetalle = $e->getMessage();
+        if (!empty($smtpTrace) && isset($debugPHPMailer) && intval($debugPHPMailer) > 0) {
+            $errorDetalle .= ' | SMTP_TRACE: ' . implode(' || ', $smtpTrace);
+        }
+
+        $erroresGlobales[] = "ID $id: $errorDetalle";
+        foreach($correos_validos as $correo) {
             $registro[] = [
                 'correo' => $correo,
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => $errorDetalle,
+                'regenvio' => 0,
+                'timestamp' => date('Y-m-d H:i:s'),
+                'certificador' => $certificador
+            ];
+        }
+
+        if (empty($correos_validos)) {
+            $registro[] = [
+                'correo' => '',
+                'status' => 'error',
+                'message' => $errorDetalle,
                 'regenvio' => 0,
                 'timestamp' => date('Y-m-d H:i:s'),
                 'certificador' => $certificador
@@ -208,6 +246,9 @@ foreach ($ids as $id) {
 
 header('Content-Type: application/json');
 echo json_encode([
-    'message' => 'Correos enviados y registro actualizado.',
-    'registro' => $respuesta
+    'message' => empty($erroresGlobales)
+        ? 'Correos enviados y registro actualizado.'
+        : 'Se presentaron errores en uno o más envíos.',
+    'registro' => $respuesta,
+    'errores' => $erroresGlobales
 ], true);

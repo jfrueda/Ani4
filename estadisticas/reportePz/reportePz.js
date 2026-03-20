@@ -16,6 +16,9 @@ data.dep.addEventListener('change', async (e) => {
 
 	let depSel = data.dep.value.split('-');
 
+	// limpiar daatalist 
+	data.dListUsr.innerHTML = '';
+
 	try {
 		let res = await fetch(`req_resp.php`, {
 			method: 'POST',
@@ -27,9 +30,9 @@ data.dep.addEventListener('change', async (e) => {
 			headers: {
 				'Content-type': 'application/json'
 			}
-		}),
-			json = await res.json();
-		//console.log(json);
+		})
+
+		let json = await res.json();
 
 		if (json.resp == '') {
 			alert('No existen usuarios en la dependencia seleccionada');
@@ -41,14 +44,17 @@ data.dep.addEventListener('change', async (e) => {
 		else {
 			data.usua.removeAttribute('disabled');
 			// Update the autocompletar generation
+			let options = '';
 			json.resp.forEach((el) => {
 				let dataUsr = el.split('-');
 				let normalizedName = normalizeSpaces(dataUsr[2]);
-				data.dListUsr.innerHTML += `<option data-id="${dataUsr[0]}-${dataUsr[1]}-${normalizedName}-${depSel[0]}">${normalizedName}</option>`;
+				options += `<option data-id="${dataUsr[0]}-${dataUsr[1]}-${normalizedName}-${depSel[0]}">${normalizedName}</option>`;
 			});
+
+			// Setear nuevos usuarios
+			data.dListUsr.innerHTML = options;
 		}
-	}
-	catch (err) {
+	} catch (err) {
 		console.log(`ERROR-LOG (${err})`);
 	}
 })

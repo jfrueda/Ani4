@@ -11,10 +11,10 @@ header('Access-Control-Allow-Headers:');
 // Recibe los datos para el formato de intercambio json y
 // los convierte en array para su previa manipulación
 // ----------------------------------------------------------------
-$postData = json_decode(file_get_contents('php://input'),true);
+$postData = json_decode(file_get_contents('php://input'), true);
 
 $validador = $postData['condicion'];
-include_once __DIR__.'/dataRepPz.php';
+include_once __DIR__ . '/dataRepPz.php';
 $back = new DataRepPz();
 
 switch ($validador) {
@@ -33,5 +33,3 @@ switch ($validador) {
 		# code...
 		break;
 }
-
-?>
