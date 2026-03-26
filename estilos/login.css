@@ -4,11 +4,11 @@
 
 .btn-primary {
 	--bs-btn-color: #fff;
-	--bs-btn-bg: #f0e59b;
-	--bs-btn-border-color: #f0e59b;
+	--bs-btn-bg: #da723f;
+	--bs-btn-border-color: #da733f91;
 
-	--bs-btn-hover-bg: #f0e591;
-	--bs-btn-hover-border-color: #f0e591;
+	--bs-btn-hover-bg: #da733fbd;
+	--bs-btn-hover-border-color: #da733fbd;
 
 	--bs-btn-active-bg: #02224f;
 	--bs-btn-active-border-color: #02224f;
@@ -75,7 +75,7 @@
 }
 
 :root {
-	--bs-primary: #f0e59b;
+	--bs-primary: #da723f;
 	--bs-secondary: #FDC608;
 	--bs-success: #0D5E30;
 	--bs-danger: #EE2A24;
@@ -83,7 +83,7 @@
 	--bs-light: #FFFFFF;
 
 	/* Link colors */
-	--bs-link-color: #f0e59b;
+	--bs-link-color: #da723f;
 	--bs-link-hover-color: #f0e591;
 
 	/* Focus ring */
@@ -96,7 +96,12 @@ html {
 	width: 100%;
 	margin: 0;
 	display: flex;
-	font-weight: bolder;
+	font-family: "Nunito Sans", sans-serif !important;
+	font-optical-sizing: auto !important;
+	font-style: normal !important;
+	font-variation-settings:
+		"wdth" 100,
+		"YTLC" 500;
 }
 
 /* Vuejs class */
@@ -147,7 +152,7 @@ html {
 
 .left-section {
 	flex: 1;
-	background: #f0e59b;
+	background: #da723f;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -159,6 +164,7 @@ html {
 .left-section .logo {
 	background-size: cover;
 	width: 30% !important;
+	filter: drop-shadow(0px 0px 4px #575756);
 }
 
 #logoorfeo {
@@ -234,7 +240,7 @@ html {
 	margin: 5px auto 10px;
 	text-align: center;
 	text-shadow: 1px 1px 2px #000;
-	background: rgba(0, 0, 0, 0.25);
+	background: #575756 !important;
 	border-radius: 5px;
 	padding: 5px;
 }
@@ -246,7 +252,7 @@ html {
 }
 
 .login-form label {
-	color: #f0e59b !important;
+	color: #575756 !important;
 }
 
 /* Login Form */
@@ -255,7 +261,7 @@ html {
 	box-sizing: border-box;
 	background: #FFF;
 	border: 1px solid #777;
-	color: #6c6c6c;
+	color: #575756;
 	padding: 20px;
 	opacity: .8;
 	-webkit-transition: opacity .5s ease-in-out;
@@ -297,7 +303,7 @@ html {
 ::placeholder {
 	text-align: left;
 	display: block;
-	color: rgb(23, 23, 23);
+	color: #575756 !important;
 }
 
 /* Login Button */
@@ -312,12 +318,12 @@ html {
 	text-shadow: none !important;
 	margin: 20px auto;
 	/* background: rgb(0, 114, 62); */
-	background: #f0e59b;
+	background: #da723f;
 	transition: background 0.5s ease-in-out 0s;
 }
 
 .btn.btn-login:hover {
-	background: #f0e59bbc;
+	background: #da723fbc;
 }
 
 .btn.btn-reset {
@@ -396,7 +402,7 @@ label.checkbox input {
 
 #footer-text,
 #footer-text a {
-	color: black;
+	color: #575756 !important;
 }
 
 @media (max-width: 768px) {

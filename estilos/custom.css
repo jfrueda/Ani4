@@ -1,13 +1,13 @@
 .btn-primary {
     --bs-btn-color: #fff;
-    --bs-btn-bg: #dc7240;
-    --bs-btn-border-color: #dc7240;
+    --bs-btn-bg: #da723f;
+    --bs-btn-border-color: #da723f;
 
-    --bs-btn-hover-bg: #032a63;
-    --bs-btn-hover-border-color: #032a63;
+    --bs-btn-hover-bg: #da733fd1;
+    --bs-btn-hover-border-color: #da733fd1;
 
-    --bs-btn-active-bg: #02224f;
-    --bs-btn-active-border-color: #02224f;
+    --bs-btn-active-bg: #da733fd1;
+    --bs-btn-active-border-color: #da733fd1;
 }
 
 .btn-secondary {
@@ -71,7 +71,7 @@
 }
 
 :root {
-    --bs-primary: #dc7240;
+    --bs-primary: #da723f;
     --bs-secondary: #FDC608;
     --bs-success: #0D5E30;
     --bs-danger: #EE2A24;
@@ -79,8 +79,8 @@
     --bs-light: #FFFFFF;
 
     /* Link colors */
-    --bs-link-color: #dc7240;
-    --bs-link-hover-color: #032a63;
+    --bs-link-color: #da723f;
+    --bs-link-hover-color: #da733fd1;
 
     /* Focus ring */
     --bs-primary-rgb: 4, 48, 116;
@@ -88,10 +88,10 @@
 
 /* ALERT PRIMARY — Azul institucional */
 .alert-primary {
-    --bs-alert-bg: #dc724020;
+    --bs-alert-bg: #da723f20;
     /* 12–20% opacity */
-    --bs-alert-border-color: #dc7240;
-    --bs-alert-color: #dc7240;
+    --bs-alert-border-color: #da723f;
+    --bs-alert-color: #da723f;
 }
 
 /* ALERT SECONDARY — Amarillo institucional */
@@ -131,24 +131,24 @@
 }
 
 .bg-orfeo {
-    background: #dc7240 !important;
+    background: #da723f !important;
     background: linear-gradient(90deg,
             #904624 0%,
-            #dc7240 60%,
+            #da723f 60%,
             #d6a994 100%) !important;
 }
 
 .btn-outline-primary {
-    --bs-btn-color: #dc7240;
-    --bs-btn-border-color: #dc7240;
+    --bs-btn-color: #da723f;
+    --bs-btn-border-color: #da723f;
 
-    --bs-btn-hover-bg: #dc7240;
+    --bs-btn-hover-bg: #da723f;
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-border-color: #dc7240;
+    --bs-btn-hover-border-color: #da723f;
 
-    --bs-btn-active-bg: #032a63;
+    --bs-btn-active-bg: #da733fd1;
     --bs-btn-active-color: #fff;
-    --bs-btn-active-border-color: #032a63;
+    --bs-btn-active-border-color: #da733fd1;
 }
 
 .btn-outline-secondary {

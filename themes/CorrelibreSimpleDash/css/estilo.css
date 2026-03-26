@@ -9,8 +9,8 @@ For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap
 /* ATTN: This is mobile first CSS - to update 786px and up screen width use the media query near the bottom of the document! */
 .btn-primary {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #dc7240;
-  --bs-btn-border-color: #dc7240;
+  --bs-btn-bg: #da723f;
+  --bs-btn-border-color: #da723f;
 
   --bs-btn-hover-bg: #032a63;
   --bs-btn-hover-border-color: #032a63;
@@ -80,7 +80,7 @@ For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap
 }
 
 :root {
-  --bs-primary: #dc7240;
+  --bs-primary: #da723f;
   --bs-secondary: #FDC608;
   --bs-success: #0D5E30;
   --bs-danger: #EE2A24;
@@ -88,7 +88,7 @@ For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap
   --bs-light: #FFFFFF;
 
   /* Link colors */
-  --bs-link-color: #dc7240;
+  --bs-link-color: #da723f;
   --bs-link-hover-color: #032a63;
 
   /* Focus ring */
@@ -97,10 +97,10 @@ For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap
 
 /* ALERT PRIMARY — Azul institucional */
 .alert-primary {
-  --bs-alert-bg: #dc724020;
+  --bs-alert-bg: #da723f20;
   /* 12–20% opacity */
-  --bs-alert-border-color: #dc7240;
-  --bs-alert-color: #dc7240;
+  --bs-alert-border-color: #da723f;
+  --bs-alert-color: #da723f;
 }
 
 /* ALERT SECONDARY — Amarillo institucional */
@@ -140,20 +140,20 @@ For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap
 }
 
 .bg-orfeo {
-  background: #dc7240 !important;
+  background: #da723f !important;
   background: linear-gradient(90deg,
       #1a4a9f 0%,
-      #dc7240 60%,
+      #da723f 60%,
       #031f4d 100%) !important;
 }
 
 .btn-outline-primary {
-  --bs-btn-color: #dc7240;
-  --bs-btn-border-color: #dc7240;
+  --bs-btn-color: #da723f;
+  --bs-btn-border-color: #da723f;
 
-  --bs-btn-hover-bg: #dc7240;
+  --bs-btn-hover-bg: #da723f;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-border-color: #dc7240;
+  --bs-btn-hover-border-color: #da723f;
 
   --bs-btn-active-bg: #032a63;
   --bs-btn-active-color: #fff;
@@ -234,7 +234,6 @@ html {
   padding: 0;
   min-height: 100%;
   position: relative;
-  color: #003366 !important;
 }
 
 body {
@@ -244,8 +243,13 @@ body {
   min-height: 100%;
   direction: ltr;
   background-color: #f8f9fa !important;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-  color: #003366 !important;
+  font-family: "Nunito Sans", sans-serif !important;
+  font-optical-sizing: auto !important;
+  font-style: normal !important;
+  font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500;
+  color: #575756 !important;
 }
 
 #logo_superargo {
@@ -501,7 +505,7 @@ table.tablesorter thead tr th:hover {
 
 .navbar a:not(.logo):hover {
   color: white !important;
-  background-color: #dc7240 !important;
+  background-color: #da723f !important;
 }
 
 /* transición suave del sidebar */
@@ -519,13 +523,14 @@ table.tablesorter thead tr th:hover {
   width: 30%;
   cursor: pointer;
   transition: all 0.3s;
+  background-color: #da723f !important;
 }
 
 
 /* Texto negro por defecto en todo el item y su enlace */
 #sidebarMenu .list-group-item,
 #sidebarMenu .list-group-item a {
-  color: black !important;
+  color: #575756 !important;
 }
 
 /* Texto blanco cuando se hace hover en el item completo */
@@ -538,12 +543,12 @@ table.tablesorter thead tr th:hover {
 #sidebarMenu .accordion-button:hover,
 #sidebarMenu .list-group-item:hover {
   color: white !important;
-  background-color: #dc7240 !important;
+  background-color: #da723f !important;
 }
 
 .accordion-button:not(.collapsed) {
   color: white !important;
-  background-color: #dc7240 !important;
+  background-color: #da723f !important;
 }
 
 /* MainFrame moderno no se usa */

@@ -147,7 +147,7 @@ foreach ($reportes as $key => $value) {
 
         .card-header {
             border-bottom: 1px solid rgba(0, 0, 0, .05);
-            background-color: #043074 !important;
+            background-color: #da723f !important;
         }
 
         .input-group-text {
@@ -164,7 +164,7 @@ foreach ($reportes as $key => $value) {
         }
 
         .shadow-sm {
-            box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+            box-shadow: 0 .125rem .25rem #da723f !important;
         }
 
         /* Para corregir el ancho de los selects generados por PHP si es necesario */
