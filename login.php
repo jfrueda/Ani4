@@ -103,8 +103,8 @@ $bac = "$ruta_raiz/bodega/$background";
 //$header = "$ruta_raiz/bodega/$headerRtaPdf";
 $imgLogin = "$ruta_raiz/bodega/sys_img/imgLogin.png";
 $imgPie = "$ruta_raiz/bodega/sys_img/pie_login.png";
-$leftSection = "$ruta_raiz/bodega/sys_img/logo-claro.png";
-$rightSection = "$ruta_raiz/bodega/sys_img/login.png";
+$leftSection = "$ruta_raiz/bodega/sys_img/logo_blanco.png";
+$rightSection = "$ruta_raiz/bodega/sys_img/Super.png";
 
 if ($logoEntidad) {
   $log = "$ruta_raiz/bodega/$logoEntidad";
@@ -175,7 +175,7 @@ if ($logoEntidad) {
           <div class="col-md-12">
             <div class="login-box show">
               <div class="login-form text-center">
-                <img src="<?= $rightSection ?>" width="100" alt="Logo Orfeo">
+                <img src="<?= $rightSection ?>" width="100%" alt="Logo Orfeo">
                 <p class="login-alt-text text-center">Sistema de gestión documental</p>
                 <?= @$msgindex ?>
                 <form action="./login.php??fecha=250314_1395788602&amp;PHPSESSID=&amp;krd=&amp;swLog=1" method="post">
