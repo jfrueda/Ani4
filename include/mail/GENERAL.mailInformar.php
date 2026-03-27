@@ -54,6 +54,7 @@ if($rsPath){
 if($codTx==1983) {
     $asuntoMail =  "Radicado: ".$numeroRadicado;
     $mailDestino = $_SESSION['email'];
+		$debugPHPMailer = 0;
 		$asu = "Se ha registrado en el Sistema de Información de la Universidad Militar Nueva Granada la siguiente PQRSDF con el número de radicado ".$numeroRadicado.". Por favor conserve el número para consultar el estado de su solicitud.";
 		$radicadosSelText = $numeroRadicado;
 		$mensaje = file_get_contents($ruta_raiz."/conf/envioDigital.html");
@@ -118,7 +119,10 @@ $mail->IsSMTP(); // telling the class to use SMTP
 try {
     $mail->Host       = $hostPHPMailer;  // SMTP server
     $mail->Port       = $portPHPMailer;  // set the SMTP port for the GMAIL server
-    $mail->SMTPDebug  = $debugPHPMailer; // enables SMTP debug information (for testing) 2 debuger
+    $mail->SMTPDebug  = intval($debugPHPMailer); // enables SMTP debug information (for testing) 2 debuger
+    if (intval($codTx) === 1983) {
+        $mail->SMTPDebug = 0;
+    }
     $mail->SMTPAuth   = true;
     $mail->SMTPSecure = $SMTPSecure;     // enable SMTP authentication
     $mail->Username   = $userPHPMailer;  // SMTP account username
