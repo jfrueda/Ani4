@@ -2002,7 +2002,6 @@ class estadisiticas
         $ddcamp2 = ",'' fechf, '' comen,'' usuafin,'' DEPEFIN ";
 
         if ($depe != 99999) {
-            echo "if";
             if ($tpAds == 1) {
                 $depe = $this->depahijas($depe);
             }
