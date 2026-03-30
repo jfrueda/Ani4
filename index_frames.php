@@ -381,6 +381,11 @@ if ($_SESSION["usua_admin_sistema"] >= 1 || $tiene_acceso_admin) {
             'subMenu' => 0,
             'url' => "./Administracion/usuario/index.php?$sendSession",
             'nombre' => "Usuarios y Perfiles"
+        ),
+        "creacionMasivaUsuarios" => array(
+            'subMenu' => 0,
+            'url' => "./Administracion/usuario/creacion_masiva.php?$sendSession",
+            'nombre' => "Creaci&oacute;n masiva de usuarios"
         )
     );
     $usuarios = array('subMenu' => 1, 'url' => "#", 'nombre' => "Usuarios y permisos", 'sub' => $sub);
