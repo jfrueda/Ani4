@@ -8,13 +8,14 @@ use AltchaOrg\Altcha\Altcha;
 define('ADODB_ASSOC_CASE', 1);
 $ruta_raiz = __DIR__;
 $ADODB_COUNTRECS = false;
-include_once("$ruta_raiz/processConfig.php");
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/processConfig.php";
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 
 $db   = new ConnectionHandler($ruta_raiz);
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 
-function verify_captcha($payload) {
+function verify_captcha($payload)
+{
     global $altcha_hmac;
     global $db;
 
@@ -28,6 +29,6 @@ function verify_captcha($payload) {
     } else {
         $db->conn->execute('INSERT INTO altcha (challenge, created_at) VALUES (?, ?)', [$payload['challenge'], date('Y-m-d H:i:s')]);
     }
-    
+
     return $verified;
 }

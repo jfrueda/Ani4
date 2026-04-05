@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @module session_orfeo
  *
@@ -23,16 +24,20 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-if(!$ruta_raiz) $ruta_raiz= ".";
+if (!$ruta_raiz) {
+    $ruta_raiz = ".";
+}
 $autenticaExterna = isset($autenticaExterna) && $autenticaExterna === true;
 // Esto es para darle al usuario acceso al menu Opciones
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/processConfig.php";
-include_once("$ruta_raiz/include/tx/roles.php");
+include_once "$ruta_raiz/include/tx/roles.php";
 
-$path_raiz = realpath ( dirname ( __FILE__ ) );
-include ("$ruta_raiz/include/utils/Utils.php");
-if(!$krd) $krd = $_SESSION["krd"];
+$path_raiz = realpath(dirname(__FILE__));
+include "$ruta_raiz/include/utils/Utils.php";
+if (!$krd) {
+    $krd = $_SESSION["krd"];
+}
 $db   = new ConnectionHandler("$ruta_raiz");
 $roles = new Roles($db);
 
@@ -40,9 +45,12 @@ include "$ruta_raiz/include/tx/sanitize.php";
 $db->conn->SetFetchMode(ADODB_FETCH_NUM);
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 
-if (!defined('ADODB_ASSOC_CASE'))define('ADODB_ASSOC_CASE', 1);
+if (!defined('ADODB_ASSOC_CASE')) {
+    define('ADODB_ASSOC_CASE', 1);
+}
+
 $krd        = strtoupper($krd);
-$fechah     = date("Ymd") . "_". time("hms");
+$fechah     = date("Ymd") . "_" . time("hms");
 $check      = 1;
 $numeroa    =
     $numero     =
@@ -73,9 +81,9 @@ $tpNumRad       =
 $queryTRad      = "";
 $queryDepeRad   = "";
 
-while(!$rs->EOF){
+while (!$rs->EOF) {
     $numTp              = $rs->fields["SGD_TRAD_CODIGO"];
-    $descTp 			= $rs->fields["SGD_TRAD_DESCR"];
+    $descTp             = $rs->fields["SGD_TRAD_DESCR"];
     $imgTp              = $rs->fields["SGD_TRAD_ICONO"];
     $queryTRad          .= ",a.USUA_PRAD_TP$numTp";
     $queryDepeRad       .= ",b.DEPE_RAD_TP$numTp";
@@ -87,7 +95,6 @@ while(!$rs->EOF){
 
     $rs->MoveNext();
 }
-
 
 /**
  * BUSQUEDA DE ICONOS Y NOMBRES PARA LOS TERCEROS
@@ -114,20 +121,18 @@ $query = "  SELECT
 
 $rs     = $db->conn->Execute($query);
 
-while(!$rs->EOF){
+while (!$rs->EOF) {
     $dirTipo   = $rs->fields["SGD_DIR_TIPO"];
     $nombTip3  = $rs->fields["SGD_TIP3_NOMBRE"];
     $descTip3  = $rs->fields["SGD_TIP3_DESC"];
     $imgTip3   = $rs->fields["SGD_TIP3_IMGPESTANA"];
 
-    for($iTp=0;$iTp<$iTpRad;$iTp++){
-
+    for ($iTp = 0; $iTp < $iTpRad; $iTp++) {
         $numTp        =  $tpNumRad[$iTp];
-
         $campoTip3    = "SGD_TPR_TP$numTp";
         $numTpExiste  = $rs->fields[$campoTip3];
 
-        if($numTpExiste>=1){
+        if ($numTpExiste >= 1) {
             $tip3Nombre[$dirTipo][$numTp]    = $nombTip3;
             $tip3desc[$dirTipo][$numTp]      = $descTip3;
             $tip3img[$dirTipo][$numTp]       = $imgTip3;
@@ -138,28 +143,29 @@ while(!$rs->EOF){
 
 if (!$autenticaExterna && !isset($_SESSION['dependencia']) && !Utils::check_token($_POST['csrf_token'])) {
     $validacionUsuario = true;
-    $recOrfeo="loginWeb";
+    $recOrfeo = "loginWeb";
     $mensajeError = '';
-}
-else {
+} else {
     // autenticar usuario
     if ($autenticaExterna) {
         $auth = true;
     } else {
-        $auth = Utils::auth($krd,$drd);
+        $auth = Utils::auth($krd, $drd);
     }
     if ($auth === true || isset($_SESSION['dependencia'])) {
         $roles->traerPermisos($krd);
-    }
-    else {
+    } else {
         $validacionUsuario = true;
-        $recOrfeo="loginWeb";
+        $recOrfeo = "loginWeb";
         $mensajeError = $auth;
     }
 }
 
-if ($db->driver == 'postgres') $krd = pg_escape_string($krd);
-$queryTRad = ""; $queryDepeRad="";
+if ($db->driver == 'postgres') {
+    $krd = pg_escape_string($krd);
+}
+$queryTRad = "";
+$queryDepeRad = "";
 $query = "SELECT
     a.*,
     b.DEPE_NOMB,
@@ -179,35 +185,34 @@ $query = "SELECT
 $comentarioDev  = ' Busca Permisos de Usuarios ...';
 $rs             = $db->conn->Execute($query);
 
+if (!$validacionUsuario) {
+    if (!isset($tpDependencias)) {
+        $tpDependencias = "";
+    }
 
-
-if (!$validacionUsuario){
-    if (!isset($tpDependencias)) $tpDependencias = "";
-
-    foreach ($tpNumRad as $key => $valueTp){
+    foreach ($tpNumRad as $key => $valueTp) {
         $campo                = "DEPE_RAD_TP$valueTp";
         $campoPer             = "USUA_PRAD_TP$valueTp";
 
         //Recorremos los tipos de radicado
-        if(array_key_exists($campoPer, $roles->permisosUsuario)){
+        if (array_key_exists($campoPer, $roles->permisosUsuario)) {
             $tpPerRad[$valueTp]   = $roles->permisosUsuario[$campoPer]['crud'];
-            if(!empty($rs->fields[$campo])){
-                $usua_prad_tpr[$valueTp]= 1;
+            if (!empty($rs->fields[$campo])) {
+                $usua_prad_tpr[$valueTp] = 1;
                 $tpDepeRad[$valueTp]  = $rs->fields[$campo];
             }
         }
 
-        if(sizeof($tpPerRad) > 0){
+        if (sizeof($tpPerRad) > 0) {
             $perm_radi_salida_tp = 1;
         }
 
-        $tpDependencias .= "<".$rs->fields[$campo].">";
-
+        $tpDependencias .= "<" . $rs->fields[$campo] . ">";
     }
 
     $perm_radi_salida_tp = 0;
 
-    if (count($rs->fields) > 0){
+    if (count($rs->fields) > 0) {
         $fechah               = date("dmy") . "_" . time("hms");
         $dependencia          = $rs->fields["DEPE_CODI"];
         $dependencianomb      = $rs->fields["DEPE_NOMB"];
@@ -225,119 +230,115 @@ if (!$validacionUsuario){
         $nombusuario          = $rs->fields["USUA_NOMB"];
         $contraxx             = $rs->fields["USUA_PASW"];
         $depe_nomb            = $rs->fields["DEPE_NOMB"];
-        $depe_codi_territorial= $rs->fields["DEPE_CODI_TERRITORIAL"];
+        $depe_codi_territorial = $rs->fields["DEPE_CODI_TERRITORIAL"];
 
 
         /*******************************************************************/
         /**************** CARGA DE PERMISOS DE RADICACION ******************/
         /*******************************************************************/
-        /*PERMISOS PARA CARGA DE ACUSES*/ 
+        /*PERMISOS PARA CARGA DE ACUSES*/
         /***************************************************************************/
-        if(array_key_exists('CARGAR_ACUSES', $roles->permisosUsuario))
-        {
+        if (array_key_exists('CARGAR_ACUSES', $roles->permisosUsuario)) {
             $usua_carg_acu = $roles->permisosUsuario['CARGAR_ACUSES']['crud'];
         }
         $_SESSION['subir_acuses'] = $usua_carg_acu;
         /***************************************************************************/
-        /*PERMISOS PARA REPORTE PAZ Y SALVO*/ 
+        /*PERMISOS PARA REPORTE PAZ Y SALVO*/
         /***************************************************************************/
-        if(array_key_exists('REPORTE_PAZ_SALVO', $roles->permisosUsuario))
-        {
+        if (array_key_exists('REPORTE_PAZ_SALVO', $roles->permisosUsuario)) {
             $usua_paz_salvo = $roles->permisosUsuario['REPORTE_PAZ_SALVO']['crud'];
         }
         $_SESSION['usr_adm_paz_salvo'] = $usua_paz_salvo;
         /***************************************************************************/
 
-        /*PERMISOS PARA RADICADOS CON RESERVA*/ 
+        /*PERMISOS PARA RADICADOS CON RESERVA*/
         /********************************************************************************/
-        if(array_key_exists('PERM_RAD_RESERV', $roles->permisosUsuario))
-        {
+        if (array_key_exists('PERM_RAD_RESERV', $roles->permisosUsuario)) {
             $_SESSION['perm_rad_reser'] = $roles->permisosUsuario['PERM_RAD_RESERV']['crud'];
         }
         /*********************************************************************************/
-        /*PERMISOS PARA RADICADOS CON RESERVA SOLO OBSERVAR GESTIONDOCUMENTAL*/ 
+        /*PERMISOS PARA RADICADOS CON RESERVA SOLO OBSERVAR GESTIONDOCUMENTAL*/
         /*********************************************************************************/
-        if(array_key_exists('PERM_RAD_CAL', $roles->permisosUsuario))
-        {
+        if (array_key_exists('PERM_RAD_CAL', $roles->permisosUsuario)) {
             $_SESSION['perm_cons_rad_cal'] = $roles->permisosUsuario['PERM_RAD_CAL']['crud'];
         }
         /*********************************************************************************/
-        if(array_key_exists('USUA_PRAD_TP1', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_PRAD_TP1', $roles->permisosUsuario)) {
             $radicar_tipo_1 =  $roles->permisosUsuario['USUA_PRAD_TP1']['crud'];
         }
 
-        if(array_key_exists('USUA_PRAD_TP2', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_PRAD_TP2', $roles->permisosUsuario)) {
             $radicar_tipo_2 =  $roles->permisosUsuario['USUA_PRAD_TP2']['crud'];
         }
 
-        if(array_key_exists('USUA_PRAD_TP3', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_PRAD_TP3', $roles->permisosUsuario)) {
             $radicar_tipo_3 =  $roles->permisosUsuario['USUA_PRAD_TP3']['crud'];
         }
 
-        if(array_key_exists('USUA_PRAD_TP4', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_PRAD_TP4', $roles->permisosUsuario)) {
             $radicar_tipo_4 =  $roles->permisosUsuario['USUA_PRAD_TP4']['crud'];
         }
 
-        if(array_key_exists('USUA_PRAD_TP5', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_PRAD_TP5', $roles->permisosUsuario)) {
             $radicar_tipo_5 =  $roles->permisosUsuario['USUA_PRAD_TP5']['crud'];
         }
 
-        if(array_key_exists('USUA_PRAD_TP6', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_PRAD_TP6', $roles->permisosUsuario)) {
             $radicar_tipo_6 =  $roles->permisosUsuario['USUA_PRAD_TP6']['crud'];
         }
 
-        if(array_key_exists('USUA_PRAD_TP7', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_PRAD_TP7', $roles->permisosUsuario)) {
             $radicar_tipo_7 =  $roles->permisosUsuario['USUA_PRAD_TP7']['crud'];
         }
 
-        if(array_key_exists('USUA_PRAD_TP8', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_PRAD_TP8', $roles->permisosUsuario)) {
             $radicar_tipo_8 =  $roles->permisosUsuario['USUA_PRAD_TP8']['crud'];
         }
 
-        if(array_key_exists('PERMISO_DIAS_HABILES', $roles->permisosUsuario)){
+        if (array_key_exists('PERMISO_DIAS_HABILES', $roles->permisosUsuario)) {
             $fecha_vencimiento =  $roles->permisosUsuario['PERMISO_DIAS_HABILES']['crud'];
         }
- 
-        if(array_key_exists('USUA_PERM_ROOT', $roles->permisosUsuario)){
+
+        if (array_key_exists('USUA_PERM_ROOT', $roles->permisosUsuario)) {
             $usua_root = 't';
         }
-        if(array_key_exists('USUA_ADMIN_SISTEMA', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_ADMIN_SISTEMA', $roles->permisosUsuario)) {
             $usua_admin_sistema = $roles->permisosUsuario['USUA_ADMIN_SISTEMA']['crud'];
         }
 
-        if(array_key_exists('USUA_ADM_PLANTILLA', $roles->permisosUsuario)){
+        if (array_key_exists('USUA_ADM_PLANTILLA', $roles->permisosUsuario)) {
             $crea_plantilla = $roles->permisosUsuario['USUA_ADM_PLANTILLA']['crud'];
         }
 
-        if(array_key_exists("USUA_ADMIN_ARCHIVO", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_ADMIN_ARCHIVO", $roles->permisosUsuario)) {
             $usua_admin_archivo = $roles->permisosUsuario["USUA_ADMIN_ARCHIVO"]['crud'];
         }
 
-        if(array_key_exists("SGD_PERM_ESTADISTICA", $roles->permisosUsuario)){
+        if (array_key_exists("SGD_PERM_ESTADISTICA", $roles->permisosUsuario)) {
             $usua_perm_estadistica  = $roles->permisosUsuario["SGD_PERM_ESTADISTICA"]['crud'];
         }
 
-        if(array_key_exists("PERM_RADI", $roles->permisosUsuario)){
+        if (array_key_exists("PERM_RADI", $roles->permisosUsuario)) {
             $perm_radi  = $roles->permisosUsuario["PERM_RADI"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_IMPRESION", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_IMPRESION", $roles->permisosUsuario)) {
             $usua_perm_impresion  = $roles->permisosUsuario["USUA_PERM_IMPRESION"]['crud'];
         }
 
-        if(array_key_exists("PERM_TIPIF_ANEXO", $roles->permisosUsuario)){
+        if (array_key_exists("PERM_TIPIF_ANEXO", $roles->permisosUsuario)) {
             $perm_tipif_anexo  = $roles->permisosUsuario["PERM_TIPIF_ANEXO"]['crud'];
         }
 
-        if(array_key_exists("PERM_BORRAR_ANEXO", $roles->permisosUsuario)){
+        if (array_key_exists("PERM_BORRAR_ANEXO", $roles->permisosUsuario)) {
             $perm_borrar_anexo  = $roles->permisosUsuario["PERM_BORRAR_ANEXO"]['crud'];
         }
 
-        if(array_key_exists("USUA_MASIVA", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_MASIVA", $roles->permisosUsuario)) {
             $usua_masiva  = $roles->permisosUsuario["USUA_MASIVA"]['crud'];
         }
 
-        if(array_key_exists("DEPE_CODI_PADRE", $roles->permisosUsuario)){
+        if (array_key_exists("DEPE_CODI_PADRE", $roles->permisosUsuario)) {
             $depe_codi_padre  = $roles->permisosUsuario["DEPE_CODI_PADRE"]['crud'];
         }
 
@@ -345,72 +346,72 @@ if (!$validacionUsuario){
             $usua_perm_numera_res   = $roles->permisosUsuario["USUA_PERM_NUMERA_RES"]['crud'];
         }*/
 
-        if(array_key_exists("USUA_PERM_TRD", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_TRD", $roles->permisosUsuario)) {
             $usua_perm_trd   = $roles->permisosUsuario["USUA_PERM_TRD"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_ADMINASIG", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_ADMINASIG", $roles->permisosUsuario)) {
             $usua_perm_adminasig   = $roles->permisosUsuario["USUA_PERM_ADMINASIG"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_ADMIN_EMAIL_MASIVE", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_ADMIN_EMAIL_MASIVE", $roles->permisosUsuario)) {
             $usua_perm_admin_email_masive = $roles->permisosUsuario["USUA_PERM_ADMIN_EMAIL_MASIVE"]['crud'];
         }
 
-        if(array_key_exists("DEPE_CODI_TERRITORIAL", $roles->permisosUsuario)){
+        if (array_key_exists("DEPE_CODI_TERRITORIAL", $roles->permisosUsuario)) {
             // $depe_codi_territorial   = $roles->permisosUsuario["DEPE_CODI_TERRITORIAL"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_DEV", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_DEV", $roles->permisosUsuario)) {
             $usua_perm_dev   = $roles->permisosUsuario["USUA_PERM_DEV"]['crud'];
         }
 
-        if(array_key_exists("SGD_PANU_CODI", $roles->permisosUsuario)){
+        if (array_key_exists("SGD_PANU_CODI", $roles->permisosUsuario)) {
             $usua_perm_anu  = $roles->permisosUsuario["SGD_PANU_CODI"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_ENVIOS", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_ENVIOS", $roles->permisosUsuario)) {
             $usua_perm_envios  = $roles->permisosUsuario["USUA_PERM_ENVIOS"]['crud'];
         }
 
-        if(array_key_exists("ENVIOS_GENERAL", $roles->permisosUsuario)){
+        if (array_key_exists("ENVIOS_GENERAL", $roles->permisosUsuario)) {
             $envios_general  = $roles->permisosUsuario["ENVIOS_GENERAL"]['crud'];
         }
 
-        if(array_key_exists("ENVIOS_DEPENDENCIA", $roles->permisosUsuario)){
+        if (array_key_exists("ENVIOS_DEPENDENCIA", $roles->permisosUsuario)) {
             $envios_dependencia  = $roles->permisosUsuario["ENVIOS_DEPENDENCIA"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_SCOR", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_SCOR", $roles->permisosUsuario)) {
             $usua_perm_scor = $roles->permisosUsuario["USUA_PERM_SCOR"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_MODIFICA", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_MODIFICA", $roles->permisosUsuario)) {
             $usua_perm_modifica  = $roles->permisosUsuario["USUA_PERM_MODIFICA"]['crud'];
         }
 
-        if(array_key_exists("USUARIO_REASIGNA", $roles->permisosUsuario)){
+        if (array_key_exists("USUARIO_REASIGNA", $roles->permisosUsuario)) {
             $usuario_reasignacion  = $roles->permisosUsuario["USUARIO_REASIGNA"]['crud'];
         }
 
-        if(array_key_exists("USUA_REASIGNA_JEFES", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_REASIGNA_JEFES", $roles->permisosUsuario)) {
             $usuario_reasigna_jefes  = $roles->permisosUsuario["USUA_REASIGNA_JEFES"]['crud'];
         }
 
 
-        if(array_key_exists("USUA_PERM_SANCIONADOS", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_SANCIONADOS", $roles->permisosUsuario)) {
             $usua_perm_sancionad  = $roles->permisosUsuario["USUA_PERM_SANCIONADOS"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_INTERGAPPS", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_INTERGAPPS", $roles->permisosUsuario)) {
             $usua_perm_intergapps  = $roles->permisosUsuario["USUA_PERM_INTERGAPPS"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_FIRMA", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_FIRMA", $roles->permisosUsuario)) {
             $usua_perm_firma = $roles->permisosUsuario["USUA_PERM_FIRMA"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_PRESTAMO", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_PRESTAMO", $roles->permisosUsuario)) {
             $usua_perm_prestamo = $roles->permisosUsuario["USUA_PERM_PRESTAMO"]['crud'];
         }
 
@@ -418,33 +419,33 @@ if (!$validacionUsuario){
             $usua_perm_notifica = $roles->permisosUsuario["USUA_PERM_NOTIFICA"]['crud'];
         }*/
 
-        if(array_key_exists("USUA_PERM_EXPEDIENTE", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_EXPEDIENTE", $roles->permisosUsuario)) {
             $usuaPermExpediente = $roles->permisosUsuario["USUA_PERM_EXPEDIENTE"]['crud'];
         }
 
-        if(array_key_exists("USUA_AUTH_LDAP", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_AUTH_LDAP", $roles->permisosUsuario)) {
             $usuaauthldap = $roles->permisosUsuario["USUA_AUTH_LDAP"]['crud'];
         }
-        if(array_key_exists("USUA_PERM_RADEMAIL", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_RADEMAIL", $roles->permisosUsuario)) {
             $usuaPermRadEmail = $roles->permisosUsuario["USUA_PERM_RADEMAIL"]['crud'];
         }
-        if(array_key_exists("USUA_PERM_RADEMAIL_AUTO", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_RADEMAIL_AUTO", $roles->permisosUsuario)) {
             $USUA_PERM_RADEMAIL_AUTO = $roles->permisosUsuario["USUA_PERM_RADEMAIL_AUTO"]['crud'];
-        }   
-        if(array_key_exists("USUA_PERM_RADIMAILCLIENT", $roles->permisosUsuario)){
+        }
+        if (array_key_exists("USUA_PERM_RADIMAILCLIENT", $roles->permisosUsuario)) {
             $USUA_PERM_RADIMAILCLIENT = $roles->permisosUsuario["USUA_PERM_RADIMAILCLIENT"]['crud'];
-        } 
-        if(array_key_exists("USUA_PERM_EXPORTEXP", $roles->permisosUsuario)){
+        }
+        if (array_key_exists("USUA_PERM_EXPORTEXP", $roles->permisosUsuario)) {
             $USUA_PERM_EXPORTEXP = $roles->permisosUsuario["USUA_PERM_EXPORTEXP"]['crud'];
-        } 
+        }
 
         if (array_key_exists("USUA_PERM_RADFAX", $roles->permisosUsuario)) {
             $usuaPermRadFax = $roles->permisosUsuario["USUA_PERM_RADFAX"]['crud'];
         }
 
-        if(array_key_exists("USUA_ASESOR", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_ASESOR", $roles->permisosUsuario)) {
             $usuario_asesor  = $roles->permisosUsuario["USUA_ASESOR"]['crud'];
-        }	        
+        }
 
         /*if (array_key_exists("PERM_ARCHI", $roles->permisosUsuario)) {
             $permArchi = $roles->permisosUsuario["PERM_ARCHI"]['crud'];
@@ -453,117 +454,122 @@ if (!$validacionUsuario){
         if (array_key_exists("PERM_VOBO", $roles->permisosUsuario)) {
             $permVobo = $roles->permisosUsuario["PERM_VOBO"]['crud'];
         }
-        if(array_key_exists("USUA_PERM_OWNCLOUD", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_OWNCLOUD", $roles->permisosUsuario)) {
             $usuaPermOwncloud = $roles->permisosUsuario["USUA_PERM_OWNCLOUD"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_RESPUESTA", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_RESPUESTA", $roles->permisosUsuario)) {
             $permRespuesta = $roles->permisosUsuario["USUA_PERM_RESPUESTA"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_STICKER", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_STICKER", $roles->permisosUsuario)) {
             $permStiker = $roles->permisosUsuario["USUA_PERM_STICKER"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_RECOVER_RAD", $roles->permisosUsuario)){
-            $usuapermrecoverrad = $roles->permisosUsuario["USUA_PERM_RECOVER_RAD"]['crud']; 
-        } 
-
-        if(array_key_exists("USUA_PERM_ARCHI", $roles->permisosUsuario)){
-            $usua_perm_archi = $roles->permisosUsuario["USUA_PERM_ARCHI"]['crud']; 
+        if (array_key_exists("USUA_PERM_RECOVER_RAD", $roles->permisosUsuario)) {
+            $usuapermrecoverrad = $roles->permisosUsuario["USUA_PERM_RECOVER_RAD"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_RAD_ESPECIAL", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_ARCHI", $roles->permisosUsuario)) {
+            $usua_perm_archi = $roles->permisosUsuario["USUA_PERM_ARCHI"]['crud'];
+        }
+
+        if (array_key_exists("USUA_PERM_RAD_ESPECIAL", $roles->permisosUsuario)) {
             $permRadEspecial = $roles->permisosUsuario["USUA_PERM_RAD_ESPECIAL"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_TRANS_RAD", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_TRANS_RAD", $roles->permisosUsuario)) {
             $permTransRad = $roles->permisosUsuario["USUA_PERM_TRANS_RAD"]['crud'];
         }
-        if(array_key_exists("USUA_PERM_TODOS_REASIGNA", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_TODOS_REASIGNA", $roles->permisosUsuario)) {
             $permTodosReasigna = $roles->permisosUsuario["USUA_PERM_TODOS_REASIGNA"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_RECOVER_RAD", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_RECOVER_RAD", $roles->permisosUsuario)) {
             $usuapermrecoverrad = $roles->permisosUsuario["USUA_PERM_RECOVER_RAD"]['crud'];
-        }	
+        }
 
         /* Fraqmentar usuarios y perfiles*/
-        if(array_key_exists("USUA_PERM_ONLY_USER", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_ONLY_USER", $roles->permisosUsuario)) {
             $usuapermonlyuser = $roles->permisosUsuario["USUA_PERM_ONLY_USER"]['crud'];
         }
 
-        if(array_key_exists("USUA_LESS_PERM_USER", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_LESS_PERM_USER", $roles->permisosUsuario)) {
             $usualesspermuser = $roles->permisosUsuario["USUA_LESS_PERM_USER"]['crud'];
         }
 
-        if(array_key_exists("USUA_LESS_PERM_USER_PROFILE", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_LESS_PERM_USER_PROFILE", $roles->permisosUsuario)) {
             $usualesspermuserprofile = $roles->permisosUsuario["USUA_LESS_PERM_USER_PROFILE"]['crud'];
         }
 
-        if(array_key_exists("ENRUTADORTRD", $roles->permisosUsuario)){
+        if (array_key_exists("ENRUTADORTRD", $roles->permisosUsuario)) {
             $usuapermenrutadortrd = $roles->permisosUsuario["ENRUTADORTRD"]['crud'];
         }
 
-        if(array_key_exists("USUA_PERM_ADM_ESP", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_ADM_ESP", $roles->permisosUsuario)) {
             $usuapermadmesp = $roles->permisosUsuario["USUA_PERM_ADM_ESP"]['crud'];
         }
-        if(array_key_exists("USUA_PERM_ENRUTADOR", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_PERM_ENRUTADOR", $roles->permisosUsuario)) {
             $usuapermenrutador = $roles->permisosUsuario["USUA_PERM_ENRUTADOR"]['crud'];
         }
 
-        if(array_key_exists("PERM_SENDMAIL_RR", $roles->permisosUsuario)){
+        if (array_key_exists("PERM_SENDMAIL_RR", $roles->permisosUsuario)) {
             $permSendMailRR = $roles->permisosUsuario["PERM_SENDMAIL_RR"]['crud'];
         }
 
-        if(array_key_exists("PERM_DESCARGAEXP", $roles->permisosUsuario)){
+        if (array_key_exists("PERM_DESCARGAEXP", $roles->permisosUsuario)) {
             $permDescargaExp = $roles->permisosUsuario["PERM_DESCARGAEXP"]['crud'];
         }
         /* Fin Fraqmentar usuarios y perfiles*/
 
-        if(array_key_exists("USUA_CARP_PERSONALES", $roles->permisosUsuario)){
+        if (array_key_exists("USUA_CARP_PERSONALES", $roles->permisosUsuario)) {
             $usuacarppersonales = $roles->permisosUsuario["USUA_CARP_PERSONALES"]['crud'];
         }
-        
-        if(array_key_exists("USUA_PERM_ADMEXPV1", $roles->permisosUsuario)){
+
+        if (array_key_exists("USUA_PERM_ADMEXPV1", $roles->permisosUsuario)) {
             $admexpv1 = $roles->permisosUsuario["USUA_PERM_ADMEXPV1"]['crud'];
         }
 
-        if(array_key_exists("ADM_EXP", $roles->permisosUsuario)){
+        if (array_key_exists("ADM_EXP", $roles->permisosUsuario)) {
             $admexpSS = $roles->permisosUsuario["ADM_EXP"]['crud'];
         }
 
-        if(array_key_exists("RESTAURAR_SEGURIDAD_EXPEDIENTE", $roles->permisosUsuario)){
+        if (array_key_exists("RESTAURAR_SEGURIDAD_EXPEDIENTE", $roles->permisosUsuario)) {
             $restaurarSeguridadExpediente = $roles->permisosUsuario["RESTAURAR_SEGURIDAD_EXPEDIENTE"]['crud'];
         }
 
-        if(array_key_exists("NOTI_EXP", $roles->permisosUsuario)){
+        if (array_key_exists("NOTI_EXP", $roles->permisosUsuario)) {
             $notiexp = $roles->permisosUsuario["NOTI_EXP"]['crud'];
         }
 
-        
 
-		if($usua_perm_impresion==1){
-			if($perm_radi_salida_tp>=1) $perm_radi_sal = 3; else $perm_radi_sal = 1;
-		}else{
-			if($perm_radi_salida_tp>=1) $perm_radi_sal = 1;
-		}
 
-		//Traemos el campo que indica si el usuario puede
-		//utilizar el administrador de flujos o no
-                /*if(array_key_exists("USUA_PERM_ADMINFLUJOS", $roles->permisosUsuario)){
+        if ($usua_perm_impresion == 1) {
+            if ($perm_radi_salida_tp >= 1) {
+                $perm_radi_sal = 3;
+            } else {
+                $perm_radi_sal = 1;
+            }
+        } else {
+            if ($perm_radi_salida_tp >= 1) {
+                $perm_radi_sal = 1;
+            }
+        }
+
+        //Traemos el campo que indica si el usuario puede
+        //utilizar el administrador de flujos o no
+        /*if(array_key_exists("USUA_PERM_ADMINFLUJOS", $roles->permisosUsuario)){
                     $usua_perm_adminflujos = $roles->permisosUsuario["USUA_PERM_ADMINFLUJOS"]['crud'];
                 }*/
 
+        if (array_key_exists("CODI_NIVEL", $roles->permisosUsuario)) {
+            $nivelus = $roles->permisosUsuario["CODI_NIVEL"]['crud'];
+        }
 
-                if(array_key_exists("CODI_NIVEL", $roles->permisosUsuario)){
-                    $nivelus = $roles->permisosUsuario["CODI_NIVEL"]['crud'];
-                }
+        //En este lugar se colocan las opciones del sistema que no pueden ir en config.
+        $mostrar_opc_envio        = 0;
 
-			//En este lugar se colocan las opciones del sistema que no pueden ir en config.
-        		$mostrar_opc_envio        = 0;
-
-        		$isql = "select
+        $isql = "select
                             b.MUNI_NOMB from dependencia a,municipio b
         				where
                             a.muni_codi=b.muni_codi
@@ -571,38 +577,37 @@ if (!$validacionUsuario){
         					and a.muni_codi=b.muni_codi
         					and a.depe_codi=$dependencia";
 
-        		$rs = $db->conn->Execute($isql);
-        		$depe_municipio= $rs->fields["MUNI_NOMB"];
+        $rs = $db->conn->Execute($isql);
+        $depe_municipio = $rs->fields["MUNI_NOMB"];
 
-        		/**
-        		*   Consulta que anade los nombres y codigos de carpetas del Usuario
-        		*/
-        		$isql = "select CARP_CODI, CARP_DESC from carpeta";
-        		$rs   = $db->conn->Execute($isql);
-        		$iC   = 0;
+        /**
+         *   Consulta que anade los nombres y codigos de carpetas del Usuario
+         */
+        $isql = "select CARP_CODI, CARP_DESC from carpeta";
+        $rs   = $db->conn->Execute($isql);
+        $iC   = 0;
 
-        		while(!$rs->EOF){
-        			$iC = $rs->fields["CARP_CODI"];
-        			$descCarpetasGen[$iC] = $rs->fields["CARP_DESC"];
-        			$rs->MoveNext();
-        		}
+        while (!$rs->EOF) {
+            $iC = $rs->fields["CARP_CODI"];
+            $descCarpetasGen[$iC] = $rs->fields["CARP_DESC"];
+            $rs->MoveNext();
+        }
 
-            	$isql = "select CODI_CARP, DESC_CARP from carpeta_per
+        $isql = "select CODI_CARP, DESC_CARP from carpeta_per
             				where usua_codi=$codusuario and depe_codi = $dependencia";
-            	$rs = $db->conn->Execute($isql);
-            	$iC = 0;
+        $rs = $db->conn->Execute($isql);
+        $iC = 0;
 
-            	while(!$rs->EOF)
-            	{
-            		$iC = $rs->fields["CODI_CARP"];
-            		$descCarpetasPer[$iC] = $rs->fields["DESC_CARP"];
-            		$rs->MoveNext();
-            	}
+        while (!$rs->EOF) {
+            $iC = $rs->fields["CODI_CARP"];
+            $descCarpetasPer[$iC] = $rs->fields["DESC_CARP"];
+            $rs->MoveNext();
+        }
 
 
-            	$ADODB_COUNTRECS = true;
+        $ADODB_COUNTRECS = true;
 
-            	$isql = "SELECT
+        $isql = "SELECT
                             d.ID_CONT,
                 			d.ID_PAIS,
                 			d.DPTO_CODI,
@@ -618,298 +623,297 @@ if (!$validacionUsuario){
                 			d.MUNI_CODI = m.MUNI_CODI AND
                 			d.DEPE_CODI = $dependencia";
 
-            	$rs_cod_local      = $db->conn->Execute("$isql");
-            	$ADODB_COUNTRECS   = false;
+        $rs_cod_local      = $db->conn->Execute("$isql");
+        $ADODB_COUNTRECS   = false;
 
-            	if ($rs_cod_local && !$rs_cod_local->EOF){
-                    $cod_local     =    $rs_cod_local->fields['ID_CONT']."-".
-                                        str_pad($rs_cod_local->fields['ID_PAIS'],3,0,STR_PAD_LEFT)."-".
-                                        str_pad($rs_cod_local->fields['DPTO_CODI'],3,0,STR_PAD_LEFT)."-".
-                                        str_pad($rs_cod_local->fields['MUNI_CODI'],3,0,STR_PAD_LEFT);
-            		$depe_municipio= $rs_cod_local->fields["MUNI_NOMB"];
-            		$rs_cod_local->Close();
-
-            	}else{
-                    $cod_local = 0;
-            		$depe_municipio = "CONFIGURAR EN SESSION_ORFEO.PHP";
-            	}
-            	if(!isset($recOrfeo)){
-                	$recOrfeo   = "";
-            	}
-            	$recOrfeoOld   = $recOrfeo;
-            	$nombSession   = date("ymdhis")."o".str_replace("::","local",str_replace(".","",$_SERVER['REMOTE_ADDR']))."$krd";
-
+        if ($rs_cod_local && !$rs_cod_local->EOF) {
+            $cod_local     =    $rs_cod_local->fields['ID_CONT'] . "-" .
+                str_pad($rs_cod_local->fields['ID_PAIS'], 3, 0, STR_PAD_LEFT) . "-" .
+                str_pad($rs_cod_local->fields['DPTO_CODI'], 3, 0, STR_PAD_LEFT) . "-" .
+                str_pad($rs_cod_local->fields['MUNI_CODI'], 3, 0, STR_PAD_LEFT);
+            $depe_municipio = $rs_cod_local->fields["MUNI_NOMB"];
+            $rs_cod_local->Close();
+        } else {
+            $cod_local = 0;
+            $depe_municipio = "CONFIGURAR EN SESSION_ORFEO.PHP";
+        }
+        if (!isset($recOrfeo)) {
+            $recOrfeo   = "";
+        }
+        $recOrfeoOld   = $recOrfeo;
+        $nombSession   = date("ymdhis") . "o" . str_replace("::", "local", str_replace(".", "", $_SERVER['REMOTE_ADDR'])) . "$krd";
 
 
-            	session_start();
-            	$recOrfeo = $recOrfeoOld;
+
+        session_start();
+        $recOrfeo = $recOrfeoOld;
 
 
-            	$fechah    = date("Ymd"). "_". time("hms");
-            	$carpeta   = 0;
-            	if (!isset($PHP_SELF)){
-                	$PHP_SELF = $_SERVER["PHP_SELF"];
-            	}
-            	$dirOrfeo  = str_replace("login.php","",$PHP_SELF);
-            
-            $uid = $db->conn->getOne("SELECT ID 
+        $fechah    = date("Ymd") . "_" . time("hms");
+        $carpeta   = 0;
+        if (!isset($PHP_SELF)) {
+            $PHP_SELF = $_SERVER["PHP_SELF"];
+        }
+        $dirOrfeo  = str_replace("login.php", "", $PHP_SELF);
+
+        $uid = $db->conn->getOne("SELECT ID 
                                     FROM USUARIO 
-                                    WHERE usua_codi = '".$codusuario."' 
-                                    AND depe_codi = '".$dependencia."'");
+                                    WHERE usua_codi = '" . $codusuario . "' 
+                                    AND depe_codi = '" . $dependencia . "'");
 
-          define('ID_JEFE_DE_AREA', 2);
-          if($roles->esDelGrupo(ID_JEFE_DE_AREA, $uid)){
-              $_SESSION["USUA_JEFE_DE_GRUPO"] = true;
-          }else{
-              $_SESSION["USUA_JEFE_DE_GRUPO"] = false;
-          }
+        define('ID_JEFE_DE_AREA', 2);
+        if ($roles->esDelGrupo(ID_JEFE_DE_AREA, $uid)) {
+            $_SESSION["USUA_JEFE_DE_GRUPO"] = true;
+        } else {
+            $_SESSION["USUA_JEFE_DE_GRUPO"] = false;
+        }
 
 
-          define('ID_RADICADOR_ENTRADA', 15);
-          if($roles->esDelGrupo(ID_RADICADOR_ENTRADA, $uid)){
-              $_SESSION["USUA_RADICADOR_ENTRADA"] = true;
-          }else{
-              $_SESSION["USUA_RADICADOR_ENTRADA"] = false;
-          }
+        define('ID_RADICADOR_ENTRADA', 15);
+        if ($roles->esDelGrupo(ID_RADICADOR_ENTRADA, $uid)) {
+            $_SESSION["USUA_RADICADOR_ENTRADA"] = true;
+        } else {
+            $_SESSION["USUA_RADICADOR_ENTRADA"] = false;
+        }
 
-          define('ID_TRAMITADOR', 37);  
-          if($roles->esDelGrupo(ID_TRAMITADOR, $uid)){
-              $_SESSION["USUA_TRAMITADOR"] = true;
-          }else{
-              $_SESSION["USUA_TRAMITADOR"] = false;
-          }
+        define('ID_TRAMITADOR', 37);
+        if ($roles->esDelGrupo(ID_TRAMITADOR, $uid)) {
+            $_SESSION["USUA_TRAMITADOR"] = true;
+        } else {
+            $_SESSION["USUA_TRAMITADOR"] = false;
+        }
 
-          $sqlActorAdministrativo = "SELECT u.usua_codi, u.depe_codi FROM usuario u
+        $sqlActorAdministrativo = "SELECT u.usua_codi, u.depe_codi FROM usuario u
                 JOIN autm_membresias me on me.autu_id = u.id
                 JOIN autg_grupos gr on gr.id = me.autg_id
-                WHERE gr.nombre = 'Actos Administrativos' and u.usua_codi = '".$codusuario."' and u.depe_codi = '".$dependencia."'";
+                WHERE gr.nombre = 'Actos Administrativos' and u.usua_codi = '" . $codusuario . "' and u.depe_codi = '" . $dependencia . "'";
 
-          $rsSqlActorAdministrativo = $db->conn->Execute($sqlActorAdministrativo);
+        $rsSqlActorAdministrativo = $db->conn->Execute($sqlActorAdministrativo);
 
-          if($rsSqlActorAdministrativo && !$rsSqlActorAdministrativo->EOF){
-                 $_SESSION["USUA_ACTOR_ADMINISTRATIVOS"] = true;
-          } else {
-                 $_SESSION["USUA_ACTOR_ADMINISTRATIVOS"] = false;
-          }
+        if ($rsSqlActorAdministrativo && !$rsSqlActorAdministrativo->EOF) {
+            $_SESSION["USUA_ACTOR_ADMINISTRATIVOS"] = true;
+        } else {
+            $_SESSION["USUA_ACTOR_ADMINISTRATIVOS"] = false;
+        }
 
-          $sql_permiso_temporal_expediente = "SELECT 
+        $sql_permiso_temporal_expediente = "SELECT 
                                             u.usua_codi, 
                                             u.depe_codi 
                                         FROM usuario u 
                                             JOIN autm_membresias me ON me.autu_id = u.id
                                             JOIN autg_grupos gr ON gr.id = me.autg_id
                                         WHERE gr.id = 48 AND u.usua_codi = ? and u.depe_codi = ?";
-            
-          $permiso_temporal_expediente = $db->conn->getRow($sql_permiso_temporal_expediente, [$codusuario, $dependencia]);
-          $_SESSION['PERMISO_TEMPORAL_EXPEDIENTE'] = false;
 
-          if($permiso_temporal_expediente) {
+        $permiso_temporal_expediente = $db->conn->getRow($sql_permiso_temporal_expediente, [$codusuario, $dependencia]);
+        $_SESSION['PERMISO_TEMPORAL_EXPEDIENTE'] = false;
+
+        if ($permiso_temporal_expediente) {
             $_SESSION['PERMISO_TEMPORAL_EXPEDIENTE'] = true;
-          }
+        }
 
 
-          $_SESSION['usua_id'] = $uid;
-          $_SESSION["entidad"]               = $entidad;
-          $_SESSION["varTramiteConjunto"]    = $varTramiteConjunto;
-          $_SESSION["entidad_largo"]	   = $entidad_largo;
-          $_SESSION["apiFirmaDigital"]	   = $apiFirmaDigital;
-          $_SESSION["dirOrfeo"]              = $dirOrfeo;
-          $_SESSION["drde"]                  = $contraxx;
-          $_SESSION["usua_doc"]              = trim($usua_doc);
-          $_SESSION["dependencia"]           = $dependencia;
-          $_SESSION["dependencia_aux"]       = $dependencia;
-          $_SESSION["codusuario"]            = $codusuario;
-          $_SESSION["depe_nomb"]             = $depe_nomb;
-          $_SESSION["cod_local"]             = $cod_local;
-          $_SESSION["depe_municipio"]        = $depe_municipio;
-          $_SESSION["usua_doc"]              = $usua_doc;
-          $_SESSION["usua_email"]            = $usua_email;
-          $_SESSION["usua_email_1"]          = $usua_email_1;
-          $_SESSION["usua_email_2"]          = $usua_email_2;
-          $_SESSION["usua_at"]               = $usua_at;
-          $_SESSION["usua_ext"]              = $usua_ext;
-          $_SESSION["usua_piso"]             = $usua_piso;
-          $_SESSION["usua_nacim"]            = $usua_nacim;
-          $_SESSION["usua_nomb"]             = $usua_nomb;
-          $_SESSION["usua_nuevo"]            = $usua_nuevo;
-          $_SESSION["usua_admin_archivo"]    = $usua_admin_archivo;
-          $_SESSION["usua_masiva"]           = $usua_masiva;
-          $_SESSION["usua_perm_dev"]         = $usua_perm_dev;
-          $_SESSION["usua_perm_anu"]         = $usua_perm_anu;
-          //$_SESSION["usua_perm_numera_res"]  = $usua_perm_numera_res;
-          $_SESSION["perm_radi_sal"]         = $perm_radi_sal;
-          $_SESSION["depecodi"]              = $dependencia;
-          $_SESSION["fechah"]                = $fechah;
-          $_SESSION["crea_plantilla"]        = $crea_plantilla;
-          $_SESSION["verrad"]                = 0;
-          $_SESSION["menu_ver"]              = 3;
-          $_SESSION["depe_codi_padre"]       = $depe_codi_padre;
-          $_SESSION["depe_codi_territorial"] = $depe_codi_territorial;
-          $_SESSION["nivelus"]               = $nivelus;
-          $_SESSION["tpNumRad"]              = $tpNumRad;
-          $_SESSION["tpDescRad"]             = $tpDescRad;
-          $_SESSION["tpImgRad"]              = $tpImgRad;
-          $_SESSION["tpDepeRad"]             = $tpDepeRad;
-          $_SESSION["tpPerRad"]              = $tpPerRad;
-          $_SESSION["usua_perm_envios"]      = $usua_perm_envios;
-          $_SESSION["envios_general"]        = $envios_general;
-          $_SESSION["envios_dependencia"]    = $envios_dependencia;
-          $_SESSION["usua_perm_modifica"]    = $usua_perm_modifica;
-          $_SESSION["usuario_reasignacion"]  = $usuario_reasignacion;
-          $_SESSION["usuario_reasigna_jefes"]= $usuario_reasigna_jefes;
-          $_SESSION["descCarpetasGen"]       = $descCarpetasGen;
-          $_SESSION["descCarpetasPer"]	   = $descCarpetasPer;
-          $_SESSION["tip3Nombre"]            = $tip3Nombre;
-          $_SESSION["tip3desc"]              = $tip3desc;
-          $_SESSION["tip3img"]               = $tip3img;
-          $_SESSION["usua_admin_sistema"]    = $usua_admin_sistema;
-          $_SESSION["usua_perm_root"]  		 = $usua_root;
-          $_SESSION["perm_radi"]             = $perm_radi;
-          $_SESSION["usua_perm_sancionad"]   = $usua_perm_sancionad;
-          $_SESSION["usua_perm_impresion"]   = $usua_perm_impresion;
-          $_SESSION["usua_perm_intergapps"]  = $usua_perm_intergapps;
-          $_SESSION["usua_perm_estadistica"] = $usua_perm_estadistica;
-          $_SESSION["usua_perm_archi"]       = $usua_perm_archi;
-          $_SESSION["usua_perm_trd"]         = $usua_perm_trd;
-          $_SESSION["usua_perm_adminasig"]   = $usua_perm_adminasig;
-          $_SESSION["usua_perm_admin_email_masive"] = $usua_perm_admin_email_masive;
-          $_SESSION["usua_perm_firma"]       = $usua_perm_firma;
-          $_SESSION["usua_perm_prestamo"]    = $usua_perm_prestamo;
-          //$_SESSION["usua_perm_notifica"]    = $usua_perm_notifica;
-          $_SESSION["usuaPermExpediente"]    = $usuaPermExpediente;
-          $_SESSION["perm_tipif_anexo"]      = $perm_tipif_anexo;
-          $_SESSION["perm_borrar_anexo"]     = $perm_borrar_anexo;
-          $_SESSION["usua_auth_ldap"]        = $usuaAuthLdap;
-          $_SESSION["usuaPermRadFax"]        = $usuaPermRadFax;
-          $_SESSION["usuaPermRadEmail"]      = $usuaPermRadEmail;
-          $_SESSION["fecha_vencimiento"]      = $fecha_vencimiento;
-          $_SESSION["usuario_asesor"]  	   = $usuario_asesor;
+        $_SESSION['usua_id'] = $uid;
+        $_SESSION["entidad"]               = $entidad;
+        $_SESSION["varTramiteConjunto"]    = $varTramiteConjunto;
+        $_SESSION["entidad_largo"]       = $entidad_largo;
+        $_SESSION["apiFirmaDigital"]       = $apiFirmaDigital;
+        $_SESSION["dirOrfeo"]              = $dirOrfeo;
+        $_SESSION["drde"]                  = $contraxx;
+        $_SESSION["usua_doc"]              = trim($usua_doc);
+        $_SESSION["dependencia"]           = $dependencia;
+        $_SESSION["dependencia_aux"]       = $dependencia;
+        $_SESSION["codusuario"]            = $codusuario;
+        $_SESSION["depe_nomb"]             = $depe_nomb;
+        $_SESSION["cod_local"]             = $cod_local;
+        $_SESSION["depe_municipio"]        = $depe_municipio;
+        $_SESSION["usua_doc"]              = $usua_doc;
+        $_SESSION["usua_email"]            = $usua_email;
+        $_SESSION["usua_email_1"]          = $usua_email_1;
+        $_SESSION["usua_email_2"]          = $usua_email_2;
+        $_SESSION["usua_at"]               = $usua_at;
+        $_SESSION["usua_ext"]              = $usua_ext;
+        $_SESSION["usua_piso"]             = $usua_piso;
+        $_SESSION["usua_nacim"]            = $usua_nacim;
+        $_SESSION["usua_nomb"]             = $usua_nomb;
+        $_SESSION["usua_nuevo"]            = $usua_nuevo;
+        $_SESSION["usua_admin_archivo"]    = $usua_admin_archivo;
+        $_SESSION["usua_masiva"]           = $usua_masiva;
+        $_SESSION["usua_perm_dev"]         = $usua_perm_dev;
+        $_SESSION["usua_perm_anu"]         = $usua_perm_anu;
+        //$_SESSION["usua_perm_numera_res"]  = $usua_perm_numera_res;
+        $_SESSION["perm_radi_sal"]         = $perm_radi_sal;
+        $_SESSION["depecodi"]              = $dependencia;
+        $_SESSION["fechah"]                = $fechah;
+        $_SESSION["crea_plantilla"]        = $crea_plantilla;
+        $_SESSION["verrad"]                = 0;
+        $_SESSION["menu_ver"]              = 3;
+        $_SESSION["depe_codi_padre"]       = $depe_codi_padre;
+        $_SESSION["depe_codi_territorial"] = $depe_codi_territorial;
+        $_SESSION["nivelus"]               = $nivelus;
+        $_SESSION["tpNumRad"]              = $tpNumRad;
+        $_SESSION["tpDescRad"]             = $tpDescRad;
+        $_SESSION["tpImgRad"]              = $tpImgRad;
+        $_SESSION["tpDepeRad"]             = $tpDepeRad;
+        $_SESSION["tpPerRad"]              = $tpPerRad;
+        $_SESSION["usua_perm_envios"]      = $usua_perm_envios;
+        $_SESSION["envios_general"]        = $envios_general;
+        $_SESSION["envios_dependencia"]    = $envios_dependencia;
+        $_SESSION["usua_perm_modifica"]    = $usua_perm_modifica;
+        $_SESSION["usuario_reasignacion"]  = $usuario_reasignacion;
+        $_SESSION["usuario_reasigna_jefes"] = $usuario_reasigna_jefes;
+        $_SESSION["descCarpetasGen"]       = $descCarpetasGen;
+        $_SESSION["descCarpetasPer"]       = $descCarpetasPer;
+        $_SESSION["tip3Nombre"]            = $tip3Nombre;
+        $_SESSION["tip3desc"]              = $tip3desc;
+        $_SESSION["tip3img"]               = $tip3img;
+        $_SESSION["usua_admin_sistema"]    = $usua_admin_sistema;
+        $_SESSION["usua_perm_root"]           = $usua_root;
+        $_SESSION["perm_radi"]             = $perm_radi;
+        $_SESSION["usua_perm_sancionad"]   = $usua_perm_sancionad;
+        $_SESSION["usua_perm_impresion"]   = $usua_perm_impresion;
+        $_SESSION["usua_perm_intergapps"]  = $usua_perm_intergapps;
+        $_SESSION["usua_perm_estadistica"] = $usua_perm_estadistica;
+        $_SESSION["usua_perm_archi"]       = $usua_perm_archi;
+        $_SESSION["usua_perm_trd"]         = $usua_perm_trd;
+        $_SESSION["usua_perm_adminasig"]   = $usua_perm_adminasig;
+        $_SESSION["usua_perm_admin_email_masive"] = $usua_perm_admin_email_masive;
+        $_SESSION["usua_perm_firma"]       = $usua_perm_firma;
+        $_SESSION["usua_perm_prestamo"]    = $usua_perm_prestamo;
+        //$_SESSION["usua_perm_notifica"]    = $usua_perm_notifica;
+        $_SESSION["usuaPermExpediente"]    = $usuaPermExpediente;
+        $_SESSION["perm_tipif_anexo"]      = $perm_tipif_anexo;
+        $_SESSION["perm_borrar_anexo"]     = $perm_borrar_anexo;
+        $_SESSION["usua_auth_ldap"]        = $usuaAuthLdap;
+        $_SESSION["usuaPermRadFax"]        = $usuaPermRadFax;
+        $_SESSION["usuaPermRadEmail"]      = $usuaPermRadEmail;
+        $_SESSION["fecha_vencimiento"]      = $fecha_vencimiento;
+        $_SESSION["usuario_asesor"]         = $usuario_asesor;
 
-          $_SESSION["USUA_PRAD_TP1"] = $radicar_tipo_1;
-          $_SESSION["USUA_PRAD_TP2"] = $radicar_tipo_2;
-          $_SESSION["USUA_PRAD_TP3"] = $radicar_tipo_3;
-          $_SESSION["USUA_PRAD_TP4"] = $radicar_tipo_4;
-          $_SESSION["USUA_PRAD_TP5"] = $radicar_tipo_5;
-          $_SESSION["USUA_PRAD_TP6"] = $radicar_tipo_6;
-          $_SESSION["USUA_PRAD_TP7"] = $radicar_tipo_7;
-          $_SESSION["USUA_PRAD_TP8"] = $radicar_tipo_8;
-
-
-          $_SESSION["USUA_PERM_RADEMAIL_AUTO"] = $USUA_PERM_RADEMAIL_AUTO;
-          $_SESSION["USUA_PERM_RADIMAILCLIENT"] = $USUA_PERM_RADIMAILCLIENT;
-          $_SESSION["USUA_PERM_EXPORTEXP"]   = $USUA_PERM_EXPORTEXP;
-          $_SESSION["varEstaenfisico"]       =  $varEstaenfisico;
-          $_SESSION["headerRtaPdf"]          = $headerRtaPdf;
-          $_SESSION["footerRtaPdf"]          = $footerRtaPdf;
-          $_SESSION["PERM_DESCARGAEXP"]      = $permDescargaExp;
-          $_SESSION["usua_perm_scor"]        = $usua_perm_scor;
+        $_SESSION["USUA_PRAD_TP1"] = $radicar_tipo_1;
+        $_SESSION["USUA_PRAD_TP2"] = $radicar_tipo_2;
+        $_SESSION["USUA_PRAD_TP3"] = $radicar_tipo_3;
+        $_SESSION["USUA_PRAD_TP4"] = $radicar_tipo_4;
+        $_SESSION["USUA_PRAD_TP5"] = $radicar_tipo_5;
+        $_SESSION["USUA_PRAD_TP6"] = $radicar_tipo_6;
+        $_SESSION["USUA_PRAD_TP7"] = $radicar_tipo_7;
+        $_SESSION["USUA_PRAD_TP8"] = $radicar_tipo_8;
 
 
-          $_SESSION["usua_perm_owncloud"]      =  $usuaPermOwncloud;
-          $_SESSION["usua_perm_respuesta"]    = $permRespuesta;
-          $_SESSION['USUA_PERM_STICKER']		= $permStiker;
-          //@busquedaFullOrfeo bandera para busqueda con opensearch
-          $_SESSION['busquedaFullOrfeo']		= $busquedaFullOrfeo;
-
-          $_SESSION['USUA_PERM_RAD_ESPECIAL']= $permRadEspecial;
-          $_SESSION['USUA_PERM_TRANS_RAD']= $permTransRad;
-          $_SESSION["USUA_PERM_RECOVER_RAD"]     = $usuapermrecoverrad;
-          $_SESSION["USUA_PERM_TODOS_REASIGNA"]     = $permTodosReasigna;
+        $_SESSION["USUA_PERM_RADEMAIL_AUTO"] = $USUA_PERM_RADEMAIL_AUTO;
+        $_SESSION["USUA_PERM_RADIMAILCLIENT"] = $USUA_PERM_RADIMAILCLIENT;
+        $_SESSION["USUA_PERM_EXPORTEXP"]   = $USUA_PERM_EXPORTEXP;
+        $_SESSION["varEstaenfisico"]       =  $varEstaenfisico;
+        $_SESSION["headerRtaPdf"]          = $headerRtaPdf;
+        $_SESSION["footerRtaPdf"]          = $footerRtaPdf;
+        $_SESSION["PERM_DESCARGAEXP"]      = $permDescargaExp;
+        $_SESSION["usua_perm_scor"]        = $usua_perm_scor;
 
 
-          /* Fraqmentar usuarios y perfiles*/
-          $_SESSION['USUA_PERM_ONLY_USER']= $usuapermonlyuser;
-          $_SESSION['USUA_LESS_PERM_USER']= $usualesspermuser;
-          $_SESSION["USUA_LESS_PERM_USER_PROFILE"] = $usualesspermuserprofile;        
-          /* Fin Fraqmentar usuarios y perfiles*/
+        $_SESSION["usua_perm_owncloud"]      =  $usuaPermOwncloud;
+        $_SESSION["usua_perm_respuesta"]    = $permRespuesta;
+        $_SESSION['USUA_PERM_STICKER']        = $permStiker;
+        //@busquedaFullOrfeo bandera para busqueda con opensearch
+        $_SESSION['busquedaFullOrfeo']        = $busquedaFullOrfeo;
 
-          $_SESSION["USUA_PERM_ENRUTADOR_TRD"] = $usuapermenrutadortrd;   
-          $_SESSION["USUA_PERM_ENRUTADOR"] = $usuapermenrutador;   
+        $_SESSION['USUA_PERM_RAD_ESPECIAL'] = $permRadEspecial;
+        $_SESSION['USUA_PERM_TRANS_RAD'] = $permTransRad;
+        $_SESSION["USUA_PERM_RECOVER_RAD"]     = $usuapermrecoverrad;
+        $_SESSION["USUA_PERM_TODOS_REASIGNA"]     = $permTodosReasigna;
 
-          $_SESSION["USUA_PERM_ADM_ESP"] = $usuapermadmesp;   
 
-		for ($itpr = 1; $itpr <= 10; $itpr++) {
-		    $_SESSION["USUA_PRAD_TPR"][$itpr] = $usua_prad_tpr[$itpr];
-		}
+        /* Fraqmentar usuarios y perfiles*/
+        $_SESSION['USUA_PERM_ONLY_USER'] = $usuapermonlyuser;
+        $_SESSION['USUA_LESS_PERM_USER'] = $usualesspermuser;
+        $_SESSION["USUA_LESS_PERM_USER_PROFILE"] = $usualesspermuserprofile;
+        /* Fin Fraqmentar usuarios y perfiles*/
 
-		//OPCIONES DEL SISTEMA.
-		$_SESSION["opt_ver_anexos_borrados"] = true; //Mostrar los anexos borrados
-		$_SESSION["opt_guardar_traza_anexos"] = true; //Guardar la traza de los anexos
+        $_SESSION["USUA_PERM_ENRUTADOR_TRD"] = $usuapermenrutadortrd;
+        $_SESSION["USUA_PERM_ENRUTADOR"] = $usuapermenrutador;
 
-    if (!isset($XAJAX_PATH)){
-      $XAJAX_PATH = "";
-    }
-    $_SESSION["XAJAX_PATH"]            = $XAJAX_PATH;
-    $_SESSION["enviarMailMovimientos"] = $enviarMailMovimientos;
-    $_SESSION["depeRadicaFormularioWeb"]=$depeRadicaFormularioWeb ;  // Es radicado en la Dependencia 900
-    $_SESSION["usuaRadicaFormularioWeb"]=$usuaRadicaFormularioWeb ;  // Es radicado en la Dependencia 900
-    $_SESSION["depeRecibeFormularioWeb"]=$depeRecibeFormularioWeb ;  // Es radicado en la Dependencia 900
-    $_SESSION["usuaRecibeWeb"]          = $usuaRecibeWeb ; // Usuario que Recibe los Documentos Web
-    $_SESSION["secRadicaFormularioWeb"] = $secRadicaFormularioWeb;
-    $_SESSION["ESTILOS_PATH"]           = $ESTILOS_PATH;
-    $_SESSION["seriesVistaTodos"]       = $seriesVistaTodos;
-    $_SESSION["USUA_PERM_RECOVER_RAD"] = $usuapermrecoverrad;
-    $_SESSION["USUA_CARP_PERSONALES"] = $usuacarppersonales;
-    $_SESSION["unicoconsecutivo"] = $unicoconsecutivo;
-    $_SESSION["permSendMailRR"] = $permSendMailRR; // Permio para envio de correo electronico por Respuesta Rapidad "RR"
-		$_SESSION["digitosDependencia"]     = $digitosDependencia;
-		$_SESSION["digitosSecRad"]          = $digitosSecRad;
-		if (!isset($indiTRD)){
-			$indiTRD = "";
-		}
-                $_SESSION["indiTRD"]                = $indiTRD;
-                //Variables para Correo IMAP
-    $_SESSION["PEAR_PATH"]              = $PEAR_PATH;
-    $_SESSION["CONTENT_PATH"]           = $CONTENT_PATH;
-    $_SESSION["ABSOL_PATH"]             = $ABSOL_PATH;
-    
-    $_SESSION["servidor_mail"]          = $servidor_mail;
-    $_SESSION["puerto_mail"]            = $puerto_mail;
-    $_SESSION["protocolo_mail"]         = $protocolo_mail;
-    $_SESSION["menuAdicional"]          = $menuAdicional;
-    //$_SESSION["permArchi"]              = $permArchi;
-    $_SESSION["permVobo"]               = $permVobo;
-    $_SESSION["usua_perm_respuesta"]    = $permRespuesta;
-    $_SESSION["USUA_PERM_ADMEXPV1"]   = $admexpv1;
+        $_SESSION["USUA_PERM_ADM_ESP"] = $usuapermadmesp;
 
-    $_SESSION["ADM_EXP"]   =$admexpSS;
-    $_SESSION["RESTAURAR_SEGURIDAD_EXPEDIENTE"]   =$restaurarSeguridadExpediente;
-    $_SESSION["NOTI_EXP"]   = $notiexp;
+        for ($itpr = 1; $itpr <= 10; $itpr++) {
+            $_SESSION["USUA_PRAD_TPR"][$itpr] = $usua_prad_tpr[$itpr];
+        }
 
-    if( isset($archivado_requiere_exp) )
-    $_SESSION["archivado_requiere_exp"] = true;
+        //OPCIONES DEL SISTEMA.
+        $_SESSION["opt_ver_anexos_borrados"] = true; //Mostrar los anexos borrados
+        $_SESSION["opt_guardar_traza_anexos"] = true; //Guardar la traza de los anexos
+
+        if (!isset($XAJAX_PATH)) {
+            $XAJAX_PATH = "";
+        }
+        $_SESSION["XAJAX_PATH"]            = $XAJAX_PATH;
+        $_SESSION["enviarMailMovimientos"] = $enviarMailMovimientos;
+        $_SESSION["depeRadicaFormularioWeb"] = $depeRadicaFormularioWeb;  // Es radicado en la Dependencia 900
+        $_SESSION["usuaRadicaFormularioWeb"] = $usuaRadicaFormularioWeb;  // Es radicado en la Dependencia 900
+        $_SESSION["depeRecibeFormularioWeb"] = $depeRecibeFormularioWeb;  // Es radicado en la Dependencia 900
+        $_SESSION["usuaRecibeWeb"]          = $usuaRecibeWeb; // Usuario que Recibe los Documentos Web
+        $_SESSION["secRadicaFormularioWeb"] = $secRadicaFormularioWeb;
+        $_SESSION["ESTILOS_PATH"]           = $ESTILOS_PATH;
+        $_SESSION["seriesVistaTodos"]       = $seriesVistaTodos;
+        $_SESSION["USUA_PERM_RECOVER_RAD"] = $usuapermrecoverrad;
+        $_SESSION["USUA_CARP_PERSONALES"] = $usuacarppersonales;
+        $_SESSION["unicoconsecutivo"] = $unicoconsecutivo;
+        $_SESSION["permSendMailRR"] = $permSendMailRR; // Permio para envio de correo electronico por Respuesta Rapidad "RR"
+        $_SESSION["digitosDependencia"]     = $digitosDependencia;
+        $_SESSION["digitosSecRad"]          = $digitosSecRad;
+        if (!isset($indiTRD)) {
+            $indiTRD = "";
+        }
+        $_SESSION["indiTRD"]                = $indiTRD;
+        //Variables para Correo IMAP
+        $_SESSION["PEAR_PATH"]              = $PEAR_PATH;
+        $_SESSION["CONTENT_PATH"]           = $CONTENT_PATH;
+        $_SESSION["ABSOL_PATH"]             = $ABSOL_PATH;
+
+        $_SESSION["servidor_mail"]          = $servidor_mail;
+        $_SESSION["puerto_mail"]            = $puerto_mail;
+        $_SESSION["protocolo_mail"]         = $protocolo_mail;
+        $_SESSION["menuAdicional"]          = $menuAdicional;
+        //$_SESSION["permArchi"]              = $permArchi;
+        $_SESSION["permVobo"]               = $permVobo;
+        $_SESSION["usua_perm_respuesta"]    = $permRespuesta;
+        $_SESSION["USUA_PERM_ADMEXPV1"]   = $admexpv1;
+
+        $_SESSION["ADM_EXP"]   = $admexpSS;
+        $_SESSION["RESTAURAR_SEGURIDAD_EXPEDIENTE"]   = $restaurarSeguridadExpediente;
+        $_SESSION["NOTI_EXP"]   = $notiexp;
+
+        if (isset($archivado_requiere_exp)) {
+            $_SESSION["archivado_requiere_exp"] = true;
+        }
 
         //Se pone el permiso de administracion de flujos en la sesion para su posterior consulta
         //$_SESSION["usua_perm_adminflujos"]     = $usua_perm_adminflujos;
         $_SESSION["krd"]                       = $krd;
 
         $nomcarpera = "ENTRADA";
-        if(!$orno) $orno = 0;
+        if (!$orno) {
+            $orno = 0;
+        }
 
         $query = "   UPDATE
             usuario
             SET
-            usua_sesion='". session_id() .
+            usua_sesion='" . session_id() .
             "',usua_fech_sesion=sysdate
             WHERE
             USUA_LOGIN ='$krd'  ";
 
-        $recordSet["USUA_SESION"]                = "'".session_id()."'";
-        $recordSet["USUA_FECH_SESION"]           = $db->conn->OffsetDate(0,$db->conn->sysTimeStamp);
+        $recordSet["USUA_SESION"]                = "'" . session_id() . "'";
+        $recordSet["USUA_FECH_SESION"]           = $db->conn->OffsetDate(0, $db->conn->sysTimeStamp);
         $recordWhere["USUA_LOGIN"]               = "'$krd'";
-        $db->update("USUARIO", $recordSet,$recordWhere);
+        $db->update("USUARIO", $recordSet, $recordWhere);
         $ValidacionKrd = "Si";
-
-    }else{
-
-        $ValidacionKrd="Errado .... ";
+    } else {
+        $ValidacionKrd = "Errado .... ";
         $mensajeError = "EL USUARIO '.$krd.' ESTA INACTIVO <br> Por
             favor consulte con el administrador del sistema";
     }
-}else{
-    if($recOrfeo!="loginWeb"){
-        $ValidacionKrd="Errado ....";
-        die (include "$ruta_raiz/cerrar_session.php");
+} else {
+    if ($recOrfeo != "loginWeb") {
+        $ValidacionKrd = "Errado ....";
+        die(include "$ruta_raiz/cerrar_session.php");
     }
 }
-?>

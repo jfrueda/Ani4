@@ -26,11 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 session_start();
 
 $ruta_raiz = ".";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
   header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+  ${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+  ${$key} = $valor;
+}
 
 define('ADODB_ASSOC_CASE', 1);
 $verrad         = "";
@@ -46,7 +51,7 @@ $descCarpetasPer = $_SESSION["descCarpetasPer"];
 
 $_SESSION['numExpedienteSelected'] = null;
 
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 if (!isset($db) || !$db) $db = new ConnectionHandler($ruta_raiz);
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 $sqlFecha = $db->conn->SQLDate("Y-m-d H:i A", "a.RADI_FECH_RADI");
@@ -57,7 +62,9 @@ if (strlen($orderNo) == 0) {
   $order = $orderNo + 1;
 }
 
-if (trim($orderTipo) == "") $orderTipo = "DESC";
+if (trim($orderTipo) == "") {
+  $orderTipo = "DESC";
+}
 if (isset($orden_cambio) && $orden_cambio == 1) {
   if (trim($orderTipo) != "DESC") {
     $orderTipo = "DESC";
@@ -66,8 +73,12 @@ if (isset($orden_cambio) && $orden_cambio == 1) {
   }
 }
 
-if (!$carpeta) $carpeta = 0;
-if (!$nomcarpeta) $nomcarpeta = "Entrada";
+if (!$carpeta) {
+  $carpeta = 0;
+}
+if (!$nomcarpeta) {
+  $nomcarpeta = "Entrada";
+}
 
 $tipo_carp = !isset($tipo_carp) ? 0 : $tipo_carp;
 
@@ -92,7 +103,7 @@ $sqlFechaHoy    = $db->conn->DBDate($fecha_hoy);
 //Filtra el query para documentos agendados
 if (isset($agendado) && $agendado == 1) {
   $sqlAgendado = " and (radi_agend=1 and radi_fech_agend > $sqlFechaHoy) "; // No vencidos
-} else  if (isset($agendado) && $agendado == 2) {
+} elseif (isset($agendado) && $agendado == 2) {
   $sqlAgendado = " and (radi_agend=1 and radi_fech_agend <= $sqlFechaHoy)  "; // vencidos
 }
 
@@ -145,6 +156,9 @@ $sqlTotalRad = "select count(1) as TOTAL
 $numTotal      = $rs->fields["TOTAL"] ?? '';
 
 ?>
+
+<!DOCTYPE html>
+
 <html>
 
 <head>
@@ -203,7 +217,7 @@ $numTotal      = $rs->fields["TOTAL"] ?? '';
                   <div class="form-group smart-form" id="">
                     <?php
                     $norandom = "file1";
-                    echo ("<div $addAttr id='$norandom'>A&ntilde;adir Archivos  <input  type='HIDDEN' value='' id='inp_$norandom'/>");
+                    echo "<div $addAttr id='$norandom'>A&ntilde;adir Archivos  <input  type='HIDDEN' value='' id='inp_$norandom'/>";
                     $scriptJS .= "
                                   var rad=($(\"#dt_basic input:checked\").attr('id'));
                                   $norandom = 'file1';
@@ -309,7 +323,7 @@ $numTotal      = $rs->fields["TOTAL"] ?? '';
                       <!-- Select dinámico según condición PHP -->
                       <?php
                       $controlAgenda = 1;
-                      if ($carpeta == 11 and !$tipo_carp and $codusuario != 1) {
+                      if ($carpeta == 11 && !$tipo_carp && $codusuario != 1) {
                         // No mostrar nada
                       } else {
                       ?>

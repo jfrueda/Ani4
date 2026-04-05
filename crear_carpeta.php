@@ -19,13 +19,18 @@ $nombcarp = isset($_GET["nombcarp"]) ? $_GET["nombcarp"] : '';
 $crear = isset($_GET["crear"]) ? $_GET["crear"] : '';
 
 $ruta_raiz = ".";
-if (!isset($_SESSION['dependencia'])) include "./rec_session.php";
+if (!isset($_SESSION['dependencia'])) {
+  include "./rec_session.php";
+}
 $verrad = "";
-if (!defined('ADODB_ASSOC_CASE')) define('ADODB_ASSOC_CASE', 1);
+if (!defined('ADODB_ASSOC_CASE')) {
+  define('ADODB_ASSOC_CASE', 1);
+}
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 $db = new ConnectionHandler($ruta_raiz);
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 ?>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -71,7 +76,7 @@ $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
     </div>
     <?
     $nombcarp = trim($nombcarp);
-    if (!$nombcarp and $crear) {
+    if (!$nombcarp && $crear) {
       echo "<center>DEBE ESCRIBIR UN NOMBRE DE CARPETA</CENTER>";
       $crear = "";
     }
@@ -137,10 +142,13 @@ $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
         $isql = "INSERT INTO CARPETA_PER(codi_carp,depe_codi,usua_codi,nomb_carp,desc_carp)
 	                          values ($codigocarpeta,$dependencia,$codusuario,'$nombcarp','$desccarp')";
         $rs = $db->query($isql);
-        if ($rs == -1)  die("<div class='alert alert-danger' role='alert'>No se ha podido crear la carpeta, Por favor intente mas tarde</div>");
+        if ($rs == -1) {
+          die("<div class='alert alert-danger' role='alert'>No se ha podido crear la carpeta, Por favor intente mas tarde</div>");
+        }
         echo "<div class='alert alert-success' role='alert'> <div class='panel-body'>Creacion de la carpeta <b>$nombcarp</b> con exito</div></div> ";
-      } else
+      } else {
         echo "<div class='alert alert-danger' role='alert'>No se ha podido crear la carpeta por Nombres Duplicados</div>";
+      }
     }
     ?>
   </form>

@@ -36,7 +36,8 @@ $rs = $dbx->query($sql);
  */
 if (!function_exists('deepArray')) {
 
-    function deepArray($element, $value) {
+    function deepArray($element, $value)
+    {
         $varHead = array_shift($element);
 
         if (count($element) >= 1) {
@@ -46,20 +47,18 @@ if (!function_exists('deepArray')) {
 
         return array($varHead => $value);
     }
-
 }
-
 
 if (!$rs->EOF) {
     while (!$rs->EOF) {
-        $nombre = $rs->fields ["CONF_NOMBRE"];
-        $valor = $rs->fields ["CONF_VALOR"];
-        $iscon = $rs->fields ["CONF_CONSTANTE"];
-        $isarr = $rs->fields ["CONF_ARREGLO"];
-        $base64 = $rs->fields ["BASE64"];
+        $nombre = $rs->fields["CONF_NOMBRE"];
+        $valor = $rs->fields["CONF_VALOR"];
+        $iscon = $rs->fields["CONF_CONSTANTE"];
+        $isarr = $rs->fields["CONF_ARREGLO"];
+        $base64 = $rs->fields["BASE64"];
 
         if ($iscon  == 1) {
-            defined($nombre) or define($nombre, $valor);
+            defined($nombre) || define($nombre, $valor);
         } elseif ($isarr == 1) {
             $namesArray = explode("_", $nombre);
             $varHead = array_shift($namesArray);
@@ -76,7 +75,7 @@ if (!$rs->EOF) {
             if (!isset(${$nombre})) {
                 ${$nombre} = $valor;
             }
-            
+
             // Create base64 variable if base64 field has content
             if (!empty($base64)) {
                 $base64_var_name = $nombre . "_base64";

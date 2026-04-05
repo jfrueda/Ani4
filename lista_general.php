@@ -25,8 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 session_start();
 
 $ruta_raiz = ".";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
   header("Location: $ruta_raiz/cerrar_session.php");
+}
 
 $lkGenerico = "&usuario=$krd&nsesion=" . trim(session_id()) . "&nro=$verradicado" . "$datos_envio";
 
@@ -123,7 +124,7 @@ if ($rsFirmador && !$rsFirmador->EOF) {
     <div class="card-header bg-primary text-white py-3">
       <h6 class="fw-bold mb-0">Información del Radicado</h6>
     </div>
-    
+
     <div class="card-body p-3">
       <div class="table-responsive">
         <table class="table table-sm align-middle">
@@ -169,7 +170,7 @@ if ($rsFirmador && !$rsFirmador->EOF) {
             <td>
               <small>
                 <?php
-                if ($radi_tipo_deri != 1 and $radi_nume_deri) {
+                if ($radi_tipo_deri != 1 && $radi_nume_deri) {
                   echo $radi_nume_deri;
                   $resulVali = $verLinkArchivo->valPermisoRadi($radi_nume_deri);
                   $verImg = $resulVali['verImg'];
@@ -183,7 +184,7 @@ if ($rsFirmador && !$rsFirmador->EOF) {
                   }
                 }
 
-                if (($verradPermisos == "Full" and $coddepe != '999') or $datoVer == "985"):
+                if (($verradPermisos == "Full" && $coddepe != '999') || $datoVer == "985"):
                 ?>
                   <input type="button" name="mostrar_anexo" value="..."
                     title="Mostrar anexo"
@@ -202,7 +203,7 @@ if ($rsFirmador && !$rsFirmador->EOF) {
           $muniCodiFac = "";
           $dptoCodiFac = "";
 
-          if ($sector_grb == 6 and $cuentai and $espcodi) {
+          if ($sector_grb == 6 && $cuentai && $espcodi) {
             if ($muni_us2 && $codep_us2) {
               $muniCodiFac = $muni_us2;
               $dptoCodiFac = $codep_us2;
@@ -244,7 +245,7 @@ if ($rsFirmador && !$rsFirmador->EOF) {
             <td class="fw-semibold text-secondary"><small>Flujos</small></td>
             <td>
               <small><?= $descFldExp ?></small>
-              <?php if ($verradPermisos == "Full" or $datoVer == "985"): ?>
+              <?php if ($verradPermisos == "Full" || $datoVer == "985"): ?>
                 <input type="button" value="..."
                   class="btn btn-primary btn-xs ms-2"
                   onclick="modFlujo('<?= $numExpediente ?>', <?= $texp ?>, <?= $codigoFldExp ?>)">
@@ -255,9 +256,13 @@ if ($rsFirmador && !$rsFirmador->EOF) {
             <td>
               <small>
                 <?php
-                if ($nivelRad == 0) echo "Público";
-                elseif ($nivelRad == 1) echo "Reservado: Solo la dependencia";
-                elseif ($nivelRad == 2) echo "Clasificado: Usuario proyectó, Jefe y actual.";
+                if ($nivelRad == 0) {
+                  echo "Público";
+                } elseif ($nivelRad == 1) {
+                  echo "Reservado: Solo la dependencia";
+                } elseif ($nivelRad == 2) {
+                  echo "Clasificado: Usuario proyectó, Jefe y actual.";
+                }
 
                 if (!($dependencias_clasificadas_trigger == 'true' &&
                   in_array($coddepe, explode(',', $dependencias_clasificadas)))):
@@ -281,9 +286,15 @@ if ($rsFirmador && !$rsFirmador->EOF) {
             <td class="fw-semibold text-secondary"><small>Clasificación Documental</small></td>
             <td>
               <?php
-              if (!$codserie) $codserie = "0";
-              if (!$tsub) $tsub = "0";
-              if (trim($val_tpdoc_grbTRD) == "///") $val_tpdoc_grbTRD = "";
+              if (!$codserie) {
+                $codserie = "0";
+              }
+              if (!$tsub) {
+                $tsub = "0";
+              }
+              if (trim($val_tpdoc_grbTRD) == "///") {
+                $val_tpdoc_grbTRD = "";
+              }
               ?>
 
               <div class="p-2 rounded bg-light border">
@@ -294,7 +305,7 @@ if ($rsFirmador && !$rsFirmador->EOF) {
                 </small>
               </div>
 
-              <?php if (($verradPermisos == "Full" && $coddepe != '999') or $datoVer == "985" or $dependencia == '999'): ?>
+              <?php if (($verradPermisos == "Full" && $coddepe != '999') || $datoVer == "985" || $dependencia == '999'): ?>
                 <input type="button" value="..."
                   title="Asignar TRD"
                   class="btn btn-primary btn-xs mt-2"
@@ -479,7 +490,7 @@ if ($rsFirmador && !$rsFirmador->EOF) {
 
                 // Lógica notificaciones
                 if ($ent == RESOLUCION || $ent == AUTO) {
-                  include_once("$ruta_raiz/include/tx/notificacion.php");
+                  include_once "$ruta_raiz/include/tx/notificacion.php";
                   $notificacion = new Notificacion($db);
 
                   $dir_codigo = $rs->fields["SGD_DIR_CODIGO"];

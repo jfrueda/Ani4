@@ -2,8 +2,9 @@
 session_start();
 
 $ruta_raiz = ".";
-if (!$_SESSION['dependencia'])
-    header ("Location: $ruta_raiz/cerrar_session.php");
+if (!$_SESSION['dependencia']) {
+    header("Location: $ruta_raiz/cerrar_session.php");
+}
 
 $krd          = $_SESSION["krd"];
 $dependencia  = $_SESSION["dependencia"];
@@ -19,30 +20,58 @@ $tip3Nombre   = $_SESSION["tip3Nombre"];
 $dependencia  = $_SESSION["dependencia"];
 $tpDepeRad    = $_SESSION["tpDepeRad"];
 
-
-if($_GET["verrad"])            $verrad            = $_GET["verrad"];
-if($_GET["verradPermisos"])    $verradPermisos    = $_GET["verradPermisos"];
-if($_GET["numfe"])             $numfe             = $_GET["numfe"];
-if($_GET["radicar"])           $radicar           = $_GET["radicar"];
-if($_GET["radicar_a"])         $radicar_a         = $_GET["radicar_a"];
-if($_GET["vp"])                $vp                = $_GET["vp"];
-if($_GET["radicar_documento"]) $radicar_documento = $_GET["radicar_documento"];
-if($_GET["generar_numero"])    $generar_numero    = $_GET["generar_numero"];
-if($_GET["numrad"])            $numrad            = $_GET["numrad"];
-if($_GET["anexo"])             $anexo             = $_GET["anexo"];
-if($_GET["linkarchivo"])       $linkarchivo       = $_GET["linkarchivo"];
-if($_GET["numextdoc"])         $numextdoc         = $_GET["numextdoc"];
-if($_GET["tpradic"])           $tpradic           = $_GET["tpradic"];
-if($_GET["numerar"])           $numerar           = $_GET["numerar"];
-if($_GET["borrar"])            $borrar            = $_GET["borrar"];
-
-
-if($_GET["numfe"]) $numfe=$_GET["numfe"];
-$ruta_raiz = ".";
-if ($radicar) {
-    include("$ruta_raiz/genarchivo.php");
-}else if ($borrar){
-    include("$ruta_raiz/borrar_archivos.php");
+if ($_GET["verrad"]) {
+    $verrad            = $_GET["verrad"];
+}
+if ($_GET["verradPermisos"]) {
+    $verradPermisos    = $_GET["verradPermisos"];
+}
+if ($_GET["numfe"]) {
+    $numfe             = $_GET["numfe"];
+}
+if ($_GET["radicar"]) {
+    $radicar           = $_GET["radicar"];
+}
+if ($_GET["radicar_a"]) {
+    $radicar_a         = $_GET["radicar_a"];
+}
+if ($_GET["vp"]) {
+    $vp                = $_GET["vp"];
+}
+if ($_GET["radicar_documento"]) {
+    $radicar_documento = $_GET["radicar_documento"];
+}
+if ($_GET["generar_numero"]) {
+    $generar_numero    = $_GET["generar_numero"];
+}
+if ($_GET["numrad"]) {
+    $numrad            = $_GET["numrad"];
+}
+if ($_GET["anexo"]) {
+    $anexo             = $_GET["anexo"];
+}
+if ($_GET["linkarchivo"]) {
+    $linkarchivo       = $_GET["linkarchivo"];
+}
+if ($_GET["numextdoc"]) {
+    $numextdoc         = $_GET["numextdoc"];
+}
+if ($_GET["tpradic"]) {
+    $tpradic           = $_GET["tpradic"];
+}
+if ($_GET["numerar"]) {
+    $numerar           = $_GET["numerar"];
+}
+if ($_GET["borrar"]) {
+    $borrar            = $_GET["borrar"];
 }
 
-?>
+if ($_GET["numfe"]) {
+    $numfe = $_GET["numfe"];
+}
+$ruta_raiz = ".";
+if ($radicar) {
+    include "$ruta_raiz/genarchivo.php";
+} elseif ($borrar) {
+    include "$ruta_raiz/borrar_archivos.php";
+}

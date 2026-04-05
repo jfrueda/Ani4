@@ -1,9 +1,13 @@
 <?php
-if (!$ruta_raiz) $ruta_raiz = ".";
-if (!$db) include "$ruta_raiz/conn.php";
-require_once("$ruta_raiz/class_control/Transaccion.php");
-require_once("$ruta_raiz/class_control/Dependencia.php");
-require_once("$ruta_raiz/class_control/usuario.php");
+if (!$ruta_raiz) {
+  $ruta_raiz = ".";
+}
+if (!$db) {
+  include "$ruta_raiz/conn.php";
+}
+require_once "$ruta_raiz/class_control/Transaccion.php";
+require_once "$ruta_raiz/class_control/Dependencia.php";
+require_once "$ruta_raiz/class_control/usuario.php";
 
 $trans = new Transaccion($db);
 $objDep = new Dependencia($db);
@@ -94,14 +98,16 @@ $dependencia_rad = $rs->fields["DEPE_NOMB"];
         $descTransaccion = $rs->fields["SGD_TTR_DESCRIP"];
         $histDoctDest = $rs->fields["HIST_DOC_DEST"];
         $iconoLink = "";
-        if ($codTransac == 67) $iconoLink = "<a href='#' Title='Ver Historico de Prestamos del radicado {$verrad}' onClick='verHistPrestamo($verrad);'><img src='img/icono_prestamo.png' width='23'></a>";
-        if (!$codTransac) $codTransac = "0";
+        if ($codTransac == 67) {
+          $iconoLink = "<a href='#' Title='Ver Historico de Prestamos del radicado {$verrad}' onClick='verHistPrestamo($verrad);'><img src='img/icono_prestamo.png' width='23'></a>";
+        }
+        if (!$codTransac) {
+          $codTransac = "0";
+        }
         $trans->Transaccion_codigo($codTransac);
         $objUs->usuarioDocto($usua_doc_hist);
         $objDep->Dependencia_codigo($depe_codi);
         $destinatarios = '';
-
-        
 
         if ($carpeta == $numdata) {
           $imagen = "usuarios.gif";
@@ -143,11 +149,12 @@ $dependencia_rad = $rs->fields["DEPE_NOMB"];
           </small>
         </td>
 
-        <td class="listado2"><?php
-                              $isqln = "select USUA_NOMB from usuario where USUA_DOC='" . trim($histDoctDest) . "'";
-                              $uprs = $db->query($isqln);
-                              $usuario_actual = $uprs->fields["USUA_NOMB"];
-                              echo $usuario_actual; ?>
+        <td class="listado2">
+          <?php
+          $isqln = "select USUA_NOMB from usuario where USUA_DOC='" . trim($histDoctDest) . "'";
+          $uprs = $db->query($isqln);
+          $usuario_actual = $uprs->fields["USUA_NOMB"];
+          echo $usuario_actual; ?>
         </td>
 
         </tr>
@@ -240,8 +247,9 @@ $rs = $db->query($isql);
         $imgRadDev = "";
       }
       $numdata =  trim($rs->fields["CARP_CODI"]);
-      if ($data == "")
+      if ($data == "") {
         $data = "NULL";
+      }
       //$numerot = $rs->RecordCount();
       if ($carpeta == $numdata) {
         $imagen = "usuarios.gif";

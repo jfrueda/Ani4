@@ -25,11 +25,14 @@ if ($nurad) {
   $verrad = $nurad;
 }
 
-if (!$verradicado and $verrad) $verradicado = $verrad;
+if (!$verradicado && $verrad) {
+  $verradicado = $verrad;
+}
 
-if (!$verradicado) die("<!-- No viene un numero de radicado a buscar -->");
+if (!$verradicado) {
+  die("<!-- No viene un numero de radicado a buscar -->");
+}
 include "$ruta_raiz/include/query/queryver_datosrad.php";
-
 
 $isqlrem = "select
             sgd_dir_nomremdes,
@@ -88,7 +91,6 @@ while (!$rsSqlJefeByRadicado->EOF) {
   break;
 }
 
-
 $isql = "select a.*, $numero, $radi_nume_radi as RADI_NUME_RADI,
   $radi_nume_deri as RADI_NUME_DERI,
   a.SGD_SPUB_CODIGO AS NIVEL_SEGURIDAD
@@ -97,8 +99,9 @@ $isql = "select a.*, $numero, $radi_nume_radi as RADI_NUME_RADI,
 
 $rs = $db->conn->Execute($isql);
 
-if ($rs->EOF)
+if ($rs->EOF) {
   die("<span class='titulosError'>No se ha podido obtener la informacion del radicado.");
+}
 
 //numero de copias
 $sqlcopias =  "  SELECT
@@ -204,7 +207,9 @@ $usuarioLoginRadicador = $rsU->fields["USUA_LOGIN"];
 //El nivel de seguridad basico viene del radicado, pero si el Expediente en el que se encuentra tiene seguridad diferente de publico
 //Este determina el verdadero nivel de seguridad del radicado
 
-if ($perm == 1) $nivelRad = 1;
+if ($perm == 1) {
+  $nivelRad = 1;
+}
 
 $radi_tipo_deri  = $rs->fields["RADI_TIPO_DERI"];
 $sector_grb      = $rs->fields["PAR_SERV_SECUE"];
@@ -242,6 +247,7 @@ if ($rs->fields["RADI_PATH"]) {
   //************************************************************************//
 
   require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
+
   $radicadoFilter = new RadicadoFilter($db);
   if ($_SESSION["perm_cons_rad_cal"] >= 1) {
     $verImg = 'SI';
@@ -252,7 +258,6 @@ if ($rs->fields["RADI_PATH"]) {
   }
 
   //************************************************************************//
-
   if ($verImg == "SI") {
     $imagenv = "<a  \"vinculos\" href=\"#\" onclick=\"funlinkArchivo('$verradicado','$ruta_raiz');\"> Ver Imagen en Otra Ventana</a>";
   } elseif ($verImg == "NO") {
@@ -386,38 +391,47 @@ $params_envio = [
   'nombret_us3'       => sanitize_qs_field($nombret_us3),
 ];
 $datos_envio = '&' . http_build_query($params_envio, '', '&', PHP_QUERY_RFC3986);
-if (!$mrec_codi)  $mrec_codi = 0;
+
+if (!$mrec_codi) {
+  $mrec_codi = 0;
+}
+
 $isql = "select mrec_desc
   from medio_recepcion
   where
   mrec_codi=$mrec_codi";
-$rs = $db->query($isql);
-if (!$rs->EOF)
-  $medio_recepcion = $rs->fields["MREC_DESC"];
 
+$rs = $db->query($isql);
+
+if (!$rs->EOF) {
+  $medio_recepcion = $rs->fields["MREC_DESC"];
+}
 
 // Extraccion de tipo de documento de la matriz
 // Para mostrarla en el listado general.
 // CODIGO QUE EXTRAE DE LA TABLA HMTD_ EL TIPO DE DOCUMENTO
 
-
 if ($sector_grb) {
   $isql = "select PAR_SERV_NOMBRE FROM PAR_SERV_SERVICIOS where PAR_SERV_SECUE=$sector_grb ";
   $rs = $db->query($isql);
-  if (!$rs->EOF)
+  if (!$rs->EOF) {
     $sector_nombre = $rs->fields["PAR_SERV_NOMBRE"];
+  }
 }
 
 if ($flujo_grb) {
-  if ($flujo) $flujo_grb = $flujo;
-  $isql = "select SGD_FLD_DESC FROM SGD_FLD_FLUJODOC where SGD_FLD_CODIGO=$flujo_grb and sgd_tpr_codigo='$tdoc'";
+  if ($flujo) {
+    $flujo_grb = $flujo;
+  }
 
+  $isql = "select SGD_FLD_DESC FROM SGD_FLD_FLUJODOC where SGD_FLD_CODIGO=$flujo_grb and sgd_tpr_codigo='$tdoc'";
   $rs = $db->query($isql);
-  if (!$rs->EOF)
+
+  if (!$rs->EOF) {
     $flujo_nombre = $rs->fields["SGD_FLD_DESC"];
+  }
 }
 if ($no_tipo != "true") {
-
   // Clasificacion TRD
   $radi_nume_radi2 = str_replace("a.", "r.", $radi_nume_radi);
   if ($dependencia <= 0) {
@@ -532,24 +546,31 @@ if ($no_tipo != "true") {
     $procedimiento_nombre = $rs->fields["SGD_PRD_DESCRIP"];
   }
   $val_tpdoc_grb = "$tpdoc_nombre / $funcion_nombre / $proceso_nombre / $procedimiento_nombre";
-  if (!$tpdoc_nombre and $tdoc) {
+  if (!$tpdoc_nombre && $tdoc) {
     $isql = "select a.SGD_TPR_CODIGO
       ,a.SGD_TPR_DESCRIP, a.SGD_TPR_TERMINO
       from sgd_tpr_tpdcumento a
       where
       a.SGD_TPR_CODIGO=$tdoc";
     $rs = $db->query($isql);
-    if (!$rs->EOF)
+    if (!$rs->EOF) {
       $tpdoc_nombre = $rs->fields["SGD_TPR_DESCRIP"];
+    }
     $termino_doc = $rs->fields["SGD_TPR_TERMINO"];
   }
   //--------------------------departamento / municipio
 
   if (!$tpdoc) {
     $tpdoc = $tpdoc_grb;
-    if (!$funciones) $funciones = $funciones_grb;
-    if (!$procesos) $procesos = $procesos_grb;
-    if (!$procedimientos) $procedimientos = $procedimientos_grb;
+    if (!$funciones) {
+      $funciones = $funciones_grb;
+    }
+    if (!$procesos) {
+      $procesos = $procesos_grb;
+    }
+    if (!$procedimientos) {
+      $procedimientos = $procedimientos_grb;
+    }
   }
 
   // FIN CODIGO EXTR. TIPO DOC GRABADO EN BD
@@ -571,11 +592,11 @@ if ($no_tipo != "true") {
     b.sgd_fun_codigo=$funciones and b.sgd_prc_codigo=$procesos and
     b.sgd_prd_codigo=$procedimientos ";
   $rs = $db->query($isql);
-  if (!$rs->EOF)
+  if (!$rs->EOF) {
     $cod_tmp = $rs->fields["SGD_MTD_CODIGO"];
+  }
 
   // EXTRAE LA CAUSAL DEL DOCUMENTO
-
   $sqlSelect = "SELECT caux.SGD_CAUX_CODIGO,
     cau.SGD_CAU_CODIGO,
     dcau.SGD_DCAU_CODIGO,
@@ -628,13 +649,13 @@ if ($no_tipo != "true") {
   if ($tema_grb) {
     $isql = "select SGD_TMA_DESCRIP FROM SGD_TMA_TEMAS where sgd_tma_codigo=$tema_grb ";
     $rs = $db->query($isql);
-    if (!$rs->EOF)
+    if (!$rs->EOF) {
       $tema_nombre = $rs->fields["SGD_TMA_DESCRIP"];
+    }
   }
   if (!$tema) {
     $tema = $tema_grb;
   }
-
 
   //Busca posibles datos relacionados con sancionados
   if ($sgd_apli_codi) {
@@ -670,7 +691,7 @@ if ($no_tipo != "true") {
 
   //Informacion del modulo de Notificaciones
   if (!empty($esNotificacion)) {
-    include_once("$ruta_raiz/include/tx/notificacion.php");
+    include_once "$ruta_raiz/include/tx/notificacion.php";
 
     $notificacion = new Notificacion($db);
 
@@ -691,9 +712,11 @@ if ($no_tipo != "true") {
     }
   }
 
-  include_once("$ruta_raiz/include/tx/Expediente.php");
+  include_once "$ruta_raiz/include/tx/Expediente.php";
 
-  if (!$verrad) $verrad = $verradicado;
+  if (!$verrad) {
+    $verrad = $verradicado;
+  }
   $trdExp          = new Expediente($db);
   $numExpediente   = $trdExp->consulta_exp("$verradicado");
   $mrdCodigo       = $trdExp->consultaTipoExpediente($numExpediente);

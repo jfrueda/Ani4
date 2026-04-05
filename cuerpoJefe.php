@@ -34,11 +34,16 @@ if ($_REQUEST['radicado_a_buscar']) {
 }
 
 $ruta_raiz = ".";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
     header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-foreach ($_REQUEST as $key => $valor)   ${$key} = $valor;
-foreach ($_REQUEST as $key => $valor)   ${$key} = $valor;
+foreach ($_REQUEST as $key => $valor) {
+    ${$key} = $valor;
+}
+foreach ($_REQUEST as $key => $valor) {
+    ${$key} = $valor;
+}
 
 define('ADODB_ASSOC_CASE', 1);
 define('CIRC_INTERNA', 4);
@@ -61,13 +66,13 @@ $entidad = $_SESSION["entidad"];
 
 $_SESSION['numExpedienteSelected'] = null;
 
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 if (!$db) $db = new ConnectionHandler($ruta_raiz);
 $db->conn->debug = false;
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 
 // Incluir las clases para manejar jefes de área
-include_once("$ruta_raiz/include/class/JefeArea.class.php");
+include_once "$ruta_raiz/include/class/JefeArea.class.php";
 
 $sqlFecha = $db->conn->SQLDate("Y-m-d H:i A", "b.RADI_FECH_RADI");
 $medios_recepcion = $db->conn->getAll('SELECT * FROM medio_recepcion ORDER BY MREC_CODI');
@@ -114,7 +119,9 @@ if (empty($_REQUEST['resultados_query_cuerpo'])){
 //End::no restablecer filtro de resultados
 
 
-if (trim($orderTipo) == "") $orderTipo = " DESC ";
+if (trim($orderTipo) == "") {
+    $orderTipo = " DESC ";
+}
 
 if ($orden_cambio == 1) {
     if (trim($orderTipo) != "DESC") {
@@ -124,11 +131,19 @@ if ($orden_cambio == 1) {
     }
 }
 
-if (!$carpeta) $carpeta = 9998;
-if ($carpeta == 9998) $carpeta = 0;
-if (!$nomcarpeta) $nomcarpeta = "Carpeta de Entrada";
+if (!$carpeta) {
+    $carpeta = 9998;
+}
+if ($carpeta == 9998) {
+    $carpeta = 0;
+}
+if (!$nomcarpeta) {
+    $nomcarpeta = "Carpeta de Entrada";
+}
 
-if (!$tipo_carp) $tipo_carp = 0;
+if (!$tipo_carp) {
+    $tipo_carp = 0;
+}
 
 /**
  * Este if verifica si se debe buscar en los radicados de todas las carpetas.
@@ -151,7 +166,7 @@ $sqlFechaHoy    = $db->conn->DBDate($fecha_hoy);
 //Filtra el query para documentos agendados
 if ($agendado == 1) {
     $sqlAgendado = " and (radi_agend=1 and radi_fech_agend > $sqlFechaHoy) "; // No vencidos
-} else  if ($agendado == 2) {
+} elseif ($agendado == 2) {
     $sqlAgendado = " and (radi_agend=1 and radi_fech_agend <= $sqlFechaHoy)  "; // vencidos
 }
 
@@ -198,6 +213,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                   from  radicado b where  b.radi_depe_actu= $dependencia
                   $whereUsuario ";
 ?>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -268,7 +284,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                             <div class="actions smart-form" style="position: absolute !important;top: 175px;z-index: 1;left: 465px;">
                                 <?php
                                 $controlAgenda = 1;
-                                if ($carpeta == 11 and !$tipo_carp and $codusuario != 1) {
+                                if ($carpeta == 11 && !$tipo_carp && $codusuario != 1) {
                                 } else { ?>
                                 <?php include "./tx/txOrfeo.php";
                                 }
@@ -371,8 +387,9 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                                             $rs = $db->conn->Execute($isql);
 
-                                            if (!empty($isqlconteo))
+                                            if (!empty($isqlconteo)) {
                                                 $rs_conteo = $db->conn->Execute($isqlconteo);
+                                            }
 
                                             include_once "$ruta_raiz/tx/diasHabiles.php";
                                             $a = new FechaHabil($db);
@@ -393,8 +410,9 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                 $tipo_rad              = $rs->fields["TIPO_RAD"];
                                                 $mrec_desc             = $rs->fields["RADI_MREC_DESC"];
 
-                                                if ($aux === $rs->fields["HID_RADI_NUME_RADI"])
+                                                if ($aux === $rs->fields["HID_RADI_NUME_RADI"]) {
                                                     continue;
+                                                }
                                                 //  $radiLeido             = $rs->fields["HID_RADI_LEIDO"];
                                                 $radianulado       = $rs->fields["HID_EANU_CODIGO"];
                                                 //Datos obtenidos para pintar los radicados
@@ -406,7 +424,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                 //End::expediente            
 
                                                 if (empty($remitenteRadicado) && ($tipo_rad == CIRC_INTERNA || $tipo_rad == CIRC_EXTERNA)) {
-                                                    include_once("$ruta_raiz/include/tx/notificacion.php");
+                                                    include_once "$ruta_raiz/include/tx/notificacion.php";
                                                     $notificacion = new Notificacion($db);
                                                     $destinatarios_circ = $notificacion->destinatariosPorRadicado($numeroRadicado);
                                                     $remitenteRadicado = $destinatarios_circ[0]["DESTINATARIOS"];
@@ -446,7 +464,7 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                                                 //Debo calcular los dias del radicado antes
                                                 if ($diasRadicado != "") {
-                                                    if ($diasRadicado == "-" or $diasRadicado == "N/A ó termino no definido") {
+                                                    if ($diasRadicado == "-" || $diasRadicado == "N/A ó termino no definido") {
                                                         #No se pintan.
                                                     } else {
                                                         if ($diasRadicado <= 0) {
@@ -454,7 +472,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                             $ColorAlerta2 =  "style='color:#FE2E2E;cursor:help'";
                                                             $MensajeAlerta2 = "Vencido";
                                                         } else {
-                                                            if ($diasRadicado > 0 and $diasRadicado <= 3) {
+                                                            if ($diasRadicado > 0 && $diasRadicado <= 3) {
                                                                 $TipoAlerta2 = "class='fa fa-circle'";
                                                                 $ColorAlerta2 =  "style='color:#8A2908;cursor:help'";
                                                                 $MensajeAlerta2 = "Por Vencer";
@@ -677,15 +695,17 @@ $sqlTotalRad = "select count(1) as TOTAL
                                         </tbody>
                                     </table>
                                     <?php
-                                    if (isset($krd) && $krd == "CONTACTCENTER")
+                                    if (isset($krd) && $krd == "CONTACTCENTER") {
                                         $paginacion = 1000;
-                                    else
+                                    } else {
                                         $paginacion = 100;
+                                    }
 
-                                    if (!empty($rs_conteo->fields['COUNT']) && ($rs_conteo->fields['COUNT'] / $paginacion) > 1)
+                                    if (!empty($rs_conteo->fields['COUNT']) && ($rs_conteo->fields['COUNT'] / $paginacion) > 1) {
                                         $conteo_paginas =  ceil($rs_conteo->fields['COUNT'] / $paginacion);
-                                    else
+                                    } else {
                                         $conteo_paginas = 1;
+                                    }
 
                                     ?>
                                     <script type="text/javascript">

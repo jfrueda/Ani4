@@ -5,7 +5,6 @@ error_reporting(7);
 $ruta_raiz = ".";
 include_once "./include/db/ConnectionHandler.php";
 
-
 if (!$db) {
   $db = new ConnectionHandler(".");
 }

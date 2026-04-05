@@ -1,14 +1,19 @@
 <?php
-if (!$ruta_raiz) $ruta_raiz= ".";
-//Programa que numera un paquete de documentos de numeración y fechado
-//además muestra el resultado de esta numeración
-if (!$dependencia or !$depe_codi_territorial)  include "$ruta_raiz/rec_session.php";
+if (!$ruta_raiz) {
+  $ruta_raiz= ".";
+}
+//Programa que numera un paquete de documentos de numeraciï¿½n y fechado
+//ademï¿½s muestra el resultado de esta numeraciï¿½n
+if (!$dependencia || !$depe_codi_territorial)  {
+  include "$ruta_raiz/rec_session.php";
+}
 
-include("$ruta_raiz/class_control/anexo.php");
-require_once("$ruta_raiz/class_control/TipoDocumento.php");
+include "$ruta_raiz/class_control/anexo.php";
+require_once "$ruta_raiz/class_control/TipoDocumento.php";
 
-if (!$db)
+if (!$db){
 		$db = new ConnectionHandler($ruta_raiz);
+}
 $db->conn->BeginTrans();
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);	 
 $anex = & new Anexo($db);
@@ -18,12 +23,12 @@ $secuenciaDocto=$anex->get_secuenciaDocto($dependencia);
 <link rel="stylesheet" href="./estilos_totales.css">
 <?
 if (strlen(trim($secuenciaDocto))<1){
-	echo ("<div align='left'><span class='etextomenu'>POR FAVOR VERIFIQUE QUE LA DEPENDENCIA A LA CUAL PERTENECE TENGA COMPETENCIA SOBRE ESTE TIPO DE DOCUMENTO</span></div>");
+	echo "<div align='left'><span class='etextomenu'>POR FAVOR VERIFIQUE QUE LA DEPENDENCIA A LA CUAL PERTENECE TENGA COMPETENCIA SOBRE ESTE TIPO DE DOCUMENTO</span></div>";
 	die;
 }
 	if	(!$anex->guardarSecuencia()){
 		$db->conn->RollbackTrans();
-		die ("<span class='etextomenu'>No se ha podido Grabar la información de numeración");
+		die ("<span class='etextomenu'>No se ha podido Grabar la informaciï¿½n de numeraciï¿½n");
 	
 	}
 	$tipoDocumento = & new TipoDocumento($db); 

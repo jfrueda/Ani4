@@ -38,8 +38,6 @@ if (!$_SESSION['dependencia'] || $_GET['close']) {
     echo "<script>parent.frames.location.reload();top.location.reload();</script>";
 }
 
-
-
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/processConfig.php";
 require_once "include/tx/Menus.php";
@@ -716,7 +714,7 @@ function getSecondNumber($input)
 foreach ($bandejasGenerales as $key => $value) {
     $valor = substr($value, 0, strpos($value, '(') - 1);
 
-    if (($mostrarCarpetaJefe == false) && ($valor == "Jefe de Area")) {
+    if ((!$mostrarCarpetaJefe) && ($valor == "Jefe de Area")) {
         continue;
     }
 
