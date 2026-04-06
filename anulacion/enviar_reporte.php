@@ -1,9 +1,11 @@
-<?
+<?php
 echo "<hr>ssssss";
 session_start();
-  $ruta_raiz = ".."; 
-    if (!$_SESSION['dependencia'])
-        header ("Location: $ruta_raiz/cerrar_session.php");
+$ruta_raiz = ".."; 
+if (!$_SESSION['dependencia']){
+	header ("Location: $ruta_raiz/cerrar_session.php");
+}
+
 // Modificado 2010 aurigadl@gmail.com
 /**
 * Paggina Cuerpo.php que muestra el contenido de las Carpetas
@@ -12,11 +14,17 @@ session_start();
 * @autor Jairo Losada 2009-05
 * @licencia GNU/GPL V 3
 */
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor)   {
+	${$key} = $valor;
+}
+foreach ($_POST as $key => $valor)   {
+	${$key} = $valor;
+}
 
 $nomcarpeta     =$_GET["nomcarpeta"];
-if($_GET["tipo_carp"])  $tipo_carp = $_GET["tipo_carp"];
+if($_GET["tipo_carp"])  {
+	$tipo_carp = $_GET["tipo_carp"];
+}
 
 define('ADODB_ASSOC_CASE', 2);
 
