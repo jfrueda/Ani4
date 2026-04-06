@@ -67,8 +67,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 foreach ($textElements as $item) {
                   $item = trim($item);
                   if ($item) {
-                    if ($i != 0) $busq_and = " or ";
-                    else $busq_and = "  ";
+                    if ($i != 0) {
+                      $busq_and = " or ";
+                    } else {
+                      $busq_and = "  ";
+                    }
 
                     $busq_radicados_tmp .= " $busq_and upper($varBuscada) like upper('%$item%') ";
                     if ($varBuscada2) {

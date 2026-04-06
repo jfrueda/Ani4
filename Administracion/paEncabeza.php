@@ -27,8 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 session_start();
 
 $ruta_raiz = "../..";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
   header("Location: $ruta_raiz/cerrar_session.php");
+}
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 
 $db = new ConnectionHandler($ruta_raiz);
@@ -76,7 +77,9 @@ if (!$carpeta) {
                       $sqlConcat = $db->conn->Concat($conversion, "'-'", $db->conn->substr . "(depe_nomb,1,30) ");
                       $sql = "select $sqlConcat ,depe_codi from dependencia where depe_estado=1 order by depe_codi";
                       $rsDep = $db->conn->Execute($sql);
-                      if (!$depeBuscada) $depeBuscada = $dependencia;
+                      if (!$depeBuscada) {
+                        $depeBuscada = $dependencia;
+                      }
 
                       // Renderizado del select con clases de BS5
                       print $rsDep->GetMenu2("dep_sel", "$dep_sel", false, false, 0, " onChange='submit();' class='form-select form-select-sm'");

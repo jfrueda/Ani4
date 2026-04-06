@@ -39,9 +39,9 @@ if (isset($_POST['radicados'])) {
 
     $radicados = implode(',', $numeros);
 
-    require_once($ruta_raiz . "/include/db/ConnectionHandler.php");
-    require_once($ruta_raiz . "/processConfig.php");
-    require_once("$ruta_raiz/include/tx/Historico.php");
+    require_once $ruta_raiz . "/include/db/ConnectionHandler.php";
+    require_once $ruta_raiz . "/processConfig.php";
+    require_once "$ruta_raiz/include/tx/Historico.php";
     $db = new ConnectionHandler($ruta_raiz);
     $hist = new Historico($db);
 
