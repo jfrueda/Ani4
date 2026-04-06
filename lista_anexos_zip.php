@@ -1,12 +1,14 @@
 <?php
 session_start();
 
-if (!$ruta_raiz) $ruta_raiz= ".";
+if (!$ruta_raiz) {
+    $ruta_raiz = ".";
+}
 include "$ruta_raiz/conn.php";
-include_once("$ruta_raiz/class_control/anexo.php");
-require_once("$ruta_raiz/class_control/TipoDocumento.php");
+include_once "$ruta_raiz/class_control/anexo.php";
+require_once "$ruta_raiz/class_control/TipoDocumento.php";
 include "$ruta_raiz/processConfig.php";
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/tx/verLinkArchivo.php";
 $ln = $_SESSION["digitosDependencia"];
 $opt_ver_anexos_borrados = $_SESSION["opt_ver_anexos_borrados"];
@@ -16,12 +18,12 @@ $verLinkArchivo = new verLinkArchivo($db);
 define('ADODB_ASSOC_CASE', 1);
 $objTipoDocto  = new TipoDocumento($db);
 $objTipoDocto->TipoDocumento_codigo($tdoc);
-$num_archivos=0;
+$num_archivos = 0;
 $anex = new Anexo($db);
-$sqlFechaDocto = $db->conn->SQLDate("Y-m-D H:i:s A","a.sgd_fech_doc");
-$sqlFechaAnexo = $db->conn->SQLDate("Y-m-D H:i:s A","a.anex_fech_anex");
+$sqlFechaDocto = $db->conn->SQLDate("Y-m-D H:i:s A", "a.sgd_fech_doc");
+$sqlFechaAnexo = $db->conn->SQLDate("Y-m-D H:i:s A", "a.anex_fech_anex");
 //$sqlFechaAnexo = "to_char(anex_fech_anex, 'YYYY/DD/MM HH:MI:SS')";
-$sqlSubstDesc =  $db->conn->substr."(anex_desc, 0, 100)";
+$sqlSubstDesc =  $db->conn->substr . "(anex_desc, 0, 100)";
 //include_once("include/query/busqueda/busquedaPiloto1.php");
 //$db->conn->debug = true;
 $db->limit(324);
@@ -79,43 +81,45 @@ echo '</pre>';
 exit;*/
 $zip = new ZipArchive;
 $filename = "bodega/tmp/anexos_$verrad.zip";
-if ($zip->open($filename, (ZipArchive::CREATE | ZipArchive::OVERWRITE)) !== TRUE) {
+if ($zip->open($filename, (ZipArchive::CREATE || !ZipArchive::OVERWRITE))) {
     exit("cannot create zip <$filename>\n");
 } else {
     $count = 0;
-    foreach($rs as $anexo) {
-        $count ++;
-        $noCache = "?dateNow=".date("ymd_his");
+    foreach ($rs as $anexo) {
+        $count++;
+        $noCache = "?dateNow=" . date("ymd_his");
         $noCache = "";
         $numrad = $anexo['DOCU'];
         $resulValiA = $verLinkArchivo->valPermisoAnex($numrad);
         $verImg = $resulValiA['verImg'];
         $pathImagen = $resulValiA['pathImagen'];
 
-        if(!$pathImagen) $pathImagen=$numrad;
-
-        if(substr(trim($numrad),0,1)==1){
-            $file = "bodega/".substr(trim($numrad),1,4)."/".ltrim(substr(trim($numrad),4,$ln), '0')."/docs/".trim($pathImagen)."$noCache";
-        }else{
-            $file = "$ruta_raiz/bodega/".substr(trim($numrad),0,4)."/".ltrim(substr(trim($numrad),4,$ln),'0')."/docs/".trim($pathImagen)."$noCache";
+        if (!$pathImagen) {
+            $pathImagen = $numrad;
         }
-        if($_SESSION["usua_perm_root_email"] == 't'){
-            if(substr(trim($numrad),0,1)==1){
-                $file = "bodega/".substr(trim($numrad),1,4)."/". $_SESSION["dependencia"]."/docs/".trim($pathImagen)."$noCache";
-            }else{
-                $file = "$ruta_raiz/bodega/".substr(trim($numrad),0,4)."/". $_SESSION["dependencia"] ."/docs/".trim($pathImagen)."$noCache";
+
+        if (substr(trim($numrad), 0, 1) == 1) {
+            $file = "bodega/" . substr(trim($numrad), 1, 4) . "/" . ltrim(substr(trim($numrad), 4, $ln), '0') . "/docs/" . trim($pathImagen) . "$noCache";
+        } else {
+            $file = "$ruta_raiz/bodega/" . substr(trim($numrad), 0, 4) . "/" . ltrim(substr(trim($numrad), 4, $ln), '0') . "/docs/" . trim($pathImagen) . "$noCache";
+        }
+        if ($_SESSION["usua_perm_root_email"] == 't') {
+            if (substr(trim($numrad), 0, 1) == 1) {
+                $file = "bodega/" . substr(trim($numrad), 1, 4) . "/" . $_SESSION["dependencia"] . "/docs/" . trim($pathImagen) . "$noCache";
+            } else {
+                $file = "$ruta_raiz/bodega/" . substr(trim($numrad), 0, 4) . "/" . $_SESSION["dependencia"] . "/docs/" . trim($pathImagen) . "$noCache";
             }
         }
 
         $extension = pathinfo($pathImagen, PATHINFO_EXTENSION);
-        $zip->addFile($file, str_replace(['/'], [' - '], $count.' '.$anexo['DESCR']).'.'.$extension);
+        $zip->addFile($file, str_replace(['/'], [' - '], $count . ' ' . $anexo['DESCR']) . '.' . $extension);
     }
 
     $zip->close();
-    header("Content-type: application/zip"); 
+    header("Content-type: application/zip");
     header("Content-Disposition: attachment; filename=anexos_$verrad.zip");
     header("Content-length: " . filesize($filename));
-    header("Pragma: no-cache"); 
-    header("Expires: 0"); 
+    header("Pragma: no-cache");
+    header("Expires: 0");
     readfile("$filename");
 }

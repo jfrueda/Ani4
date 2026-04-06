@@ -1,3 +1,2 @@
 <?php
-header ("Location: consultaWeb/index.php");
-?>
+header("Location: consultaWeb/index.php");

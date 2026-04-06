@@ -1,8 +1,7 @@
 <?php
-//Programa que radica un paquete de anexos de numeración y fechado
+//Programa que radica un paquete de anexos de numeraciï¿½n y fechado
 //Recupera los archivos modificados en caso de roolback
 function recuperarARchivos($arregloArchsIni,$arregloArchsBk){
-
 	$numArchvos = count($arregloArchsIni);
 	$i = 0;
 	
@@ -13,20 +12,25 @@ function recuperarARchivos($arregloArchsIni,$arregloArchsBk){
 	}
 }
 
-if (!$ruta_raiz) $ruta_raiz= ".";
+if (!$ruta_raiz) {
+	$ruta_raiz= ".";
+}
 
-if (!$dependencia or !$depe_codi_territorial or !$depe_municipio )  include "$ruta_raiz/rec_session.php";
+if (!$dependencia || !$depe_codi_territorial || !$depe_municipio )  {
+	include "$ruta_raiz/rec_session.php";
+}
 
-require_once("$ruta_raiz/include/db/ConnectionHandler.php"); 
-require_once("$ruta_raiz/class_control/anexo.php");
+require_once "$ruta_raiz/include/db/ConnectionHandler.php";
+require_once "$ruta_raiz/class_control/anexo.php";
 include "$ruta_raiz/class_control/class_gen.php";
-require_once("$ruta_raiz/class_control/Dependencia.php");
-require_once("$ruta_raiz/class_control/Radicado.php");
-require_once("$ruta_raiz/class_control/TipoDocumento.php");
-require_once("$ruta_raiz/class_control/Esp.php");
+require_once "$ruta_raiz/class_control/Dependencia.php";
+require_once "$ruta_raiz/class_control/Radicado.php";
+require_once "$ruta_raiz/class_control/TipoDocumento.php";
+require_once "$ruta_raiz/class_control/Esp.php";
 
-if (!$conexion)
-		$conexion = new ConnectionHandler($ruta_raiz);
+if (!$conexion){
+	$conexion = new ConnectionHandler($ruta_raiz);
+}
 $conexion->conn->BeginTrans();
 $conexion->conn->SetFetchMode(ADODB_FETCH_ASSOC);	 
 $fecha_dia_hoy = Date("Y-m-d");
@@ -59,7 +63,7 @@ $tipoDocumento = & new TipoDocumento($conexion);
 $num = count($documentosPaquete);
 $i = 0; 
 $j = 0;
-//almacena el número de archivos que va siendo procesado
+//almacena el nï¿½mero de archivos que va siendo procesado
 $numArchs=0; 
 $no_digitos = 6;
 $linkarchivo_grabar = str_replace("bodega","",$linkarchivo);
@@ -74,18 +78,18 @@ $hora=date("H")."_".date("i")."_".date("s");
 $ddate=date('d');
 // var que almacena el mes de la fecha
 $mdate=date('m');
-// var que almacena el año de la fecha
+// var que almacena el aï¿½o de la fecha
 $adate=date('Y');
 // var que almacena  la fecha formateada
 $fechaArchivo=$adate."_".$mdate."_".$ddate;
-//var que almacena el nombre que tendrá la pantilla
+//var que almacena el nombre que tendrï¿½ la pantilla
 $archInsumo="tmp_".$usua_doc."_".$fechaArchivo."_".$hora.".txt";
-//Arma el link hacia el lugar donde se encuentran los archivos físicos que hacen parte del paquete
-
+//Arma el link hacia el lugar donde se encuentran los archivos fï¿½sicos que hacen parte del paquete
 
 while ($j < $num2-1) {	
-	if (strlen($trozosPath[$j]))
+	if (strlen($trozosPath[$j])){
 		$pathParcial.="/".$trozosPath[$j];
+	}
 	$j++;
 } 
 	$verrad = $numrad;
@@ -156,17 +160,16 @@ while ($i < $num) {
 	$descripcionDocumento="";
 	$descripcionDocumento=$tipoDocumento->get_sgd_tpr_descrip();
 	$arregloDocumentos[$i]=$descripcionDocumento;
-	$desc_anexos="Documento que hace parte de un paquete de numeración y fechado";
+	$desc_anexos="Documento que hace parte de un paquete de numeraciï¿½n y fechado";
 	$sec=$conexion->nextId("sec_$depe_codi_territorial");
 	
-		
 	if ($sec==-1){
 		print ("No hay secuencia");
-	die;
+		die;
 		$conexion->conn->RollbackTrans();
-		 die ("<span class='etextomenu'>No existe secuencia para la generaci&oacute;n del radicado (Territorial $depe_codi_territorial)");
+		die ("<span class='etextomenu'>No existe secuencia para la generaci&oacute;n del radicado (Territorial $depe_codi_territorial)");
 	}
-  $sec = str_pad($sec,$no_digitos,"0",STR_PAD_left);
+  	$sec = str_pad($sec,$no_digitos,"0",STR_PAD_left);
 	$rad_salida = date("Y") . $dependencia . $sec ."1";
 	$sql = "update ANEXOS set RADI_NUME_SALIDA=$rad_salida,
 		           ANEX_SOLO_LECT='S',ANEX_RADI_FECH=$sqlFechaHoy,ANEX_ESTADO=2
@@ -183,8 +186,9 @@ while ($i < $num) {
 	$carp_codi =1;
 	$tipo_docto=$anex->get_sgd_tpr_codigo();
 	  
-	if (!$tipo_docto)
+	if (!$tipo_docto){
  		$tipo_docto=0;
+	}
 	$arregloRadicados[$i]=$rad_salida;	
 	$sql = "INSERT INTO RADICADO(EESP_CODI,TDOC_CODI,RADI_NUME_RADI,RADI_FECH_RADI,RADI_NUME_DERI,RADI_TIPO_DERI,CARP_CODI   ,CARP_PER,RADI_DEPE_RADI ,RADI_DEPE_ACTU,RADI_USUA_ACTU,RA_ASUN  ,RADI_DESC_ANEX         ,RADI_PATH     )
 								 VALUES(    '$espcodi',$tipo_docto     ,'$rad_salida' , $sqlFechaHoy      ,'$numrad'      ,9  ,$carp_codi,0      ,'$dependencia',$dependencia    ,$codusuario     ,'$descripcionDocumento','$desc_anexos','$pathCompleto')";
@@ -213,11 +217,10 @@ while ($i < $num) {
 	$documento_us2    = "";
 	$documento_us3    = "";
 	
-	
 	include "$ruta_raiz/radicacion/grb_direcciones.php"; 
 	
 	$i++; 
-	//Recupera la información de los datos del radicado base, para combinar la plantilla
+	//Recupera la informaciï¿½n de los datos del radicado base, para combinar la plantilla
 	$dir_tipo_us1     = $dir_tipo_us[1];
 	$tipo_emp_us1     = $tipo_emp_us[1];
 	$nombre_us1       = $nombre_us[1];
@@ -311,22 +314,21 @@ while ($i < $num) {
 		//print ("<BR> a&nacute;ade".trim($campos[$i_count])."=".trim($datos[$i_count])."\n");
 	}
 	fclose($fp);
-	include("$ruta_raiz/processConfig.php");
+	include "$ruta_raiz/processConfig.php";
 	error_reporting(7);
 	 //El include del servlet hace que se altere el valor de la variable  $estadoTransaccion como 0 si se pudo procesar el documento, -1 de lo
 	// contrario
 	
 	$estadoTransaccion=-1;
-	include ("http://$servProcDocs/docgen/servlet/WorkDistributor?accion=1&ambiente=$ambiente&archinsumo=$archInsumo");
+	include "http://$servProcDocs/docgen/servlet/WorkDistributor?accion=1&ambiente=$ambiente&archinsumo=$archInsumo";
 	if ($estadoTransaccion!=0){
 		$conexion->conn->RollbackTrans();
-		echo ("<BR> NO SE PUDO COMPLETAR LA TRANSACCION 	INTENTE MAS TARDE");
+		echo "<BR> NO SE PUDO COMPLETAR LA TRANSACCION 	INTENTE MAS TARDE";
 		//echo "<BR><input type=button  name=Reintentar value=Reintentar class='ebuttons2' onClick='history.go(0);'>";
 		echo "<input type=button  name=Regresar value=Regresar  class='ebuttons2' onClick='history.go(-1);'>";
 		recuperarARchivos($arregloArchsIni,$arregloArchsBk);
 	die;
 	}
-	
 }
 
 $num = count($docsNoRadicables);
@@ -362,8 +364,8 @@ while ($i < $num) {
 	$fp=fopen("$ruta_raiz/bodega/masiva/$archInsumo",'w');
 	
 	if (!$fp){
-			 	echo "<br><font size='3' ><span class='etextomenu'>ERROR..No se pudo abrir el archivo $ruta_raiz/bodega/masiva/$archInsumo</br>";
-				die;
+		echo "<br><font size='3' ><span class='etextomenu'>ERROR..No se pudo abrir el archivo $ruta_raiz/bodega/masiva/$archInsumo</br>";
+		die;
 	}
 	copy ("$ruta_raiz/bodega$pathCompleto", "$ruta_raiz/bodega$pathCompleto.bk");
 	$arregloArchsBk[$numArchs]="$ruta_raiz/bodega$pathCompleto.bk";
@@ -425,25 +427,22 @@ while ($i < $num) {
 		fputs ($fp,trim($campos[$i_count])."=".trim($datos[$i_count])."\n");
 	}
 	fclose($fp);
-	include("$ruta_raiz/processConfig.php");
+	include "$ruta_raiz/processConfig.php";
 	error_reporting(7);
 	//El include del servlet hace que se altere el valor de la variable  $estadoTransaccion como 0 si se pudo procesar el documento, -1 de lo
 	// contrario
 	
 	$estadoTransaccion=-1;
-	include ("http://$servProcDocs/docgen/servlet/WorkDistributor?accion=1&ambiente=$ambiente&archinsumo=$archInsumo");
+	include "http://$servProcDocs/docgen/servlet/WorkDistributor?accion=1&ambiente=$ambiente&archinsumo=$archInsumo";
 	if ($estadoTransaccion!=0){
 		$conexion->conn->RollbackTrans();
-		echo ("<BR> NO SE PUDO COMPLETAR LA TRANSACCION 	INTENTE MAS TARDE");
+		echo "<BR> NO SE PUDO COMPLETAR LA TRANSACCION 	INTENTE MAS TARDE";
 		echo "<input type=button  name=Regresar value=Regresar  class='ebuttons2' onClick='history.go(-1);'>";
 		recuperarARchivos($arregloArchsIni,$arregloArchsBk);
-	die;
+		die;
 	}
 	$i++; 
-	
-
 }	
 
- $conexion->conn->CommitTrans();
-include "$ruta_raiz/radicar_paquete_exitosa.php"; 
-?>
+ 	$conexion->conn->CommitTrans();
+	include "$ruta_raiz/radicar_paquete_exitosa.php"; 

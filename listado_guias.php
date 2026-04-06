@@ -1,6 +1,6 @@
 <?php
-define('FPDF_FONTPATH','../fpdf/font/');
-require_once('pdf_label.php');
+define('FPDF_FONTPATH', '../fpdf/font/');
+require_once 'pdf_label.php';
 
 /*-------------------------------------------------
 To create the object, 2 possibilities:
@@ -17,8 +17,8 @@ $pdf->Open();
 $pdf->AddPage();
 
 // Print labels
-for($i=1;$i<=40;$i++)
+for ($i = 1; $i <= 40; $i++) {
     $pdf->Add_PDF_Label(sprintf("%s\n%s\n%s\n%s, %s, %s", "Laurent $i", 'Immeuble Titi', 'av. fragonard', '06000', 'NICE', 'FRANCE'));
+}
 
 $pdf->Output();
-?>

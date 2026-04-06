@@ -69,6 +69,9 @@ $dependencianomb = $rs->fields["DEPE_NOMB"];
 $usua_login      = $rs->fields["USUA_LOGIN"];
 
 ?>
+
+<!DOCTYPE html>
+
 <html>
 
 <head>

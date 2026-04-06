@@ -1,17 +1,13 @@
-<?
+<?php
 session_start();
 if (!$dependencia or !$nivelus)  include "./rec_session.php";
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Enviar Datos</title>
 <link rel="stylesheet" href="estilos_totales.css">
 </head>
-<style type="text/css">
-<!--
-.textoOpcion {  font-family: Arial, Helvetica, sans-serif; font-size: 8pt; color: #000000; text-decoration: underline}
--->
-</style>
 <body bgcolor="#FFFFFF" topmargin="0">
 <?php
 IF($enviardoc=="REALIZAR")
@@ -99,7 +95,7 @@ if($carpper==10002 and $enviara ==10){$enviara=6;}
 								 ora_parse($cursor,$isql_hl);
 								 ora_exec($cursor);
 								 $observa = "Dev.". $observa;
-								 $proccarp = "Devolución";
+								 $proccarp = "Devoluciï¿½n";
 								 $mensaje_dev = "<font color=blue> $us_anterior_nombre (Devuelto)</font></b><BR>";
 								 return "$us_anterior_nombre";
 								}
@@ -723,7 +719,7 @@ if($enviara==11)
 			<input type=checkbox name=reasignarnivel value=si checked=checked  >
 			Deseo que los documentos a enviar tomen el nivel automaticamente
 			del usuario destino. (De lo contrario el nivel que tiene actualmente
-			el documento se conservará) <br>
+			el documento se conservarï¿½) <br>
 			<br>
 			Se van a Mover estos datos. Desea colocar un
 			Comentario? </span><br>

@@ -1,11 +1,12 @@
 <?php
+
 /**
-* @module  bandejas
-*
-* @author Jairo Losada   <jlosada@gmail.com>
-* @author Cesar Gonzalez <aurigadl@gmail.com>
-* @license  GNU AFFERO GENERAL PUBLIC LICENSE
-* @copyright
+ * @module  bandejas
+ *
+ * @author Jairo Losada   <jlosada@gmail.com>
+ * @author Cesar Gonzalez <aurigadl@gmail.com>
+ * @license  GNU AFFERO GENERAL PUBLIC LICENSE
+ * @copyright
 
 SIIM2 Models are the data definition of SIIM2 Information System
 Copyright (C) 2013 Infometrika Ltda.
@@ -22,7 +23,7 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 if (session_status() !== 2) {
     session_start();
@@ -185,5 +186,3 @@ include_once "$ruta_raiz/tx/verLinkArchivo.php";
 if (isset($db)) {
     $verLinkArchivo = new verLinkArchivo($db);
 }
-
-?>

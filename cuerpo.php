@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @author Jairo Losada   <jlosada@gmail.com>
  * @author Cesar Augusto   <aurigadl@gmail.com>
@@ -35,11 +34,16 @@ if ($_REQUEST['radicado_a_buscar']) {
 }
 
 $ruta_raiz = ".";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
     header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-foreach ($_REQUEST as $key => $valor)   ${$key} = $valor;
-foreach ($_REQUEST as $key => $valor)   ${$key} = $valor;
+foreach ($_REQUEST as $key => $valor) {
+    ${$key} = $valor;
+}
+foreach ($_REQUEST as $key => $valor) {
+    ${$key} = $valor;
+}
 
 define('ADODB_ASSOC_CASE', 1);
 define('CIRC_INTERNA', 4);
@@ -63,8 +67,10 @@ $entidad = $_SESSION["entidad"];
 
 $_SESSION['numExpedienteSelected'] = null;
 
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
-if (!$db) $db = new ConnectionHandler($ruta_raiz);
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
+if (!$db) {
+    $db = new ConnectionHandler($ruta_raiz);
+}
 $db->conn->debug = false;
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 $sqlFecha = $db->conn->SQLDate("Y-m-d H:i A", "b.RADI_FECH_RADI");
@@ -111,8 +117,9 @@ if (empty($_REQUEST['resultados_query_cuerpo'])){
 */
 //End::no restablecer filtro de resultados
 
-
-if (trim($orderTipo) == "") $orderTipo = " DESC ";
+if (trim($orderTipo) == "") {
+    $orderTipo = " DESC ";
+}
 
 if ($orden_cambio == 1) {
     if (trim($orderTipo) != "DESC") {
@@ -122,11 +129,18 @@ if ($orden_cambio == 1) {
     }
 }
 
-if (!$carpeta) $carpeta = 9998;
-if ($carpeta == 9998) $carpeta = 0;
-if (!$nomcarpeta) $nomcarpeta = "Carpeta de Entrada";
-
-if (!$tipo_carp) $tipo_carp = 0;
+if (!$carpeta) {
+    $carpeta = 9998;
+}
+if ($carpeta == 9998) {
+    $carpeta = 0;
+}
+if (!$nomcarpeta) {
+    $nomcarpeta = "Carpeta de Entrada";
+}
+if (!$tipo_carp) {
+    $tipo_carp = 0;
+}
 
 /**
  * Este if verifica si se debe buscar en los radicados de todas las carpetas.
@@ -149,7 +163,7 @@ $sqlFechaHoy    = $db->conn->DBDate($fecha_hoy);
 //Filtra el query para documentos agendados
 if ($agendado == 1) {
     $sqlAgendado = " and (radi_agend=1 and radi_fech_agend > $sqlFechaHoy) "; // No vencidos
-} else  if ($agendado == 2) {
+} elseif ($agendado == 2) {
     $sqlAgendado = " and (radi_agend=1 and radi_fech_agend <= $sqlFechaHoy)  "; // vencidos
 }
 
@@ -164,7 +178,6 @@ if ($carpeta == 11 && $codusuario != 1 && $_REQUEST['tipo_carp'] != 1) {
 } else {
     $whereUsuario = " and b.radi_usua_actu='$codusuario' ";
 }
-
 
 $sqlNoRad = "select
                         b.carp_codi as carp, count(1) as COUNT
@@ -183,6 +196,9 @@ $sqlTotalRad = "select count(1) as TOTAL
                   from  radicado b where  b.radi_depe_actu= $dependencia
                   $whereUsuario ";
 ?>
+
+<!DOCTYPE html>
+
 <html>
 
 <head>
@@ -429,7 +445,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                     //End::expediente            
 
                                                     if (empty($remitenteRadicado) && ($tipo_rad == CIRC_INTERNA || $tipo_rad == CIRC_EXTERNA)) {
-                                                        include_once("$ruta_raiz/include/tx/notificacion.php");
+                                                        include_once "$ruta_raiz/include/tx/notificacion.php";
                                                         $notificacion = new Notificacion($db);
                                                         $destinatarios_circ = $notificacion->destinatariosPorRadicado($numeroRadicado);
                                                         $remitenteRadicado = $destinatarios_circ[0]["DESTINATARIOS"];
@@ -703,15 +719,17 @@ $sqlTotalRad = "select count(1) as TOTAL
                                         </table>
                                         <?php
 
-                                        if ((isset($krd) && $krd == "CONTACTCENTER") || (isset($dependencia) && $dependencia == '8010'))
+                                        if ((isset($krd) && $krd == "CONTACTCENTER") || (isset($dependencia) && $dependencia == '8010')) {
                                             $paginacion = 200;
-                                        else
+                                        } else {
                                             $paginacion = 100;
+                                        }
 
-                                        if (!empty($rs_conteo->fields['COUNT']) && ($rs_conteo->fields['COUNT'] / $paginacion) > 1)
+                                        if (!empty($rs_conteo->fields['COUNT']) && ($rs_conteo->fields['COUNT'] / $paginacion) > 1) {
                                             $conteo_paginas =  ceil($rs_conteo->fields['COUNT'] / $paginacion);
-                                        else
+                                        } else {
                                             $conteo_paginas = 1;
+                                        }
 
                                         ?>
                                         <script type="text/javascript">

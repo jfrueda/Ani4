@@ -22,15 +22,19 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 session_start();
 
 $ruta_raiz = ".";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
   header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+  ${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+  ${$key} = $valor;
+}
 
 define('ADODB_ASSOC_CASE', 2);
 $verrad         = "";
@@ -40,6 +44,7 @@ $usua_doc       = $_SESSION["usua_doc"];
 $codusuario     = $_SESSION["codusuario"];
 $verrad         = "";
 ?>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -51,8 +56,10 @@ $verrad         = "";
 </head>
 <?
 include_once "./include/db/ConnectionHandler.php";
-require_once("$ruta_raiz/class_control/Mensaje.php");
-if (!$db) $db = new ConnectionHandler($ruta_raiz);
+require_once "$ruta_raiz/class_control/Mensaje.php";
+if (!$db) {
+  $db = new ConnectionHandler($ruta_raiz);
+}
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 $objMensaje = new Mensaje($db);
 $mesajes = $objMensaje->getMsgsUsr($_SESSION['usua_doc'], $_SESSION['dependencia']);
@@ -63,9 +70,12 @@ include "./envios/paEncabeza.php";
 
 <body onLoad="window_onload();">
   <?
-  if ($swLog == 1)
-    echo ($mesajes);
-  if (trim($orderTipo) == "") $orderTipo = "DESC";
+  if ($swLog == 1) {
+    echo $mesajes;
+  }
+  if (trim($orderTipo) == "") {
+    $orderTipo = "DESC";
+  }
   if ($orden_cambio == 1) {
     if (trim($orderTipo) != "DESC") {
       $orderTipo = "DESC";
@@ -74,7 +84,9 @@ include "./envios/paEncabeza.php";
     }
   }
 
-  if (!$carpeta) $carpeta = 0;
+  if (!$carpeta) {
+    $carpeta = 0;
+  }
 
   if ($busqRadicados) {
     $busqRadicados = trim($busqRadicados);
@@ -147,7 +159,9 @@ include "./envios/paEncabeza.php";
                     $whereCarpeta = " ";
                   } else {
                     $chkValue = "";
-                    if (!$tipo_carp) $tipo_carp = "0";
+                    if (!$tipo_carp) {
+                      $tipo_carp = "0";
+                    }
                     $whereCarpeta = " and b.carp_codi=$carpeta  and b.carp_per=$tipo_carp";
                   }
                   $fecha_hoy = Date("Y-m-d");
@@ -228,7 +242,7 @@ include "./envios/paEncabeza.php";
                   <div class="table-responsive" style='display:none'>
                     <?
                     $controlAgenda = 1;
-                    if ($carpeta == 11 and !$tipo_carp and $codusuario != 1) {
+                    if ($carpeta == 11 && !$tipo_carp && $codusuario != 1) {
                     } else {
                       //include "./tx/txOrfeo.php";
                     }
@@ -248,7 +262,7 @@ include "./envios/paEncabeza.php";
                     $sqlFecha = $db->conn->SQLDate("Y-m-d H:i A", "h.HIST_FECH");
                     include "$ruta_raiz/include/query/queryCuerpoTx.php";
                     $rs = $db->conn->Execute($isql);
-                    if ($rs->EOF and $busqRadicados) {
+                    if ($rs->EOF && $busqRadicados) {
                       echo "<hr><center><b><span class='alarmas'>No se encuentra ningun radicado con el criterio de busqueda</span></center></b></hr>";
                     } else {
                       $pager = new ADODB_Pager($db, $isql, 'adodb', true, $orderNo, $orderTipo);

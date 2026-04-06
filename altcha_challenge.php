@@ -9,7 +9,7 @@ define('ADODB_ASSOC_CASE', 1);
 $ruta_raiz = __DIR__;
 $ADODB_COUNTRECS = false;
 
-include_once("$ruta_raiz/processConfig.php");
+include_once "$ruta_raiz/processConfig.php";
 
 $hmacKey = $altcha_hmac;
 

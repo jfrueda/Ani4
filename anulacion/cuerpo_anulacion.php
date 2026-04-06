@@ -26,13 +26,19 @@ session_start();
 $verrad = "";
 $ruta_raiz = "..";
 
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
 	header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-if (!$dep_sel) $dep_sel = $_SESSION['dependencia'];
+if (!$dep_sel)
+	$dep_sel = $_SESSION['dependencia'];
 $depeBuscada = $dep_sel;
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+	${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+	${$key} = $valor;
+}
 $krd = $_SESSION["krd"];
 $dependencia = $_SESSION["dependencia"];
 $usua_doc = $_SESSION["usua_doc"];
@@ -128,12 +134,18 @@ $adodb_next_page = $_GET["adodb_next_page"];
 	 *  el archivo original es adodb-pager.inc.php la modificada es adodb-paginacion.inc.php
 	 */
 
-	if ($orderNo == 98 or $orderNo == 99) {
+	if ($orderNo == 98 || $orderNo == 99) {
 		$order = 1;
-		if ($orderNo == 98)   $orderTipo = "desc";
-		if ($orderNo == 99)   $orderTipo = "";
+		if ($orderNo == 98) {
+			$orderTipo = "desc";
+		}
+		if ($orderNo == 99) {
+			$orderTipo = "";
+		}
 	} else {
-		if (!$orderNo)  $orderNo = 3;
+		if (!$orderNo) {
+			$orderNo = 3;
+		}
 		$order = $orderNo + 1;
 
 		if ($orden_cambio == 1) {
@@ -155,7 +167,7 @@ $adodb_next_page = $_GET["adodb_next_page"];
 		<div class="container-fluid my-4">
 
 			<!-- TÍTULO -->
-			
+
 			<!-- ALERTA -->
 			<div class="alert alert-warning shadow-sm rounded-3">
 				<strong>⚠ Importante:</strong>

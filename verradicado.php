@@ -1,7 +1,6 @@
 <?php
 // Enable error reporting for debugging
 
-
 /**
  * @author Cesar Augusto <aurigadl@gmail.com>
  * @author Jairo Losada  <jlosada@gmail.com>
@@ -32,11 +31,17 @@ define('RESOLUCION', 6);
 define('AUTO', 7);
 $ruta_raiz = ".";
 
-if (!$_SESSION['dependencia']) header("Location: $ruta_raiz/cerrar_session.php");
+if (!$_SESSION['dependencia']) {
+	header("Location: $ruta_raiz/cerrar_session.php");
+}
 
 include_once $ruta_raiz . "/include/tx/sanitize.php";
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+	${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+	${$key} = $valor;
+}
 
 $krd                =	$_SESSION["krd"];
 $dependencia        =	$_SESSION["dependencia"];
@@ -53,19 +58,35 @@ $nomcarpeta 		=	$_GET["nomcarpeta"];
 $verradicado 		=	$_GET['verrad'];
 $key 				=	$_GET['key'] ?? '';
 
-if (!isset($ent))         $ent           = substr($verradicado, -1);
-if (!isset($menu_ver_tmp)) $menu_ver_tmp  = $menu_ver_tmpOld;
-if (!isset($menu_ver))     $menu_ver      = $menu_ver_Old;
-if (!isset($menu_ver))     $menu_ver      = 3;
-if ($menu_ver_tmp)	 $menu_ver      = $menu_ver_tmp;
+if (!isset($ent)) {
+	$ent           = substr($verradicado, -1);
+}
+if (!isset($menu_ver_tmp)) {
+	$menu_ver_tmp  = $menu_ver_tmpOld;
+}
+if (!isset($menu_ver)) {
+	$menu_ver      = $menu_ver_Old;
+}
+if (!isset($menu_ver)) {
+	$menu_ver      = 3;
+}
+if ($menu_ver_tmp) {
+	$menu_ver      = $menu_ver_tmp;
+}
 
-if (!defined('ADODB_ASSOC_CASE')) define('ADODB_ASSOC_CASE', 1);
+if (!defined('ADODB_ASSOC_CASE')) {
+	define('ADODB_ASSOC_CASE', 1);
+}
 include_once "./processConfig.php";
 include_once "./include/db/ConnectionHandler.php";
-include_once("$ruta_raiz/include/crypt/Crypt.php");
+include_once "$ruta_raiz/include/crypt/Crypt.php";
 
-if ($verradicado)	$verrad = $verradicado;
-if (!$ruta_raiz)	$ruta_raiz = ".";
+if ($verradicado) {
+	$verrad = $verradicado;
+}
+if (!$ruta_raiz) {
+	$ruta_raiz = ".";
+}
 $numrad = $verrad;
 
 $db = new ConnectionHandler('.');
@@ -205,15 +226,19 @@ if ($ent == CIRC_INTERNA || $ent == CIRC_EXTERNA) {
 		var contadorVentanas = 0
 		<?PHP
 
-		if ($dependencia == 900) $verradPermisos = "Full";
-		if ($carpeta == 8 || $carpeta == 66)  $verradPermisos = "Full";
+		if ($dependencia == 900) {
+			$verradPermisos = "Full";
+		}
+		if ($carpeta == 8 || $carpeta == 66) {
+			$verradPermisos = "Full";
+		}
 
-		if ($verradPermisos == "Full" or $datoVer == "985") {
+		if ($verradPermisos == "Full" || $datoVer == "985") {
 			if ($datoVer == "985") {
 		?>
 
 				function window_onload() {
-					<? if ($verradPermisos == "Full" or $datoVer == "985") { ?>
+					<? if ($verradPermisos == "Full" || $datoVer == "985") { ?>
 						window_onload2();
 					<?  } ?>
 				}
@@ -263,7 +288,7 @@ if ($ent == CIRC_INTERNA || $ent == CIRC_EXTERNA) {
 	$numerot = 0;
 	$numerop = 0;
 	$numeroh = 0;
-	include_once("ver_datosrad.php");
+	include_once "ver_datosrad.php";
 
 	$_SESSION['dir_doc_us1'] = $cc_documento_us1;
 	$_SESSION['dir_doc_us2'] = $cc_documento_us2;
@@ -405,7 +430,7 @@ if ($ent == CIRC_INTERNA || $ent == CIRC_EXTERNA) {
 									$row1["USUA_CODI"] = $codusuario;
 									$row1["RADI_NUME_RADI"] = $verrad;
 									$rs = $db->update("informados", $row, $row1);
-								} elseif (($leido != "no" or !$leido) and $datoVer != 985) {
+								} elseif (($leido != "no" || !$leido) && $datoVer != 985) {
 									$row["RADI_LEIDO"] = 1;
 									$row1["radi_depe_actu"] = $dependencia;
 									$row1["radi_usua_actu"] = $codusuario;
@@ -414,8 +439,8 @@ if ($ent == CIRC_INTERNA || $ent == CIRC_EXTERNA) {
 								}
 							}
 
-							include_once("ver_datosrad.php");
-							include("ver_datosgeo.php");
+							include_once "ver_datosrad.php";
+							include "ver_datosgeo.php";
 							$tipo_documento .= "<input type=hidden name=menu_ver value='$menu_ver'>";
 							$hdatos = "leido=$leido&nomcarpeta=" . $nomcarpeta . "&tipo_carp=$tipo_carp&carpeta=$carpeta&verrad=$verrad&datoVer=$datoVer&fechah=fechah&menu_ver_tmp=";
 						} else {
@@ -446,9 +471,9 @@ if ($ent == CIRC_INTERNA || $ent == CIRC_EXTERNA) {
 					//************************************************************************************************************************//
 					//Filtro para ver con permiso y que los usuarios que lo tienen lo puedan modificar
 					//************************************************************************************************************************//
-					if (($_SESSION["perm_rad_reser"] == NULL || $depe_actu == $dependencia) && $codusuario == $usuacodi || $SeguridadRadicado == 0 || $tieneAsignacion == true || ($_SESSION["USUA_TRAMITADOR"] == true && $depe_actu == $dependencia)) {
+					if ((!$_SESSION["perm_rad_reser"] || $depe_actu == $dependencia) && $codusuario == $usuacodi || $SeguridadRadicado == 0 || $tieneAsignacion || ($_SESSION["USUA_TRAMITADOR"] && $depe_actu == $dependencia)) {
 						echo "<div class='actions2'>";
-						include_once("$ruta_raiz/tx/txOrfeo.php");
+						include_once "$ruta_raiz/tx/txOrfeo.php";
 						echo "</div>";
 						$verradPermisos = 'Full';
 					} else {

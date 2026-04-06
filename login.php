@@ -38,14 +38,15 @@ if (!empty($_SESSION['dependencia'])) {
  */
 function get_the_browser()
 {
-  if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)
+  if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
     return false;
-  elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
+  } elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false) {
     return false;
-  elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'Edg') !== false)
+  } elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'Edg') !== false) {
     return false;
-  else
+  } else {
     return true;
+  }
 }
 
 $isValidBrowser = get_the_browser();
@@ -72,24 +73,25 @@ $ruta_raiz     = ".";
 $usua_nuevo    = 3;
 $ValidacionKrd  = "";
 
-include("dbconfig.php");
-include("processConfig.php");
+include "dbconfig.php";
+include "processConfig.php";
 $serv = str_replace(".", ".", $_SERVER['REMOTE_ADDR']);
 
 if ($krd) {
   //session_orfeo retorna mensaje de error
   include "$ruta_raiz/session_orfeo.php";
-  require_once("$ruta_raiz/class_control/Mensaje.php");
+  require_once "$ruta_raiz/class_control/Mensaje.php";
 
   if ($usua_nuevo == 0 &&  !$autenticaPorLDAP && false) {
-    include($ruta_raiz . "/contraxx.php");
+    include $ruta_raiz . "/contraxx.php";
     $ValidacionKrd = "NOOOO";
-    if ($j = 1)
+    if ($j = 1) {
       die("<center> -- </center>");
+    }
   }
 }
 
-include_once("include/utils/Utils.php");
+include_once "include/utils/Utils.php";
 
 $krd = strtoupper($krd);
 

@@ -1,26 +1,29 @@
 <?php
-// Programa que actualiza el paquete de documentos de numeración y fechado
+// Programa que actualiza el paquete de documentos de numeraciï¿½n y fechado
 session_start();
 //print("ENTRA");
-if (!$ruta_raiz) $ruta_raiz = ".";
+if (!$ruta_raiz) {
+	$ruta_raiz = ".";
+}
 //print("ENTRA1");
-require_once("$ruta_raiz/include/db/ConnectionHandler.php");
+require_once "$ruta_raiz/include/db/ConnectionHandler.php";
 //print("ENTRA2");
 include "$ruta_raiz/rec_session.php";
 //print("ENTRA3");
-require_once("$ruta_raiz/class_control/anexo.php");
+require_once "$ruta_raiz/class_control/anexo.php";
 //print("ENTRA4");
-require_once("$ruta_raiz/class_control/anex_tipo.php");
+require_once "$ruta_raiz/class_control/anex_tipo.php";
 //print("INCLUYE");
 $fecha_hoy = Date("Y-m-d");
 $hora=date("H").":".date("i").":".date("s");
-//Trae los datos relacionados con el paquete de documentos de numeración y fechado
+//Trae los datos relacionados con el paquete de documentos de numeraciï¿½n y fechado
 $q="select a.SGD_TPR_CODIGO, a.ANEX_TIPO_CODI, a.SGD_DNUFE_GERARQ,b.SGD_PNUFE_CODI ,a.SGD_DNUFE_CODI,a.SGD_DNUFE_PATH ,b.SGD_PNUFE_SERIE,c.SGD_TPR_DESCRIP,a.SGD_DNUFE_LABEL,a.SGD_DNUFE_MAIN,a.TRTE_CODI from sgd_dnufe_docnufe a,sgd_pnufe_procnumfe b,sgd_tpr_tpdcumento c where b.sgd_pnufe_codi=a.sgd_pnufe_codi " .
 		"and c.sgd_tpr_codigo=a.sgd_tpr_codigo and b.sgd_pnufe_codi=$tipoPaquete order by a.sgd_dnufe_main desc";
 //print("ANTES CONEXIONES");
 
-if (!$db)
-		$db = new ConnectionHandler($ruta_raiz);
+if (!$db){
+	$db = new ConnectionHandler($ruta_raiz);
+}
 $db->conn->BeginTrans();
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);	 
 
@@ -39,7 +42,7 @@ while (($rs&&!$rs->EOF) && $estadoCopia ){
 	$tipo_archivo->anex_tipo_codigo($tipoArchivoFisico);
 	$extensionArchivo = $tipo_archivo->get_anex_tipo_ext();
 	$auxnumero = str_pad($auxnumero,5,"0",STR_PAD_LEFT);
-  $archivo=trim($numrad."_".$auxnumero.".".$extensionArchivo);
+  	$archivo=trim($numrad."_".$auxnumero.".".$extensionArchivo);
 	$archivoconversion=trim("1").trim($numrad."_".$auxnumero.".".$extensionArchivo);
 	$codigo=$numrad.str_pad($auxnumero,5,"0",STR_PAD_LEFT);
 	$doctoPrincipal= 	$rs->fields['SGD_DNUFE_MAIN']; 
@@ -93,8 +96,9 @@ if ($doctoPrincipal=="1") {
 			 $record_id = key($argumento); 
 			 $secuencia=$db->nextId("sgd_anar_secue");
 			 
-			 if  ($secuencia==-1)
+			 if  ($secuencia==-1){
  			 	$secuencia=0;
+			 }
 			 
 			 $values["sgd_anar_codi"] = $secuencia;
 			 $values["anex_codigo"] = "'$codDoctoPadre'";
@@ -105,7 +109,7 @@ if ($doctoPrincipal=="1") {
 			 
 			 if (!$rs3){
 			 	$db->conn->RollbackTrans();
-		 	 	die ("<span class='etextomenu'>No se ha podido Grabar la información seleccionada");
+		 	 	die ("<span class='etextomenu'>No se ha podido Grabar la informaciï¿½n seleccionada");
 			 }
 
 			 next($argumento); 
@@ -119,7 +123,7 @@ if ($doctoPrincipal=="1") {
 }
 //print("SALE");
 $db->conn->CommitTrans();
-include ("nuevo_paquete_exito.php");
+include "nuevo_paquete_exito.php";
 ?>
 
  <script language="javascript">

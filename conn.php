@@ -1,15 +1,25 @@
-<?php 
-if (!$ruta_raiz) $ruta_raiz=".";
+<?php
+if (!$ruta_raiz) {
+    $ruta_raiz = ".";
+}
 
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+    ${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+    ${$key} = $valor;
+}
 
-include_once("$ruta_raiz/processConfig.php");
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
-require_once("$ruta_raiz/class_control/TipoDocumento.php");
+include_once "$ruta_raiz/processConfig.php";
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
+require_once "$ruta_raiz/class_control/TipoDocumento.php";
 
-if(!$verrad) $verrad = $verradicado;
-if(!$verradicado) $verradicado = $verrad;
+if (!$verrad) {
+    $verrad = $verradicado;
+}
+if (!$verradicado) {
+    $verradicado = $verrad;
+}
 
 $db = new ConnectionHandler("$ruta_raiz");
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
@@ -27,4 +37,6 @@ $tpPerRad           = $_SESSION["tpPerRad"];
 $tpDescRad          = $_SESSION["tpDescRad"];
 $usuaPermExpediente = $_SESSION["usuaPermExpediente"];
 
-if($verradicado) require_once("$ruta_raiz/ver_datosrad.php");
+if ($verradicado) {
+    require_once "$ruta_raiz/ver_datosrad.php";
+}

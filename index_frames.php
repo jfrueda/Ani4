@@ -38,8 +38,6 @@ if (!$_SESSION['dependencia'] || $_GET['close']) {
     echo "<script>parent.frames.location.reload();top.location.reload();</script>";
 }
 
-
-
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/processConfig.php";
 require_once "include/tx/Menus.php";
@@ -381,6 +379,11 @@ if ($_SESSION["usua_admin_sistema"] >= 1 || $tiene_acceso_admin) {
             'subMenu' => 0,
             'url' => "./Administracion/usuario/index.php?$sendSession",
             'nombre' => "Usuarios y Perfiles"
+        ),
+        "creacionMasivaUsuarios" => array(
+            'subMenu' => 0,
+            'url' => "./Administracion/usuario/creacion_masiva.php?$sendSession",
+            'nombre' => "Creaci&oacute;n masiva de usuarios"
         )
     );
     $usuarios = array('subMenu' => 1, 'url' => "#", 'nombre' => "Usuarios y permisos", 'sub' => $sub);
@@ -711,7 +714,7 @@ function getSecondNumber($input)
 foreach ($bandejasGenerales as $key => $value) {
     $valor = substr($value, 0, strpos($value, '(') - 1);
 
-    if (($mostrarCarpetaJefe == false) && ($valor == "Jefe de Area")) {
+    if ((!$mostrarCarpetaJefe) && ($valor == "Jefe de Area")) {
         continue;
     }
 

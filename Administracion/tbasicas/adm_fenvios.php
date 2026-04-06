@@ -27,13 +27,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 session_start();
 
 $ruta_raiz = "../..";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
 	header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-if (!isset($krd)) $krd = $_POST['krd'];
-else $krd = $_GET['krd'];
+if (!isset($krd)) {
+	$krd = $_POST['krd'];
+} else {
+	$krd = $_GET['krd'];
+}
 
-require_once("$ruta_raiz/include/db/ConnectionHandler.php");
+require_once "$ruta_raiz/include/db/ConnectionHandler.php";
 $db = new ConnectionHandler($ruta_raiz);
 
 /*
@@ -140,7 +144,9 @@ if ($db) {
 						$error = 5;
 					} else {
 						$ok = $db->conn->Execute('DELETE FROM SGD_FENV_FRMENVIO WHERE SGD_FENV_CODIGO=' . $record['SGD_FENV_CODIGO']);
-						if (!$ok) $error = 2;
+						if (!$ok) {
+							$error = 2;
+						}
 					}
 				}
 				break;
@@ -153,8 +159,9 @@ if ($db) {
 	$sql =	"SELECT SGD_FENV_DESCRIP, SGD_FENV_CODIGO, SGD_FENV_ESTADO, SGD_FENV_PLANILLA
 				FROM SGD_FENV_FRMENVIO ORDER BY SGD_FENV_DESCRIP";
 	$Rs = $db->conn->Execute($sql);
-	if (!($Rs)) $error = 2;
-	else {	//Creamos el vector que contiene todas las Formas de envio con su respectiva informacion.
+	if (!($Rs)) {
+		$error = 2;
+	} else {	//Creamos el vector que contiene todas las Formas de envio con su respectiva informacion.
 		$v_fenv = array();
 		$i = 0;
 		while ($arr = $Rs->fetchRow()) {
@@ -200,6 +207,7 @@ if ($error) {
 	$msg .= '</td></tr>';
 }
 ?>
+<!DOCTYPE>
 <html>
 
 <head>

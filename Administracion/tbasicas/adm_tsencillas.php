@@ -28,15 +28,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 session_start();
 
 $ruta_raiz = "../../";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
 	header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 
 $db = new ConnectionHandler($ruta_raiz);
 
 if ($db->conn) {
-
 	//Creamos un vector con las opciones
 	$vec_ppal[0] = array("&lt; Seleccione &gt;", "", "", "");
 	//$vec_ppal[1]= array("Subtemas","SGD_CAU_CAUSAL","SGD_CAU_CODIGO","SGD_CAU_DESCRIP");
@@ -55,22 +55,22 @@ if ($db->conn) {
 
 	switch ($_POST['slc_ppal']) {
 		case 1: {
-				include($ruta_raiz . '/include/class/causales.class.php');
+				include $ruta_raiz . '/include/class/causales.class.php';
 				$obj_tmp = new Causales($db->conn);
 			}
 			break;
 		case 2: {
-				include($ruta_raiz . '/include/class/resoluciones.class.php');
+				include $ruta_raiz . '/include/class/resoluciones.class.php';
 				$obj_tmp = new Resoluciones($db->conn);
 			}
 			break;
 		case 3: {
-				include($ruta_raiz . '/include/class/sectores.class.php');
+				include $ruta_raiz . '/include/class/sectores.class.php';
 				$obj_tmp = new Sectores($db->conn);
 			}
 			break;
 		case 4: {
-				include($ruta_raiz . '/include/class/medioDevoluciones.class.php');
+				include $ruta_raiz . '/include/class/medioDevoluciones.class.php';
 				$obj_tmp = new MedDevolucion($db->conn);
 			}
 			break;

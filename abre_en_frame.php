@@ -1,4 +1,5 @@
 <?
+
 /*************************************************************************************/
 /* ORFEO GPL:Sistema de Gestion Documental		http://www.orfeogpl.org	     */
 /*	Idea Original de la SUPERINTENDENCIA DE SERVICIOS PUBLICOS DOMICILIARIOS     */
@@ -33,13 +34,11 @@ $lkfin = $lkfin . str_replace("|", "&", $datoenvio);
 
 ?>
 <frameset cols="100%" frameborder="NO" border="0" framespacing="0" cols="*" onunload="opener.regresar();">
-   <frameset cols=*" border="0" framespacing="0" rows="*">
-     <frame name='mainFrame' src='<?=$lkfin ?>'  scrolling='AUTO'>
-    </frameset>
+  <frameset cols=*" border="0" framespacing="0" rows="*">
+    <frame name='mainFrame' src='<?= $lkfin ?>' scrolling='AUTO'>
+  </frameset>
 </frameset>
 <noframes></noframes>
 </frameset>
 
 </html>
-
-

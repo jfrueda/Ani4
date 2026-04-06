@@ -1,7 +1,8 @@
 <?php
 
-function checkMailuser($username,$password,$ruta_raiz){
-  require($ruta_raiz."/email/pop3.php");
+function checkMailuser($username, $password, $ruta_raiz)
+{
+  require $ruta_raiz . "/email/pop3.php";
   //$username = "jlosada";
   $apop                           = 0;              // Use APOP authentication  */
   $pop3                           = new pop3_class();
@@ -13,19 +14,14 @@ function checkMailuser($username,$password,$ruta_raiz){
   $pop3->authentication_mechanism = "USER";/* SASL authentication mechanism               */
   $pop3->debug                    = 0;     /* Output debug information                    */
   $pop3->html_debug               = 1;     /* Debug information is in HTML                */
-  $pop3->join_continuation_header_lines=1; /* Concatenate headers split in multiple lines */
+  $pop3->join_continuation_header_lines = 1; /* Concatenate headers split in multiple lines */
   $pop3->Open();
-//echo "$username,$password,$apop";
-  $connect = $pop3->Login($username,$password,$apop);
-  
-  if (!$connect) 
-  {
-      return 0;
-  }else{
-  
-     return $connect;
+  //echo "$username,$password,$apop";
+  $connect = $pop3->Login($username, $password, $apop);
+
+  if (!$connect) {
+    return 0;
+  } else {
+    return $connect;
   }
 }
-?>
-
-

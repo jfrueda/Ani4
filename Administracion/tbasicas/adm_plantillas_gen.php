@@ -1,13 +1,16 @@
 <?php
 session_start();
 $ruta_raiz = "../..";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
     header("Location: $ruta_raiz/cerrar_session.php");
-include_once($ruta_raiz . '/processConfig.php'); // incluir configuracion.
-include_once($ruta_raiz . "/include/db/ConnectionHandler.php");
+}
+include_once $ruta_raiz . '/processConfig.php'; // incluir configuracion.
+include_once $ruta_raiz . "/include/db/ConnectionHandler.php";
 $db = new ConnectionHandler("$ruta_raiz");
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
-foreach ($_POST as $key => $valor) ${$key} = $valor;
+foreach ($_POST as $key => $valor) {
+    ${$key} = $valor;
+}
 error_reporting(7);
 $doc    = new DOMDocument();
 //Abrir o crear el archivo de listado en 
@@ -25,7 +28,6 @@ $tamArchi = 5054432;
 if (@!file_exists($direcTor)) {
     $directorio = mkdir("$direcTor", 0777);
 }
-
 
 /****************************************
  * Plantillas agregar y eliminar 
@@ -99,7 +101,6 @@ if (@!$doc->load($archivo3)) {
         );
     }
 }
-
 
 if ($btn_acc == adjuntar) {
     $nomb       = "plant" . time() . rand(0, 1000) . ".odt";
@@ -200,8 +201,6 @@ if ($btn_acc == Modificar) {
     $msg    .= "Se actulizo la informacion de los campos</br>";
 }
 
-
-
 /*****************************************
  * Leer el archivo existente o crearlo
  * ***************************************/
@@ -234,7 +233,6 @@ if (@!$doc->load($archivo2)) {
         $nombMa  .= empty($nombMa) ? $valor : ", $valor";
     }
 }
-
 
 if (empty($nombSe)) {
     $nombSe = "*TIPO* 
@@ -326,8 +324,7 @@ if (empty($nombMa)) {
 
         <table width="100%" border="1" align="center" cellpadding="0" cellspacing="0">
             <tr>
-                <td width="20%" align="center"><input name="
-" type="submit" class="botones" value="Modificar"></td>
+                <td width="20%" align="center"><input name="" type="submit" class="botones" value="Modificar"></td>
             </tr>
         </table>
 
