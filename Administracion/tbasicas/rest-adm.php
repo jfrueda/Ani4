@@ -45,7 +45,7 @@ $usua_perm_estadistica = $_SESSION["usua_perm_estadistica"];
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 
 $db = new ConnectionHandler($ruta_raiz);
-$db->conn->debug =true;
+$db->conn->debug = true;
 $datos = array();
 switch ($fn) {
     case 'add':
@@ -61,21 +61,21 @@ switch ($fn) {
         $dato['status'] = $ok ? 'ok' : 'fail';
         break;
     case 'addFmas':
-       // echo "ss";
-       //$fechas = explode(';', $_POST['datos']);
-       $fechas =str_replace(';',"'),('" ,trim($_POST['datos'],';'));
+        // echo "ss";
+        //$fechas = explode(';', $_POST['datos']);
+        $fechas = str_replace(';', "'),('", trim($_POST['datos'], ';'));
         //print_r($fechas );
         //for ($index = 0; $index < count($fechas); $index++) {
-            $sqlInsert = "insert into sgd_noh_nohabiles  (noh_fecha) values ('" .$fechas . "')";
-//            $sqlBorra = "delete from sgd_noh_nohabiles where noh_fecha in ({$fechas[$i]})";
-            $ok = $db->conn->Execute($sqlInsert);
-       // }
+        $sqlInsert = "insert into sgd_noh_nohabiles  (noh_fecha) values ('" . $fechas . "')";
+        //            $sqlBorra = "delete from sgd_noh_nohabiles where noh_fecha in ({$fechas[$i]})";
+        $ok = $db->conn->Execute($sqlInsert);
+        // }
         $dato['status'] = $ok ? 'ok' : 'fail';
         break;
     case 'delFmas':
-        $fechas =str_replace(';',"','" ,trim($_POST['datos'],';'));
-            $sqlBorra = "delete from sgd_noh_nohabiles where noh_fecha in ('{$fechas}')";
-            $ok = $db->conn->Execute($sqlBorra);
+        $fechas = str_replace(';', "','", trim($_POST['datos'], ';'));
+        $sqlBorra = "delete from sgd_noh_nohabiles where noh_fecha in ('{$fechas}')";
+        $ok = $db->conn->Execute($sqlBorra);
 
         $dato['status'] = $ok ? 'ok' : 'fail';
         break;

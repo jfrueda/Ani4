@@ -169,8 +169,12 @@ if ($db) {
 									$rs_nxt = $db->conn->Execute($sql_nxt);
 									$rs_act = $db->conn->Execute($sql_act);
 									$ADODB_COUNTRECS = false;
-									if ($rs_nxt->RecordCount() > 0) $vlr_nxt = $rs_nxt->fields['LAST_NUMBER'] + 1;
-									if ($rs_act->RecordCount() > 0) $vlr_act = $rs_act->fields['LAST_NUMBER'] + 1;
+									if ($rs_nxt->RecordCount() > 0) {
+										$vlr_nxt = $rs_nxt->fields['LAST_NUMBER'] + 1;
+									}
+									if ($rs_act->RecordCount() > 0) {
+										$vlr_act = $rs_act->fields['LAST_NUMBER'] + 1;
+									}
 									$sql_rtp = "select * from radicado where " . $db->conn->substr . '(cast(radi_nume_radi as varchar(20)),-1)=' . $tmp1 . " and radi_depe_radi=" . $_POST['txtIdDep'];
 									break;
 								case 'mssql':
@@ -191,13 +195,11 @@ if ($db) {
 					}
 
 					/*actuliza campo de cierre automatico*/
-
 					$record['DEP_CIERRE'] = $_POST['cierre'];
 					$record['MUNI_CODI'] = 1;
 					$record['DPTO_CODI'] = 11;
 					$record['ID_PAIS'] = 170;
 					$record['ID_CONT'] = 1;
-
 
 					//Finalizamos validaciones para modificación
 					if ($oka && $okb && $okc) {
@@ -221,9 +223,13 @@ if ($db) {
 							unset($rs_sec_dep_vis);
 						}
 					} else {
-						if (!$oka) $error = 7;
-						else if (!$okb) $error = 8;
-						else if (!$okc) $error = 9;
+						if (!$oka) {
+							$error = 7;
+						} elseif (!$okb) {
+							$error = 8;
+						} elseif (!$okc) {
+							$error = 9;
+						}
 					}
 				}
 				break;
@@ -237,7 +243,9 @@ if ($db) {
 					if ($rs_tmp->RecordCount() == 0) {
 						$ok = $db->conn->Execute('DELETE FROM DEPENDENCIA WHERE DEPE_CODI=' . $_POST['id']);
 					}
-					if (!$ok) $error = 11;
+					if (!$ok) {
+						$error = 11;
+					}
 				}
 				break;
 		}
@@ -372,6 +380,7 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 }
 
 ?>
+<!DOCTYPE>
 <html>
 
 <head>

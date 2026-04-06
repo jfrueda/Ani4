@@ -26,8 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 session_start();
 $ruta_raiz = "../..";
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
 	header("Location: $ruta_raiz/cerrar_session.php");
+}
 
 # Variables de la session de Orfeo
 $krd         = $_SESSION["krd"];
@@ -38,13 +39,17 @@ $tip3Nombre  = $_SESSION["tip3Nombre"];
 $tip3desc    = $_SESSION["tip3desc"];
 $tip3img     = $_SESSION["tip3img"];
 
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
-require_once("$ruta_raiz/class_control/Mensaje.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
+require_once "$ruta_raiz/class_control/Mensaje.php";
 
 $db = new ConnectionHandler($ruta_raiz);
 
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+	${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+	${$key} = $valor;
+}
 
 function valueToJsValue($value, $encoding = false)
 {
@@ -176,8 +181,7 @@ if ($db) {
 		$nomTabla = "Formas de Envio";
 	}
 
-
-	if ($_POST['id_fenv'] and $_POST['slc_TipoTar']) {
+	if ($_POST['id_fenv'] && $_POST['slc_TipoTar']) {
 		if ($_POST['slc_TipoTar'] == '1') {
 			$sql_val = " SGD_TAR_TARIFAS.SGD_TAR_VALENV1 AS VAL1, SGD_TAR_TARIFAS.SGD_TAR_VALENV2 AS VAL2 ";
 		} else {

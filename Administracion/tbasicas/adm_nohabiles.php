@@ -311,7 +311,7 @@ function calendario($ano, $mes)
             $c = 1;
         }
 
-        if ($a > $EmpiezaMesCalOffset and $c <= UltimoDia($ano, $mes)) {
+        if ($a > $EmpiezaMesCalOffset && $c <= UltimoDia($ano, $mes)) {
             $mes2 = $mes;
             $c2 = $c;
             if ($mes < 10) {
@@ -347,7 +347,7 @@ function calendario($ano, $mes)
 
 function UltimoDia($anho, $mes)
 {
-    if (((fmod($anho, 4) == 0) and (fmod($anho, 100) != 0)) or (fmod($anho, 400) == 0)) {
+    if (((fmod($anho, 4) == 0) && (fmod($anho, 100) != 0)) || (fmod($anho, 400) == 0)) {
         $dias_febrero = 29;
     } else {
         $dias_febrero = 28;

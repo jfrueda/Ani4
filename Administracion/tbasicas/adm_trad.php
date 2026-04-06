@@ -31,7 +31,6 @@ if (!$_SESSION['dependencia']) {
 	header("Location: $ruta_raiz/cerrar_session.php");
 }
 
-
 function valueToJsValue($value, $encoding = false)
 {
 	if (!is_numeric($value)) {
