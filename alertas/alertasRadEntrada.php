@@ -3,26 +3,25 @@ $krd            = $_SESSION["krd"];
 $dependencia    = $_SESSION["dependencia"];
 $usua_doc       = $_SESSION["usua_doc"];
 $codusuario     = $_SESSION["codusuario"];
-if (!$_SESSION['dependencia']) header ("Location: $ruta_raiz/cerrar_session.php");
+if (!$_SESSION['dependencia']) {
+  header("Location: $ruta_raiz/cerrar_session.php");
+}
 
- $ruta_raiz = "..";
- include_once    ("$ruta_raiz/include/db/ConnectionHandler.php");
-
+$ruta_raiz = "..";
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 
 $db = new ConnectionHandler($ruta_raiz);
-
 
 //Numero de dias habiles para el calculo.
 $numero_dias = 2;
 
 //CALCULO DE FECHAS
 $hoy = date('Y-m-d');
-$anio = (date("Y")-2)."-01-01";
+$anio = (date("Y") - 2) . "-01-01";
 
-$whereJefe="";
-if($codusuario!=1 and (empty($_SESSION["USUA_PERM_ENRUTADOR"]) || $_SESSION["USUA_PERM_ENRUTADOR"]==0)) {
-   $whereJefe = " and r.radi_usua_actu=$codusuario ";
-
+$whereJefe = "";
+if ($codusuario != 1 && (empty($_SESSION["USUA_PERM_ENRUTADOR"]) || $_SESSION["USUA_PERM_ENRUTADOR"] == 0)) {
+  $whereJefe = " and r.radi_usua_actu=$codusuario ";
 }
 $iSql = "select r.sgd_trad_codigo, a.anex_estado, count(*) cantidad_radicados, count(renv.sgd_fenv_codigo) cantidad_enviados from radicado r
             left outer join 
@@ -34,51 +33,40 @@ $iSql = "select r.sgd_trad_codigo, a.anex_estado, count(*) cantidad_radicados, c
               group by r.sgd_trad_codigo, a.anex_estado
               order by  r.sgd_trad_codigo, a.anex_estado
         ";
-  //$db->conn->debug = true;
-  $rs=$db->conn->query($iSql);
- //RECORRO DATO POR DATO, Y POR CADA UNO, ENVIO UN CORREO ELECTRONICO.
+//$db->conn->debug = true;
+$rs = $db->conn->query($iSql);
+//RECORRO DATO POR DATO, Y POR CADA UNO, ENVIO UN CORREO ELECTRONICO.
 $arrRadicadosEstado = array();
-for($i=0; $i<=4; $i++){
- $arrRadicadosEstado[2][$i]="0";
- $arrRadicadosEstado[4][$i]="0";
- $arrRadicadosEstado[5][$i]="0";
+for ($i = 0; $i <= 4; $i++) {
+  $arrRadicadosEstado[2][$i] = "0";
+  $arrRadicadosEstado[4][$i] = "0";
+  $arrRadicadosEstado[5][$i] = "0";
 }
- while (!$rs->EOF) {//ESTE ES EL WHILE
-   
-   $db = new ConnectionHandler($ruta_raiz);
-   $tipoRadicado       = $rs->fields['SGD_TRAD_CODIGO'];
-   $cantidadRadicados  = $rs->fields['CANTIDAD_RADICADOS'];
-   $cantidadEnviados   = $rs->fields['CANTIDAD_ENVIADOS'];
-   if(!$rs->fields['ANEX_ESTADO']) $anexEstado=0; else $anexEstado = $rs->fields['ANEX_ESTADO'];
-   if($anexEstado==0) 
-     {
+while (!$rs->EOF) { //ESTE ES EL WHILE
 
-      if($cantidadEnviados>=1 and ($anexEstado==0 || !$anexEstado)) {
-          $arrRadicadosEstado[$tipoRadicado][4] +=$cantidadEnviados ;
-          $arrRadicadosEstado[$tipoRadicado][0] +=$cantidadRadicados-$cantidadEnviados;
-       } else{
-          $arrRadicadosEstado[$tipoRadicado][0] +=$cantidadRadicados ;
-        }
-      
-
-   }else{
-     $arrRadicadosEstado[$tipoRadicado][$anexEstado] +=$cantidadRadicados;
-   }
-  
-   
-   $radicadosEstado .= "$tipoRadicado  - $anexEstado - $cantidadRadicados<br>";
-//$mailDestino = "cejebuto@gmail.com";
+  $db = new ConnectionHandler($ruta_raiz);
+  $tipoRadicado       = $rs->fields['SGD_TRAD_CODIGO'];
+  $cantidadRadicados  = $rs->fields['CANTIDAD_RADICADOS'];
+  $cantidadEnviados   = $rs->fields['CANTIDAD_ENVIADOS'];
+  if (!$rs->fields['ANEX_ESTADO']) {
+    $anexEstado = 0;
+  } else {
+    $anexEstado = $rs->fields['ANEX_ESTADO'];
+  }
+  if ($anexEstado == 0) {
+    if ($cantidadEnviados >= 1 && ($anexEstado == 0 || !$anexEstado)) {
+      $arrRadicadosEstado[$tipoRadicado][4] += $cantidadEnviados;
+      $arrRadicadosEstado[$tipoRadicado][0] += $cantidadRadicados - $cantidadEnviados;
+    } else {
+      $arrRadicadosEstado[$tipoRadicado][0] += $cantidadRadicados;
+    }
+  } else {
+    $arrRadicadosEstado[$tipoRadicado][$anexEstado] += $cantidadRadicados;
+  }
+  $radicadosEstado .= "$tipoRadicado  - $anexEstado - $cantidadRadicados<br>";
+  //$mailDestino = "cejebuto@gmail.com";
   $rs->MoveNext();
-}//FIN DEL WHILE
-
-
-
-
-
-
-
-
-
+} //FIN DEL WHILE
 
 $time = date("G:i:s");
 $dia = date('Y-m-d');
@@ -93,22 +81,22 @@ $charRadicadosEstado = "
         backgroundColor: '#fd1004',
         borderWidth: 2,
         fill: false,
-        data: [".$arrRadicadosEstado[2][0].",".$arrRadicadosEstado[5][0].",".$arrRadicadosEstado[4][0]."]
+        data: [" . $arrRadicadosEstado[2][0] . "," . $arrRadicadosEstado[5][0] . "," . $arrRadicadosEstado[4][0] . "]
       },  {
         type: 'bar',
         label: 'Respuesta Sin Enviar',
         backgroundColor: '#fdf404',
-        data: [".$arrRadicadosEstado[2][2].",".$arrRadicadosEstado[5][2].",".$arrRadicadosEstado[4][2]."]
+        data: [" . $arrRadicadosEstado[2][2] . "," . $arrRadicadosEstado[5][2] . "," . $arrRadicadosEstado[4][2] . "]
       }, {
         type: 'bar',
         label: 'Por Enviar',
         backgroundColor: '#d1fd04',
-        data: [".$arrRadicadosEstado[2][3].",".$arrRadicadosEstado[5][3].",".$arrRadicadosEstado[4][3]."]
+        data: [" . $arrRadicadosEstado[2][3] . "," . $arrRadicadosEstado[5][3] . "," . $arrRadicadosEstado[4][3] . "]
       }, {
         type: 'bar',
         label: 'Enviado Ok',
         backgroundColor: '#04fd04',
-        data: [".$arrRadicadosEstado[2][4].",".$arrRadicadosEstado[5][4].",".$arrRadicadosEstado[5][4]."]
+        data: [" . $arrRadicadosEstado[2][4] . "," . $arrRadicadosEstado[5][4] . "," . $arrRadicadosEstado[5][4] . "]
       }]
     };
     
@@ -128,8 +116,6 @@ $charRadicadosEstado = "
                 fontSize: 12
             }
         }
-
-
 ,
         scales: {
           xAxes: [{
@@ -145,11 +131,6 @@ $charRadicadosEstado = "
             }
           }]
         }
-
-
-
         }
-
       });
   ";
-?>

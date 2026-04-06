@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql = "UPDATE alertas SET html='$htmlEncoded', texto='$textoEncoded', fecha_inicial='$fecha_inicial', fecha_final='$fecha_final', depe_codi=$dependenciaSeleccionada WHERE id=$id";
             }
         }
-        if ($db->conn->query($sql) === TRUE) {
+        if ($db->conn->query($sql)) {
             echo "Record updated successfully";
         } else {
             echo  $db->conn->ErrorMsg();
@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Insert new record
 
         $sql = "INSERT INTO alertas (html,texto, fecha_inicial, fecha_final, imagenbase64, depe_codi) VALUES ('$htmlEncoded','$textoEncoded', '$fecha_inicial', '$fecha_final', '$imagenbase64', $dependenciaSeleccionada)";
-        if ($db->conn->Execute($sql) === TRUE) {
+        if ($db->conn->Execute($sql)) {
             echo "New record created successfully";
         } else {
             echo $db->conn->ErrorMsg();
@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $sql = "DELETE FROM alertas WHERE id=$id";
-    if ($db->conn->query($sql) === TRUE) {
+    if ($db->conn->query($sql)) {
         echo "Record deleted successfully";
     } else {
         echo "Error deleting record: " . $db->conn->ErrorMsg();
