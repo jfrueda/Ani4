@@ -284,7 +284,7 @@
     display: none !important;
 }
 
-.fc-border-separate thead tr,
+table thead tr,
 .table {
     background-color: #043074 !important;
 }
