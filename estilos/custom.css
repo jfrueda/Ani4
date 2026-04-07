@@ -283,3 +283,8 @@
 .hide {
     display: none !important;
 }
+
+.fc-border-separate thead tr,
+.table {
+    background-color: #043074 !important;
+}

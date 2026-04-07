@@ -114,9 +114,15 @@ function microtime_float()
 						<td width="20%" class='titulos2'>
 							<?php
 							$time_start = microtime_float();
-							if (!$tdoc) $tdoc = 0;
-							if (!$codserie) $codserie = 0;
-							if (!$tsub) $tsub = 0;
+							if (!$tdoc) {
+								$tdoc = 0;
+							}
+							if (!$codserie) {
+								$codserie = 0;
+							}
+							if (!$tsub) {
+								$tsub = 0;
+							}
 							$fechah = date("dmy") . " " . time("h_m_s");
 							$fecha_hoy = Date("Y-m-d");
 							$sqlFechaHoy = $db->conn->DBDate($fecha_hoy);
@@ -286,8 +292,11 @@ function microtime_float()
 							?>
 						<td width="20%" class='titulos2' align="left"> FECHA ARCHIVO &nbsp;&nbsp;&nbsp;&nbsp; Desde <br>&nbsp;&nbsp;&nbsp;
 							<?
-							if ($sep == 1) $datoss = "checked";
-							else $datoss = "";
+							if ($sep == 1) {
+								$datoss = "checked";
+							} else {
+								$datoss = "";
+							}
 							?>
 							<input name="sep" type="checkbox" class="select" value="1" <?= $datoss ?>>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -296,8 +305,12 @@ function microtime_float()
 						<td width="20%" class='titulos2'>
 							<script language="javascript">
 								<?
-								if (!$fechaInii) $fechaInii = fnc_date_calcm(date('Y-m-d'), '1');
-								if (!$fechaInif) $fechaInif = date('Y-m-d');
+								if (!$fechaInii) {
+									$fechaInii = fnc_date_calcm(date('Y-m-d'), '1');
+								}
+								if (!$fechaInif) {
+									$fechaInif = date('Y-m-d');
+								}
 								?>
 								var dateAvailable1 = new ctlSpiffyCalendarBox("dateAvailable1", "busqueda_archivo", "fechaInii", "btnDate1", "<?= $fechaInii ?>", scBTNMODE_CUSTOMBLUE);
 								dateAvailable1.date = "<?= date('Y-m-d'); ?>";
@@ -324,8 +337,11 @@ function microtime_float()
 							?>
 						<td width="20%" class='titulos2'>FECHA FINAL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Desde <br>&nbsp;&nbsp;&nbsp;
 							<?
-							if ($sel1 == 1) $datoss = "checked";
-							else $datoss = "";
+							if ($sel1 == 1) {
+								$datoss = "checked";
+							} else {
+								$datoss = "";
+							}
 							?>
 							<input name="sel1" type="checkbox" class="select" value="1" <?= $datoss ?>>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -334,8 +350,12 @@ function microtime_float()
 						<td width="20%" class='titulos2'>
 							<script language="javascript">
 								<?
-								if (!$fechaFini) $fechaFini = fnc_date_calcm(date('Y-m-d'), '1');
-								if (!$fechaFinf) $fechaFinf = date('Y-m-d');
+								if (!$fechaFini) {
+									$fechaFini = fnc_date_calcm(date('Y-m-d'), '1');
+								}
+								if (!$fechaFinf) {
+									$fechaFinf = date('Y-m-d');
+								}
 								?>
 								var dateAvailable3 = new ctlSpiffyCalendarBox("dateAvailable3", "busqueda_archivo", "fechaFini", "btnDate1", "<?= $fechaFini ?>", scBTNMODE_CUSTOMBLUE);
 								dateAvailable3.date = "<?= date('Y-m-d'); ?>";
@@ -600,9 +620,14 @@ function microtime_float()
 										$path = $rs->fields['RADI_PATH'];
 										$folios = $rs->fields['RADI_NUME_HOJA'];
 
-										if ($docu1 == 3) $documento = $rs->fields['RADI_CUENTAI'];
-										if ($docu1 == 1) $documento = $rs->fields['NIT_DE_LA_EMPRESA'];
-										else $documento = $rs->fields['SGD_DIR_DOC'];
+										if ($docu1 == 3) {
+											$documento = $rs->fields['RADI_CUENTAI'];
+										}
+										if ($docu1 == 1) {
+											$documento = $rs->fields['NIT_DE_LA_EMPRESA'];
+										} else {
+											$documento = $rs->fields['SGD_DIR_DOC'];
+										}
 										include "$ruta_raiz/include/query/archivo/queryBusqueda_exp.php";
 										$rsr = $db->query($sqlmin);
 										while (!$rsr->EOF) {
@@ -623,19 +648,31 @@ function microtime_float()
 											$srd = $rsr->fields['SGD_SRD_CODIGO'];
 											$sbrd = $rsr->fields['SGD_SBRD_CODIGO'];
 											$proceso = $rsr->fields['SGD_PEXP_CODIGO'];
-											include("$ruta_raiz/include/query/archivo/queryBusqueda_exp.php");
+											include "$ruta_raiz/include/query/archivo/queryBusqueda_exp.php";
 											$rst = $db->query($sql2);
-											if (!$rst->EOF) $caja = $rst->fields["SGD_EIT_SIGLA"];
+											if (!$rst->EOF) {
+												$caja = $rst->fields["SGD_EIT_SIGLA"];
+											}
 											$rst = $db->query($sql3);
-											if (!$rst->EOF) $estante = $rst->fields["SGD_EIT_SIGLA"];
+											if (!$rst->EOF) {
+												$estante = $rst->fields["SGD_EIT_SIGLA"];
+											}
 											$rst = $db->query($sql4);
-											if (!$rst->EOF) $piso = $rst->fields["SGD_EIT_SIGLA"];
+											if (!$rst->EOF) {
+												$piso = $rst->fields["SGD_EIT_SIGLA"];
+											}
 											$rst = $db->query($sql5);
-											if (!$rst->EOF) $archiva = $rst->fields["SGD_EIT_SIGLA"];
+											if (!$rst->EOF) {
+												$archiva = $rst->fields["SGD_EIT_SIGLA"];
+											}
 											$rst = $db->query($sql10);
-											if (!$rst->EOF) $carro = $rst->fields["SGD_EIT_SIGLA"];
+											if (!$rst->EOF) {
+												$carro = $rst->fields["SGD_EIT_SIGLA"];
+											}
 											$rst = $db->query($sql11);
-											if (!$rst->EOF) $entrepa = $rst->fields["SGD_EIT_SIGLA"];
+											if (!$rst->EOF) {
+												$entrepa = $rst->fields["SGD_EIT_SIGLA"];
+											}
 
 											/**
 											 * Modificacion acceso a documentos
@@ -718,22 +755,37 @@ function microtime_float()
 											$rsm = $db->query($sqld);
 											$documento = $rsm->fields['NIT_DE_LA_EMPRESA'];
 										}
-										if ($docu1 == 3) $documento = $rs->fields['RADI_CUENTAI'];
-										else $documento = $rs->fields['SGD_DIR_DOC'];
+										if ($docu1 == 3) {
+											$documento = $rs->fields['RADI_CUENTAI'];
+										} else {
+											$documento = $rs->fields['SGD_DIR_DOC'];
+										}
 
-										include("$ruta_raiz/include/query/archivo/queryBusqueda_exp.php");
+										include "$ruta_raiz/include/query/archivo/queryBusqueda_exp.php";
 										$rsr = $db->query($sql2);
-										if (!$rsr->EOF) $caja = $rsr->fields["SGD_EIT_SIGLA"];
+										if (!$rsr->EOF) {
+											$caja = $rsr->fields["SGD_EIT_SIGLA"];
+										}
 										$rsr = $db->query($sql3);
-										if (!$rsr->EOF) $estante = $rsr->fields["SGD_EIT_SIGLA"];
+										if (!$rsr->EOF) {
+											$estante = $rsr->fields["SGD_EIT_SIGLA"];
+										}
 										$rsr = $db->query($sql4);
-										if (!$rsr->EOF) $piso = $rsr->fields["SGD_EIT_SIGLA"];
+										if (!$rsr->EOF) {
+											$piso = $rsr->fields["SGD_EIT_SIGLA"];
+										}
 										$rsr = $db->query($sql5);
-										if (!$rsr->EOF) $archiva = $rsr->fields["SGD_EIT_SIGLA"];
+										if (!$rsr->EOF) {
+											$archiva = $rsr->fields["SGD_EIT_SIGLA"];
+										}
 										$rsr = $db->query($sql10);
-										if (!$rsr->EOF) $carro = $rsr->fields["SGD_EIT_SIGLA"];
+										if (!$rsr->EOF) {
+											$carro = $rsr->fields["SGD_EIT_SIGLA"];
+										}
 										$rsr = $db->query($sql11);
-										if (!$rsr->EOF) $entrepa = $rsr->fields["SGD_EIT_SIGLA"];
+										if (!$rsr->EOF) {
+											$entrepa = $rsr->fields["SGD_EIT_SIGLA"];
+										}
 
 										/**
 										 * Modificacion acceso a documentos
