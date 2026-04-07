@@ -2,9 +2,11 @@
 session_start();
 $krd = $_SESSION["krd"];
 $dependencia = $_SESSION["dependencia"];
-if (!$ruta_raiz) $ruta_raiz = "..";
+if (!$ruta_raiz) {
+	$ruta_raiz = "..";
+}
 extract($_REQUEST);
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 $db = new ConnectionHandler("$ruta_raiz");
 $encabezadol = "$PHP_SELF?" . session_name() . "=" . session_id() . "&num_exp=$num_exp";
 
@@ -103,9 +105,15 @@ $verLinkArchivo = new verLinkArchivo($db);
 										<td class="titulos5 fw-semibold text-end">Serie</td>
 										<td colspan="3">
 											<?php
-											if (!$tdoc) $tdoc = 0;
-											if (!$codserie) $codserie = 0;
-											if (!$tsub) $tsub = 0;
+											if (!$tdoc) {
+												$tdoc = 0;
+											}
+											if (!$codserie) {
+												$codserie = 0;
+											}
+											if (!$tsub) {
+												$tsub = 0;
+											}
 											$fechah = date("dmy") . " " . time("h_m_s");
 											$fecha_hoy = Date("Y-m-d");
 											$sqlFechaHoy = $db->conn->DBDate($fecha_hoy);
@@ -158,14 +166,27 @@ $verLinkArchivo = new verLinkArchivo($db);
 												$codiSRD = $codserie;
 												$codiSBRD = $tsub;
 											}
-											if ($codiSRD < 10 && $codiSRD != 0) $codiSRD = "0" . $codiSRD;
-											if ($codiSBRD < 10 && $codiSBRD != 0) $codiSBRD = "0" . $codiSBRD;
-											if ($dep_sel == 0) $dep_sel2 = "";
-											else $dep_sel2 = $dep_sel;
-											if ($codiSRD == 0) $codiSRD2 = "";
-											else $codiSRD2 = $codiSRD;
-											if ($codiSBRD == 0) $codiSBRD2 = "";
-											else $codiSBRD2 = $codiSBRD;
+											if ($codiSRD < 10 && $codiSRD != 0) {
+												$codiSRD = "0" . $codiSRD;
+											}
+											if ($codiSBRD < 10 && $codiSBRD != 0) {
+												$codiSBRD = "0" . $codiSBRD;
+											}
+											if ($dep_sel == 0) {
+												$dep_sel2 = "";
+											} else {
+												$dep_sel2 = $dep_sel;
+											}
+											if ($codiSRD == 0) {
+												$codiSRD2 = "";
+											} else {
+												$codiSRD2 = $codiSRD;
+											}
+											if ($codiSBRD == 0) {
+												$codiSBRD2 = "";
+											} else {
+												$codiSBRD2 = $codiSBRD;
+											}
 											$expe = $dep_sel2 . $codiSRD2 . $codiSBRD2;
 											?>
 										</td>

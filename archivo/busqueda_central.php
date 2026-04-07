@@ -83,9 +83,15 @@ function fnc_date_calcm($this_date, $num_month)
 					<td class="fw-semibold">SERIE</td>
 					<td>
 						<?php
-						if (!$tdoc) $tdoc = 0;
-						if (!$codserie) $codserie = 0;
-						if (!$tsub) $tsub = 0;
+						if (!$tdoc) {
+							$tdoc = 0;
+						}
+						if (!$codserie) {
+							$codserie = 0;
+						}
+						if (!$tsub) {
+							$tsub = 0;
+						}
 
 						$fecha_hoy = Date("Y-m-d");
 						$sqlFechaHoy = $db->conn->DBDate($fecha_hoy);
@@ -251,8 +257,12 @@ function fnc_date_calcm($this_date, $num_month)
 					<td>
 						<script language="javascript">
 							<?php
-							if (!$fechaIni) $fechaIni = fnc_date_calcm(date('Y-m-d'), '1');
-							if (!$fechaInif) $fechaInif = date('Y-m-d');
+							if (!$fechaIni) {
+								$fechaIni = fnc_date_calcm(date('Y-m-d'), '1');
+							}
+							if (!$fechaInif) {
+								$fechaInif = date('Y-m-d');
+							}
 							?>
 							var dateAvailable1 = new ctlSpiffyCalendarBox(
 								"dateAvailable1", "busqueda_central", "fechaIni", "btnDate1",
@@ -288,8 +298,12 @@ function fnc_date_calcm($this_date, $num_month)
 					<td>
 						<script language="javascript">
 							<?php
-							if (!$fechaIni2) $fechaIni2 = fnc_date_calcm(date('Y-m-d'), '1');
-							if (!$fechaInif2) $fechaInif2 = date('Y-m-d');
+							if (!$fechaIni2) {
+								$fechaIni2 = fnc_date_calcm(date('Y-m-d'), '1');
+							}
+							if (!$fechaInif2) {
+								$fechaInif2 = date('Y-m-d');
+							}
 							?>
 							var dateAvailable3 = new ctlSpiffyCalendarBox(
 								"dateAvailable3", "busqueda_central", "fechaIni2", "btnDate3",
@@ -746,8 +760,12 @@ function fnc_date_calcm($this_date, $num_month)
 
 					<td>
 						<?php
-						if (!$fechaIni3) $fechaIni3 = fnc_date_calcm(date('Y-m-d'), '1');
-						if (!$fechaInif3) $fechaInif3 = date('Y-m-d');
+						if (!$fechaIni3) {
+							$fechaIni3 = fnc_date_calcm(date('Y-m-d'), '1');
+						}
+						if (!$fechaInif3) {
+							$fechaInif3 = date('Y-m-d');
+						}
 						?>
 
 						<script language="javascript">
@@ -807,9 +825,11 @@ function fnc_date_calcm($this_date, $num_month)
 
 		<?
 		if ($Buscar) {
-			include("$ruta_raiz/include/query/archivo/queryBusqueda_central.php");
+			include "$ruta_raiz/include/query/archivo/queryBusqueda_central.php";
 			$dbg = $db->conn->Execute($sqla);
-			if (!$dbg->EOF) $usua_perm_archi = $dbg->fields['USUA_ADMIN_ARCHIVO'];
+			if (!$dbg->EOF) {
+				$usua_perm_archi = $dbg->fields['USUA_ADMIN_ARCHIVO'];
+			}
 			switch ($codiSRD) {
 				case '1':
 					$it1 = "NRO DE EXPEDIENTE";
@@ -855,8 +875,11 @@ function fnc_date_calcm($this_date, $num_month)
 						<TD><?= $it3 ?></TD>
 						<TD>DOCUMENTO DE IDENTIDAD <?= $it2 ?>
 							<?
-							if ($codiSRD == '200') $tp = "DOCUMENTO DE IDENTIDAD " . $it3;
-							else $tp = "";
+							if ($codiSRD == '200') {
+								$tp = "DOCUMENTO DE IDENTIDAD " . $it3;
+							} else {
+								$tp = "";
+							}
 							?>
 						</TD>
 						<TD>DOCUMENTO DE IDENTIDAD QUERELLANTE</TD>
@@ -925,24 +948,33 @@ function fnc_date_calcm($this_date, $num_month)
 						$f = "";
 					}
 					if ($buscar_carro != "") {
-						if ($item1 == "ESTANTE") $carro = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_carro'";
-						elseif ($item1 == "CARRO") $carro = "SGD_ARCHIVO_CARRO LIKE '$buscar_carro'";
+						if ($item1 == "ESTANTE") {
+							$carro = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_carro'";
+						} elseif ($item1 == "CARRO") {
+							$carro = "SGD_ARCHIVO_CARRO LIKE '$buscar_carro'";
+						}
 						$g = "and";
 					} else {
 						$carro = "";
 						$g = "";
 					}
 					if ($buscar_cara != "") {
-						if ($item3 == "ENTREPANO") $cara = "SGD_ARCHIVO_ENTREPANO LIKE '$buscar_cara'";
-						elseif ($item3 == "CARA") $cara = "SGD_ARCHIVO_CARA LIKE '$buscar_cara'";
+						if ($item3 == "ENTREPANO") {
+							$cara = "SGD_ARCHIVO_ENTREPANO LIKE '$buscar_cara'";
+						} elseif ($item3 == "CARA") {
+							$cara = "SGD_ARCHIVO_CARA LIKE '$buscar_cara'";
+						}
 						$i = "and";
 					} else {
 						$cara = "";
 						$i = "";
 					}
 					if ($buscar_estante != "") {
-						if ($item4 == "ESTANTE") $estan = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_estante'";
-						elseif ($item4 == "CAJA") $estan = "SGD_ARCHIVO_CAJA LIKE '$buscar_estante'";
+						if ($item4 == "ESTANTE") {
+							$estan = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_estante'";
+						} elseif ($item4 == "CAJA") {
+							$estan = "SGD_ARCHIVO_CAJA LIKE '$buscar_estante'";
+						}
 						$h = "and";
 					} else {
 						$estan = "";
@@ -963,8 +995,9 @@ function fnc_date_calcm($this_date, $num_month)
 						$s = "";
 					}
 					if ($sep == '1') {
-						if ($fechaIni == $fechaInif) $fecha = "SGD_ARCHIVO_FECHAI like '$fechaIni'";
-						else {
+						if ($fechaIni == $fechaInif) {
+							$fecha = "SGD_ARCHIVO_FECHAI like '$fechaIni'";
+						} else {
 							$time = fnc_date_calcy($fechaInif, '1');
 							$fecha = "SGD_ARCHIVO_FECHAI <= '$time' and SGD_ARCHIVO_FECHAI >= '$fechaIni'";
 						}
@@ -974,8 +1007,9 @@ function fnc_date_calcm($this_date, $num_month)
 						$j = "";
 					}
 					if ($sep2 == '1') {
-						if ($fechaIni2 == $fechaInif2) $fecha2 = "SGD_ARCHIVO_FECHAF like '$fechaIni2'";
-						else {
+						if ($fechaIni2 == $fechaInif2) {
+							$fecha2 = "SGD_ARCHIVO_FECHAF like '$fechaIni2'";
+						} else {
 							$time2 = fnc_date_calcy($fechaInif2, '1');
 							$fecha2 = "SGD_ARCHIVO_FECHAF <= '$time2' and SGD_ARCHIVO_FECHAF >= '$fechaIni2'";
 						}
@@ -985,8 +1019,9 @@ function fnc_date_calcm($this_date, $num_month)
 						$w = "";
 					}
 					if ($sep3 == '1') {
-						if ($fechaIni3 == $fechaInif3) $fecha3 = "SGD_ARCHIVO_FECH like '$fechaIni3'";
-						else {
+						if ($fechaIni3 == $fechaInif3) {
+							$fecha3 = "SGD_ARCHIVO_FECH like '$fechaIni3'";
+						} else {
 							$time3 = fnc_date_calcy($fechaInif3, '1');
 							$fecha3 = "SGD_ARCHIVO_FECH <= '$time3' and SGD_ARCHIVO_FECH >= '$fechaIni3'";
 						}
@@ -1046,8 +1081,11 @@ function fnc_date_calcm($this_date, $num_month)
 						$mata = "";
 						$q = "";
 					}
-					if ($buscar_ano != "") $orde = " order by sgd_archivo_year";
-					else $orde = " order by sgd_archivo_fech";
+					if ($buscar_ano != "") {
+						$orde = " order by sgd_archivo_year";
+					} else {
+						$orde = " order by sgd_archivo_fech";
+					}
 					if ($presta != "") {
 						$pst = "SGD_ARCHIVO_PRESTAMO=$presta ";
 						$pt = "and";
@@ -1084,7 +1122,7 @@ function fnc_date_calcm($this_date, $num_month)
 					if ($pru != "") {
 						$de = $db->conn->Execute("select depe_codi from usuario where usua_login like '$krd'");
 						$depek = $de->fields['DEPE_CODI'];
-						include("$ruta_raiz/include/query/archivo/queryBusqueda_central.php");
+						include "$ruta_raiz/include/query/archivo/queryBusqueda_central.php";
 						//$db->conn->debug=true;
 						$rs = $db->conn->Execute($sql);
 						while (!$rs->EOF) {
@@ -1126,8 +1164,11 @@ function fnc_date_calcm($this_date, $num_month)
 								$wet = $db->conn->Execute("select sgd_pexp_descrip from sgd_pexp_procexpedientes where sgd_pexp_codigo like'" . $procc . "'");
 								$proce = $wet->fields['SGD_PEXP_DESCRIP'];
 							}
-							if ($pres == 1) $prest = "SI";
-							else $prest = "NO";
+							if ($pres == 1) {
+								$prest = "SI";
+							} else {
+								$prest = "NO";
+							}
 
 							switch ($indet) {
 								case '0':
@@ -1361,7 +1402,7 @@ function fnc_date_calcm($this_date, $num_month)
 									<?
 									$rs2 = $db->conn->Execute("select DEPE_CODI from sgd_archivo_central where sgd_archivo_rad like '$radi'");
 									$depen = $rs2->fields['DEPE_CODI'];
-									if ($usua_perm_archi >= 3 and ($depek == $depen or $depek == '623')) {
+									if ($usua_perm_archi >= 3 && ($depek == $depen || $depek == '623')) {
 									?>
 										<a href='insertar_central.php?<?= session_name() . "=" . session_id() . "&krd=$krd&fechah=$fechah&$orno&adodb_next_page&edi=1&rad=$radi" ?>'>
 										<? } ?>
@@ -1404,7 +1445,7 @@ function fnc_date_calcm($this_date, $num_month)
 							$rs->MoveNext();
 						}
 
-						include_once('../adodb/toexport.inc.php');
+						include_once '../adodb/toexport.inc.php';
 
 						$db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 

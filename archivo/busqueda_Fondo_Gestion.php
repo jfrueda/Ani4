@@ -13,12 +13,16 @@ foreach ($_SESSION as $key => $valor) {
 	${$key} = $valor;
 }
 
-if (!$krd) $krd = $krdOld;
-if (!$ruta_raiz) $ruta_raiz = "..";
+if (!$krd) {
+	$krd = $krdOld;
+}
+if (!$ruta_raiz) {
+	$ruta_raiz = "..";
+}
 
 include "$ruta_raiz/rec_session.php";
 
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 
 $db = new ConnectionHandler("$ruta_raiz");
 $db2 = new ConnectionHandler("$ruta_raiz");
@@ -79,9 +83,15 @@ function fnc_date_calcm($this_date, $num_month)
 					<td class="fw-semibold text-start">SERIE</td>
 					<td>
 						<?php
-						if (!$tdoc) $tdoc = 0;
-						if (!$codserie) $codserie = 0;
-						if (!$tsub) $tsub = 0;
+						if (!$tdoc) {
+							$tdoc = 0;
+						}
+						if (!$codserie) {
+							$codserie = 0;
+						}
+						if (!$tsub) {
+							$tsub = 0;
+						}
 						$fechah = date("dmy") . " " . time("h_m_s");
 						$fecha_hoy = Date("Y-m-d");
 						$sqlFechaHoy = $db->conn->DBDate($fecha_hoy);
@@ -219,8 +229,11 @@ function fnc_date_calcm($this_date, $num_month)
 						FECHA INICIAL<br>
 						<small class="text-muted">Desde</small><br>
 						<?
-						if ($sep == 1) $datoss = "checked";
-						else $datoss = "";
+						if ($sep == 1) {
+							$datoss = "checked";
+						} else {
+							$datoss = "";
+						}
 						?>
 						<input name="sep" type="checkbox" class="form-check-input ms-1" value="1" <?= $datoss ?>>
 						<span class="ms-4 text-muted">Hasta</span>
@@ -230,8 +243,12 @@ function fnc_date_calcm($this_date, $num_month)
 						<div class="mb-2">
 							<script language="javascript">
 								<?
-								if (!$fechaIni) $fechaIni = fnc_date_calcm(date('Y-m-d'), '1');
-								if (!$fechaInif) $fechaInif = date('Y-m-d');
+								if (!$fechaIni) {
+									$fechaIni = fnc_date_calcm(date('Y-m-d'), '1');
+								}
+								if (!$fechaInif) {
+									$fechaInif = date('Y-m-d');
+								}
 								?>
 								var dateAvailable1 = new ctlSpiffyCalendarBox("dateAvailable1", "busqueda_central", "fechaIni", "btnDate1", "<?= $fechaIni ?>", scBTNMODE_CUSTOMBLUE);
 								dateAvailable1.date = "<?= date('Y-m-d'); ?>";
@@ -252,8 +269,11 @@ function fnc_date_calcm($this_date, $num_month)
 						FECHA FINAL<br>
 						<small class="text-muted">Desde</small><br>
 						<?
-						if ($sep2 == 1) $datoss2 = "checked";
-						else $datoss2 = "";
+						if ($sep2 == 1) {
+							$datoss2 = "checked";
+						} else {
+							$datoss2 = "";
+						}
 						?>
 						<input name="sep2" type="checkbox" class="form-check-input ms-1" value="1" <?= $datoss2 ?>>
 						<span class="ms-4 text-muted">Hasta</span>
@@ -263,8 +283,12 @@ function fnc_date_calcm($this_date, $num_month)
 						<div class="mb-2">
 							<script language="javascript">
 								<?
-								if (!$fechaIni2) $fechaIni2 = fnc_date_calcm(date('Y-m-d'), '1');
-								if (!$fechaInif2) $fechaInif2 = date('Y-m-d');
+								if (!$fechaIni2) {
+									$fechaIni2 = fnc_date_calcm(date('Y-m-d'), '1');
+								}
+								if (!$fechaInif2) {
+									$fechaInif2 = date('Y-m-d');
+								}
 								?>
 								var dateAvailable3 = new ctlSpiffyCalendarBox("dateAvailable3", "busqueda_central", "fechaIni2", "btnDate3", "<?= $fechaIni2 ?>", scBTNMODE_CUSTOMBLUE);
 								dateAvailable3.date = "<?= date('Y-m-d'); ?>";
@@ -303,7 +327,9 @@ function fnc_date_calcm($this_date, $num_month)
 						<?
 						$conD = $db->conn->Concat("d.DEPE_CODI", "'-'", "d.DEPE_NOMB");
 						$sql5 = "select distinct($conD) as detalle,d.DEPE_CODI from DEPENDENCIA d ";
-						if ($codserie != '0') $sql5 .= " , SGD_MRD_MATRIRD m where m.depe_codi=d.depe_codi and m.sgd_srd_codigo='$codserie'";
+						if ($codserie != '0') {
+							$sql5 .= " , SGD_MRD_MATRIRD m where m.depe_codi=d.depe_codi and m.sgd_srd_codigo='$codserie'";
+						}
 						$sql5 .= " order by d.DEPE_CODI";
 						$rs = $db->conn->Execute($sql5);
 						print $rs->GetMenu2('depen', $depen, true, false, "", "class='form-select form-select-sm'");
@@ -318,9 +344,13 @@ function fnc_date_calcm($this_date, $num_month)
 							<?
 							$agnoactual = Date('Y');
 							for ($i = 1986; $i <= $agnoactual; $i++) {
-								if ($i == $buscar_ano) $option = "<option selected value=\"$buscar_ano\">$buscar_ano</option>";
-								elseif ($i == 1986) $option = "<option value=\"\">TODOS</option>";
-								else $option = "<option value=\"$i\">$i</option>";
+								if ($i == $buscar_ano) {
+									$option = "<option selected value=\"$buscar_ano\">$buscar_ano</option>";
+								} elseif ($i == 1986) {
+									$option = "<option value=\"\">TODOS</option>";
+								} else {
+									$option = "<option value=\"$i\">$i</option>";
+								}
 								echo $option;
 							}
 							?>
@@ -349,9 +379,13 @@ function fnc_date_calcm($this_date, $num_month)
 				<tr>
 					<td class="titulos2 align-middle"><?= $item3 ?></td>
 					<?
-					if ($buscar_cara == "A") $sec1 = "checked";
-					elseif ($buscar_cara == "B") $sec2 = "checked";
-					else $sec3 = "checked";
+					if ($buscar_cara == "A") {
+						$sec1 = "checked";
+					} elseif ($buscar_cara == "B") {
+						$sec2 = "checked";
+					} else {
+						$sec3 = "checked";
+					}
 					?>
 					<td class="titulos2">
 						<div class="form-check form-check-inline">
@@ -517,8 +551,11 @@ function fnc_date_calcm($this_date, $num_month)
 				<tr>
 					<td class="titulos2 text-end">PRÉSTAMO</td>
 					<?
-					if ($presta == 1) $de = "checked";
-					else $de = "";
+					if ($presta == 1) {
+						$de = "checked";
+					} else {
+						$de = "";
+					}
 					?>
 					<td class="titulos2">
 						<input class="form-check-input" type="checkbox" name="presta" value="1" <?= $de ?>>
@@ -528,8 +565,11 @@ function fnc_date_calcm($this_date, $num_month)
 						FECHA RADICADO<br>
 						<small class="text-muted">Desde</small>
 						<?
-						if ($sep3 == 1) $datoss3 = "checked";
-						else $datoss3 = "";
+						if ($sep3 == 1) {
+							$datoss3 = "checked";
+						} else {
+							$datoss3 = "";
+						}
 						?>
 						<input name="sep3" type="checkbox" class="form-check-input ms-1" value="1" <?= $datoss3 ?>>
 						<span class="ms-4 text-muted">Hasta</span>
@@ -538,8 +578,12 @@ function fnc_date_calcm($this_date, $num_month)
 					<td class="titulos2">
 						<script language="javascript">
 							<?
-							if (!$fechaIni3) $fechaIni3 = fnc_date_calcm(date('Y-m-d'), '1');
-							if (!$fechaInif3) $fechaInif3 = date('Y-m-d');
+							if (!$fechaIni3) {
+								$fechaIni3 = fnc_date_calcm(date('Y-m-d'), '1');
+							}
+							if (!$fechaInif3) {
+								$fechaInif3 = date('Y-m-d');
+							}
 							?>
 							var dateAvailable5 = new ctlSpiffyCalendarBox("dateAvailable5", "busqueda_central", "fechaIni3", "btnDate5", "<?= $fechaIni3 ?>", scBTNMODE_CUSTOMBLUE);
 							dateAvailable5.date = "<?= date('Y-m-d'); ?>";
@@ -572,7 +616,9 @@ function fnc_date_calcm($this_date, $num_month)
 		if ($Buscar) {
 			include "$ruta_raiz/include/query/archivo/queryBusqueda_central.php";
 			$dbg = $db->conn->Execute($sqla);
-			if (!$dbg->EOF) $usua_perm_archi = $dbg->fields['USUA_ADMIN_ARCHIVO'];
+			if (!$dbg->EOF) {
+				$usua_perm_archi = $dbg->fields['USUA_ADMIN_ARCHIVO'];
+			}
 			switch ($codiSRD) {
 				case '100':
 					$it1 = "NRO DE EXPEDIENTE";
@@ -681,24 +727,33 @@ function fnc_date_calcm($this_date, $num_month)
 					$f = "";
 				}
 				if ($buscar_carro != "") {
-					if ($item1 == "ESTANTE") $carro = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_carro'";
-					elseif ($item1 == "CARRO") $carro = "SGD_ARCHIVO_CARRO LIKE '$buscar_carro'";
+					if ($item1 == "ESTANTE") {
+						$carro = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_carro'";
+					} elseif ($item1 == "CARRO") {
+						$carro = "SGD_ARCHIVO_CARRO LIKE '$buscar_carro'";
+					}
 					$g = "and";
 				} else {
 					$carro = "";
 					$g = "";
 				}
 				if ($buscar_cara != "") {
-					if ($item3 == "ENTREPANO") $cara = "SGD_ARCHIVO_ENTREPANO LIKE '$buscar_cara'";
-					elseif ($item3 == "CARA") $cara = "SGD_ARCHIVO_CARA LIKE '$buscar_cara'";
+					if ($item3 == "ENTREPANO") {
+						$cara = "SGD_ARCHIVO_ENTREPANO LIKE '$buscar_cara'";
+					} elseif ($item3 == "CARA") {
+						$cara = "SGD_ARCHIVO_CARA LIKE '$buscar_cara'";
+					}
 					$i = "and";
 				} else {
 					$cara = "";
 					$i = "";
 				}
 				if ($buscar_estante != "") {
-					if ($item4 == "ESTANTE") $estan = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_estante'";
-					elseif ($item4 == "CAJA") $estan = "SGD_ARCHIVO_CAJA LIKE '$buscar_estante'";
+					if ($item4 == "ESTANTE") {
+						$estan = "SGD_ARCHIVO_ESTANTE LIKE '$buscar_estante'";
+					} elseif ($item4 == "CAJA") {
+						$estan = "SGD_ARCHIVO_CAJA LIKE '$buscar_estante'";
+					}
 					$h = "and";
 				} else {
 					$estan = "";
@@ -719,8 +774,9 @@ function fnc_date_calcm($this_date, $num_month)
 					$s = "";
 				}
 				if ($sep == '1') {
-					if ($fechaIni == $fechaInif) $fecha = "SGD_ARCHIVO_FECHAI like '$fechaIni'";
-					else {
+					if ($fechaIni == $fechaInif) {
+						$fecha = "SGD_ARCHIVO_FECHAI like '$fechaIni'";
+					} else {
 						$time = fnc_date_calcy($fechaInif, '1');
 						$fecha = "SGD_ARCHIVO_FECHAI <= '$time' and SGD_ARCHIVO_FECHAI >= '$fechaIni'";
 					}
@@ -730,8 +786,9 @@ function fnc_date_calcm($this_date, $num_month)
 					$j = "";
 				}
 				if ($sep2 == '1') {
-					if ($fechaIni2 == $fechaInif2) $fecha2 = "SGD_ARCHIVO_FECHAF like '$fechaIni2'";
-					else {
+					if ($fechaIni2 == $fechaInif2) {
+						$fecha2 = "SGD_ARCHIVO_FECHAF like '$fechaIni2'";
+					} else {
 						$time2 = fnc_date_calcy($fechaInif2, '1');
 						$fecha2 = "SGD_ARCHIVO_FECHAF <= '$time2' and SGD_ARCHIVO_FECHAF >= '$fechaIni2'";
 					}
@@ -741,8 +798,9 @@ function fnc_date_calcm($this_date, $num_month)
 					$w = "";
 				}
 				if ($sep3 == '1') {
-					if ($fechaIni3 == $fechaInif3) $fecha3 = "SGD_ARCHIVO_FECH like '$fechaIni3'";
-					else {
+					if ($fechaIni3 == $fechaInif3) {
+						$fecha3 = "SGD_ARCHIVO_FECH like '$fechaIni3'";
+					} else {
 						$time3 = fnc_date_calcy($fechaInif3, '1');
 						$fecha3 = "SGD_ARCHIVO_FECH <= '$time3' and SGD_ARCHIVO_FECH >= '$fechaIni3'";
 					}
@@ -802,8 +860,11 @@ function fnc_date_calcm($this_date, $num_month)
 					$mata = "";
 					$q = "";
 				}
-				if ($buscar_ano != "") $orde = " order by sgd_archivo_year";
-				else $orde = " order by sgd_archivo_fech";
+				if ($buscar_ano != "") {
+					$orde = " order by sgd_archivo_year";
+				} else {
+					$orde = " order by sgd_archivo_fech";
+				}
 				if ($presta != "") {
 					$pst = "SGD_ARCHIVO_PRESTAMO=$presta ";
 					$pt = "and";
@@ -837,7 +898,7 @@ function fnc_date_calcm($this_date, $num_month)
 					$buscar_docu . $buscar_ufisica . $codserie . $codiSBRD . $buscar_proc . $buscar_inder;
 				$cont = 0;
 
-				include("$ruta_raiz/include/query/archivo/queryBusqueda_gestion.php");
+				include "$ruta_raiz/include/query/archivo/queryBusqueda_gestion.php";
 				//$db->conn->debug=true;
 				$rs = $db->conn->Execute($sql);
 				while (!$rs->EOF) {
@@ -868,8 +929,11 @@ function fnc_date_calcm($this_date, $num_month)
 					$funprest = $rs->fields['SGD_ARCHIVO_FUNPREST'];
 					$fprestf = $rs->fields['SGD_ARCHIVO_FECHPRESTF'];
 					$fechaR = $rs->fields['FECHR'];
-					if ($pres == 1) $prest = "SI";
-					else $prest = "NO";
+					if ($pres == 1) {
+						$prest = "SI";
+					} else {
+						$prest = "NO";
+					}
 					$fecaa = $rs->fields['SGD_ARCHIVO_FECHAA'];
 					$procc = $rs->fields['SGD_ARCHIVO_PROC'];
 					$ncarp = $rs->fields['SGD_ARCHIVO_NCARP'];
