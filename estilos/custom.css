@@ -287,4 +287,6 @@
 table thead tr,
 .table {
     background-color: #043074 !important;
+    color: white !important;
+    font-weight: bold;
 }
