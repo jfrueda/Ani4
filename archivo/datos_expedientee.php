@@ -4,8 +4,10 @@ error_reporting(0);
 $CARPETA=200;
 $CAJA=7;
 $ruta_raiz = "..";
-if(!$dependencia or !$tpDepeRad) include "$ruta_raiz/rec_session.php";
-require_once("$ruta_raiz/include/db/ConnectionHandler.php");
+if(!$dependencia || !$tpDepeRad) {
+	include "$ruta_raiz/rec_session.php";
+}
+require_once "$ruta_raiz/include/db/ConnectionHandler.php";
 include_once "$ruta_raiz/include/tx/Historico.php";
 $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 $db = new ConnectionHandler($ruta_raiz);

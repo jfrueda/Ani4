@@ -123,3 +123,6 @@ $encabezado2 = "$PHP_SELF?" . session_name() . "=" . session_id() . "&dependenci
         }
             ?>
             </form>
+</body>
+
+</html>
