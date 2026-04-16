@@ -36,13 +36,15 @@ if ($_GET['action'] == "Cosultar") {
 					and ent.sgd_eit_codigo= e.sgd_exp_caja
 					order by e.sgd_exp_carpeta asc";
 	} else {
-		if ($valida == "estante")
+		if ($valida == "estante") {
 			$extra = "(select  c.sgd_eit_codigo from SGD_EIT_ITEMS a ,SGD_EIT_ITEMS b,SGD_EIT_ITEMS c where b.SGD_EIT_COD_PADRE =$id and  b.SGD_EIT_COD_PADRE =a.sgd_eit_codigo and c.SGD_EIT_COD_PADRE =b.sgd_eit_codigo order by b.SGD_EIT_NOMBRE) ent";
-		if ($valida == "entre")
+		}
+		if ($valida == "entre") {
 			$extra = "(select sgd_eit_codigo from SGD_EIT_ITEMS where SGD_EIT_COD_PADRE =$id order by SGD_EIT_NOMBRE)  ent";
-		$isql = "select e.sgd_exp_numero,r.radi_depe_radi,e.sgd_exp_titulo,e.SGD_EXP_FECH_ARCH,e.RADI_NUME_RADI,e.SGD_EXP_ESTADO,r.RADI_NUME_HOJA,e.sgd_exp_carpeta as CARP,e.sgd_exp_caja_bodega 
+			$isql = "select e.sgd_exp_numero,r.radi_depe_radi,e.sgd_exp_titulo,e.SGD_EXP_FECH_ARCH,e.RADI_NUME_RADI,e.SGD_EXP_ESTADO,r.RADI_NUME_HOJA,e.sgd_exp_carpeta as CARP,e.sgd_exp_caja_bodega 
 					FROM SGD_EXP_EXPEDIENTE e, RADICADO r , $extra
 					WHERE e.sgd_exp_caja_bodega is not NULL and r.RADI_NUME_RADI=e.RADI_NUME_RADI and ent.sgd_eit_codigo= e.sgd_exp_caja and e.sgd_exp_estado !=2 order by e.sgd_exp_carpeta asc";
+		}
 	}
 	//echo $isql;
 	$rs = $db->query($isql);
@@ -67,7 +69,7 @@ if ($_GET['action'] == "Cosultar") {
 	$style2 = " class='titulos5' align='center' ";
 
 	while (! $rs->EOF) {
-		if ($carp == $rs->fields["CARP"] || $carp == NULL) {
+		if ($carp == $rs->fields["CARP"] || !$carp) {
 			$carp = $rs->fields["CARP"];
 			$radicados .= $rs->fields["RADI_NUME_RADI"] . " ";
 			if ($consecutivo != $consecutivo2) {
