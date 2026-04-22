@@ -156,3 +156,7 @@ $encabezado3 = "$PHP_SELF?" . session_name() . "=" . session_id() . "&dependenci
             }
                 ?>
                 </form>
+            </form>
+</body>
+
+</html>

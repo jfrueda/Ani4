@@ -28,11 +28,15 @@ $krdOld = $krd;
 $per = 1;
 session_start();
 
-if (!$krd) $krd = $krdOld;
-if (!$ruta_raiz) $ruta_raiz = "..";
+if (!$krd) {
+	$krd = $krdOld;
+}
+if (!$ruta_raiz) {
+	$ruta_raiz = "..";
+}
 include "$ruta_raiz/rec_session.php";
 include_once "$ruta_raiz/htmlheader.inc.php";
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 $db = new ConnectionHandler("$ruta_raiz");
 
 if (trim($orderTipo) == "") {
@@ -145,9 +149,15 @@ if ($_POST['fechaIni'] != "" && $_POST['fechaInif'] != "") {
 										<td class="titulos5 text-end fw-semibold">Serie</td>
 										<td class="titulos5">
 											<?php
-											if (!$codserie) $codserie = 0;
-											if (!$tsub) $tsub = 0;
-											if (!$tdoc) $tdoc = 0;
+											if (!$codserie) {
+												$codserie = 0;
+											}
+											if (!$tsub) {
+												$tsub = 0;
+											}
+											if (!$tdoc) {
+												$tdoc = 0;
+											}
 											$fechah = date("dmy") . " " . time("h_m_s");
 											$fecha_hoy = Date("Y-m-d");
 											$sqlFechaHoy = $db->conn->DBDate($fecha_hoy);

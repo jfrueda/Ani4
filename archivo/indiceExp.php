@@ -1,21 +1,26 @@
 <?
 session_start();
-$ruta_raiz = ".."; 
-if (!$_SESSION['dependencia'])
-	header ("Location: $ruta_raiz/cerrar_session.php");
+$ruta_raiz = "..";
+if (!$_SESSION['dependencia']) {
+	header("Location: $ruta_raiz/cerrar_session.php");
+}
 
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+	${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+	${$key} = $valor;
+}
 
-include_once    ("$ruta_raiz/include/db/ConnectionHandler.php");
-include_once ("$ruta_raiz/adodb/toexport.inc.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
+include_once "$ruta_raiz/adodb/toexport.inc.php";
 
 $db = new ConnectionHandler($ruta_raiz);
 $db->conn->SetFetchMode(ADODB_FETCH_NUM);
 
-$exps="'".implode("','",array_keys($checkValue))."'";
+$exps = "'" . implode("','", array_keys($checkValue)) . "'";
 
-$sql=<<<EOF
+$sql = <<<EOF
 
 select 
   s.sgd_exp_numero as "Numero Expediente", 
@@ -42,28 +47,28 @@ where s.sgd_exp_numero in ($exps);
 
 EOF;
 //$db->conn->debug=true;
-$rs=$db->conn->Execute($sql);
+$rs = $db->conn->Execute($sql);
 
-if($xml=="true"){
+if ($xml == "true") {
 	header("Content-Type: text/xml");
 	header("Content-Disposition: attachment; filename=indice.xml");
 	$db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 	//echo "<pre>$sql</pre>";
-	$rs=$db->conn->GetArray($sql);
-	foreach($rs as $data){
-		$_indice[]=array(
-			"EXPEDIENTE"=>array(
-				"ID"=>$data["NUMERO EXPEDIENTE"],
-				"RADICADO"=>array(
-					"ID"=>$data["NUMERO RADICADO"],
-					"ASUNTO"=>$data["ASUNTO RADICADO"],
-					"TIPOLOGIA_DOCUMENTAL"=>$data["TIPO DOC RADICADO"],
-					"FOLIOS"=>$data["FOLIOS"],
-					"FECHA_INCORPORACION_EXPEDIENTE"=>$data["FECHA INCORPORACION EXPEDIENTE"],
-					"ANEXO"=>array(
-						"NUMERO"=>"".$data["CODIGO DE ANEXO"],
-						"DESCRIPCION"=>$data["DESCRIPCION DE ANEXO"],
-						"TIPOLOGIA_ANEXO"=>$data["TIPO DOC ANEXOS"],
+	$rs = $db->conn->GetArray($sql);
+	foreach ($rs as $data) {
+		$_indice[] = array(
+			"EXPEDIENTE" => array(
+				"ID" => $data["NUMERO EXPEDIENTE"],
+				"RADICADO" => array(
+					"ID" => $data["NUMERO RADICADO"],
+					"ASUNTO" => $data["ASUNTO RADICADO"],
+					"TIPOLOGIA_DOCUMENTAL" => $data["TIPO DOC RADICADO"],
+					"FOLIOS" => $data["FOLIOS"],
+					"FECHA_INCORPORACION_EXPEDIENTE" => $data["FECHA INCORPORACION EXPEDIENTE"],
+					"ANEXO" => array(
+						"NUMERO" => "" . $data["CODIGO DE ANEXO"],
+						"DESCRIPCION" => $data["DESCRIPCION DE ANEXO"],
+						"TIPOLOGIA_ANEXO" => $data["TIPO DOC ANEXOS"],
 					),
 				),
 			),
@@ -81,51 +86,51 @@ if($xml=="true"){
 	array_walk_recursive($_indice, array ($xml, 'addChild'));
 	print $xml->asXML();	*/
 	unset($xml);
-	$xml="<?xml version='1.0' encoding='UTF-8'?>"."\n";
+	$xml = "<?xml version='1.0' encoding='UTF-8'?>" . "\n";
 
-	$xml.="<EXPEDIENTES>"."\n";
-	foreach ($_indice as $key => $value){
+	$xml .= "<EXPEDIENTES>" . "\n";
+	foreach ($_indice as $key => $value) {
 		//$xml.="<$key>"."\n";
-		if (is_array($value)){
-			foreach($value as $k => $v){
-				if (is_array($v)){
-					$xml.="\t<$k>"."\n";
-					foreach ($v as $kk => $vv){
-						if (is_array($vv)){
-							$xml.="\t\t<$kk>"."\n";
-							foreach ($vv as $_kk => $_vv){
-								if (is_array($_vv)){
-									$xml.="\t\t\t<$_kk>"."\n";
-									foreach ($_vv as $__kk => $__vv){
-										if (is_array($__vv)){
-										}else{
-											$xml.="\t\t\t\t<$__kk>$__vv</$__kk>\n";
+		if (is_array($value)) {
+			foreach ($value as $k => $v) {
+				if (is_array($v)) {
+					$xml .= "\t<$k>" . "\n";
+					foreach ($v as $kk => $vv) {
+						if (is_array($vv)) {
+							$xml .= "\t\t<$kk>" . "\n";
+							foreach ($vv as $_kk => $_vv) {
+								if (is_array($_vv)) {
+									$xml .= "\t\t\t<$_kk>" . "\n";
+									foreach ($_vv as $__kk => $__vv) {
+										if (is_array($__vv)) {
+										} else {
+											$xml .= "\t\t\t\t<$__kk>$__vv</$__kk>\n";
 										}
 									}
-									$xml.="\t\t\t</$_kk>"."\n";
-								}else{
-									$xml.="\t\t\t<$_kk>$_vv</$_kk>\n";
+									$xml .= "\t\t\t</$_kk>" . "\n";
+								} else {
+									$xml .= "\t\t\t<$_kk>$_vv</$_kk>\n";
 								}
 							}
-							$xml.="\t\t</$kk>"."\n";
-						}else{
-							$xml.="\t\t<$kk>$vv</$kk>\n";
+							$xml .= "\t\t</$kk>" . "\n";
+						} else {
+							$xml .= "\t\t<$kk>$vv</$kk>\n";
 						}
 					}
-					$xml.="\t</$k>"."\n";
-				}else{
-					$xml.="<$k>$v</$k>\n";
+					$xml .= "\t</$k>" . "\n";
+				} else {
+					$xml .= "<$k>$v</$k>\n";
 				}
 			}
-		}else{
-			$xml.="$value";
+		} else {
+			$xml .= "$value";
 		}
 		//$xml.="</$key>";
 	}
 
-	$xml.="</EXPEDIENTES>"."\n";
+	$xml .= "</EXPEDIENTES>" . "\n";
 	echo $xml;
-}else{
+} else {
 	header("Content-Type: text/csv");
 	header("Content-Disposition: attachment; filename=indice.csv");
 	print rs2csv($rs);
@@ -155,5 +160,3 @@ foreach($coleccion as $key => $value){
 //var_dump($rs->fields);
 //var_dump($coleccion);
 //echo "</pre>";
-
-?>

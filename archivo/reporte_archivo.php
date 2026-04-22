@@ -95,7 +95,9 @@ if ($_GET['fechaIniSel'] == "" && $_GET['fechaInifSel'] == "") {
               </div>
               <div class="col-md-8">
                 <?php
-                if (!$dep_sel) $dep_sel = 0;
+                if (!$dep_sel) {
+                  $dep_sel = 0;
+                }
                 $fechah = date("dmy") . " " . time("h_m_s");
                 $fecha_hoy = Date("Y-m-d");
                 $sqlFechaHoy = $db->conn->DBDate($fecha_hoy);
@@ -266,7 +268,7 @@ if ($_GET['fechaIniSel'] == "" && $_GET['fechaInifSel'] == "") {
         </div>
       </div>
     </div>
-    
+
     <p>&nbsp;</p>
     <?
     $Buscar = $_POST['Buscar'];
