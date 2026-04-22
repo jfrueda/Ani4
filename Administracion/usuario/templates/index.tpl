@@ -198,11 +198,11 @@
 		Background corporativo Orfeo
 		=========================== */
 		.bg-orfeo {
-			background: #043074 !important;
+			background: #da723f !important;
 			background: linear-gradient(90deg,
-					#1a4a9f 0%,
-					#043074 60%,
-					#031f4d 100%) !important;
+					#904624 0%,
+					#da723f 60%,
+					#d6a994 100%) !important;
 			color: #fff;
 		}
 
