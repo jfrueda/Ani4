@@ -946,3 +946,4 @@ $edi1=$edi->fields['SGD_EIT_CODIGO'];
 		?>
 		</table>
 	</form>
+</body>

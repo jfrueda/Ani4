@@ -6,8 +6,11 @@
 		<?
 		$check = 1;
 		$fieldCount = $rsE->FieldCount();
-		if ($ascdesc == "") $ascdesc = " desc ";
-		else $ascdesc = "";
+		if ($ascdesc == "") {
+			$ascdesc = " desc ";
+		} else {
+			$ascdesc = "";
+		}
 
 		for ($iE = 0; $iE <= $fieldCount - 1; $iE++) {
 			$fld = $rsE->FetchField($iE);
@@ -63,12 +66,12 @@
 						}
 
 						// busca el campo de numero de expediente para asignar en ver detalles
-						if ($fld->name == "SGD_EXP_NUMERO")
+						if ($fld->name == "SGD_EXP_NUMERO") {
 							$expedientes = $rsE->fields["$fld->name"];
-
-						if ($fld->name == "ESTADO")
+						}
+						if ($fld->name == "ESTADO") {
 							$rsE->fields["$fld->name"] = ($rsE->fields["$fld->name"] == 0) ? 'Sin Archivar' : 'Archivado';
-
+						}
 						echo $rsE->fields["$fld->name"];
 						if (trim($pathImg)) {
 							echo "</a>";
@@ -104,11 +107,21 @@
 					$data2y[($iRow - 1)] = $rsE->fields["$fld->name"];
 					$nombYAxis .= " / HOJAS DIGITALIZADAS";
 				}
-				if ($fld->name == "HID_MREC_CODI") $datosEnvioDetalle .= "&mrecCodi=" . $rsE->fields["$fld->name"];
-				if ($fld->name == "HID_CODIGO_ENVIO") $datosEnvioDetalle .= "&fenvCodi=" . $rsE->fields["$fld->name"];
-				if ($fld->name == "HID_TPR_CODIGO") $datosEnvioDetalle .= "&tipoDOCumento=" . $rsE->fields["$fld->name"];
-				if ($fld->name == "HID_COD_DEPE") $datosEnvioDetalle .= "&depeUs=" . $rsE->fields["$fld->name"];
-				if ($fld->name == "HID_FECH_SELEC") $datosEnvioDetalle .= "&fecSel=" . $rsE->fields["$fld->name"];
+				if ($fld->name == "HID_MREC_CODI") {
+					$datosEnvioDetalle .= "&mrecCodi=" . $rsE->fields["$fld->name"];
+				}
+				if ($fld->name == "HID_CODIGO_ENVIO") {
+					$datosEnvioDetalle .= "&fenvCodi=" . $rsE->fields["$fld->name"];
+				}
+				if ($fld->name == "HID_TPR_CODIGO") {
+					$datosEnvioDetalle .= "&tipoDOCumento=" . $rsE->fields["$fld->name"];
+				}
+				if ($fld->name == "HID_COD_DEPE") {
+					$datosEnvioDetalle .= "&depeUs=" . $rsE->fields["$fld->name"];
+				}
+				if ($fld->name == "HID_FECH_SELEC") {
+					$datosEnvioDetalle .= "&fecSel=" . $rsE->fields["$fld->name"];
+				}
 			}
 			if (!$genDetalle) {
 				if ($genTodosDetalle == 1) {

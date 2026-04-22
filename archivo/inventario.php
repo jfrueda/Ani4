@@ -15,7 +15,9 @@ foreach ($_SESSION as $key => $valor) {
 $krd = $_SESSION["krd"];
 $dependencia = $_SESSION["dependencia"];
 
-if (!$ruta_raiz) $ruta_raiz = "..";
+if (!$ruta_raiz) {
+	$ruta_raiz = "..";
+}
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 
 $db = new ConnectionHandler("$ruta_raiz");
@@ -139,8 +141,8 @@ function fnc_date_calcm($this_date, $num_month)
 				<td class='titulos5'>EDIFICIO</td>
 				<TD>&nbsp;
 					<?
-					if ($codMuni != 0 and $codMuni) {
-						include("$ruta_raiz/include/query/archivo/queryInventario.php");
+					if ($codMuni != 0 && $codMuni) {
+						include "$ruta_raiz/include/query/archivo/queryInventario.php";
 						$rs = $db->query($sql7);
 						print $rs->GetMenu2('exp_edificio', $exp_edificio, true, false, "", "onChange='submit()'  class='form-select'");
 					}
@@ -152,14 +154,20 @@ function fnc_date_calcm($this_date, $num_month)
 				<TD>
 					&nbsp;
 					<?
-					if ($min == 1) $sel = "checked";
-					else $sel = "";
+					if ($min == 1) {
+						$sel = "checked";
+					} else {
+						$sel = "";
+					}
 					?>
 					<span class="listado1"> ENTREPA&Ntilde;O:</span>
 					<input name="min" type="radio" value="1" " <?= $sel ?>>
 				<?
-					if ($min == 2) $sel = "checked";
-					else $sel = "";
+					if ($min == 2) {
+						$sel = "checked";
+					} else {
+						$sel = "";
+					}
 				?>
 				&nbsp; 
 				<span class=" listado1">CAJA:</span>
