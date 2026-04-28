@@ -1,8 +1,10 @@
-<?php 
+<?php
 
-class Restclient{
+class Restclient
+{
 
-    function login($arrayParams=array()) {
+    function login($arrayParams = array())
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://webapi.r1.rpost.net/token");
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -11,11 +13,11 @@ class Restclient{
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
-        $response = json_decode($response,true);
+        $response = json_decode($response, true);
 
         $result = "";
-        if($response){
-            if(isset($response['access_token'])) {
+        if ($response) {
+            if (isset($response['access_token'])) {
                 $result = $response['access_token'];
             }
         }
@@ -23,54 +25,53 @@ class Restclient{
         return $result;
     }
 
-    function messageStatus($token,$StartDate,$EndDate,$account) {
+    function messageStatus($token, $StartDate, $EndDate, $account)
+    {
 
-        $params= array(
-                "SenderType" => "4",
-                "SenderTypeValue" => $account,
-                "FromDate" => "{$StartDate}",
-                "ToDate" => "{$EndDate}",
-                "DateRangeType" => "11",
-                "ServiceFeature" => "0",
-                "DeliveryStatusType" => "1",
-                "MessageId" => "",
-                "RecipientAddress" => "",
-                "RecipientDomain" => "",
-                "ReportOutputType" => "json"
+        $params = array(
+            "SenderType" => "4",
+            "SenderTypeValue" => $account,
+            "FromDate" => "{$StartDate}",
+            "ToDate" => "{$EndDate}",
+            "DateRangeType" => "11",
+            "ServiceFeature" => "0",
+            "DeliveryStatusType" => "1",
+            "MessageId" => "",
+            "RecipientAddress" => "",
+            "RecipientDomain" => "",
+            "ReportOutputType" => "json"
         );
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://webapi.r1.rpost.net/api/Reports/UsageReport',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>json_encode($params),
-          CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'Authorization: Bearer '.$token
-          ),
+            CURLOPT_URL => 'https://webapi.r1.rpost.net/api/Reports/UsageReport',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($params),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $token
+            ),
         ));
 
         $response = curl_exec($curl);
 
-        $response = json_decode($response,true);
+        $response = json_decode($response, true);
 
         $result = "";
-        if($response)
-        {
-            if(!isset($response['MessageId']) && !isset($response['DeliveryStatus'])) {
+        if ($response) {
+            if (!isset($response['MessageId']) && !isset($response['DeliveryStatus'])) {
                 $result = $response;
             }
         }
         curl_close($curl);
         return $result;
-
     }
 
     /*function trackingId($token,$TrackingId) {
@@ -111,6 +112,4 @@ class Restclient{
             return $response;
         }
     }*/
-
-
 }
