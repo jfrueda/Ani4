@@ -299,7 +299,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                 </div>
                                 <div class="widget-body no-padding">
                                     <div class="widget-body-toolbar border rounded-4 p-2 bg-light mb-2">
-                                        <h5 class="fw-bold">Filtrar por fechas</h5>
+                                        <span class="fw-bold">Filtrar por fechas</span>
                                         <div class="row g-3 align-items-end">
                                             <!-- Página -->
                                             <div class="col-md-3">
@@ -364,8 +364,8 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                                             <!-- Botones -->
                                             <div class="col-12 mt-1 text-end">
-                                                <input type="button" id="botongrande" value="Filtrar" class="btn btn-primary px-4">
-                                                <input type="button" id="botongrandeBorrar" value="Borrar" class="btn btn-outline-secondary px-4 ms-2">
+                                                <input type="button" id="botongrande" value="Filtrar" class="btn btn-primary ">
+                                                <input type="button" id="botongrandeBorrar" value="Borrar" class="btn btn-outline-secondary">
                                             </div>
                                         </div>
                                     </div>
