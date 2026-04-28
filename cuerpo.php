@@ -299,7 +299,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                 </div>
                                 <div class="widget-body no-padding">
                                     <div class="widget-body-toolbar border rounded-4 p-2 bg-light mb-2">
-                                        <span class="fw-bold">Filtrar por fechas</span>
+                                        <!-- <span class="fw-bold">Filtrar por fechas</span> -->
                                         <div class="row g-3 align-items-end">
                                             <!-- Página -->
                                             <div class="col-md-3">
