@@ -2,17 +2,21 @@
 
 $ruta_raiz = "../";
 session_start();
-require_once($ruta_raiz . "include/db/ConnectionHandler.php");
-include($ruta_raiz . "processConfig.php");
+require_once $ruta_raiz . "include/db/ConnectionHandler.php";
+include $ruta_raiz . "processConfig.php";
 
 list($driver1, $host1, $user1, $pass1, $dbname1) = explode(',', $superargo1);
 $db1 = ADONewConnection($driver1);
 $db1->Connect($host1, $user1, $pass1, $dbname1);
 
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+    ${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+    ${$key} = $valor;
+}
 
-include("common.php");
+include "common.php";
 $fechah = date("ymd") . "_" . time("hms");
 
 $params = session_name() . "=" . session_id() . "&krd=$krd";
