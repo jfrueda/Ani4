@@ -363,7 +363,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </div>
 
                                             <!-- Botones -->
-                                            <div class="col-12 mt-1 text-end">
+                                            <div class="col-12 col-md-2 mt-1 text-start">
                                                 <input type="button" id="botongrande" value="Filtrar" class="btn btn-primary ">
                                                 <input type="button" id="botongrandeBorrar" value="Borrar" class="btn btn-outline-secondary">
                                             </div>
