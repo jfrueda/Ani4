@@ -20,11 +20,13 @@ $db = new ConnectionHandler("$ruta_raiz");
 	<div id="spiffycalendar" class="text"></div>
 	<link rel="stylesheet" type="text/css" href="../js/spiffyCal/spiffyCal_v2_1.css">
 	<script language="JavaScript" src="../js/spiffyCal/spiffyCal_v2_1.js"></script>
-	<!-- <script language="javascript">
+	<script language="javascript">
+		<!--
 		var dateAvailable = new ctlSpiffyCalendarBox("dateAvailable", "new_product", "fecha_busq", "btnDate1", "<?= $fecha_busq ?>", scBTNMODE_CUSTOMBLUE);
 		var dateAvailable2 = new ctlSpiffyCalendarBox("dateAvailable2", "new_product", "fecha_busq2", "btnDate1", "<?= $fecha_busq2 ?>", scBTNMODE_CUSTOMBLUE);
 		//
-	</script> -->
+		-->
+	</script>
 	<P>
 	<p>
 		<CENTER><b><span class="etexto">LISTADO DE DOCUMENTOS ENVIADOS POR AGENCIA DE CORREO<p>

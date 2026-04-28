@@ -1,12 +1,8 @@
 <?php
 session_start();
 
-foreach ($_GET as $key => $valor) {
-	${$key} = $valor;
-}
-foreach ($_POST as $key => $valor) {
-	${$key} = $valor;
-}
+foreach ($_GET as $key => $valor)   ${$key} = $valor;
+foreach ($_POST as $key => $valor)   ${$key} = $valor;
 
 $krd            = $_SESSION["krd"];
 $dependencia    = $_SESSION["dependencia"];
@@ -23,15 +19,12 @@ if (!is_object($db)) {
 	$db = new ConnectionHandler("$ruta_raiz");
 }
 
-require_once $ruta_raiz . "/include/tx/Historico.php";
-require_once $ruta_raiz . "/include/tx/Tx.php";
-
+require_once($ruta_raiz . "/include/tx/Historico.php");
+require_once($ruta_raiz . "/include/tx/Tx.php");
 $hist      = new Historico($db);
 $tx = new Tx($db);
 
-if (!defined('ADODB_FETCH_ASSOC')) {
-	define('ADODB_FETCH_ASSOC', 2);
-}
+if (!defined('ADODB_FETCH_ASSOC'))	define('ADODB_FETCH_ASSOC', 2);
 $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_max=$estado_sal_max&pagina_sig=$pagina_sig&dep_sel=$dep_sel&krd=$krd";
 ?>
@@ -106,22 +99,21 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 			} else { //<input type=SUBMIT name='devolver_rad'  value = 'CONFIRMAR DEVOLUCION' class=ebuttons2 onclick="markDev();"></center></td>
 				error_reporting(7);
 				$isql = "select SGD_DEVE_DESC
-						from SGD_DEVE_DEV_ENVIO
-						WHERE SGD_DEVE_CODIGO = $motivo_devol
-						";
+		from SGD_DEVE_DEV_ENVIO
+		WHERE SGD_DEVE_CODIGO = $motivo_devol
+		";
 				$sim = 0;
-				if (!defined('ADODB_FETCH_ASSOC')) {
-					define('ADODB_FETCH_ASSOC', 2);
-				}
+				if (!defined('ADODB_FETCH_ASSOC'))	define('ADODB_FETCH_ASSOC', 2);
 				$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 				$rs = $db->conn->Execute($isql);
 				$motivo = $rs->fields["SGD_DEVE_DESC"];
 			}
 			error_reporting(7);
 			/*
-			*Procediminiento que recorre el array de valores de radicados a devolver.....
-			*/
-			if (!$radicados_dev || $motivo_devol == 0) {
+*Procediminiento que recorre el array de valores de radicados a devolver.....
+*/
+			if (!$radicados_dev  or $motivo_devol == 0) {
+
 				$num = count($checkValue);
 				$i = 0;
 				while ($i < $num) {
@@ -137,14 +129,14 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 
 			echo "<input type=hidden name=radicados_dev value='$radicados_dev'>";
 			echo "<input type=hidden name=radicados_devOrginal value='$radicados_devOrginal'>";
-			if ($devolver_rad  && $motivo_devol == 0) {
+			if ($devolver_rad  and $motivo_devol == 0) {
 				echo "
-					<script>
-					alert('Elija un Motivo de devolucion.');
-					</script>
-					";
+		 <script>
+		 alert('Elija un Motivo de devolucion.');
+		 </script>
+		 ";
 			}
-			if ($devolver_rad  && $motivo_devol) {
+			if ($devolver_rad  and $motivo_devol) {
 				if ($motivo_devol != 0) {
 					$systemDate = $db->conn->OffsetDate(0, $db->conn->sysTimeStamp);
 					$sqlConcat = $db->conn->Concat("'$comentarios_dev'", "'-'", "sgd_renv_observa");
@@ -163,11 +155,12 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 					$radicados_devOrginal = "((radi_nume_salida=$radicados_devOrginal))";
 					$condicionUp = $radicados_devOrginal;
 					$isqlu = "update anexos
-								set
-								anex_estado=2,
-								sgd_deve_fech=$systemDate,
-								sgd_deve_codigo = $motivo_devol
-							where $condicionUp ";
+			set
+			anex_estado=2,
+			sgd_deve_fech=$systemDate,
+			sgd_deve_codigo = $motivo_devol
+		  where $condicionUp ";
+
 
 					//echo $isqlu;
 					$rs = $db->conn->Execute($isqlu);
@@ -190,10 +183,10 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 						$usua_codi_dest = $datos[0]['USUA_CODI_DEST'];
 						$depe_codi_dest = $datos[0]['DEPE_CODI_DEST'];
 						/*	$isql_hl= "insert
-						into hist_eventos(DEPE_CODI, HIST_FECH, USUA_CODI, RADI_NUME_RADI, HIST_OBSE, USUA_CODI_DEST, DEPE_CODI_DEST, USUA_DOC, SGD_TTR_CODIGO)
-						values ($dependencia, $systemDate ,$codusuario, $chkt, 'Devolución $tipo ($motivo). $comentarios_dev', '$usua_codi_dest', '$depe_codi_dest', '$usua_doc',28)";
-							
-						$rs = $db->conn->Execute($isql_hl);*/
+		into hist_eventos(DEPE_CODI, HIST_FECH, USUA_CODI, RADI_NUME_RADI, HIST_OBSE, USUA_CODI_DEST, DEPE_CODI_DEST, USUA_DOC, SGD_TTR_CODIGO)
+		values ($dependencia, $systemDate ,$codusuario, $chkt, 'Devolución $tipo ($motivo). $comentarios_dev', '$usua_codi_dest', '$depe_codi_dest', '$usua_doc',28)";
+			
+		$rs = $db->conn->Execute($isql_hl);*/
 
 						$radicadosSel[0] = $chkt;
 						$hist->insertarHistorico(
@@ -209,19 +202,20 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 						//INICIA FASE DE DEVOLUCION AL USUARIO ANTERIOR O JEFE DE AREA SI EL USUARIO ANTEIRO ESTA DESACTIVADO
 
 						/*$sqlUsuAnte = "select u.usua_esta, u.usua_codi, u.depe_codi from radicado r 
-						join usuario u ON u.usua_login = r.radi_usu_ante
-						where r.radi_nume_radi = $chkt";*/
+		join usuario u ON u.usua_login = r.radi_usu_ante
+		where r.radi_nume_radi = $chkt";*/
 						$depDestino = 0;
 						$codUsDestino = 0;
 						$flagUser = false;
 
-						$sqlUsuAct = "select r.radi_usua_actu, r.radi_depe_actu from radicado r where r.radi_nume_radi = $chkt";
+						$sqlUsuAct = "select r.radi_usua_actu, r.radi_depe_actu from radicado r 
+		where r.radi_nume_radi = $chkt";
 						$rs = $db->conn->Execute($sqlUsuAct);
 
 						if ($rs->fields['RADI_DEPE_ACTU'] == 999) {
 							$sqlUsuAnte = "select u.usua_esta, u.usua_codi, u.depe_codi from radicado r 
-											join usuario u ON u.usua_login = r.radi_usu_ante
-											where r.radi_nume_radi = $chkt";
+				join usuario u ON u.usua_login = r.radi_usu_ante
+				where r.radi_nume_radi = $chkt";
 
 							$rs = $db->conn->Execute($sqlUsuAnte);
 							if ($rs->fields['USUA_ESTA'] == 1) {
@@ -230,7 +224,8 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 								$flagUser = true;
 							}
 						} else {
-							$sqlUsuAnte = "select usua_esta  from usuario where depe_codi = " . $rs->fields['RADI_DEPE_ACTU'] . " and usua_codi = " . $rs->fields['RADI_USUA_ACTU'];
+							$sqlUsuAnte = "select usua_esta  from usuario 
+					where depe_codi = " . $rs->fields['RADI_DEPE_ACTU'] . " and usua_codi = " . $rs->fields['RADI_USUA_ACTU'];
 
 							$rsUsuAnte = $db->conn->Execute($sqlUsuAnte);
 							if ($rsUsuAnte->fields['USUA_ESTA'] == 1) {
@@ -243,7 +238,7 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 						if ($flagUser) {
 							$observa = 'Se asigna automáticamente el radicado debido a la devolución';
 							$sqlContaHist =  "select count(*) from hist_eventos where radi_nume_radi = '" . $chkt  . "' and sgd_ttr_codigo = 9  
-												and hist_fech BETWEEN  (SELECT now() - interval '1 minute') and (SELECT now() + interval '1 minute')";
+				and hist_fech BETWEEN  (SELECT now() - interval '1 minute') and (SELECT now() + interval '1 minute')";
 							$rsSqlContaHist = $db->conn->Execute($sqlContaHist);
 
 							if ($rsSqlContaHist->fields['COUNT'] == 0) {
@@ -296,8 +291,9 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 						}
 
 						$sqlUsuAnte = "select u.usua_esta, u.usua_codi, u.depe_codi from radicado r 
-										join usuario u ON u.usua_login = r.radi_usu_ante
-										where r.radi_nume_radi = $rad";
+		join usuario u ON u.usua_login = r.radi_usu_ante
+		where r.radi_nume_radi = $rad";
+
 
 						next($checkValue);
 						$i++;
@@ -377,46 +373,46 @@ $encabezado_i = "estado_sal=$estado_sal&motivo_devol=$motivo_devol&estado_sal_ma
 				$condicion = $radicados_devOrginal;
 
 				$isql = 'select 
-						a.anex_estado AS "CHU_ESTADO"
-							,CAST(a.radi_nume_salida as varchar(20)) AS "IMG_RADICADO_SALIDA"
-						,c.RADI_PATH AS "HID_RADI_PATH"						
-							,substr(trim( CAST( a.sgd_dir_tipo AS VARCHAR(5) ) ),2,5) AS COPIA
-						,CAST(a.anex_radi_nume as varchar(20)) AS RADICADO_PADRE
-						,c.radi_fech_radi AS FECHA_RADICADO
-						,dir.sgd_dir_nomremdes||' . "'/'" . '||dir.sgd_dir_nombre||' . "'<br>'" . '||dir.sgd_dir_direccion AS DESCRIPCION
-						,a.sgd_fech_impres AS FECHA_IMPRESION
-						,a.anex_creador AS GENERADO_POR
-						,e.tipo as MEDIO_DE_ENVIO
-						,e.id as "HID_ID_ENVIO"
-									, e.id AS "CHK_ANULAR"
-									, a.sgd_dir_tipo     AS "HID_sgd_dir_tipo"
-						,a.anex_nomb_archivo AS "HID_ANEX_NOMB_ARCHIVO" 
-						,a.anex_tamano       AS "HID_ANEX_TAMANO"
-						,a.ANEX_RADI_FECH    AS "HID_ANEX_RADI_FECH" 
-						,' . "'WWW'" . '     AS "HID_WWW" 
-						,' . "'9999'" . '    AS "HID_9999"     
-						,a.anex_tipo         AS "HID_ANEX_TIPO" 
-						,a.anex_radi_nume    AS "HID_ANEX_RADI_NUME" 
-						,a.sgd_dir_tipo      AS "HID_SGD_DIR_TIPO"
-						,a.sgd_deve_codigo   AS "HID_SGD_DEVE_CODIGO"
-					from sgd_rad_envios e, anexos a, usuario b, radicado c, sgd_dir_drecciones dir
-					where e.id_anexo = a.id AND a.ANEX_ESTADO>=2 ' .
-								$dependencia_busq2 . '
-							and a.ANEX_ESTADO <= ' . $estado_sal_max . '
-							and a.radi_nume_salida=c.radi_nume_radi
-							and e.id_direccion=dir.id
-							-- and a.sgd_dir_tipo    =dir.sgd_dir_tipo
-							and a.anex_creador=b.usua_login 
-								and a.anex_borrado= ' . "'N'" . '
-							and a.sgd_dir_tipo != 7
-							and (a.sgd_deve_codigo >= 0 or a.sgd_deve_codigo <= 90 or a.sgd_deve_codigo is null)
-							AND
-							((c.SGD_EANU_CODIGO != 2
-							AND c.SGD_EANU_CODIGO != 1) 
-							or c.SGD_EANU_CODIGO IS NULL)
-											' .
-								$condicion . '	
-											order by a.radi_nume_salida ';
+			a.anex_estado AS "CHU_ESTADO"
+		        ,CAST(a.radi_nume_salida as varchar(20)) AS "IMG_RADICADO_SALIDA"
+			,c.RADI_PATH AS "HID_RADI_PATH"						
+		        ,substr(trim( CAST( a.sgd_dir_tipo AS VARCHAR(5) ) ),2,5) AS COPIA
+			,CAST(a.anex_radi_nume as varchar(20)) AS RADICADO_PADRE
+			,c.radi_fech_radi AS FECHA_RADICADO
+			,dir.sgd_dir_nomremdes||' . "'/'" . '||dir.sgd_dir_nombre||' . "'<br>'" . '||dir.sgd_dir_direccion AS DESCRIPCION
+			,a.sgd_fech_impres AS FECHA_IMPRESION
+			,a.anex_creador AS GENERADO_POR
+			,e.tipo as MEDIO_DE_ENVIO
+			,e.id as "HID_ID_ENVIO"
+                        , e.id AS "CHK_ANULAR"
+                        , a.sgd_dir_tipo     AS "HID_sgd_dir_tipo"
+			,a.anex_nomb_archivo AS "HID_ANEX_NOMB_ARCHIVO" 
+			,a.anex_tamano       AS "HID_ANEX_TAMANO"
+			,a.ANEX_RADI_FECH    AS "HID_ANEX_RADI_FECH" 
+			,' . "'WWW'" . '     AS "HID_WWW" 
+			,' . "'9999'" . '    AS "HID_9999"     
+			,a.anex_tipo         AS "HID_ANEX_TIPO" 
+			,a.anex_radi_nume    AS "HID_ANEX_RADI_NUME" 
+			,a.sgd_dir_tipo      AS "HID_SGD_DIR_TIPO"
+			,a.sgd_deve_codigo   AS "HID_SGD_DEVE_CODIGO"
+		from sgd_rad_envios e, anexos a, usuario b, radicado c, sgd_dir_drecciones dir
+		where e.id_anexo = a.id AND a.ANEX_ESTADO>=2 ' .
+					$dependencia_busq2 . '
+				and a.ANEX_ESTADO <= ' . $estado_sal_max . '
+				and a.radi_nume_salida=c.radi_nume_radi
+				and e.id_direccion=dir.id
+				-- and a.sgd_dir_tipo    =dir.sgd_dir_tipo
+				and a.anex_creador=b.usua_login 
+			        and a.anex_borrado= ' . "'N'" . '
+				and a.sgd_dir_tipo != 7
+				and (a.sgd_deve_codigo >= 0 or a.sgd_deve_codigo <= 90 or a.sgd_deve_codigo is null)
+				AND
+				((c.SGD_EANU_CODIGO != 2
+				AND c.SGD_EANU_CODIGO != 1) 
+				or c.SGD_EANU_CODIGO IS NULL)
+                                 ' .
+					$condicion . '	
+								order by a.radi_nume_salida ';
 				$rs = $db->conn->Execute($isql);
 				$pager = new ADODB_Pager($db, $isql, 'adodb', false, $orderNo, $orderTipo);
 				$pager->toRefLinks = $linkPagina;

@@ -20,10 +20,10 @@ $db = new ConnectionHandler("$ruta_raiz");
 	<div id="spiffycalendar" class="text"></div>
 	<link rel="stylesheet" type="text/css" href="../js/spiffyCal/spiffyCal_v2_1.css">
 	<script language="JavaScript" src="../js/spiffyCal/spiffyCal_v2_1.js"></script>
-	<!-- <script language="javascript">
+	<script language="javascript">
 		var dateAvailable = new ctlSpiffyCalendarBox("dateAvailable", "new_product", "fecha_busq", "btnDate1", "<?= $fecha_busq ?>", scBTNMODE_CUSTOMBLUE);
 		var dateAvailable2 = new ctlSpiffyCalendarBox("dateAvailable2", "new_product", "fecha_busq2", "btnDate1", "<?= $fecha_busq2 ?>", scBTNMODE_CUSTOMBLUE);
-	</script> -->
+	</script>
 	<P>
 	<p>
 		<CENTER><b><span class="etexto">GENERACION LISTADOS DE DOCUMENTOS DEVUELTOS POR AGENCIA DE CORREO<p>
@@ -101,9 +101,9 @@ $db = new ConnectionHandler("$ruta_raiz");
 						sgd_deve_dev_envio  b,
 						dependencia c,
 						SGD_FENV_FRMENVIO d ';
-					$fecha_mes = substr($fecha_ini, 0, 7);
-					// Si la variable $generar_listado_existente viene entonces este if genera la planilla existente
-					$where_isql = ' WHERE a.DEPE_CODI = ' . $dependencia . '
+		$fecha_mes = substr($fecha_ini, 0, 7);
+		// Si la variable $generar_listado_existente viene entonces este if genera la planilla existente
+		$where_isql = ' WHERE a.DEPE_CODI = ' . $dependencia . '
 				and a.sgd_deve_fech BETWEEN
 				' . $db->conn->DBTimeStamp($fecha_ini) . ' and ' . $db->conn->DBTimeStamp($fecha_fin) . '
 				and a.sgd_deve_codigo=b.sgd_deve_codigo
