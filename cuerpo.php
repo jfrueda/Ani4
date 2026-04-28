@@ -302,7 +302,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                         <!-- <span class="fw-bold">Filtrar por fechas</span> -->
                                         <div class="row align-items-end">
                                             <!-- Página -->
-                                            <div class="col-md-3">
+                                            <div class="col-sm-6 col-md-2">
                                                 <label for="resultados_aux" class="form-label fw-semibold">Página</label>
                                                 <div class="input-group">
                                                     <input type="number" class="form-control" max="1000" min="0" value="<?= $_SESSION['resultados'] ?>" name="resultados_aux" id="resultados_aux">
@@ -313,7 +313,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </div>
 
                                             <!-- Fecha inicial -->
-                                            <div class="col-md-3">
+                                            <div class="col-sm-6 col-md-2">
                                                 <label class="form-label fw-semibold">Fecha inicial</label>
                                                 <input
                                                     type="date"
@@ -324,7 +324,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </div>
 
                                             <!-- Fecha final -->
-                                            <div class="col-md-3">
+                                            <div class="col-sm-6 col-md-2">
                                                 <label class="form-label fw-semibold">Fecha final</label>
                                                 <input
                                                     type="date"
@@ -335,7 +335,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </div>
 
                                             <!-- Medio de recepción -->
-                                            <div class="col-md-3">
+                                            <div class="col-sm-6 col-md-2">
                                                 <label class="form-label fw-semibold">Medio de recepción</label>
                                                 <select
                                                     class="form-select"
@@ -353,7 +353,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </div>
 
                                             <!-- Loader -->
-                                            <div class="col-md-1 d-flex align-items-center">
+                                            <div class="col-sm-6 col-md-1 d-flex align-items-center">
                                                 <img
                                                     id="cargando_bandeja"
                                                     src="https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_800,h_600/https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"
