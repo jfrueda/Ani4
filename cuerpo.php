@@ -335,7 +335,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </div>
 
                                             <!-- Medio de recepción -->
-                                            <div class="col-sm-6 col-md-2">
+                                            <div class="col-sm-6 col-md-3">
                                                 <label class="form-label fw-semibold">Medio de recepción</label>
                                                 <select
                                                     class="form-select"
