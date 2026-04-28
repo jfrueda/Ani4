@@ -299,7 +299,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                 </div>
                                 <div class="widget-body no-padding">
                                     <div class="widget-body-toolbar border rounded-4 p-4 bg-light mb-4">
-                                        <h4 class="fw-bold mb-3">Filtrar por fechas</h4>
+                                        <h5 class="fw-bold">Filtrar por fechas</h5>
                                         <div class="row g-3 align-items-end">
                                             <!-- Página -->
                                             <div class="col-md-3">
@@ -353,7 +353,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </div>
 
                                             <!-- Loader -->
-                                            <div class="col-md-1 d-flex align-items-center mt-2">
+                                            <div class="col-md-1 d-flex align-items-center">
                                                 <img
                                                     id="cargando_bandeja"
                                                     src="https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_800,h_600/https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"
@@ -363,7 +363,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </div>
 
                                             <!-- Botones -->
-                                            <div class="col-12 mt-3 text-end">
+                                            <div class="col-12 mt-1 text-end">
                                                 <input type="button" id="botongrande" value="Filtrar" class="btn btn-primary px-4">
                                                 <input type="button" id="botongrandeBorrar" value="Borrar" class="btn btn-outline-secondary px-4 ms-2">
                                             </div>
