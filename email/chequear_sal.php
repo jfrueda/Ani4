@@ -255,7 +255,7 @@ if($primera!=1 and $Submit=="BUSCAR" and ($pnom or $cuentai or $noradicado or $r
 	 } else 
 	 {
       // Si el usuario no es el administrador cuando selecciona la carpeta enviar
-			// Se le añade esta instruccion a la varible del sql que solo muestra los doc's 
+			// Se le aï¿½ade esta instruccion a la varible del sql que solo muestra los doc's 
 			// Enviados por el usuario de lo contrario solo toma la dependencia  	   
 	    $carpetaenviar = "  ";
 	 }
@@ -356,10 +356,10 @@ if($primera!=1 and $Submit=="BUSCAR" and ($pnom or $cuentai or $noradicado or $r
               Pdf </th>
             <th width='9%' height="45"> <a href='cuerpopdf.php?<?=SID ?><?=$encabezado ?>1' alt='Seleccione una busqueda' class='textoOpcion'> 
               <?=$img1 ?>
-              Número Radicado Generado</a> </th>			  		  
+              Nï¿½mero Radicado Generado</a> </th>			  		  
             <th width='9%' height="45"> <a href='cuerpopdf.php?<?=SID ?><?=$encabezado ?>1' alt='Seleccione una busqueda' class='textoOpcion'> 
               <?=$img1 ?>
-              Número Radicado</a> </th>
+              Nï¿½mero Radicado</a> </th>
 		    <th  width='17%'> <a href='cuerpopdf.php?<?=SID ?><?=$encabezado ?>2' alt='Seleccione una busqueda' class='textoOpcion'>
               <?=$img2 ?>
               Fecha Radicado</a> </th>
@@ -374,7 +374,7 @@ if($primera!=1 and $Submit=="BUSCAR" and ($pnom or $cuentai or $noradicado or $r
               Nombre</a> </th>
 		    <th  width='9%'> <a href='cuerpopdf.php?<?=SID ?><?=$encabezado ?>6'  alt='Ordenar por nombre' class='textoOpcion'>
               <?=$img6 ?>
-              Días <br>
+              Dï¿½as <br>
                Restantes</a>
 		 </th>
 	        <th  width='7%'><a href='cuerpopdf.php?<?=SID ?><?=$encabezado ?>7'  alt='Ordenar por Enviado' class='textoOpcion'>
