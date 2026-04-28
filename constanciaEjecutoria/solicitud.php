@@ -1,13 +1,13 @@
 <?php
 
-if (!$ruta_raiz)
+if (!$ruta_raiz) {
     $ruta_raiz = "..";
-
+}
 session_start();
 
-if (!$_SESSION['dependencia'])
+if (!$_SESSION['dependencia']) {
     header("Location: $ruta_raiz/cerrar_session.php");
-
+}
 ?>
 
 <html>
