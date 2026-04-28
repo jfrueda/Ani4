@@ -23,7 +23,7 @@ class TipoDocumental
          * 
          */
         $this->db = $db;
-    }     
+    }
     function TipoDocumental($db)
     {
         /**
@@ -33,11 +33,8 @@ class TipoDocumental
          */
         $this->db = $db;
     }
-     
-    function consultaTipoTRD( $dependencia )
-    {
 
-    } // end of member function cconsultaTipoTRD
+    function consultaTipoTRD($dependencia) {} // end of member function cconsultaTipoTRD
 
 
 
@@ -47,11 +44,11 @@ class TipoDocumental
      * @tdoc tipo documental que se asignara al radicado
      * return nuemric devuelve 1 si tiene td o -1 si no la tiene.
      */
-    function consultaTRDradicado( $noRadicado )
-    {	 
+    function consultaTRDradicado($noRadicado)
+    {
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
         $this->db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
-        $ADODB_COUNTRECS=true;
+        $ADODB_COUNTRECS = true;
         $sql = "SELECT rdf.radi_nume_radi, 
 									rdf.depe_codi, 
 									rdf.usua_codi, 
@@ -70,18 +67,17 @@ class TipoDocumental
 								ORDER BY
 									rdf.sgd_rdf_fech ASC  ";
         # Executa la busqueda y obtiene el registro a actualizar.
-        $rs = $this->db->conn->Execute($sql); 
+        $rs = $this->db->conn->Execute($sql);
         //$ADODB_COUNTRECS=false;
-        if(!$rs->EOF){
-					  $this->serieCodigo = $rs->fields["SGD_SRD_CODIGO"];
+        if (!$rs->EOF) {
+            $this->serieCodigo = $rs->fields["SGD_SRD_CODIGO"];
             $this->subSerieCodigo = $rs->fields["SGD_SBRD_CODIGO"];
             $this->tprCodigo = $rs->fields["SGD_TPR_CODIGO"];
-            $rta=1;
-        }else {
-					$rta = -1;
-          
+            $rta = 1;
+        } else {
+            $rta = -1;
         }
-		return $rta;		
+        return $rta;
     } // end of member function cconsultaTipoTRD
 
 
@@ -91,14 +87,15 @@ class TipoDocumental
      * @noRadicado numero al cual se le cambiara la fecha
      * @tdoc tipo documental que se asignara al radicado
      */
-    function setFechVenci($noRadicado,$tdoc){
+    function setFechVenci($noRadicado, $tdoc)
+    {
         //Agregamos la fecha de vencimiento
         //Sacando los dias de fiesta y los sabados
-        $isqla = 'SELECT NOH_FECHA FROM SGD_NOH_NOHABILES';       
+        $isqla = 'SELECT NOH_FECHA FROM SGD_NOH_NOHABILES';
         $resa  = $this->db->conn->Execute($isqla);
 
-        while (!$resa->EOF){
-            $festi[] = strtotime(substr($resa->fields["NOH_FECHA"],0,10));
+        while (!$resa->EOF) {
+            $festi[] = strtotime(substr($resa->fields["NOH_FECHA"], 0, 10));
             $resa->MoveNext();
         }
 
@@ -111,19 +108,19 @@ class TipoDocumental
             WHERE 
             RADI_NUME_RADI = '$noRadicado'";
 
-        $rsTmp    = $this->db->conn->Execute($sql); 
+        $rsTmp    = $this->db->conn->Execute($sql);
         $fechRad  = $rsTmp->fields["RADI_FECH_RADI"];
 
         //tiempo del tipo documental
         //numero
-        if(!empty($tdoc)){
+        if (!empty($tdoc)) {
             $sql3 = "SELECT 
                 SGD_TPR_TERMINO FROM 
                 SGD_TPR_TPDCUMENTO  
                 WHERE 
                 SGD_TPR_CODIGO = '$tdoc'";
 
-            $rs2 = $this->db->conn->Execute($sql3); 
+            $rs2 = $this->db->conn->Execute($sql3);
             $sal = $tiemTdoc = $rs2->fields["SGD_TPR_TERMINO"];
         }
 
@@ -132,20 +129,20 @@ class TipoDocumental
         // se tienen encuenta los dia habiles y se determina cuanto
         // tiempo tiene para dar respuesta.
         //date("j-n-Y",strtotime("2000-10-29 + 1 days"))
-        $tiemTdoc = empty($tiemTdoc)? 1 : $tiemTdoc;
+        $tiemTdoc = empty($tiemTdoc) ? 1 : $tiemTdoc;
 
         // frad:    Fecha en que se radico el documento 
         // fechfin: Fecha que contendra el resultado de la 
         // sumatoria de los dias habiles y festivos
-        $fechfin = $frad  = substr($fechRad,0,10);
+        $fechfin = $frad  = substr($fechRad, 0, 10);
 
-        while(!empty($tiemTdoc)){
+        while (!empty($tiemTdoc)) {
 
             $fecha        = strtotime("$fechfin  + 1 day");
             $fechfin      = date("Y-m-d", $fecha);
             $noHabil      = getdate($fecha);
             $diasuma      = $noHabil["wday"];
-            while(($diasuma == 0) or ($diasuma == 6) or in_array($fecha,$festi)){
+            while (($diasuma == 0) || ($diasuma == 6) || in_array($fecha, $festi)) {
                 $fecha        = strtotime("$fechfin  + 1 day");
                 $fechfin      = date("Y-m-d", $fecha);
                 $noHabil      = getdate($fecha);
@@ -156,16 +153,15 @@ class TipoDocumental
 
         $resul    = $fechfin;
 
-        $record = array(); 
+        $record = array();
         $record['FECH_VCMTO'] = $resul;
         $updateSQL = $this->db->conn->GetUpdateSQL($rsTmp, $record, true);
         # Actualiza el registro en la base de datos
-        $this->db->conn->Execute($updateSQL); 
+        $this->db->conn->Execute($updateSQL);
 
-     /**echo " <br> fecha radicado $frad
+        /**echo " <br> fecha radicado $frad
         <br> dias por tipo documental $sal
      <br> fecha procesando $resul"; **/
-
     }
 
 
@@ -178,7 +174,8 @@ class TipoDocumental
      * @return void
      * @access public
      */
-    function insertarTRD($codiTRDS,$codiTRD,$noRadicado, $coddepe , $codusuario, $tdoc = null){
+    function insertarTRD($codiTRDS, $codiTRD, $noRadicado, $coddepe, $codusuario, $tdoc = null)
+    {
         //Arreglo que almacena los nombres de columna
 
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
@@ -191,21 +188,21 @@ class TipoDocumental
             USUARIO 
             WHERE 
             DEPE_CODI=$coddepe
-            AND USUA_CODI=$codusuario"; 
+            AND USUA_CODI=$codusuario";
         # Busca el usuairo para luego traer sus datos.
         $rs = $this->db->conn->Execute($sql);
         $usDoc = $rs->fields["USUA_DOC"];
-        $ADODB_COUNTRECS=true;
+        $ADODB_COUNTRECS = true;
         $sql = "SELECT *
             FROM SGD_RDF_RETDOCF 
             WHERE RADI_NUME_RADI = '$noRadicado'
             AND  SGD_MRD_CODIGO =  '$codiTRD'";
         # Executa la busqueda y obtiene el registro a actualizar.
-        $rs = $this->db->conn->Execute($sql); 
-        $ADODB_COUNTRECS=false;
-        if($rs->RowCount()>=1){
+        $rs = $this->db->conn->Execute($sql);
+        $ADODB_COUNTRECS = false;
+        if ($rs->RowCount() >= 1) {
             $mensaje_err = "<HR><center><B><FONT COLOR=RED>Esta Tipificacion YA esta incluida. <BR>  VERIFIQUE LA INFORMACION E INTENTE DE NUEVO</FONT></B></center><HR>";
-        }else{
+        } else {
             $record = array(); # Inicializa el arreglo que contiene los datos a insertar
             # Asignar el valor de los campos en el registro
             # Observa que el nombre de los campos pueden ser mayusculas o minusculas
@@ -214,21 +211,22 @@ class TipoDocumental
             $record["USUA_CODI"]      = $codusuario;
             $record["USUA_DOC"]       = $usDoc;
             $record["SGD_MRD_CODIGO"] = $codiTRD;
-            $record["SGD_RDF_FECH"]   = $this->db->conn->OffsetDate(0,$this->db->conn->sysTimeStamp);
+            $record["SGD_RDF_FECH"]   = $this->db->conn->OffsetDate(0, $this->db->conn->sysTimeStamp);
             # Mandar como parametro el recordset vacio y el 
             # arreglo conteniendo los datos a insertar
             # a la funcion GetInsertSQL. Esta procesara los 
             # datos y regresara un enunciado SQL
             # para procesar el INSERT.
             $insertSQL = $this->db->insert("SGD_RDF_RETDOCF", $record, "true");
-            $this->setFechVenci($noRadicado,$tdoc);
+            $this->setFechVenci($noRadicado, $tdoc);
         }
 
-        return ($codiTRDS);
+        return $codiTRDS;
     }
 
 
-    function insertarTRDA($codiTRDS,$codiTRD,$noRadicado,$noRadicadoA, $coddepe , $codusuario){ 	
+    function insertarTRDA($codiTRDS, $codiTRD, $noRadicado, $noRadicadoA, $coddepe, $codusuario)
+    {
         # Busca el Documento del usuario 
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
         $this->db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
@@ -239,7 +237,7 @@ class TipoDocumental
             USUARIO 
             WHERE 
             DEPE_CODI=$coddepe
-            AND USUA_CODI=$codusuario"; 
+            AND USUA_CODI=$codusuario";
         # Busca el usuairo para luego traer sus datos.
         $rs = $this->db->conn->Execute($sql);
         $usDoc = $rs->fields["USUA_DOC"];
@@ -249,25 +247,24 @@ class TipoDocumental
             AND ANEX_CODIGO = '$noRadicadoA'
             AND  SGD_MRD_CODIGO =  '$codiTRD'";
         $rs = $this->db->conn->Execute($sql); # Executa la busqueda y obtiene el registro a actualizar.
-        if($rs->RowCount()>=1) die ("<HR><center><B><FONT COLOR=RED>Esta Tipificacion YA esta incluida. <BR>  VERIFIQUE LA INFORMACION E INTENTE DE NUEVO</FONT></B></center><HR>");
+        if ($rs->RowCount() >= 1) die("<HR><center><B><FONT COLOR=RED>Esta Tipificacion YA esta incluida. <BR>  VERIFIQUE LA INFORMACION E INTENTE DE NUEVO</FONT></B></center><HR>");
         $record = array(); # Inicializa el arreglo que contiene los datos a insertar
         # Asignar el valor de los campos en el registro
         # Observa que el nombre de los campos pueden ser mayusculas o minusculas
-        foreach($codiTRDS as $codiTRDR)
-        {
+        foreach ($codiTRDS as $codiTRDR) {
             $record["ANEX_RADI_NUME"] = $noRadicado;
             $record["ANEX_CODIGO"] = $noRadicadoA;
             $record["DEPE_CODI"]      = $coddepe;
             $record["USUA_CODI"]      = $codusuario;
             $record["USUA_DOC"]       = $usDoc;
             $record["SGD_MRD_CODIGO"] = $codiTRD;
-            $record["SGD_RDA_FECH"]   = $this->db->conn->OffsetDate(0,$this->db->conn->sysTimeStamp);
+            $record["SGD_RDA_FECH"]   = $this->db->conn->OffsetDate(0, $this->db->conn->sysTimeStamp);
             # Mandar como parametro el recordset vacio y el arreglo conteniendo los datos a insertar
             # a la funcion GetInsertSQL. Esta procesara los datos y regresara un enunciado SQL
             # para procesar el INSERT.
             $insertSQL = $this->db->insert("SGD_RDA_RETDOCA", $record, "true");
         }
-        return ($codiTRDS);
+        return $codiTRDS;
     }
 
 
@@ -278,8 +275,9 @@ class TipoDocumental
      * @return void
      * @access public
      */
-    function eliminarTRD($nurad,$coddepe,$usua_doc,$codusuario,$codiTRD){
-        /*Elimina la clasificacion TRD*/		 
+    function eliminarTRD($nurad, $coddepe, $usua_doc, $codusuario, $codiTRD)
+    {
+        /*Elimina la clasificacion TRD*/
         $isqlE = "delete 
             from SGD_RDF_RETDOCF
             where 
@@ -293,7 +291,7 @@ class TipoDocumental
             TDOC_CODI
             FROM radicado 
             WHERE 
-            radi_nume_radi = '$nurad'" ; 
+            radi_nume_radi = '$nurad'";
         $rs = $this->db->conn->Execute($sql);
         $tip_dcto =  $rs->fields['TDOC_CODI'];
 
@@ -304,7 +302,7 @@ class TipoDocumental
         $rs = $this->db->conn->Execute($sql);
         $tip_trd =  $rs->fields['SGD_TPR_CODIGO'];
 
-        require ("../include/query/busqueda/busquedaPiloto1.php");
+        require "../include/query/busqueda/busquedaPiloto1.php";
         unset($db);
 
         $this->setFechVenci($nurad, 0);
@@ -312,7 +310,7 @@ class TipoDocumental
          * la misma que la de la clasificacion eliminada
          * */
 
-        if ($tip_trd == $tip_dcto){
+        if ($tip_trd == $tip_dcto) {
 
             $isqlM = "select $radi_nume_radi RADI_NUME_RADI,
                 SGD_MRD_CODIGO
@@ -323,11 +321,10 @@ class TipoDocumental
             $codiTRDM = $rsM->fields["SGD_MRD_CODIGO"];
             $cod_nvo  = 0;
 
-            if($codiTRDM != ''){
-                while(!$rsM->EOF)
-                {
+            if ($codiTRDM != '') {
+                while (!$rsM->EOF) {
                     $cod_nvo =  $rsM->fields['SGD_MRD_CODIGO'];
-                    $rsM->MoveNext();		
+                    $rsM->MoveNext();
                 }
                 $isqlM = "select SGD_TPR_CODIGO
                     from SGD_MRD_MATRIRD 
@@ -340,7 +337,7 @@ class TipoDocumental
                 TDOC_CODI
                 FROM radicado 
                 WHERE 
-                radi_nume_radi = '$nurad'" ; 
+                radi_nume_radi = '$nurad'";
 
             $rs = $this->db->conn->Execute($sql);
             $record = array(); # Inicializa el arreglo que contiene los datos a modificar
@@ -349,14 +346,15 @@ class TipoDocumental
             $this->db->conn->Execute($updateSQL); # Actualiza el registro en la base de datos
 
         }
-    } 
+    }
 
 
     /*
      *Elimina el Registro de la TRD de un Anexo
      */
-    function eliminarTRDA($nurad,$coddocu,$coddepe,$usua_doc,$codusuario,$codiTRD){	
-        include_once ("../include/query/busqueda/busquedaPiloto1.php");
+    function eliminarTRDA($nurad, $coddocu, $coddepe, $usua_doc, $codusuario, $codiTRD)
+    {
+        include_once("../include/query/busqueda/busquedaPiloto1.php");
         $isqlE = "select rownum as NUM, 
             ANEX_RADI_NUME,
             ANEX_CODIGO,
@@ -368,19 +366,14 @@ class TipoDocumental
             ";
 
         $rsE = $this->db->conn->Execute($isqlE);
-        if($rsE->RowCount()>1)
-        {
-            while(!$rsE->EOF)
-            {
-                if ($rsE->fields['SGD_MRD_CODIGO'] == $codiTRD )
-                {
+        if ($rsE->RowCount() > 1) {
+            while (!$rsE->EOF) {
+                if ($rsE->fields['SGD_MRD_CODIGO'] == $codiTRD) {
                     $numreg_Eli = $rsE->fields['NUM'];
                 }
                 $rsE->MoveNext();
-
             }
-            if ($numreg_Eli==$rsE->RowCount())
-            {
+            if ($numreg_Eli == $rsE->RowCount()) {
                 $i = $rsE->RowCount() - 1;
                 $isqlE = "select  
                     ANEX_RADI_NUME,
@@ -394,7 +387,7 @@ class TipoDocumental
                     ";
 
                 $rsE = $this->db->conn->Execute($isqlE);
-                $cod_nvo =  $rsE->fields['SGD_MRD_CODIGO'];    
+                $cod_nvo =  $rsE->fields['SGD_MRD_CODIGO'];
                 $isqlE = "select SGD_TPR_CODIGO
                     from SGD_MRD_MATRIRD 
                     where SGD_MRD_CODIGO = '$cod_nvo'";
@@ -402,14 +395,12 @@ class TipoDocumental
                 $rsE = $this->db->conn->Execute($isqlE);
                 $cod_nvo =  $rsE->fields['SGD_TPR_CODIGO'];
                 $indi_change = "SI";
-            }   
-        }else
-            {
-                $cod_nvo = 0;
-                $indi_change = "SI";
             }
-        if ($indi_change == "SI")
-        {
+        } else {
+            $cod_nvo = 0;
+            $indi_change = "SI";
+        }
+        if ($indi_change == "SI") {
             $sql = "SELECT
                 SGD_TPR_CODIGO
                 FROM anexos 
@@ -423,7 +414,7 @@ class TipoDocumental
 
             $this->db->conn->Execute($updateSQL); # Actualiza el registro en la base de datos
 
-        }	 
+        }
 
         $isqlEAnex = "delete 
             from SGD_RDA_RETDOCA
@@ -433,22 +424,22 @@ class TipoDocumental
             and SGD_MRD_CODIGO = '$codiTRD'
             ";
         $rsE = $this->db->conn->Execute($isqlEAnex);
-
     }
 
 
 
 
-    function actualizarTRD($radicados,$tdoc){		
-        require("../include/query/busqueda/busquedaPiloto1.php");
+    function actualizarTRD($radicados, $tdoc)
+    {
+        require "../include/query/busqueda/busquedaPiloto1.php";
         unset($db);
         // tdoc_codi = 0 and 
-        foreach($radicados as $noRadicado){
+        foreach ($radicados as $noRadicado) {
             $sql = "SELECT  
                 TDOC_CODI
                 FROM radicado 
                 WHERE 
-                radi_nume_radi = " . $noRadicado; 
+                radi_nume_radi = " . $noRadicado;
             # Selecciona el registro a actualizar
             $rs = $this->db->conn->Execute($sql); # Executa la busqueda y obtiene el registro a actualizar.
 
@@ -466,9 +457,9 @@ class TipoDocumental
             $updateSQL = $this->db->conn->GetUpdateSQL($rs, $record, true);
             $this->db->conn->Execute($updateSQL); # Actualiza el registro en la base de datos
             # Si no se modificaron los datos no regresa nada.
-            $this->setFechVenci($noRadicado,$tdoc);
+            $this->setFechVenci($noRadicado, $tdoc);
         }
-        return ($radicados);
+        return $radicados;
     }
 
 
@@ -476,15 +467,15 @@ class TipoDocumental
      * Actualiza el tipo documento table Anexos
      */
 
-    function actualizarTRDA($radicados,$coddocu,$tdoc){
-        foreach($radicados as $noRadicado){
+    function actualizarTRDA($radicados, $coddocu, $tdoc)
+    {
+        foreach ($radicados as $noRadicado) {
             //Modificado el 05092005 SGD_TPR_CODIGO = 0  and
             $sqlUA = "SELECT
                 SGD_TPR_CODIGO
                 FROM anexos 
                 WHERE  ANEX_RADI_NUME = '$noRadicado'
-                and ANEX_CODIGO = '$coddocu'"
-                ; 
+                and ANEX_CODIGO = '$coddocu'";
             # Selecciona el registro a actualizar
             $rs = $this->db->conn->Execute($sqlUA); # Executa la busqueda y obtiene el registro a actualizar.
 
@@ -505,17 +496,17 @@ class TipoDocumental
             $this->db->conn->Execute($updateSQL); # Actualiza el registro en la base de datos
             # Si no se modificaron los datos no regresa nada.
         }
-        setFechVenci($noRadicado,$tdoc);
-        return ($radicados);
-    } 
+        setFechVenci($noRadicado, $tdoc);
+        return $radicados;
+    }
 
 
-    function actualizarTRDAUnitario($noRadicado,$coddocu){
+    function actualizarTRDAUnitario($noRadicado, $coddocu)
+    {
         $sqlUA = "SELECT
             SGD_TPR_CODIGO
             FROM anexos 
-            WHERE  ANEX_CODIGO = '$noRadicado'"
-            ; 
+            WHERE  ANEX_CODIGO = '$noRadicado'";
         # Selecciona el registro a actualizar
         $rs = $this->db->conn->Execute($sqlUA); # Executa la busqueda y obtiene el registro a actualizar.
 
@@ -536,9 +527,6 @@ class TipoDocumental
         $this->db->conn->Execute($updateSQL); # Actualiza el registro en la base de datos
         # Si no se modificaron los datos no regresa nada.
 
-        return ($updateSQL);
+        return $updateSQL;
     }
-
 }
-
-?>

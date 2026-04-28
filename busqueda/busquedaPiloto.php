@@ -649,8 +649,11 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         if (is_array($lookup_s_entrada)) {
                                             reset($lookup_s_entrada);
                                             while (list($key, $value) = each($lookup_s_entrada)) {
-                                                if ($key == $flds_entrada) $option = "<option SELECTED value=\"$key\">$value</option>";
-                                                else $option = "<option value=\"$key\">$value</option>";
+                                                if ($key == $flds_entrada) {
+                                                    $option = "<option SELECTED value=\"$key\">$value</option>";
+                                                } else {
+                                                    $option = "<option value=\"$key\">$value</option>";
+                                                }
                                                 echo $option;
                                             }
                                         }
@@ -670,8 +673,11 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         if (is_array($lookup_s_TDOC_CODI)) {
                                             reset($lookup_s_TDOC_CODI);
                                             while (list($key, $value) = each($lookup_s_TDOC_CODI)) {
-                                                if ($key == $flds_TDOC_CODI) $option = "<option SELECTED value=\"$key\">$value</option>";
-                                                else $option = "<option value=\"$key\">$value</option>";
+                                                if ($key == $flds_TDOC_CODI) {
+                                                    $option = "<option SELECTED value=\"$key\">$value</option>";
+                                                } else {
+                                                    $option = "<option value=\"$key\">$value</option>";
+                                                }
                                                 echo $option;
                                             }
                                         }
@@ -703,8 +709,11 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                             if (is_array($lookup_s_RADI_DEPE_ACTU)) {
                                                 reset($lookup_s_RADI_DEPE_ACTU);
                                                 while (list($key, $value) = each($lookup_s_RADI_DEPE_ACTU)) {
-                                                    if ($l > 0 && $key == $flds_RADI_DEPE_ACTU) $option = "<option SELECTED value=\"$key\">$value</option>";
-                                                    else $option = "<option value=\"$key\">$value</option>";
+                                                    if ($l > 0 && $key == $flds_RADI_DEPE_ACTU) {
+                                                        $option = "<option SELECTED value=\"$key\">$value</option>";
+                                                    } else {
+                                                        $option = "<option value=\"$key\">$value</option>";
+                                                    }
                                                     echo $option;
                                                 }
                                             }
@@ -1060,14 +1069,15 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 
                                     /* Se recibe la dependencia actual para busqueda */
                                     $ps_RADI_DEPE_ACTU = $_GET["s_RADI_DEPE_ACTU"];
-                                    if (is_number($ps_RADI_DEPE_ACTU) && strlen($ps_RADI_DEPE_ACTU))
+                                    if (is_number($ps_RADI_DEPE_ACTU) && strlen($ps_RADI_DEPE_ACTU)) {
                                         $ps_RADI_DEPE_ACTU = tosql($ps_RADI_DEPE_ACTU, "Number");
-                                    else
+                                    } else {
                                         $ps_RADI_DEPE_ACTU = "";
-
+                                    }
                                     if (strlen($ps_RADI_DEPE_ACTU)) {
-                                        if ($sWhere != "")
+                                        if ($sWhere != "") {
                                             $sWhere .= " and ";
+                                        }
                                         $HasParam = true;
                                         $sWhere = $sWhere . "r.radi_depe_actu=" . $ps_RADI_DEPE_ACTU;
                                     }
@@ -1075,21 +1085,27 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                     /* Se recibe el numero del radicado para busqueda */
                                     $ps_RADI_NUME_RADI = $_GET["s_RADI_NUME_RADI"];
                                     $ps_BORRA_NUME_RADI = $_GET["s_RADI_NUME_RADI"];
-                                    if (!$ps_RADI_NUME_RADI) $ps_RADI_NUME_RADI = "2";
-                                    if (!$ps_BORRA_NUME_RADI) $ps_BORRA_NUME_RADI = "3";
+                                    if (!$ps_RADI_NUME_RADI) {
+                                        $ps_RADI_NUME_RADI = "2";
+                                    }
+                                    if (!$ps_BORRA_NUME_RADI) {
+                                        $ps_BORRA_NUME_RADI = "3";
+                                    }
                                     $ps_DOCTO =  $_GET["s_DOCTO"];
                                     $ps_CUENTAINTERNA  =  $_GET["s_CUENTAINTERNA"];
                                     $ps_GUIA  =  $_GET["s_GUIA"];
                                     if (strlen($ps_RADI_NUME_RADI)) {
-                                        if ($sWhere != "")
+                                        if ($sWhere != "") {
                                             $sWhere .= " and ";
+                                        }
                                         $HasParam = true;
                                         $sWhere = $sWhere . "(r.radi_nume_radi::text like " . tosql("%" . trim($ps_RADI_NUME_RADI) . "%", "Text") . " or r.radi_nume_borrador::text like " . tosql("%" . trim($ps_BORRA_NUME_RADI) . "%", "Text") . ")";
                                     }
 
                                     if (strlen($ps_DOCTO) && !$esNotificacionCircular) {
-                                        if ($sWhere != "")
+                                        if ($sWhere != "") {
                                             $sWhere .= " and ";
+                                        }
                                         $HasParam = true;
                                         $sWhere = $sWhere . " dir.SGD_DIR_DOC = '$ps_DOCTO' ";
                                     }
@@ -1148,8 +1164,9 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                     $sLen = strlen($ps_salida);
 
                                     if ($ps_entrada != "9999") {
-                                        if ($sWhere != "")
+                                        if ($sWhere != "") {
                                             $sWhere .= " and ";
+                                        }
                                         $HasParam = true;
 
                                         if ($ps_entrada == "9998") {
@@ -1174,14 +1191,15 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 
                                     /* Se recibe el tipo de documento para la bsqueda */
                                     $ps_TDOC_CODI = $_GET["s_TDOC_CODI"];
-                                    if (is_number($ps_TDOC_CODI) && strlen($ps_TDOC_CODI) && $ps_TDOC_CODI != "9999")
+                                    if (is_number($ps_TDOC_CODI) && strlen($ps_TDOC_CODI) && $ps_TDOC_CODI != "9999") {
                                         $ps_TDOC_CODI = tosql($ps_TDOC_CODI, "Number");
-                                    else
+                                    } else {
                                         $ps_TDOC_CODI = "";
+                                    }
                                     if (strlen($ps_TDOC_CODI)) {
-                                        if ($sWhere != "")
+                                        if ($sWhere != "") {
                                             $sWhere .= " and ";
-
+                                        }
                                         $HasParam = true;
                                         $sWhere = $sWhere . "r.tdoc_codi=" . $ps_TDOC_CODI;
                                     }
@@ -1193,8 +1211,9 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 
                                     if (strlen($ps_RADI_NOMB) && !$esNotificacionCircular) //&& $ps_solo_nomb == "Any")
                                     {
-                                        if ($sWhere != "")
+                                        if ($sWhere != "") {
                                             $sWhere .= " and (";
+                                        }
                                         $HasParam = true;
                                         $sWhere .= " ";
 
@@ -1203,7 +1222,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         $sWhere .= "(";
                                         while ($tok) {
                                             $sWhere .= "";
-                                            if ($yaentro == true) {
+                                            if ($yaentro) {
                                                 $sWhere .= " and ";
                                             }
                                             $sWhere .= "dir.sgd_dir_nomremdes iLIKE '%" . $tok . "%' ";
@@ -1215,7 +1234,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         $yaentro = false;
                                         while ($tok) {
                                             $sWhere .= "";
-                                            if ($yaentro == true) {
+                                            if ($yaentro) {
                                                 $sWhere .= " and ";
                                             }
                                             $sWhere .= "( dir.sgd_dir_nombre iLIKE '%" . $tok . "%' OR dir.sgd_dir_apellido iLIKE '%" . $tok . "%' )";
@@ -1225,7 +1244,9 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         $sWhere .= ") or (";
                                         $yaentro = false;
                                         $tok = strtok($ps_RADI_NOMB, " ");
-                                        if ($yaentro == true) $sWhere .= " and (";
+                                        if ($yaentro) {
+                                            $sWhere .= " and (";
+                                        }
 
                                         $sWhere .= "" . $db->conn->Concat("r.ra_asun") . " iLIKE '%" . $ps_RADI_NOMB . "%' ";
                                         $sWhere .= " or " . $db->conn->Concat("r.RADI_DATO_001") . " iLIKE '%" . $ps_RADI_NOMB . "%' ";
@@ -1236,14 +1257,15 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         //$sWhere .= "UPPER(".$db->conn->Concat("dir.sgd_dir_direccion") . ") LIKE '%".$ps_RADI_NOMB."%' ";
                                         //$sWhere .= "UPPER(".$db->conn->Concat("r.radi_nume_guia") . ") LIKE '%".$ps_RADI_NOMB."%' ";
                                         $tok = strtok(" ");
-                                        if ($yaentro == true) $sWhere .= ")";
-
+                                        if ($yaentro) {
+                                            $sWhere .= ")";
+                                        }
                                         $yaentro = true;
                                         $sWhere .= "))";
-                                    } else if (strlen($ps_RADI_NOMB)) {
-                                        if ($sWhere != "")
+                                    } elseif (strlen($ps_RADI_NOMB)) {
+                                        if ($sWhere != "") {
                                             $sWhere .= " and ";
-
+                                        }
                                         $sWhere .= "(" . $db->conn->Concat("r.ra_asun") . " iLIKE '%" . $ps_RADI_NOMB . "%' ";
                                         $sWhere .= " or " . $db->conn->Concat("r.RADI_DATO_001") . " iLIKE '%" . $ps_RADI_NOMB . "%' ";
                                         $sWhere .= " or " . $db->conn->Concat("r.RADI_DATO_002") . " iLIKE '%" . $ps_RADI_NOMB . "%' ";
@@ -1252,8 +1274,9 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                     }
 
                                     if (strlen($ps_RADI_NOMB) && $ps_solo_nomb == "AllTTT" && !$esNotificacionCircular) {
-                                        if ($sWhere != "")
+                                        if ($sWhere != "") {
                                             $sWhere .= " AND (";
+                                        }
                                         $HasParam = true;
                                         $sWhere .= " ";
 
@@ -1261,7 +1284,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         $tok = strtok($ps_RADI_NOMB, " ");
                                         $sWhere .= "(";
                                         $sWhere .= "";
-                                        if ($yaentro == true) {
+                                        if ($yaentro) {
                                             $sWhere .= " AND ";
                                         }
                                         $sWhere .= "dir.sgd_dir_nomremdes iLIKE '%" . $ps_RADI_NOMB . "%' ";
@@ -1271,7 +1294,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         $tok = strtok($ps_RADI_NOMB, " ");
                                         $yaentro = false;
                                         $sWhere .= "";
-                                        if ($yaentro == true) {
+                                        if ($yaentro) {
                                             $sWhere .= " AND ";
                                         }
                                         $sWhere .= " (dir.sgd_dir_nombre iLIKE '%" . $ps_RADI_NOMB . "%'  OR dir.sgd_dir_apellido iLIKE '%" . $ps_RADI_NOMB . "%') ";
@@ -1280,10 +1303,14 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         $sWhere .= ") OR (";
                                         $yaentro = false;
                                         $tok = strtok($ps_RADI_NOMB, " ");
-                                        if ($yaentro == true) $sWhere .= " AND (";
+                                        if ($yaentro) {
+                                            $sWhere .= " AND (";
+                                        }
                                         $sWhere .= "" . $db->conn->Concat("r.ra_asun", "r.radi_cuentai", "dir.sgd_dir_telefono", "dir.sgd_dir_direccion", "dir.sgd_dir_mail", "r.RADI_DATO_001", "r.RADI_DATO_002") . " iLIKE '%" . $ps_RADI_NOMB . "%' ";
                                         $tok = strtok(" ");
-                                        if ($yaentro == true) $sWhere .= ")";
+                                        if ($yaentro) {
+                                            $sWhere .= ")";
+                                        }
                                         $yaentro = true;
                                         $sWhere .= "))";
                                     }
@@ -1320,7 +1347,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                     //-------------------------------
                                     // Build base SQL statement - Construccion de consulta
                                     //-------------------------------
-                                    require_once("../include/query/busqueda/busquedaPiloto1.php");
+                                    require_once "../include/query/busqueda/busquedaPiloto1.php";
 
                                     $sSQL = "SELECT " .
                                         $radi_nume_radi . " AS RADI_NUME_RADI," .
@@ -1353,7 +1380,9 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                      * Fecha de modificacion: 11-Agosto-2006
                                      * Modificador: Supersolidaria
                                      */
-                                    if (strlen($ps_SGD_EXP_SUBEXPEDIENTE) != 0)  $sSQL .= " ,EXP.SGD_EXP_NUMERO";
+                                    if (strlen($ps_SGD_EXP_SUBEXPEDIENTE) != 0) {
+                                        $sSQL .= " ,EXP.SGD_EXP_NUMERO";
+                                    }
 
                                     $sSQL .= " FROM radicado r LEFT JOIN sgd_tpr_tpdcumento td ON r.TDOC_CODI=td.SGD_TPR_CODIGO, " . $from_circular;
 
@@ -1373,8 +1402,9 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                         $sSQL .= "dir.RADI_NUME_RADI=r.RADI_NUME_RADI";
                                     }
                                     /*Modificación para la CRA, sólo la dependencia 230 puede ver los radicados tipo 4*/
-                                    if ($entidad == "CRA" &&  $dependencia != 230)
+                                    if ($entidad == "CRA" &&  $dependencia != 230) {
                                         $sWhere .= " and substr(r.radi_nume_radi,-1)!=4";
+                                    }
                                     /**********************************************************************************/
                                     //-------------------------------
                                     // Assemble full SQL statement
@@ -1579,7 +1609,8 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             if (
                 $seguridadRadicado == 0
                 || ($seguridadRadicado == 1 && $_SESSION["dependencia"] == $aRADI_DEPE_ACTU)
-                || ($seguridadRadicado == 2 && (($_SESSION["dependencia"] == $aRADI_DEPE_ACTU && ($_SESSION["USUA_JEFE_DE_GRUPO"] == true) || ($_SESSION["dependencia"] == $aRADI_DEPE_ACTU && $_SESSION["codusuario"] == $aRADI_USUA_ACTU)) || ($_SESSION["dependencia"] == $DEPE_CODI_PROYECTO && $_SESSION["codusuario"] == $USUA_CODI_PROYECTO)))
+                || ($seguridadRadicado == 2 &&
+                    (($_SESSION["dependencia"] == $aRADI_DEPE_ACTU && ($_SESSION["USUA_JEFE_DE_GRUPO"]) || ($_SESSION["dependencia"] == $aRADI_DEPE_ACTU && $_SESSION["codusuario"] == $aRADI_USUA_ACTU)) || ($_SESSION["dependencia"] == $DEPE_CODI_PROYECTO && $_SESSION["codusuario"] == $USUA_CODI_PROYECTO)))
             ) {
                 if ($extension[1] == 'pdf') {
                     //Muestra el pdf en el visor modal
@@ -1724,8 +1755,8 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
             $_SESSION['arrFitDep'] = $arrFitDep;
             /** verificacion si el radicado se encuentra en el usuario Actual*/
             include "$ruta_raiz/tx/verifRelacionados.php";
-            if ($valImg == "SI" && $noPermisoFlag == 1) {
 
+            if ($valImg == "SI" && $noPermisoFlag == 1) {
                 if ($extension[1] == 'pdf') {
                     //Muestra el pdf en el visor modal
                     $linkDocto = "<a href='#'  class='btn btn-success btn-xs btn-visorimage ' data-toggle='modal' data-target='DetEsta' contador=$contadorImagenes data-link='$linkImagen' data-rad='$fldRADI_NUME_RADI'>";
@@ -1738,7 +1769,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                 $verImg = true;
             } else {
                 $radicadoFilter = new RadicadoFilter($db);
-                if ($tieneAsignacion == true) {
+                if ($tieneAsignacion) {
                     $linkInfGeneral = "<a class='btn btn-outline-primary btn-xs' href='../verradicado.php?verrad=$fldRADI_NUME_RADI&nomcarpeta=Busquedas&depe_actu=$radi_depe_actu&usuacodi=$usuaCodi&tieneAsignacion=$tieneAsignacion' title='Es Memorando Multiple'>";
                     $verImg = true;
                 } elseif (($_SESSION["perm_cons_rad_cal"] > 1 && in_array($dependencia, $arrdepend))) {

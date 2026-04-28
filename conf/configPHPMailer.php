@@ -1,9 +1,15 @@
 <?php
-if(!$ruta_raiz) $ruta_raiz = "..";
+if (!$ruta_raiz) {
+    $ruta_raiz = "..";
+}
 include "$ruta_raiz/processConfig.php";
 
-if(!isset($debugPHPMailer) || $debugPHPMailer === "")  $debugPHPMailer=0;
-if(!$SMTPSecure)  $SMTPSecure="tls";
+if (!isset($debugPHPMailer) || $debugPHPMailer === "") {
+    $debugPHPMailer = 0;
+}
+if (!$SMTPSecure) {
+    $SMTPSecure = "tls";
+}
 $smtpAuth             = trim($smtpAuth);
 $admPHPMailer         = trim($correoSaliente);
 $userPHPMailer        = trim($correoSaliente);
@@ -17,7 +23,7 @@ $asuntoMailInformado  = "Se ha informado de un radicado $radicadosSelText";
 //Start::asunto tramite conjunto
 $asuntoMailConjunto  = "Se ha informado de un radicado $radicadosSelText";
 //End::asunto tramite conjunto
-$servidorOrfeoBodega  = $httpOrfeoLocal.'/bodega/';
+$servidorOrfeoBodega  = $httpOrfeoLocal . '/bodega/';
 
 // Datos para correo de respuesta emailRespuestaRapida
 $correoSalienteRR          = trim($correoSalienteRR);
@@ -27,4 +33,3 @@ $passwordCorreoSalienteRR  = trim($passwordCorreoSalienteRR);
 $usuarioEmailPQRS     = trim($correoSaliente);
 $emailPQRS            = trim($correoSaliente);
 $passwordEmailPQRS    = trim($passwordCorreoSaliente);
-?>

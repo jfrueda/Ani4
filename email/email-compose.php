@@ -1,9 +1,9 @@
 <?php
-$ruta_raiz="../";
+$ruta_raiz = "../";
 include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 <h2 class="email-open-header">
 	Compose New Email <span class="label txt-color-white">DRAFT</span>
-	<a href="javascript:void(0);" rel="tooltip" data-placement="left" data-original-title="Print" class="txt-color-darken pull-right"><i class="fa fa-print"></i></a>	
+	<a href="javascript:void(0);" rel="tooltip" data-placement="left" data-original-title="Print" class="txt-color-darken pull-right"><i class="fa fa-print"></i></a>
 </h2>
 
 <form enctype="multipart/form-data" action="dummy.php" method="POST" class="form-horizontal" id="email-compose-form">
@@ -25,9 +25,9 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 					<em><a href="javascript:void(0);" class="show-next" rel="tooltip" data-placement="bottom" data-original-title="Carbon Copy">CC</a></em>
 				</div>
 			</div>
-		</div>	
+		</div>
 	</div>
-	
+
 	<div class="inbox-info-bar no-padding hidden">
 		<div class="row">
 			<div class="form-group">
@@ -45,7 +45,7 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 					<em><a href="javascript:void(0);" class="show-next" rel="tooltip" data-placement="bottom" data-original-title="Blind Carbon Copy">BCC</a></em>
 				</div>
 			</div>
-		</div>	
+		</div>
 	</div>
 
 	<div class="inbox-info-bar no-padding hidden">
@@ -64,9 +64,9 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 					</select>
 				</div>
 			</div>
-		</div>	
+		</div>
 	</div>
-	
+
 	<div class="inbox-info-bar no-padding">
 		<div class="row">
 			<div class="form-group">
@@ -76,7 +76,7 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 					<em><a href="javascript:void(0);" class="show-next" rel="tooltip" data-placement="bottom" data-original-title="Attachments"><i class="fa fa-paperclip fa-lg"></i></a></em>
 				</div>
 			</div>
-		</div>	
+		</div>
 	</div>
 
 	<div class="inbox-info-bar no-padding hidden">
@@ -87,30 +87,30 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 					<input class="form-control fileinput" type="file" multiple="multiple">
 				</div>
 			</div>
-		</div>	
+		</div>
 	</div>
-	
+
 	<div class="inbox-message no-padding">
-	
+
 		<div id="emailbody">
-			
-				<br><br><br><br><br>Thanks,<br><strong>John Doe</strong><br><br><small>CEO - SmartAdmin <br> 231 Ajax Rd, Detroit MI - 48212, USA<br><i class="fa fa-phone"> (313) 647 4761</i></small><br><img src="img/logo-blacknwhite.png" height="20" width="auto" style="margin-top:7px; padding-right:9px; border-right:1px dotted #9B9B9B;" />		
-		</div>	
+
+			<br><br><br><br><br>Thanks,<br><strong>John Doe</strong><br><br><small>CEO - SmartAdmin <br> 231 Ajax Rd, Detroit MI - 48212, USA<br><i class="fa fa-phone"> (313) 647 4761</i></small><br><img src="img/logo-blacknwhite.png" height="20" width="auto" style="margin-top:7px; padding-right:9px; border-right:1px dotted #9B9B9B;" />
+		</div>
 	</div>
-	
+
 	<div class="inbox-compose-footer">
 
-	<button class="btn btn-danger" type="button">
-		Disregard
-	</button>
-		
-	<button class="btn btn-info" type="button">
-		Draft
-	</button>
+		<button class="btn btn-danger" type="button">
+			Disregard
+		</button>
 
-	<button data-loading-text="&lt;i class='fa fa-refresh fa-spin'&gt;&lt;/i&gt; &nbsp; Sending..." class="btn btn-primary pull-right" type="button" id="send">
-		Send <i class="fa fa-arrow-circle-right fa-lg"></i>
-	</button>
+		<button class="btn btn-info" type="button">
+			Draft
+		</button>
+
+		<button data-loading-text="&lt;i class='fa fa-refresh fa-spin'&gt;&lt;/i&gt; &nbsp; Sending..." class="btn btn-primary pull-right" type="button" id="send">
+			Send <i class="fa fa-arrow-circle-right fa-lg"></i>
+		</button>
 
 
 	</div>
@@ -135,7 +135,7 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 
 	<div class="well well-sm well-light">
 		<h5>Upcoming Meetings</h5>
-		
+
 		<p>
 			<span class="label label-success"><i class="fa fa-check"></i> <strike>Agenda Review @ 10 AM</strike> </span>
 		</p>
@@ -146,8 +146,8 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 
 		<p>
 			<span class="label label-warning"><i class="fa fa-clock-o"></i> Salary Review @ 4:00 PM</span>
-		</p>		
-	</div>	
+		</p>
+	</div>
 
 	<ul class="list-inline">
 		<li><img src="img/avatars/5.png" alt="me" width="30px"></li>
@@ -159,7 +159,6 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 </div>
 
 <script type="text/javascript">
-	
 	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
 	 *
 	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
@@ -191,11 +190,11 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 	 */
 
 	//pageSetUp();
-	
+
 	//here we only run
 	runAllForms();
 
-	 // PAGE RELATED SCRIPTS
+	// PAGE RELATED SCRIPTS
 
 	$(".table-wrap [rel=tooltip]").tooltip();
 
@@ -205,34 +204,32 @@ include_once "$ruta_raiz/htmlheader.inc.php"; ?>
 	loadScript("js/plugin/summernote/summernote.min.js", iniEmailBody);
 
 	function iniEmailBody() {
-	    $('#emailbody').summernote({
-	        height: '100%',
-	        focus: false,
-	        tabsize: 2
-	    });
+		$('#emailbody').summernote({
+			height: '100%',
+			focus: false,
+			tabsize: 2
+		});
 	}
 
-	$(".show-next").click(function () {
-	    $this = $(this);
-	    $this.hide();
-	    $this.parent().parent().parent().parent().parent().next().removeClass("hidden");
+	$(".show-next").click(function() {
+		$this = $(this);
+		$this.hide();
+		$this.parent().parent().parent().parent().parent().next().removeClass("hidden");
 	})
 
-	 $("#send").click(function () {
+	$("#send").click(function() {
 
-	    var $btn = $(this);
-	    $btn.button('loading');
+		var $btn = $(this);
+		$btn.button('loading');
 
-	    // wait for animation to finish and execute send script
-	    setTimeout(function () {
-	        //Insert send script here
+		// wait for animation to finish and execute send script
+		setTimeout(function() {
+			//Insert send script here
 
 
-	        // Load inbox once send is complete
-	        loadInbox();
+			// Load inbox once send is complete
+			loadInbox();
 
-	    }, 1000); // how long do you want the delay to be? 
+		}, 1000); // how long do you want the delay to be? 
 	});
-	
-	
 </script>

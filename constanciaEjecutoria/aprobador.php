@@ -717,7 +717,7 @@ if (!$_SESSION['dependencia'])
             </div>
         </div>
     </div>
-    
+
     <!-- SCRIPT LOGICA -->
     <script type="text/javascript">
         var tab;

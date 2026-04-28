@@ -41,7 +41,7 @@ $connection = "$protocolo_mail://$usuaEmail:$passwdEmail@$servidor_mail:$puerto_
    $msg->dump($msg->error->getErrors(TRUE));
    }
   }
-//------------------------Funcion Suprime caracteres extraña----------------------------//
+//------------------------Funcion Suprime caracteres extraï¿½a----------------------------//
  function sup_tilde($str)
 {
  $stdchars= array(" at ","a","e","i","o","u","n","A","E","I","O","U","N"," "," ");

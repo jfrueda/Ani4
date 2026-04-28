@@ -1,7 +1,7 @@
-<?php 
+<?php
 
-require_once('connection.php');
-require_once('restclient.php');
+require_once 'connection.php';
+require_once 'restclient.php';
 
 $rest = new Restclient();
 
@@ -13,13 +13,13 @@ $params = array(
 
 $token = $rest->login($params);
 
-$fecha=$_GET['f'];
+$fecha = $_GET['f'];
 
-if(isset($token)) {
-    $response = $rest->messageStatus($token,$fecha.'T00:00:01',$fecha.'T23:59:59');
+if (isset($token)) {
+    $response = $rest->messageStatus($token, $fecha . 'T00:00:01', $fecha . 'T23:59:59');
 
 
-   if(isset($response)) {
+    if (isset($response)) {
         foreach ($response['ResultContent'] as $row) {
 
             $trackingId = $row['TrackingId'];
@@ -28,68 +28,67 @@ if(isset($token)) {
             $senderAddress = $row['SenderAddress'];
             $date = $row['Date'];
             $status = $row['Status'];
-            
 
-
-            $sql = "INSERT INTO records(trackingid, customertrackingid, sendername, senderaddress, date_, status_) VALUES ('".$trackingId."',".$customerTrackingId.",'".$senderName."','".$senderAddress."', '".$date."', '".$status."')";
+            $sql = "INSERT INTO records(trackingid, customertrackingid, sendername, senderaddress, date_, status_) VALUES ('" . $trackingId . "'," . $customerTrackingId . ",'" . $senderName . "','" . $senderAddress . "', '" . $date . "', '" . $status . "')";
 
             $db->query($sql);
 
-   
-                
-                if(isset($row['Recipients'])) {
-                    foreach($row['Recipients'] as $recipientTemp) {
-    
-                        $address = $recipientTemp['Address'];
-                        $deliveryStatus = $recipientTemp['DeliveryStatus'];
-                        $deliveryDetail = $recipientTemp['DeliveryDetail'];
-                        $deliveredDate = $recipientTemp['DeliveredDate'];
-                        $openedDate = $recipientTemp['OpenedDate'];
-    
-         
-                        $sql1 = "INSERT INTO records_recipients_details(address_, delivery_status, delivery_detail, delivered_date, opened_date, fk_record) VALUES ('".$address ."', '".$deliveryStatus."', '".$deliveryDetail."', '".$deliveredDate."', '".$openedDate."', (select max(id) from records))";
-                        $db->query($sql1);
+            if (isset($row['Recipients'])) {
+                foreach ($row['Recipients'] as $recipientTemp) {
 
-            $link="<a  href=\"certicamara/trackingId.php?t=".$trackingId."\">Descargar certificado de entrega</a>";
-            $email=$address;
-            $dateF=str_replace('T',' ',$deliveredDate);
-
-            $sql_un="SELECT count(*) k FROM sgd_renv_regenvio WHERE radi_nume_sal=".$customerTrackingId." AND sgd_renv_nombre='".$address."'";
+                    $address = $recipientTemp['Address'];
+                    $deliveryStatus = $recipientTemp['DeliveryStatus'];
+                    $deliveryDetail = $recipientTemp['DeliveryDetail'];
+                    $deliveredDate = $recipientTemp['DeliveredDate'];
+                    $openedDate = $recipientTemp['OpenedDate'];
 
 
-            //$rs_un=$db->query($sql_un);
+                    $sql1 = "INSERT INTO records_recipients_details(address_, delivery_status, delivery_detail, delivered_date, opened_date, fk_record) VALUES ('" . $address . "', '" . $deliveryStatus . "', '" . $deliveryDetail . "', '" . $deliveredDate . "', '" . $openedDate . "', (select max(id) from records))";
+                    $db->query($sql1);
+
+                    $link = "<a  href=\"certicamara/trackingId.php?t=" . $trackingId . "\">Descargar certificado de entrega</a>";
+                    $email = $address;
+                    $dateF = str_replace('T', ' ', $deliveredDate);
+
+                    $sql_un = "SELECT count(*) k FROM sgd_renv_regenvio WHERE radi_nume_sal=" . $customerTrackingId . " AND sgd_renv_nombre='" . $address . "'";
 
 
-            if($rs_un->fields['K']==0)        
-            {
-                    
-                    $deliveryStatust=$deliveryStatus;     
-                                   
-                    $pos=strpos($deliveryStatus,"Delivery Failed");
-                    
-                    if($pos !== false)
-                        $deliveryStatust="Entrega fallida";
+                    //$rs_un=$db->query($sql_un);
 
-                   $pos=strpos($deliveryStatus,"Delivered to Mailbox" );
-                    
-                    if($pos !== false)
-                        $deliveryStatust="Entregado al buzon";
 
-                  $pos=strpos($deliveryStatus, "Delivered to Mail Server");
-                    
-                    if($pos !== false)
-                        $deliveryStatust="Entregado al servidor de correo";
-                    
-                  $pos=strpos($deliveryStatus,"Delivered and Opened" );
-                    
-                    if($pos !== false)
-                        $deliveryStatust="Entregado y Abierto";
-                    
-                    $dateFNew = trim($dateF);
-                    $date_e=explode("/",$dateFNew);
-                    $datei=$date_e[2]."-".$date_e[1]."-".$date_e[0];
+                    if ($rs_un->fields['K'] == 0) {
 
-                    $isql = "INSERT INTO SGD_RENV_REGENVIO(
+                        $deliveryStatust = $deliveryStatus;
+
+                        $pos = strpos($deliveryStatus, "Delivery Failed");
+
+                        if ($pos !== false) {
+                            $deliveryStatust = "Entrega fallida";
+                        }
+
+                        $pos = strpos($deliveryStatus, "Delivered to Mailbox");
+
+                        if ($pos !== false) {
+                            $deliveryStatust = "Entregado al buzon";
+                        }
+
+                        $pos = strpos($deliveryStatus, "Delivered to Mail Server");
+
+                        if ($pos !== false) {
+                            $deliveryStatust = "Entregado al servidor de correo";
+                        }
+
+                        $pos = strpos($deliveryStatus, "Delivered and Opened");
+
+                        if ($pos !== false) {
+                            $deliveryStatust = "Entregado y Abierto";
+                        }
+
+                        $dateFNew = trim($dateF);
+                        $date_e = explode("/", $dateFNew);
+                        $datei = $date_e[2] . "-" . $date_e[1] . "-" . $date_e[0];
+
+                        $isql = "INSERT INTO SGD_RENV_REGENVIO(
                         id,
                         sgd_renv_pais,
                         sgd_renv_cantidad,
@@ -120,18 +119,14 @@ if(isset($token)) {
                         '$address',
                         '$deliveryStatust'
                     )";
-              
-                    $db->conn->query($isql);
 
-            }
+                        $db->conn->query($isql);
                     }
                 }
-            
+            }
         }
 
 
         //$response1 = $rest->trackingId($token,$trackingId1);
     }
 }
-
-?>

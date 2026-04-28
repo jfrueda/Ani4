@@ -11,29 +11,30 @@ $ruta_raiz = "..";
 include "$ruta_raiz/include/tx/sanitize.php";
 include "$ruta_raiz/cron/config.php";
 
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
 $db     = new ConnectionHandler("$ruta_raiz");
 $ADODB_COUNTRECS  = true;
 $ADODB_FORCE_TYPE = ADODB_FORCE_NULL;
 
-include("$ruta_raiz/include/tx/Tx.php");
-include("$ruta_raiz/include/tx/Radicacion.php");
-include("$ruta_raiz/include/tx/usuario.php");
-include("$ruta_raiz/include/tx/roles.php");
-include("$ruta_raiz/class_control/Municipio.php");
-include("$ruta_raiz/processConfig.php");
+include "$ruta_raiz/include/tx/Tx.php";
+include "$ruta_raiz/include/tx/Radicacion.php";
+include "$ruta_raiz/include/tx/usuario.php";
+include "$ruta_raiz/include/tx/roles.php";
+include "$ruta_raiz/class_control/Municipio.php";
+include "$ruta_raiz/processConfig.php";
 require "$ruta_raiz/vendor/autoload.php";
 
 @mkdir("$ruta_raiz/bodega/mail");
 
 function convert($size)
 {
-    $unit=array('b','kb','mb','gb','tb','pb');
-    return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+    $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+    return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
 }
 
-function circular(&$array) {
-    if(($result = current($array)) === false) {
+function circular(&$array)
+{
+    if (($result = current($array)) === false) {
         $result = reset($array);
     }
     next($array);
@@ -41,9 +42,10 @@ function circular(&$array) {
     return $result;
 }
 
-function logg($m) {
+function logg($m)
+{
     global $ruta_raiz;
-    error_log(date(DATE_ATOM)." $m\n",3,"$ruta_raiz/bodega/mailrad.log");
+    error_log(date(DATE_ATOM) . " $m\n", 3, "$ruta_raiz/bodega/mailrad.log");
 }
 
 $hist      = new Historico($db);
@@ -57,13 +59,15 @@ $mailbox = new PhpImap\Mailbox(
 $k = 1;
 $s = unserialize(@file_get_contents('/tmp/radimail'));
 foreach ($conf_mail['carpetas'] as $carpeta => $usuario) {
-    $usuarios = array_map('info_usuario',$usuario);
+    $usuarios = array_map('info_usuario', $usuario);
     $mailbox->switchMailbox($carpeta);
     $mailsIds = $mailbox->searchMailbox('ALL');
     $total = count($mailsIds);
     logg("$carpeta: $total");
-    for ($i=0;$i<count($usuarios);$i++) {
-        if (circular($usuarios)['USUA_LOGIN'] == $s[$carpeta]) break;
+    for ($i = 0; $i < count($usuarios); $i++) {
+        if (circular($usuarios)['USUA_LOGIN'] == $s[$carpeta]) {
+            break;
+        }
     }
     foreach ($mailsIds as $mailId) {
         $usua_radi = circular($usuarios);
@@ -73,7 +77,7 @@ foreach ($conf_mail['carpetas'] as $carpeta => $usuario) {
         $mail_dir = "$ruta_raiz/bodega/tmp/radimail/{$omail->messageId}";
         @mkdir($mail_dir, 0755, true);
         $attachments = $omail->getAttachments();
-        foreach($attachments as $attachment) {
+        foreach ($attachments as $attachment) {
             $dst = "$mail_dir/{$attachment->id}";
             $attachment->setFilePath($dst);
             if (!$attachment->saveToDisk()) {
@@ -95,9 +99,8 @@ foreach ($conf_mail['carpetas'] as $carpeta => $usuario) {
         }
 
         try {
-            $mailbox->moveMail($mailId,'R_'.$carpeta);
-        }
-        catch (exception $e) {
+            $mailbox->moveMail($mailId, 'R_' . $carpeta);
+        } catch (exception $e) {
             logg("error al mover el correo: $e");
             $k++;
             continue;
@@ -107,16 +110,15 @@ foreach ($conf_mail['carpetas'] as $carpeta => $usuario) {
         //$rads = radicar($message->getSubject(), 7050, $usua_radi);
         try {
             $rads = radicar($subject, '$dependencia', $usua_radi, $omail);
-        }
-        catch (exception $e) {
+        } catch (exception $e) {
             logg("error al radicar: $email ($subject) {$omail->messageId}");
         }
         if (!$rads[0]['answer']) {
             logg("error al radicar ({$rads[0]['error']}): $email ($subject) {$omail->messageId}");
         }
         $numrad = $rads[0]['answer'];
-        logg("$k rad:$numrad {$usua_radi['USUA_LOGIN']} adjuntos:".count($attachments));
-        $ano = substr($numrad,0,4);
+        logg("$k rad:$numrad {$usua_radi['USUA_LOGIN']} adjuntos:" . count($attachments));
+        $ano = substr($numrad, 0, 4);
         //$dependencia = ltrim(substr($usua_radi['DEPE_CODI'],4,$digitosDependencia),'0');
         $dependencia = $usua_radi['DEPE_CODI'];
         $radi_path = "/$ano/$dependencia/$numrad.html";
@@ -125,23 +127,24 @@ foreach ($conf_mail['carpetas'] as $carpeta => $usuario) {
 
         $listaAdjuntos = '';
         $i = 0;
-        foreach($attachments as $attachment) {
-            $anex=fileAdttachments($db,$numrad,$usua_radi['USUA_LOGIN'],$attachment->name,++$i,$dependencia);
+        foreach ($attachments as $attachment) {
+            $anex = fileAdttachments($db, $numrad, $usua_radi['USUA_LOGIN'], $attachment->name, ++$i, $dependencia);
             $dst = "$ruta_raiz/bodega/$ano/{$usua_radi['DEPE_CODI']}/docs/{$anex['name']}";
             $src = "$mail_dir/{$attachment->id}";
             rename($src, $dst);
             logg("\t$i,{$attachment->name}");
 
-            $ext = pathinfo($dst,PATHINFO_EXTENSION);
-            if (strtolower($ext) == 'pdf')
-                $listaAdjuntos.= "<a href='javascript:void(0)' class='abrirVisor' link='bodega/$ano/{$usua_radi['DEPE_CODI']}/docs/{$anex['name']}'>".$attachment->name."</a><br>";
-            else
-                $listaAdjuntos.= "<a href='javascript:void(0)' onclick='funlinkArchivo(\"".$anex['code']."\",\"./\")'>".$attachment->name."</a><br>";
+            $ext = pathinfo($dst, PATHINFO_EXTENSION);
+            if (strtolower($ext) == 'pdf') {
+                $listaAdjuntos .= "<a href='javascript:void(0)' class='abrirVisor' link='bodega/$ano/{$usua_radi['DEPE_CODI']}/docs/{$anex['name']}'>" . $attachment->name . "</a><br>";
+            } else {
+                $listaAdjuntos .= "<a href='javascript:void(0)' onclick='funlinkArchivo(\"" . $anex['code'] . "\",\"./\")'>" . $attachment->name . "</a><br>";
+            }
         }
         rmdir($mail_dir);
 
         $email_path = "bodega/$ano/$dependencia/$numrad.email.html";
-        file_put_contents("$ruta_raiz/$email_path",$body);
+        file_put_contents("$ruta_raiz/$email_path", $body);
         $email_para = htmlentities($omail->headers->toaddress);
         $email_cc  = htmlentities($omail->headers->ccaddress);
         ob_start();
@@ -149,18 +152,18 @@ foreach ($conf_mail['carpetas'] as $carpeta => $usuario) {
         //$data = ob_get_flush();
         $data = ob_get_contents();
         ob_end_clean();
-        file_put_contents("$ruta_raiz/bodega$radi_path",$data);
+        file_put_contents("$ruta_raiz/bodega$radi_path", $data);
         $isqlRadicado = "update radicado set RADI_PATH = '$radi_path' where radi_nume_radi = $numrad";
-        $rs=$db->conn->query($isqlRadicado);
-        if (!$rs)//Si actualizo BD correctamente
+        $rs = $db->conn->query($isqlRadicado);
+        if (!$rs) //Si actualizo BD correctamente
         {
             logg("\terror Fallo la Actualizacion del Path en radicado < $isqlRadicado >");
-        }else{
-            $observa = "Radicaci&oacute;n e-mail, se anexa (".count($attachments).") adjunto(s).";
-            $codusuario = 1; 
+        } else {
+            $observa = "Radicaci&oacute;n e-mail, se anexa (" . count($attachments) . ") adjunto(s).";
+            $codusuario = 1;
             $codTx = 42;
             //$hist->insertarHistorico(array($numrad),  $dependencia , $codusuario, $dependencia, $codusuario, $observa, $codTx);
-            $hist->insertarHistorico(array($numrad),  $dependencia , $usua_radi['USUA_CODI'], $dependencia, $usua_radi['USUA_CODI'], $observa, $codTx);
+            $hist->insertarHistorico(array($numrad),  $dependencia, $usua_radi['USUA_CODI'], $dependencia, $usua_radi['USUA_CODI'], $observa, $codTx);
             //include "enviarMail.php";
         }
 
@@ -170,55 +173,58 @@ foreach ($conf_mail['carpetas'] as $carpeta => $usuario) {
     }
 }
 
-function fileAdttachments($db,$nurad,$user,$filename,$attachNumber,$dependence){
-    $ext=strtolower(array_pop(explode(".",$filename)));
+function fileAdttachments($db, $nurad, $user, $filename, $attachNumber, $dependence)
+{
+    $ext = strtolower(array_pop(explode(".", $filename)));
     //$ext=array_pop(explode(".",$filename));
     $type = "SELECT ANEX_TIPO_CODI FROM ANEXOS_TIPO WHERE ANEX_TIPO_EXT = '$ext'";
     $type = $db->conn->query($type);
     $type = $type->fields["ANEX_TIPO_CODI"];
-    if(!$type) $type = 99;
-    $attachNumber=str_pad($attachNumber, 5, "0", STR_PAD_LEFT);
+    if (!$type) $type = 99;
+    $attachNumber = str_pad($attachNumber, 5, "0", STR_PAD_LEFT);
     //$code = $nurad."0000".$attachNumber;
     $code = "$nurad$attachNumber";
-    $anexName = $nurad."_$attachNumber.$ext";
+    $anexName = $nurad . "_$attachNumber.$ext";
     $record["ANEX_RADI_NUME"]    = $nurad;
     $record["ANEX_CODIGO"]       = "'$code'";
     $record["ANEX_SOLO_LECT"]    = "'S'";
     $record["ANEX_CREADOR"]      = "'$user'";
-    $record["ANEX_DESC"]         = "' Archivo:.". $filename."'";
+    $record["ANEX_DESC"]         = "' Archivo:." . $filename . "'";
     $record["ANEX_NUMERO"]       = $attachNumber;
     $record["ANEX_NOMB_ARCHIVO"] = "'$anexName'";
     $record["ANEX_BORRADO"]      = "'N'";
     $record["ANEX_DEPE_CREADOR"] = $dependence;
     $record["SGD_TPR_CODIGO"]    = '0';
     $record["ANEX_TIPO"]         = $type;
-    $sqlDate=$db->conn->DBDate(Date("Y-m-d"));
+    $sqlDate = $db->conn->DBDate(Date("Y-m-d"));
     $record["ANEX_FECH_ANEX"]    = $sqlDate;
-    $anex['name']=$anexName;
-    $anex['code']=$code;
-    if ($db->insert("anexos", $record, "true")){
+    $anex['name'] = $anexName;
+    $anex['code'] = $code;
+    if ($db->insert("anexos", $record, "true")) {
         return $anex;
     }
     return false;
 }
 
-function info_usuario($login) {
+function info_usuario($login)
+{
     global $db;
     $query = "select * from usuario where usua_login = '$login'";
     $rs = $db->conn->Execute($query);
     return $rs->fetchRow();
 }
 
-function radicar($asunto, $depe_actu, $usua_radi, $omail) {
+function radicar($asunto, $depe_actu, $usua_radi, $omail)
+{
     global $db;
     $hist      = new Historico($db);
     $classusua = new Usuario($db);
     $Tx        = new Tx($db);
 
-    $adate=date('Y');
+    $adate = date('Y');
 
     //$tpRadicado    = empty($_POST['datorad'])? 0 : $_POST['datorad'];
-    $tpRadicado    = 0;//trim($tpRadicado ,";");
+    $tpRadicado    = 0; //trim($tpRadicado ,";");
 
     //$tpRadicado    = empty($_POST['radicado_tipo'])? 0 : $_POST['radicado_tipo'];
     $empTrans      = $_POST['empTrans'];
@@ -230,12 +236,14 @@ function radicar($asunto, $depe_actu, $usua_radi, $omail) {
     $sgdSpubCodigo = 0;
 
     $ane           = '';
-    $coddepe       = /*$depe_actu;*/ $usua_radi['DEPE_CODI'];//?
+    $coddepe       = /*$depe_actu;*/ $usua_radi['DEPE_CODI']; //?
     $tdoc          = 0;
 
     $ent           = 2;
     $radicadopadre = '';
-    if(!$radicadopadre){  $radicadopadre = null; }
+    if (!$radicadopadre) {
+        $radicadopadre = null;
+    }
 
 
     //Enviados solo si es para modificar
@@ -252,7 +260,7 @@ function radicar($asunto, $depe_actu, $usua_radi, $omail) {
     global $digitosDependencia, $digitosSecRad;
     $rad->noDigitosDep = $digitosDependencia;
     $rad->noDigitosRad = $digitosSecRad;
-    $rad->dependencia= $usua_radi['DEPE_CODI'];
+    $rad->dependencia = $usua_radi['DEPE_CODI'];
     $rad->usuaDoc    = $usua_radi['USUA_DOC'];
     //$this->noDigitosDep = $_SESSION['digitosDependencia'];
     $rad->usuaLogin  = $usua_radi['USUA_LOGIN'];
@@ -282,19 +290,19 @@ function radicar($asunto, $depe_actu, $usua_radi, $omail) {
 
     $rad->radiTipoDeri = $tpRadicado;
     $rad->radiCuentai  = '';
-    $rad->guia         = '';//trim(substr($guia,0 ,20));
+    $rad->guia         = ''; //trim(substr($guia,0 ,20));
     $rad->empTrans     = $empTrans;
     $rad->eespCodi     = $documento_us3;
-    $rad->mrecCodi     = $med;// "dd/mm/aaaa"
-    $rad->radiFechOfic =       substr($fecha_gen_doc,6 ,4)
-        ."-". substr($fecha_gen_doc,3 ,2)
-        ."-". substr($fecha_gen_doc,0 ,2);
+    $rad->mrecCodi     = $med; // "dd/mm/aaaa"
+    $rad->radiFechOfic =       substr($fecha_gen_doc, 6, 4)
+        . "-" . substr($fecha_gen_doc, 3, 2)
+        . "-" . substr($fecha_gen_doc, 0, 2);
 
-    if(!$radicadopadre){
+    if (!$radicadopadre) {
         $radicadopadre = null;
     }
 
-    if(!$ent){
+    if (!$ent) {
         $radicadopadre = null;
     }
 
@@ -308,47 +316,53 @@ function radicar($asunto, $depe_actu, $usua_radi, $omail) {
     $rad->carpCodi     = $carp_codi;
     $rad->carPer       = $carp_per;
     $rad->trteCodi     = $tip_rem;
-    $rad->raAsun       = substr(htmlspecialchars(stripcslashes($asunto)),0,349);
+    $rad->raAsun       = substr(htmlspecialchars(stripcslashes($asunto)), 0, 349);
     $rad->radi_dato_001 = $radi_dato_001;
     $rad->radi_dato_002 = $radi_dato_002;
-    if(strlen(trim($aplintegra)) == 0){
+    if (strlen(trim($aplintegra)) == 0) {
         $aplintegra = "0";
     }
 
     $rad->sgd_apli_codi = $aplintegra;
 
-    if($nurad){
-        if ($modificar==true){
+    if ($nurad) {
+        if ($modificar == true) {
             $rad->tdocCodi = "noactualizar";
-        }else{
+        } else {
             $rad->tdocCodi     = $tdoc;
         }
-        if(!$rad->updateRadicado($nurad)){
-            $data[] = array( "error"   => 'No se actualiz&oacute; el radicado');
+        if (!$rad->updateRadicado($nurad)) {
+            $data[] = array("error"   => 'No se actualiz&oacute; el radicado');
         }
-    }else{
+    } else {
         $rad->tdocCodi     = $tdoc;
         //$nurad = $rad->newRadicado($ent,8230);//, $tpDepeRad[$ent]);
-        $rad->radiMail=true;
-        $nurad = $rad->newRadicado($ent);//, $tpDepeRad[$ent]);
+        $rad->radiMail = true;
+        $nurad = $rad->newRadicado($ent); //, $tpDepeRad[$ent]);
     }
 
-    if ($nurad=="-1"){
-        $data[] = array( "error"   => 'No se genero un numero de radicado');
-    }else{
-        $data[] = array( "answer"  => $nurad);
+    if ($nurad == "-1") {
+        $data[] = array("error"   => 'No se genero un numero de radicado');
+    } else {
+        $data[] = array("answer"  => $nurad);
     }
     $radicadosSel[0] = $nurad;
 
-    if (isset($_POST['modificar'])){$_tipo_tx = 21;}else{$_tipo_tx = 2;}
+    if (isset($_POST['modificar'])) {
+        $_tipo_tx = 21;
+    } else {
+        $_tipo_tx = 2;
+    }
 
-    $hist->insertarHistorico( $radicadosSel,
-        $usua_radi['DEPE_CODI'] ,
+    $hist->insertarHistorico(
+        $radicadosSel,
+        $usua_radi['DEPE_CODI'],
         $usua_radi['USUA_CODI'],
         $coddepe,
         $rad->radiUsuaActu,
         " ",
-        $_tipo_tx);
+        $_tipo_tx
+    );
 
     //Borramos todos los usuarios existentes en sgd_dir_drecciones y los
     //grabamos nuevamente con los datos suministrados.
@@ -423,36 +437,38 @@ function radicar($asunto, $depe_actu, $usua_radi, $omail) {
         "sgdDirTipo"     => 1
     );
 
-    if($ent == 2){
+    if ($ent == 2) {
         $query = "select u.USUA_EMAIL
             from usuario u
             where u.USUA_CODI = 1 and  u.depe_codi='$coddepe'";
-        $rsM=$db->conn->query($query);
+        $rsM = $db->conn->query($query);
         $mailDestino_frm = $rsM->fields["USUA_EMAIL"];
     }
     $borrable = true;
     $respons = $classusua->guardarUsuarioRadicado($usuarios, $nurad, $borrable);
 
-    if($respons!=1){
-        $data[] = array( "error"   => 'No se Agregó correctamente el destinatario, compruebe datos');
+    if ($respons != 1) {
+        $data[] = array("error"   => 'No se Agregó correctamente el destinatario, compruebe datos');
     }
 
     //ENVIAR UN CORREO ELECTRONICO AL DESTINATARIO AL MOMENTO DE RADICAR.
-    global $sendEmail,$ruta_raiz,$conf_mail;
-    include("$ruta_raiz/dbconfig.php");
-    if($conf_mail['enviar'] && !in_array($omail->fromAddress, $conf_mail['excepciones'])){
-        $codTx=99;
+    global $sendEmail, $ruta_raiz, $conf_mail;
+    include "$ruta_raiz/dbconfig.php";
+    if ($conf_mail['enviar'] && !in_array($omail->fromAddress, $conf_mail['excepciones'])) {
+        $codTx = 99;
         $email = $omail->fromAddress;
-        $texto = "Estimado usuario, la Superintendencia Nacional De Salud le informa que ha recibido su correo electr&oacute;nico, el cual qued&oacute; radicado con radicado *RAD_S* Asunto: ".htmlentities($rad->raAsun);
-        $asuntoMailRespuestaRapida='answer';
+        $texto = "Estimado usuario, la Superintendencia Nacional De Salud le informa que ha recibido su correo electr&oacute;nico, el cual qued&oacute; radicado con radicado *RAD_S* Asunto: " . htmlentities($rad->raAsun);
+        $asuntoMailRespuestaRapida = 'answer';
         $radicadosSelText = $nurad;
-        if ($_emailUser == ""){$_emailUser="no-reply@test.com";}
+        if ($_emailUser == "") {
+            $_emailUser = "no-reply@test.com";
+        }
 
         $nombre_fichero = "GENERAL.mailInformar.php";
-        $ruta_fichero = $ruta_raiz.'/include/mail/'.$nombre_fichero;
-        require("$ruta_raiz/include/mail/GENERAL.mailInformar.php");
+        $ruta_fichero = $ruta_raiz . '/include/mail/' . $nombre_fichero;
+        require "$ruta_raiz/include/mail/GENERAL.mailInformar.php";
         ob_end_clean();
-    }//FIN enviar email
+    } //FIN enviar email
 
 
     return $data;

@@ -1,7 +1,7 @@
-<?php 
+<?php
 
-require_once('connection.php');
-require_once('restclient.php');
+require_once 'connection.php';
+require_once 'restclient.php';
 
 $rest = new Restclient();
 
@@ -14,17 +14,14 @@ $params = array(
 $token = $rest->login($params);
 
 
-if(isset($token)) {
+if (isset($token)) {
     $MsgId = $_GET['id'];
-    $response = $rest->acusePDF($token,$MsgId);
- 
-    if(isset($response)) {
+    $response = $rest->acusePDF($token, $MsgId);
+
+    if (isset($response)) {
 
         $obj = json_decode($response);
-        $linkpdf=$obj->{'download'};
-        header('Location: '.$linkpdf);
-
-   }
-
+        $linkpdf = $obj->{'download'};
+        header('Location: ' . $linkpdf);
+    }
 }
-?>

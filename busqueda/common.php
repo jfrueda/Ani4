@@ -12,9 +12,10 @@
 //Archivo - Manejo de prestamos y devoluciones
 //Connection begin - iniciar coneccion
 
-if (!$ruta_raiz) $ruta_raiz = "..";
-require_once("$ruta_raiz/include/db/ConnectionHandler.php");
-
+if (!$ruta_raiz) {
+    $ruta_raiz = "..";
+}
+require_once "$ruta_raiz/include/db/ConnectionHandler.php";
 
 // Archivo - Manejo de prestamos y devoluciones
 // Connection end - finalizar coneccion
@@ -57,11 +58,11 @@ function get_param($param_name)
     global $HTTP_GET_VARS;
 
     $param_value = "";
-    if(isset($HTTP_POST_VARS[$param_name]))
+    if (isset($HTTP_POST_VARS[$param_name])) {
         $param_value = $HTTP_POST_VARS[$param_name];
-    else if(isset($HTTP_GET_VARS[$param_name]))
+    } elseif (isset($HTTP_GET_VARS[$param_name])) {
         $param_value = $HTTP_GET_VARS[$param_name];
-
+    }
     return $param_value;
 }
 
@@ -72,27 +73,29 @@ function get_session($param_name)
     global ${$param_name};
 
     $param_value = "";
-    if(!isset($HTTP_POST_VARS[$param_name]) && !isset($HTTP_GET_VARS[$param_name]) && session_is_registered($param_name))
+    if (!isset($HTTP_POST_VARS[$param_name]) && !isset($HTTP_GET_VARS[$param_name]) && session_is_registered($param_name)) {
         $param_value = ${$param_name};
-
+    }
     return $param_value;
 }
 
 function set_session($param_name, $param_value)
 {
     global ${$param_name};
-    if(session_is_registered($param_name))
+    if (session_is_registered($param_name)) {
         session_unregister($param_name);
+    }
     ${$param_name} = $param_value;
     session_register($param_name);
 }
 
 function is_number($string_value)
 {
-    if(is_numeric($string_value) || !strlen($string_value))
+    if (is_numeric($string_value) || !strlen($string_value)) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 //-------------------------------
@@ -100,31 +103,27 @@ function is_number($string_value)
 //-------------------------------
 function tosql($value, $type)
 {
-    if(!strlen($value))
+    if (!strlen($value)) {
         return "NULL";
-    else
-        if($type == "Number")
-            return str_replace (",", ".", doubleval($value));
-        else
-        {
-            if(get_magic_quotes_gpc() == 0)
-            {
-                $value = str_replace("'","''",$value);
-                $value = str_replace("\\","\\\\",$value);
-            }
-            else
-            {
-                $value = str_replace("\\'","''",$value);
-                $value = str_replace("\\\"","\"",$value);
-            }
-
-            return "'" . $value . "'";
+    } else
+        if ($type == "Number")
+        return str_replace(",", ".", doubleval($value));
+    else {
+        if (get_magic_quotes_gpc() == 0) {
+            $value = str_replace("'", "''", $value);
+            $value = str_replace("\\", "\\\\", $value);
+        } else {
+            $value = str_replace("\\'", "''", $value);
+            $value = str_replace("\\\"", "\"", $value);
         }
+
+        return "'" . $value . "'";
+    }
 }
 
 function strip($value)
 {
-    if(get_magic_quotes_gpc() == 0)
+    if (get_magic_quotes_gpc() == 0)
         return $value;
     else
         return stripslashes($value);
@@ -133,24 +132,21 @@ function strip($value)
 function db_fill_array($sql_query)
 {
     global  $ruta_raiz;
-    define('ADODB_FETCH_NUM',1);
+    define('ADODB_FETCH_NUM', 1);
     $ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
     $db = new ConnectionHandler($ruta_raiz);
     $db->conn->SetFetchMode(ADODB_FETCH_NUM);
-    $rs=$db->query($sql_query);
-    if ($rs && !$rs->EOF  )
-    {
-        do
-        {
+    $rs = $db->query($sql_query);
+    if ($rs && !$rs->EOF) {
+        do {
             $ar_lookup[$rs->fields[0]] = $rs->fields[1];
             $rs->MoveNext();
         } while ($rs && !$rs->EOF);
         return $ar_lookup;
-    }
-    else
+    } else {
         return false;
-
+    }
 }
 
 //-------------------------------
@@ -169,12 +165,13 @@ function dlookup($table_name, $field_name, $where_condition)
 function get_db_value($sql)
 {
     global $db;
-    $rs=$db->query($sql);
+    $rs = $db->query($sql);
 
-    if($rs && !$rs->EOF)
+    if ($rs && !$rs->EOF) {
         return $rs->fields[0];
-    else
+    } else {
         return "";
+    }
 }
 
 //-------------------------------
@@ -182,10 +179,11 @@ function get_db_value($sql)
 //-------------------------------
 function get_checkbox_value($value, $checked_value, $unchecked_value, $type)
 {
-    if(!strlen($value))
+    if (!strlen($value)) {
         return tosql($unchecked_value, $type);
-    else
+    } else {
         return tosql($checked_value, $type);
+    }
 }
 
 //-------------------------------
@@ -195,14 +193,13 @@ function get_lov_value($value, $array)
 {
     $return_result = "";
 
-    if(sizeof($array) % 2 != 0)
+    if (sizeof($array) % 2 != 0)
         $array_length = sizeof($array) - 1;
     else
         $array_length = sizeof($array);
 
-    for($i = 0; $i < $array_length; $i = $i + 2)
-    {
-        if($value == $array[$i]) $return_result = $array[$i+1];
+    for ($i = 0; $i < $array_length; $i = $i + 2) {
+        if ($value == $array[$i]) $return_result = $array[$i + 1];
     }
 
     return $return_result;
@@ -214,10 +211,10 @@ function get_lov_value($value, $array)
 
 function check_security()
 {
-    if(!session_is_registered("UserID")){
+    if (!session_is_registered("UserID")) {
         $querystring = urlencode(getenv("QUERY_STRING"));
         $ret_page = urlencode(getenv("REQUEST_URI"));
-        include_once ("login.php");
+        include_once("login.php");
         die;
     }
 }

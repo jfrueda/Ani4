@@ -3,8 +3,8 @@
 $ruta_raiz = "../";
 //error_reporting(E_ALL);
 session_start();
-require_once($ruta_raiz . "include/db/ConnectionHandler.php");
-include($ruta_raiz . "processConfig.php");
+require_once $ruta_raiz . "include/db/ConnectionHandler.php";
+include $ruta_raiz . "processConfig.php";
 
 if (!$db) {
   $db = new ConnectionHandler($ruta_raiz);
@@ -12,10 +12,14 @@ if (!$db) {
 
 $db->conn->SetFetchMode(ADODB_FETCH_ASSOC);
 
-foreach ($_GET as $key => $valor)   ${$key} = $valor;
-foreach ($_POST as $key => $valor)   ${$key} = $valor;
+foreach ($_GET as $key => $valor) {
+  ${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+  ${$key} = $valor;
+}
 
-include("common.php");
+include "common.php";
 $fechah = date("ymd") . "_" . time("hms");
 
 $params = session_name() . "=" . session_id() . "&krd=$krd";
@@ -413,16 +417,18 @@ if (isset($_POST['a'])) {
       $p['nurc'] = $_POST['r'];
       $result = $client->__soapCall('ConsultarHistorial', ['parameters' => $p]);
       $ret = $result->return;
-      if (!is_array($result->return))
+      if (!is_array($result->return)) {
         $ret = [$result->return];
+      }
       $ret['comentario'] = $ret;
       break;
     case 'anex':
       $p['radicado'] = $_POST['r'];
       $result = $client->__soapCall('AnexosxRadicado', ['parameters' => $p]);
       $ret = $result->return;
-      if (!is_array($result->return))
+      if (!is_array($result->return)) {
         $ret = [$result->return];
+      }
       foreach ($ret as $anexo) {
         $decoded = base64_decode($anexo->img_anexo);
         $file = $ruta_raiz . '/bodega/supercore/' . $anexo->img_nombreImagen;
@@ -666,7 +672,9 @@ if (!empty($_POST['Busqueda']) && ($_POST['Busqueda'] == "Busqueda")) {
                           <?php if (isset($result->return->codigoAccion) && $result->return->codigoAccion !== ' ') { ?>
                             <div class="col-md-12">
                               Sin resultados (<?= $result->return->codigoAccion ?>)
-                              <?php if ($urlimg->return->img_anexo) echo "<a href='{$urlimg->return->img_anexo}' target='_blank'>Ver imagen</a>"; ?>
+                              <?php if ($urlimg->return->img_anexo) {
+                                echo "<a href='{$urlimg->return->img_anexo}' target='_blank'>Ver imagen</a>";
+                              } ?>
                             </div>
                           <?php } else { ?>
                             <?php
@@ -678,7 +686,9 @@ if (!empty($_POST['Busqueda']) && ($_POST['Busqueda'] == "Busqueda")) {
                                   <?php if (strlen($data->return) > 10) { ?>
                                     <a href="supercord_fdl.php?<?= $params ?>&num=<?= $nume_radi ?>&ext=<?= $ext ?>"><i class="icon-download-alt"></i>DESCARGAR</a>
                                   <?php } ?>
-                                  <?php if ($urlimg->return->img_anexo) echo "<a href='{$urlimg->return->img_anexo}' target='_blank'>Ver imagen</a>"; ?>
+                                  <?php if ($urlimg->return->img_anexo) {
+                                    echo "<a href='{$urlimg->return->img_anexo}' target='_blank'>Ver imagen</a>";
+                                  } ?>
                                 </small>
                               </h4><br>
                             </div>
