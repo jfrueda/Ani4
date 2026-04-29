@@ -587,37 +587,37 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
 
                             <div class="row g-3">
                                 <!-- RADICADO / BORRADOR -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Radicado o Borrador</label>
                                     <input class="form-control" type="text" name="s_RADI_NUME_RADI" value="<?= tohtml($flds_RADI_NUME_RADI) ?>" id="cajarad">
                                 </div>
 
                                 <!-- DOCUMENTO -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Identificación</label>
                                     <input class="form-control" type="text" name="s_DOCTO" value="<?= tohtml($flds_DOCTO) ?>">
                                 </div>
 
                                 <!-- EXPEDIENTE -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Expediente</label>
                                     <input class="form-control" type="text" name="s_SGD_EXP_SUBEXPEDIENTE" value="<?= tohtml($flds_SGD_EXP_SUBEXPEDIENTE) ?>">
                                 </div>
 
                                 <!-- REFERENCIA -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Referencia</label>
                                     <input class="form-control" type="text" name="s_CUENTAINTERNA" value="<?= tohtml($flds_CUENTAINTERNA) ?>">
                                 </div>
 
                                 <!-- GUIA -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Número de Guía</label>
                                     <input class="form-control" type="text" name="s_GUIA" value="<?= tohtml($flds_GUIA) ?>">
                                 </div>
 
                                 <!-- FECHA DESDE -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Desde Fecha</label>
                                     <div class="d-flex gap-2">
                                         <select class="form-select" name="s_desde_dia"><? for ($i = 1; $i <= 31; $i++) echo "<option " . ($i == $flds_desde_dia ? 'selected' : '') . ">$i</option>"; ?></select>
@@ -627,7 +627,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                 </div>
 
                                 <!-- FECHA HASTA -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Hasta Fecha</label>
                                     <div class="d-flex gap-2">
                                         <select class="form-select" name="s_hasta_dia"><? for ($i = 1; $i <= 31; $i++) echo "<option " . ($i == $flds_hasta_dia ? 'selected' : '') . ">$i</option>"; ?></select>
@@ -637,7 +637,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                 </div>
 
                                 <!-- ENTRADA -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Buscar en Radicados de</label>
                                     <select class="form-select" name="s_entrada">
                                         <?
@@ -662,7 +662,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                 </div>
 
                                 <!-- TIPO DOCUMENTO -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Tipo de Documento</label>
                                     <select class="form-select" name="s_TDOC_CODI">
                                         <?
@@ -686,13 +686,13 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                 </div>
 
                                 <!-- BUSCAR POR -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Buscar Por</label>
                                     <input class="form-control" type="text" name="s_RADI_NOMB" value="<?= tohtml($flds_RADI_NOMB) ?>">
                                 </div>
 
                                 <!-- DEPENDENCIA -->
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-3">
                                     <label class="form-label fw-semibold">Dependencia Actual</label>
                                     <div class="d-flex gap-2">
                                         <select class="form-select" name="s_RADI_DEPE_ACTU">
@@ -722,7 +722,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                     </div>
                                 </div>
 
-                                <div class="col-6 col-md-4 d-flex align-items-end gap-2">
+                                <div class="col-6 col-md-3 d-flex align-items-end gap-2">
                                     <button type="button" onclick="limpiar();" class="btn btn-outline-danger">
                                         Limpiar
                                     </button>
