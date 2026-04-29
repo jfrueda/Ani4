@@ -722,7 +722,7 @@ require_once "$ruta_raiz/include/tx/RadicadoFilter.php";
                                     </div>
                                 </div>
 
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-4 d-flex align-items-end gap-2">
                                     <button type="button" onclick="limpiar();" class="btn btn-outline-danger">
                                         Limpiar
                                     </button>
