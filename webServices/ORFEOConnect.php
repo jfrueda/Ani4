@@ -1,4 +1,5 @@
 <?php
+
 namespace Orpyca\webService;
 
 /**
@@ -16,7 +17,7 @@ namespace Orpyca\webService;
 
 class ORFEOConnect
 {
-	use ORFEOerrorTrait;
+    use ORFEOerrorTrait;
 
     //=============================================
     // CONSTANT DEFINITIONS
@@ -37,7 +38,8 @@ class ORFEOConnect
         "NI" => array('cod' => 4, 'desc' => 'Nit'),
         "PJ" => array('cod' => 8, 'desc' => ''),
         "EO" => array('cod' => 9, 'desc' => ''),
-        "RM" => array('cod' => 10, 'desc' => ''));
+        "RM" => array('cod' => 10, 'desc' => '')
+    );
 
     /**
      * database object.
@@ -122,7 +124,6 @@ class ORFEOConnect
         $this->expe    = $objOrfeo['expe'];
 
         $this->db->conn->debug = $debug;
-
     }
 
     /**
@@ -227,7 +228,9 @@ class ORFEOConnect
             "SELECT
                         COUNT(1) AS NUM_ANEX
                     FROM ANEXOS
-                    WHERE ANEX_RADI_NUME = %u", array($radiNume));
+                    WHERE ANEX_RADI_NUME = %u",
+            array($radiNume)
+        );
 
 
         $rs = $this->db->conn->Execute($consulta);
@@ -254,9 +257,9 @@ class ORFEOConnect
 
         $rs = $this->db->conn->Execute($consulta);
 
-        if ($rs && !$rs->EOF)
+        if ($rs && !$rs->EOF) {
             $salida = $rs->fields['NUM_ANEX'];
-
+        }
         return $salida;
     }
 
@@ -357,8 +360,10 @@ class ORFEOConnect
      */
     public function asociarRadicado($numrad, $radicadoSalida)
     {
-        if (!$this->validarRadicado($numrad)
-            && !$this->validarRadicado($radicadoSalida)) {
+        if (
+            !$this->validarRadicado($numrad)
+            && !$this->validarRadicado($radicadoSalida)
+        ) {
             return false;
         }
 
@@ -417,8 +422,10 @@ class ORFEOConnect
 
         $sql_upd_e = vsprintf($sql23, $temp_2);
 
-        if ($this->db->conn->Execute($s_anexo)
-            and $this->db->conn->Execute($sql_upd_e)) {
+        if (
+            $this->db->conn->Execute($s_anexo)
+            && $this->db->conn->Execute($sql_upd_e)
+        ) {
             return true;
         }
 
@@ -444,15 +451,16 @@ class ORFEOConnect
      *
      * @return bool|string Numero de radicado
      */
-    public function crearRadicado($funcionario,
-                                  int $tipo,
-                                  int $td,
-                                  string $asunto,
-                                  string $referencia,
-                                  array $ciudadano = [])
-    {
+    public function crearRadicado(
+        $funcionario,
+        int $tipo,
+        int $td,
+        string $asunto,
+        string $referencia,
+        array $ciudadano = []
+    ) {
 
-        if(empty($tipo * $td) || empty($asunto || ($tipo > 0 && $tipo < 10) )){
+        if (empty($tipo * $td) || empty($asunto || ($tipo > 0 && $tipo < 10))) {
             $this->setError('arg_insuficientes');
             return false;
         }
@@ -465,14 +473,14 @@ class ORFEOConnect
         $usua_nivel = $usuario['nivel'];
 
         if (!empty($ciudadano)) {
-            $usua_tipo = $ciudadano['tipoDocumento']? $ciudadano['tipoDocumento'] : 0;
-            $usua_doc = $ciudadano['documento']? $ciudadano['documento'] : '0';
-            $usua_ema = $ciudadano['email']? $ciudadano['email'] : null;
-            $usua_nom = $ciudadano['nombre']? $ciudadano['nombre'] : null;
-            $usua_apell = $ciudadano['apellido']? $ciudadano['apellido'] : 'anonimo';
-            $usua_dir = $ciudadano['direccion']? $ciudadano['direccion'] : 'no registra';
-            $usua_tel = $ciudadano['telefono']? $ciudadano['telefono'] : 'no registra' ;
-        }else{
+            $usua_tipo = $ciudadano['tipoDocumento'] ? $ciudadano['tipoDocumento'] : 0;
+            $usua_doc = $ciudadano['documento'] ? $ciudadano['documento'] : '0';
+            $usua_ema = $ciudadano['email'] ? $ciudadano['email'] : null;
+            $usua_nom = $ciudadano['nombre'] ? $ciudadano['nombre'] : null;
+            $usua_apell = $ciudadano['apellido'] ? $ciudadano['apellido'] : 'anonimo';
+            $usua_dir = $ciudadano['direccion'] ? $ciudadano['direccion'] : 'no registra';
+            $usua_tel = $ciudadano['telefono'] ? $ciudadano['telefono'] : 'no registra';
+        } else {
             $usua_tipo = 0;
             $usua_doc = '0';
             $usua_ema = null;
@@ -515,24 +523,27 @@ class ORFEOConnect
             return false;
         }
 
-        $this->hist->insertarHistorico(array($nu_radicado)
-            , $depe_codi
-            , $usua_codi
-            , $depe_codi
-            , $usua_codi
-            , " "
-            , 2);
+        $this->hist->insertarHistorico(
+            array($nu_radicado),
+            $depe_codi,
+            $usua_codi,
+            $depe_codi,
+            $usua_codi,
+            " ",
+            2
+        );
 
         $temp13 = array(
             $nu_radicado,
             $usua_doc,
             $usua_ema,
-            $usua_nom. ' ' .$usua_apell,
+            $usua_nom . ' ' . $usua_apell,
             $usua_nom,
             $usua_apell,
             $usua_dir,
             $usua_tel,
-            $usua_tipo);
+            $usua_tipo
+        );
 
         $s_direcciones = "INSERT INTO sgd_dir_drecciones (
             sgd_dir_codigo
@@ -575,7 +586,6 @@ class ORFEOConnect
         $this->db->conn->Execute($s_direcciones);
 
         return $nu_radicado;
-
     }
 
     /** PNN 3
@@ -587,7 +597,7 @@ class ORFEOConnect
      */
     public function getUsuarioSelect($data)
     {
-        if(empty($data)){
+        if (empty($data)) {
             $this->setError('usuario_noexiste');
             return false;
         }
@@ -629,22 +639,21 @@ class ORFEOConnect
 
         $rs = $this->db->conn->Execute($sql);
 
-        if(!$rs || $rs->EOF){
+        if (!$rs || $rs->EOF) {
             $this->setError('arg_insuficientes');
             return false;
         }
 
-            $usuario['email'] = $rs->fields['USUA_EMAIL'];
-            $usuario['login'] = $rs->fields['USUA_LOGIN'];
-            $usuario['codusuario'] = $rs->fields['USUA_CODI'];
-            $usuario['nivel'] = $rs->fields['CODI_NIVEL'];
-            $usuario['dependencia'] = $rs->fields['DEPE_CODI'];
-            $usuario['documento'] = $rs->fields['USUA_DOC'];
-            $usuario['nombre'] = $rs->fields['USUA_NOMB'];
-            $usuario['nombre_dependencia'] = $rs->fields['DEPE_NOMB'];
+        $usuario['email'] = $rs->fields['USUA_EMAIL'];
+        $usuario['login'] = $rs->fields['USUA_LOGIN'];
+        $usuario['codusuario'] = $rs->fields['USUA_CODI'];
+        $usuario['nivel'] = $rs->fields['CODI_NIVEL'];
+        $usuario['dependencia'] = $rs->fields['DEPE_CODI'];
+        $usuario['documento'] = $rs->fields['USUA_DOC'];
+        $usuario['nombre'] = $rs->fields['USUA_NOMB'];
+        $usuario['nombre_dependencia'] = $rs->fields['DEPE_NOMB'];
 
         return $usuario;
-
     }
 
     /** PNN 5
@@ -744,12 +753,12 @@ class ORFEOConnect
                 'anexCreador' => $usuario['login'],
                 'anexDesc' => $descripcion,
                 'anexNumero' => $numAnexo,
-                'anexNombArchivo' => $nombreAnexo.$extension,
+                'anexNombArchivo' => $nombreAnexo . $extension,
                 'anexEstado' => 0,
                 'sgdRemDestino' => 1,
                 'anexFechAnex' => $fechaAnexado,
-                'anexBorrado' => 'N' );
-
+                'anexBorrado' => 'N'
+            );
         }
 
         $this->setError('insertar');
@@ -964,7 +973,8 @@ class ORFEOConnect
                 'anexEstado' => $rs->fields["ANEX_ESTADO"],
                 'sgdRemDestino' => $rs->fields["SGD_REM_DESTINO"],
                 'anexFechAnex' => $rs->fields["FEANEX"],
-                'anexBorrado' => 'N' );
+                'anexBorrado' => 'N'
+            );
 
             $rs->MoveNext();
         }
@@ -1013,9 +1023,9 @@ class ORFEOConnect
         $rs = $this->db->conn->Execute($sql);
 
         if ($rs && !$rs->EOF) {
-            if(empty($rs->fields['RADI_PATH'])){
+            if (empty($rs->fields['RADI_PATH'])) {
                 $imdata['archivo_b64'] = '';
-            }else{
+            } else {
                 $filename = $this->contentPath . $rs->fields['RADI_PATH'];
                 $im = file_get_contents($filename);
                 $serializado = base64_encode($im);
@@ -1033,7 +1043,6 @@ class ORFEOConnect
             $imdata['usuarioActual'] = $rs->fields['USUA_NOMB'];
 
             return $imdata;
-
         } else {
             $this->setError('radicado_noexiste');
             return false;
@@ -1053,9 +1062,14 @@ class ORFEOConnect
      *
      * @return boolean
      */
-    public function actualizarTrd($dependencia, $serie, $sub_serie,
-                                  $tipo, $radicado, $cedula)
-    {
+    public function actualizarTrd(
+        $dependencia,
+        $serie,
+        $sub_serie,
+        $tipo,
+        $radicado,
+        $cedula
+    ) {
         $dsql = vsprintf("DELETE
                         FROM
                             SGD_RDF_RETDOCF
@@ -1064,7 +1078,8 @@ class ORFEOConnect
 
         $this->db->conn->Execute($dsql);
 
-        $sqlmrd = vsprintf("SELECT
+        $sqlmrd = vsprintf(
+            "SELECT
                                 SGD_MRD_CODIGO
                             FROM
                                  SGD_MRD_MATRIRD
@@ -1072,8 +1087,9 @@ class ORFEOConnect
                                 DEPE_CODI       = '%u'
                             AND SGD_SRD_ID      = '%u'
                             AND SGD_SBRD_ID     = '%u'
-                            AND SGD_TPR_CODIGO  = '%u'"
-            , array($dependencia, $serie, $sub_serie, $tipo));
+                            AND SGD_TPR_CODIGO  = '%u'",
+            array($dependencia, $serie, $sub_serie, $tipo)
+        );
 
         $rs_sqlmrd = $this->db->conn->Execute($sqlmrd);
 
@@ -1107,13 +1123,15 @@ class ORFEOConnect
             return false;
         }
 
-        $this->hist->insertarHistorico(array($radicado)
-            , $rs_sqlc->fields['DEPE_CODI']
-            , $rs_sqlc->fields['USUA_CODI']
-            , $rs_sqlc->fields['DEPE_CODI']
-            , $rs_sqlc->fields['USUA_CODI']
-            , 'TRD AUTOMATICA BPM'
-            , '32');
+        $this->hist->insertarHistorico(
+            array($radicado),
+            $rs_sqlc->fields['DEPE_CODI'],
+            $rs_sqlc->fields['USUA_CODI'],
+            $rs_sqlc->fields['DEPE_CODI'],
+            $rs_sqlc->fields['USUA_CODI'],
+            'TRD AUTOMATICA BPM',
+            '32'
+        );
 
         return true;
     }
@@ -1241,30 +1259,36 @@ class ORFEOConnect
             return false;
         }
 
-        $data = array($usu_destino['dependencia']
-        , $usu_destino['codusuario']
-        , $radicado);
+        $data = array(
+            $usu_destino['dependencia'],
+            $usu_destino['codusuario'],
+            $radicado
+        );
 
-        $upd_rad = vsprintf("UPDATE
+        $upd_rad = vsprintf(
+            "UPDATE
             RADICADO
             SET RADI_DEPE_ACTU = %u
             RADI_USUA_ACTU = %u
             WHERE
             RADI_NUME_RADI = '%u'",
-            array($data));
+            array($data)
+        );
 
         if (!$this->db->conn->Execute($upd_rad)) {
             $this->setError('insertar');
             return false;
         }
 
-        $this->hist->insertarHistorico(array($radicado)
-            , $usu_origen['dependencia']
-            , $usu_origen['codusuario']
-            , $usu_destino['dependencia']
-            , $usu_destino['codusuario']
-            , 'Radicado reasignado desde platinum'
-            , 9);
+        $this->hist->insertarHistorico(
+            array($radicado),
+            $usu_origen['dependencia'],
+            $usu_origen['codusuario'],
+            $usu_destino['dependencia'],
+            $usu_destino['codusuario'],
+            'Radicado reasignado desde platinum',
+            9
+        );
 
         //variable modificada en General.mailinforma
         if ($success !== true) {
@@ -1307,14 +1331,15 @@ class ORFEOConnect
         while ($rs && !$rs->EOF) {
             $list = json_encode(explode(' ', trim($rs->fields['LISTA_TIPO_RADICADO'])));
 
-            $salida[] = array( 'id'  => $rs->fields['SGD_TPR_CODIGO'],
+            $salida[] = array(
+                'id'  => $rs->fields['SGD_TPR_CODIGO'],
 
-                               'termino' => $rs->fields['SGD_TPR_TERMINO'],
+                'termino' => $rs->fields['SGD_TPR_TERMINO'],
 
-                               'nombre' => strtoupper($rs->fields['SGD_TPR_DESCRIP']),
+                'nombre' => strtoupper($rs->fields['SGD_TPR_DESCRIP']),
 
-                                'listRadicado' => $list
-                             );
+                'listRadicado' => $list
+            );
             $rs->MoveNext();
         }
         return $salida;
@@ -1337,9 +1362,16 @@ class ORFEOConnect
      * @return integer
      *
      */
-    public function crearExpediente($nurad, $usuario, $anoExp, $fechaExp,
-                                    $codiSRD, $codiSBRD, $tmr, $busquedaTag)
-    {
+    public function crearExpediente(
+        $nurad,
+        $usuario,
+        $anoExp,
+        $fechaExp,
+        $codiSRD,
+        $codiSBRD,
+        $tmr,
+        $busquedaTag
+    ) {
         $expediente = $this->expe;
 
         //Informacion necesaria del usuario para la creacion de expedientes
@@ -1383,7 +1415,6 @@ class ORFEOConnect
             $this->anexarExpediente($nurad, $numeroExpediente, $usua_login, "ANEXADO DESDE SIMCA");
 
             return $numeroExpediente;
-
         } else {
             //Insercion para el TMR
             $sql = "INSERT
@@ -1401,24 +1432,28 @@ class ORFEOConnect
             $numeroExpediente = $anoExp . substr($dependencia, 0, 3) .
                 $trdExp . $consecutivoExp . 'E';
 
-            $numeroExpedienteE = $expediente->crearExpediente($numeroExpediente
-                , $nurad
-                , substr($dependencia, 0, 3)
-                , $codusuario
-                , $usua_doc
-                , $usuaDocExp
-                , $codiSRD
-                , $codiSBRD
-                , 'false'
-                , $fechaExp
-                , 0);
+            $numeroExpedienteE = $expediente->crearExpediente(
+                $numeroExpediente,
+                $nurad,
+                substr($dependencia, 0, 3),
+                $codusuario,
+                $usua_doc,
+                $usuaDocExp,
+                $codiSRD,
+                $codiSBRD,
+                'false',
+                $fechaExp,
+                0
+            );
 
 
-            $expediente->insertar_expediente($numeroExpediente
-                , $nurad
-                , substr($dependencia, 0, 3)
-                , $codusuario
-                , $usua_doc);
+            $expediente->insertar_expediente(
+                $numeroExpediente,
+                $nurad,
+                substr($dependencia, 0, 3),
+                $codusuario,
+                $usua_doc
+            );
 
             $upd_exp = "UPDATE
                 SGD_SEXP_SECEXPEDIENTES
@@ -1489,21 +1524,25 @@ class ORFEOConnect
 
             if ($this->db->query($sqli)) {
                 $radicaArr = array($numRadicado);
-                $this->hist->insertarHistoricoExp($numExpediente
-                    , $radicaArr
-                    , $usuario['usua_depe']
-                    , $usuario['usua_codi']
-                    , $observa
-                    , $tipoTx
-                    , 0);
+                $this->hist->insertarHistoricoExp(
+                    $numExpediente,
+                    $radicaArr,
+                    $usuario['usua_depe'],
+                    $usuario['usua_codi'],
+                    $observa,
+                    $tipoTx,
+                    0
+                );
 
-                $this->hist->insertarHistorico($radicaArr
-                    , $usuario['usua_depe']
-                    , $usuario['codusuario']
-                    , $usuario['usua_depe']
-                    , $usuario['codusuario']
-                    , " "
-                    , 53);
+                $this->hist->insertarHistorico(
+                    $radicaArr,
+                    $usuario['usua_depe'],
+                    $usuario['codusuario'],
+                    $usuario['usua_depe'],
+                    $usuario['codusuario'],
+                    " ",
+                    53
+                );
 
                 return true;
             }

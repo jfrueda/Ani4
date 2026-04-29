@@ -12,12 +12,12 @@ use \GraphQL\Error\DebugFlag;
 
 $ruta_raiz = '..';
 
-include_once("$ruta_raiz/include/db/ConnectionHandler.php");
-include_once("$ruta_raiz/include/tx/Historico.php");
-include_once("$ruta_raiz/include/tx/Expediente.php");
-include_once("$ruta_raiz/include/tx/Tx.php");
-include_once("$ruta_raiz/include/tx/Radicacion.php");
-include_once("$ruta_raiz/class_control/Municipio.php");
+include_once "$ruta_raiz/include/db/ConnectionHandler.php";
+include_once "$ruta_raiz/include/tx/Historico.php";
+include_once "$ruta_raiz/include/tx/Expediente.php";
+include_once "$ruta_raiz/include/tx/Tx.php";
+include_once "$ruta_raiz/include/tx/Radicacion.php";
+include_once "$ruta_raiz/class_control/Municipio.php";
 
 // Disable default PHP error reporting - we have better one for debug mode (see below)
 ini_set('display_errors', 1);
