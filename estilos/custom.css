@@ -287,9 +287,14 @@
 table thead tr,
 .table {
     background-color: #da723f !important;
+    --bs-table-bg: var(--bs-primary) !important;
 }
 
 table thead th {
     color: white !important;
     font-weight: bold;
+}
+
+.tablescroll{
+    background-color: #da723f !important;
 }
