@@ -284,9 +284,10 @@
     display: none !important;
 }
 
-table thead,
-table tr {
+table thead tr, 
+table thead th {
     background-color: #043074 !important;
+    color: white; /* Tip: usualmente querrás el texto blanco con ese azul oscuro */
 }
 
 table thead th {
