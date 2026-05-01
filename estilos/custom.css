@@ -284,18 +284,14 @@
     display: none !important;
 }
 
-table thead tr, 
+table thead tr,
 table thead th {
     background-color: #043074 !important;
-    color: white; /* Tip: usualmente querrás el texto blanco con ese azul oscuro */
+    color: white;
+    /* Tip: usualmente querrás el texto blanco con ese azul oscuro */
 }
 
 table thead th {
     color: white !important;
     font-weight: bold;
 }
-
-/* 
-.tablescroll{
-    background-color: #043074 !important;
-} */
