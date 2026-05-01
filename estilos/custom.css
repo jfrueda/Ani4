@@ -284,7 +284,8 @@
     display: none !important;
 }
 
-table thead tr {
+table thead,
+table tr {
     background-color: #043074 !important;
 }
 
