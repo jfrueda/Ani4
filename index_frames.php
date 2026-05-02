@@ -593,6 +593,12 @@ if ($_SESSION["USUA_PRAD_TP3"]) {
     $radicacion["radica3"] = array('subMenu' => 0, 'url' => "$enlace1", 'nombre' => "$tpDescRad[2]");
 }
 
+if ($_SESSION["USUA_PRAD_TP5"]) {
+    $menuRadicacion = 1;
+    $enlace5   = "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=5&depende=$dependencia";
+    $radicacion["radicaCircular"] = array('subMenu' => 0, 'url' => "$enlace5", 'nombre' => "Circular");
+}
+
 
 
 if ($_SESSION["USUA_PRAD_TP6"]) {
