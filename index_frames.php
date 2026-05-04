@@ -400,6 +400,12 @@ if ($_SESSION["usua_admin_sistema"] >= 1 || $tiene_acceso_admin) {
         'nombre' => "Dependencias"
     );
     $administracion["dependencias"] = $dependencias;
+    $visibilidadDependenciasMasiva = array(
+        'subMenu' => 0,
+        'url' => "./Administracion/tbasicas/adm_visibilidad_dependencias_masiva.php?$sendSession",
+        'nombre' => "Visibilidad dependencias masiva"
+    );
+    $administracion["visibilidadDependenciasMasiva"] = $visibilidadDependenciasMasiva;
     $diasHabiles = array(
         'subMenu' => 0,
         'url' => "./Administracion/tbasicas/adm_nohabiles.php?$sendSession",
