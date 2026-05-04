@@ -513,7 +513,7 @@ $opciones = array(
     ),
     "ayuda" => array(
         'subMenu' => 0,
-        'url' => "$url_ayuda",
+        'url' => "https://wa.me/573161718834",
         'nombre' => 'Ayuda'
     ),
     "formatos" => array(
