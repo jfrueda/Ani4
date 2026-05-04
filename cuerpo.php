@@ -758,8 +758,34 @@ $sqlTotalRad = "select count(1) as TOTAL
     </form>
 
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function() {
+        function eliminarBorrador(numbor) {
+            if (confirm('Esta seguro que desea eliminar el borrador: ' + numbor)) {
 
+                fetch("eliminarBorrador.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: new URLSearchParams({
+                            funcion: '1',
+                            numbor: numbor
+                        })
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        if (result == 200) {
+                            document.querySelector("#borrar_borrador_exc").submit();
+                        } else {
+                            alert("Ha ocurrido un error, por favor comuníquese con el Administrador del sistema.");
+                        }
+                    })
+                    .catch(() => {
+                        alert("Ha ocurrido un error, por favor comuníquese con el Administrador del sistema.");
+                    });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
             // Abrir visor
             document.querySelectorAll('.abrirVisor').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -830,33 +856,6 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                 document.querySelector("#filtro_fechas").submit();
             });
-
-            function eliminarBorrador(numbor) {
-                if (confirm('Esta seguro que desea eliminar el borrador: ' + numbor)) {
-
-                    fetch("eliminarBorrador.php", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded"
-                            },
-                            body: new URLSearchParams({
-                                funcion: '1',
-                                numbor: numbor
-                            })
-                        })
-                        .then(response => response.text())
-                        .then(result => {
-                            if (result == 200) {
-                                document.querySelector("#borrar_borrador_exc").submit();
-                            } else {
-                                alert("Ha ocurrido un error, por favor comuníquese con el Administrador del sistema.");
-                            }
-                        })
-                        .catch(() => {
-                            alert("Ha ocurrido un error, por favor comuníquese con el Administrador del sistema.");
-                        });
-                }
-            }
 
             // Muestra las imágenes de los radicados
             function funlinkArchivo(numrad, rutaRaiz) {
