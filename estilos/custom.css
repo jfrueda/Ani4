@@ -285,16 +285,23 @@
 }
 
 table thead tr,
+table thead th {
+    background-color: #da723f !important;
+    color: white;
+    /* Tip: usualmente querrás el texto blanco con ese azul oscuro */
+}
+
+/* table thead tr,
 .table {
     background-color: #da723f !important;
     --bs-table-bg: var(--bs-primary) !important;
-}
+} */
 
 table thead th {
     color: white !important;
     font-weight: bold;
 }
 
-.tablescroll{
+.tablescroll {
     background-color: #da723f !important;
 }
