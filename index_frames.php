@@ -513,7 +513,7 @@ $opciones = array(
     ),
     "ayuda" => array(
         'subMenu' => 0,
-        'url' => "https://wa.me/573161718834",
+        'url' => "javascript:window.open('https://wa.me/573161718834','_blank');void(0);",
         'nombre' => 'Ayuda'
     ),
     "formatos" => array(
