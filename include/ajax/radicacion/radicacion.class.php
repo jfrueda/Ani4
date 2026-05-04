@@ -147,7 +147,12 @@ class radicacionAjax extends Radicacion{
 		$this->trteCodi                     = $tipoRemitente;
 		$this->tdocCodi                     = $tipoDocumento;
 		$this->tdidCodi                     = $tDidCodi;
-		$this->carpCodi                     = $carpetaCodi;
+			// En salidas/resoluciones/otros, conservar carpeta por tipo de radicado
+			// si llega 0 por cliente.
+			if (($tipoRadicado != 2) && (empty($carpetaCodi) || $carpetaCodi == 0 || $carpetaCodi == '0')) {
+				$carpetaCodi = $tipoRadicado;
+			}
+			$this->carpCodi                     = $carpetaCodi;
 		$this->carPer                       = $carpetaPer;
 		$this->usuaDoc                      = $usuaDoc;
 		$this->noDigitosRad                 = 6;
