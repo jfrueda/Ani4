@@ -32,11 +32,11 @@ $dependencia = $_SESSION["dependencia"];
 $usua_doc    = $_SESSION["usua_doc"];
 $codusuario  = $_SESSION["codusuario"];
 $entidad     = $_SESSION["entidad"];
-$usua_perm_anu = isset($_SESSION["usua_perm_anu"]) ? (int) $_SESSION["usua_perm_anu"] : 0;
+$usua_perm_anugestion = isset($_SESSION["usua_perm_anugestion"]) ? (int) $_SESSION["usua_perm_anugestion"] : 0;
 $usua_admin_sistema = isset($_SESSION["usua_admin_sistema"]) ? (int) $_SESSION["usua_admin_sistema"] : 0;
 $usua_perm_root = isset($_SESSION["usua_perm_root"]) ? (int) $_SESSION["usua_perm_root"] : 0;
 $es_admin = ($usua_admin_sistema >= 1 || $usua_perm_root >= 1);
-$puede_anular = ($usua_perm_anu === 1 || $usua_perm_anu === 3 || $es_admin);
+$puede_anular = ($usua_perm_anugestion === 1 || $usua_perm_anugestion === 3 || $es_admin);
 $datos_enviar = session_name() . "=" . session_id();
 
 include_once "$ruta_raiz/processConfig.php";

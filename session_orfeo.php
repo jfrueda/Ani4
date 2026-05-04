@@ -370,6 +370,10 @@ if (!$validacionUsuario) {
             $usua_perm_anu  = $roles->permisosUsuario["SGD_PANU_CODI"]['crud'];
         }
 
+        if (array_key_exists("SGD_PANUGESTION_CODI", $roles->permisosUsuario)) {
+            $usua_perm_anugestion  = $roles->permisosUsuario["SGD_PANUGESTION_CODI"]['crud'];
+        }
+
         if (array_key_exists("USUA_PERM_ENVIOS", $roles->permisosUsuario)) {
             $usua_perm_envios  = $roles->permisosUsuario["USUA_PERM_ENVIOS"]['crud'];
         }
@@ -740,6 +744,7 @@ if (!$validacionUsuario) {
         $_SESSION["usua_masiva"]           = $usua_masiva;
         $_SESSION["usua_perm_dev"]         = $usua_perm_dev;
         $_SESSION["usua_perm_anu"]         = $usua_perm_anu;
+        $_SESSION["usua_perm_anugestion"]  = $usua_perm_anugestion;
         //$_SESSION["usua_perm_numera_res"]  = $usua_perm_numera_res;
         $_SESSION["perm_radi_sal"]         = $perm_radi_sal;
         $_SESSION["depecodi"]              = $dependencia;
