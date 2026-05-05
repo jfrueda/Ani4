@@ -750,6 +750,7 @@ if ($esNotificacion) {
         $record["SGD_MRD_CODIGO"] = 15720;
         $nombTrd = "Circular Interna";
         $sgdTprCodigo = 273;
+        $expedienteFijo = "2026100000701000001E";
     } elseif ($ent == CIRC_EXTERNA) {
         $record["SGD_MRD_CODIGO"] = 18711;
         $nombTrd = "Circular Externa";
@@ -784,16 +785,28 @@ if ($esNotificacion) {
     if (!empty($expedienteFijo)) {
         include_once "$ruta_raiz/include/tx/Expediente.php";
         $expedienteObj = new Expediente($db);
-        $expedienteObj->insertar_expediente($expedienteFijo, $nurad, $dependencia, $codusuario, $usua_doc);
-        $hist->insertarHistorico(
-            $radicadosSel,
-            $dependencia,
-            $codusuario,
-            $dependencia,
-            $codusuario,
-            "Se agregó expediente fijo automático: " . $expedienteFijo,
-            32
-        );
+        $insExp = $expedienteObj->insertar_expediente($expedienteFijo, $nurad, $dependencia, $codusuario, $usua_doc);
+        if ($insExp) {
+            $hist->insertarHistorico(
+                $radicadosSel,
+                $dependencia,
+                $codusuario,
+                $dependencia,
+                $codusuario,
+                "Se agregó expediente fijo automático: " . $expedienteFijo,
+                32
+            );
+        } else {
+            $hist->insertarHistorico(
+                $radicadosSel,
+                $dependencia,
+                $codusuario,
+                $dependencia,
+                $codusuario,
+                "No fue posible agregar expediente fijo automático: " . $expedienteFijo,
+                32
+            );
+        }
     }
 
     include_once "$ruta_raiz/include/tx/TipoDocumental.php";
