@@ -1,6 +1,11 @@
 Options -Indexes
 AddType  application/vnd.openxmlformats  .docx .pptx .xlsx
 
+# Limites de carga (si el servidor permite php_value en .htaccess)
+php_value upload_max_filesize 20M
+php_value post_max_size 25M
+php_value max_file_uploads 20
+
 RewriteEngine on
 RewriteCond %{HTTP_USER_AGENT} AltaVista [OR]
 RewriteCond %{HTTP_USER_AGENT} Googlebot [OR]
