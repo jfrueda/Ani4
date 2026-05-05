@@ -19,7 +19,8 @@ if ($_FILES['file1']['error'] == 1) {
 	print "<script> alert('El Archivo supera el límite de tamaño, por favor seleccione un archivo diferente.')</script>";
 } else {
 	$bodega_firmas = $ruta_raiz . '/bodega/firmas/';
-	$uriFile1 = $bodega_firmas . $usua_doc;
+	$loginFirma = strtolower(trim($_SESSION["krd"]));
+	$uriFile1 = $bodega_firmas . 'grafo/' . $loginFirma;
 	$uriFile2 = $bodega_firmas . $usua_doc . '.p12';
 	$record[0] = 553;
 	if (!empty($_FILES['file1']['tmp_name'])) {
