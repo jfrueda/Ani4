@@ -522,6 +522,11 @@ $opciones = array(
         'url' => "javascript:window.open('https://wa.me/573161718834','_blank');void(0);",
         'nombre' => 'Ayuda'
     ),
+    "documentacion" => array(
+        'subMenu' => 0,
+        'url' => "javascript:window.open('https://drive.google.com/drive/folders/1tV-YaEB6F8aUQ5TPqCMpW6hcBHr9ZDj_?usp=sharing','_blank');void(0);",
+        'nombre' => 'Documentación'
+    ),
     "formatos" => array(
         'subMenu' => 0,
         'url' => "formatos.php?fechah=$fechah&info=false",
