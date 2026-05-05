@@ -994,8 +994,8 @@ if ($tip_rest == 2) {
               <tr>
               <?php
                     }
-                    $maximo_tamano = number_format((return_bytes(ini_get('upload_max_filesize'))) / 1000000, 2);
-                    $tamano_archivo = return_bytes(ini_get('upload_max_filesize'));
+                    $tamano_archivo = 500 * 1024 * 1024; // 500MB
+                    $maximo_tamano = number_format($tamano_archivo / 1000000, 2);
               ?>
               <tr>
                 <td colspan="2"></td>
