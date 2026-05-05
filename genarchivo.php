@@ -1456,7 +1456,7 @@ if ($ext == "ODT" || $ext == "odt") {
     if (file_exists($grafo)) {
 
         $template = new \PhpOffice\PhpWord\TemplateProcessor($ABSOL_PATH . '/bodega/' . $linkarchivo_grabar);
-        $template->setImageValue('FIRMA', array('path' => $grafo, 'width' => 384, 'height' => 70, 'ratio' => false));
+        $template->setImageValue('FIRMA', array('path' => $grafo, 'width' => 220, 'height' => 60, 'ratio' => false));
         $template->saveAs($ABSOL_PATH . '/bodega/' . $linkarchivo_grabar);
     }
 
