@@ -770,7 +770,7 @@ if( $rs_exp->RecordCount() == 0 ){
     <tr><td colspan="2"></td></tr>
     <tr align="center">
           <td  align="center" >
-            <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo return_bytes(ini_get('upload_max_filesize')); ?>">Adjuntar Archivo
+            <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo 500 * 1024 * 1024; ?>">Adjuntar Archivo
           </td>
 
           <td align="center" >
@@ -781,7 +781,7 @@ if( $rs_exp->RecordCount() == 0 ){
 						   <input name="userfile1" type="file" onChange="escogio_archivo();" id="userfile" value="valor">
 						 </div>
 						</label>
-						<div class="note note-error">Archivo debe ser menor a  <?php echo number_format((return_bytes(ini_get('upload_max_filesize')))/1000000,2); ?>Mb.</div>
+              <div class="note note-error">Archivo debe ser menor a <?php echo number_format((500 * 1024 * 1024) / 1000000, 2); ?>Mb.</div>
 				 </section>
 
           </td>

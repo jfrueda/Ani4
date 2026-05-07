@@ -55,13 +55,6 @@
 </head>
 
 <body>
-	<!-- AMBIENTE -->
-    <!--{if $ambiente != "PRODUCCION"}-->
-    <div class="position-absolute top-0 start-50 translate-middle-x bg-danger text-white px-3 py-1 fw-bold">
-        ..:: Ambiente de: <!--{$ambiente}--> ::..
-    </div>
-    <!--{/if}-->
-
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg" role="navigation">
         <div class="container-fluid">

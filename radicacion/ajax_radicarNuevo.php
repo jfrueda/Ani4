@@ -104,6 +104,13 @@ $nurad         = $_POST['nurad'];
 $radi_dato_001 = $_POST['radi_dato_001'];
 $radi_dato_002 = $_POST['radi_dato_002'];
 
+// En algunos flujos de edición de borrador no llega "ent" en POST.
+// Se infiere desde el último dígito del número de radicado para no perder
+// reglas automáticas por tipo (TRD/expediente/notificación).
+if (empty($ent) && !empty($nurad)) {
+    $ent = (int)substr(trim((string)$nurad), -1);
+}
+
 if ($modificar == 'true' && !is_null($nurad)) {
     $modificar     = true;
 } else {
@@ -737,19 +744,23 @@ if ($esNotificacion) {
     $record["USUA_CODI"]      = $codusuario;
     $record["USUA_DOC"]       = $usua_doc;
     $record["SGD_RDF_FECH"]   = $db->conn->OffsetDate(0, $db->conn->sysTimeStamp);
+    $expedienteFijo = null;
 
     if ($ent == CIRC_INTERNA) {
         $record["SGD_MRD_CODIGO"] = 15720;
         $nombTrd = "Circular Interna";
         $sgdTprCodigo = 273;
+        $expedienteFijo = "2026100000701000001E";
     } elseif ($ent == CIRC_EXTERNA) {
-        $record["SGD_MRD_CODIGO"] = 15718;
+        $record["SGD_MRD_CODIGO"] = 18711;
         $nombTrd = "Circular Externa";
         $sgdTprCodigo = 274;
+        $expedienteFijo = "2026100000701000001E";
     } elseif ($ent == RESOLUCION) {
-        $record["SGD_MRD_CODIGO"] = 15716;
+        $record["SGD_MRD_CODIGO"] = 18720;
         $nombTrd = "Resolución";
         $sgdTprCodigo = 258;
+        $expedienteFijo = "2026100003599000001E";
     } elseif ($ent == AUTO) {
         $record["SGD_MRD_CODIGO"] = 15714;
         $nombTrd = "Auto";
@@ -770,6 +781,33 @@ if ($esNotificacion) {
         "Se agregó TRD Automático: " . $nombTrd,
         32
     );
+
+    if (!empty($expedienteFijo)) {
+        include_once "$ruta_raiz/include/tx/Expediente.php";
+        $expedienteObj = new Expediente($db);
+        $insExp = $expedienteObj->insertar_expediente($expedienteFijo, $nurad, $dependencia, $codusuario, $usua_doc);
+        if ($insExp) {
+            $hist->insertarHistorico(
+                $radicadosSel,
+                $dependencia,
+                $codusuario,
+                $dependencia,
+                $codusuario,
+                "Se agregó expediente fijo automático: " . $expedienteFijo,
+                32
+            );
+        } else {
+            $hist->insertarHistorico(
+                $radicadosSel,
+                $dependencia,
+                $codusuario,
+                $dependencia,
+                $codusuario,
+                "No fue posible agregar expediente fijo automático: " . $expedienteFijo,
+                32
+            );
+        }
+    }
 
     include_once "$ruta_raiz/include/tx/TipoDocumental.php";
 

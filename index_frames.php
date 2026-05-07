@@ -400,6 +400,12 @@ if ($_SESSION["usua_admin_sistema"] >= 1 || $tiene_acceso_admin) {
         'nombre' => "Dependencias"
     );
     $administracion["dependencias"] = $dependencias;
+    $visibilidadDependenciasMasiva = array(
+        'subMenu' => 0,
+        'url' => "./Administracion/tbasicas/adm_visibilidad_dependencias_masiva.php?$sendSession",
+        'nombre' => "Visibilidad dependencias masiva"
+    );
+    $administracion["visibilidadDependenciasMasiva"] = $visibilidadDependenciasMasiva;
     $diasHabiles = array(
         'subMenu' => 0,
         'url' => "./Administracion/tbasicas/adm_nohabiles.php?$sendSession",
@@ -513,8 +519,13 @@ $opciones = array(
     ),
     "ayuda" => array(
         'subMenu' => 0,
-        'url' => "$url_ayuda",
+        'url' => "javascript:window.open('https://wa.me/573161718834','_blank');void(0);",
         'nombre' => 'Ayuda'
+    ),
+    "documentacion" => array(
+        'subMenu' => 0,
+        'url' => "javascript:window.open('https://drive.google.com/drive/folders/1tV-YaEB6F8aUQ5TPqCMpW6hcBHr9ZDj_?usp=sharing','_blank');void(0);",
+        'nombre' => 'Documentación'
     ),
     "formatos" => array(
         'subMenu' => 0,
@@ -591,6 +602,12 @@ if ($_SESSION["USUA_PRAD_TP3"]) {
     $menuRadicacion = 1;
     $enlace1   = "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=3&depende=$dependencia";
     $radicacion["radica3"] = array('subMenu' => 0, 'url' => "$enlace1", 'nombre' => "$tpDescRad[2]");
+}
+
+if ($_SESSION["USUA_PRAD_TP5"]) {
+    $menuRadicacion = 1;
+    $enlace5   = "radicacion/NEW.php?$phpsession&dependencia=$dependencia&ent=5&depende=$dependencia";
+    $radicacion["radicaCircular"] = array('subMenu' => 0, 'url' => "$enlace5", 'nombre' => "Circular");
 }
 
 

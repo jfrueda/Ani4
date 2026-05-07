@@ -331,6 +331,7 @@ if ($verrad) {
     $exp = $expediente->consultaExp($verrad, null, $traerRadicadosYAnexos);
 }
 $arrExpedientes = $expediente->expedientes;
+$inicaiRadicado = substr($verrad, 0, 4);
 ?>
 
 <!-- widget content -->
@@ -348,14 +349,10 @@ $arrExpedientes = $expediente->expedientes;
         ?>
         <div class="col-md-12">
             <?php
-            $indicaBorrador = substr($numrad, 0, 4);
-            $indicadorTipoRadi = substr($numrad, -1);
-            if ($indicaBorrador < 3000 || $indicadorTipoRadi <= 3) {
             ?>
-                <button class="btn btn-warning pull-right" type="button" onclick="insertarExpediente();"> <span class="fa fa-plus"></span> incluir en...
-                </button>
+            <button class="btn btn-warning pull-right" type="button" onclick="insertarExpediente();"> <span class="fa fa-plus"></span> incluir en...
+            </button>
             <?php
-            }
             ?>
             <div class="dropdown pull-right">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id='nombexpbtn'> <?php echo $tituloA ?>
@@ -395,19 +392,12 @@ $arrExpedientes = $expediente->expedientes;
         } else {
             if (!empty($usuaPermExpediente)) {
 
-                $inicaiRadicado = substr($verrad, 0, 4);
-                $indicadorTipoRadiado = substr($verrad, -1);
-
                 if (!$tsub)
                     $tsub = "0";
                 if (!$tdoc)
                     $tdoc = "0";
                 if (!$codserie)
                     $codserie = "0";
-                if (
-                    $inicaiRadicado < 3000 || $indicadorTipoRadiado == 3 ||
-                    $indicadorTipoRadiado == 1
-                ) {
                 ?>
                     <span class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
@@ -420,7 +410,7 @@ $arrExpedientes = $expediente->expedientes;
                             </li>
                         </ul>
                     </span>
-                <?php } ?>
+                <?php ?>
             <? } ?>
         <?php } ?>
     </div>

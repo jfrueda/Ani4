@@ -448,7 +448,7 @@ if ($esNotificacion) {
 $firma_krd = !isset($desdeMasiva) ? $_SESSION['krd'] : $usuaKrdMasiva;
 $grafo = $ruta_raiz . '/bodega/firmas/grafo/' . strtolower($firma_krd) . '.png';
 if (file_exists($grafo)) {
-    $grafo_html = '<img src="'.$grafo.'" alt="firma">';
+    $grafo_html = '<img src="' . $grafo . '" alt="firma" width="220" height="60" style="width:220px;height:60px;object-fit:contain;">';
     $respuesta = str_replace('${FIRMA}', $grafo_html, $respuesta);
     $asu = str_replace('${FIRMA}', $grafo_html, $asu);
 }

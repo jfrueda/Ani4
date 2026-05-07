@@ -177,7 +177,8 @@ if ($_POST) {
           <div class="row g-3">
             <?
             $bodega_firmas = $ruta_raiz . '/bodega/firmas/';
-            $uriFile1 = $bodega_firmas . $usua_doc;
+            $loginFirma = strtolower(trim($_SESSION["krd"]));
+            $uriFile1 = $bodega_firmas . 'grafo/' . $loginFirma . '.png';
             $uriFile2 = $bodega_firmas . $usua_doc . '.p12';
             ?>
 
@@ -185,10 +186,11 @@ if ($_POST) {
               <div class="col-md-5">
                 <div class="p-3 border rounded bg-white shadow-sm h-100 border-start border-4 border-info">
                   <label class="form-label fw-bold small">Imagen de Firma Mecánica</label>
-                  <input type="file" name="file1" class="form-control form-control-sm mb-2">
+                  <input type="file" name="file1" accept=".png,image/png" class="form-control form-control-sm mb-2">
+                  <small class="text-muted d-block mb-2">La firma debe cargarse en PNG, recortada al tamaño de la firma y sin espacios en blanco.</small>
                   <? if (file_exists($uriFile1)) { ?>
                     <div class="badge bg-danger-subtle text-danger border border-danger p-2 w-100 text-wrap">
-                      <i class="fa fa-warning me-1"></i> Ya existe una imagen cargada
+                      <i class="fa fa-warning me-1"></i> Ya existe una imagen cargada. Si sube una nueva, se reemplaza.
                     </div>
                   <? } ?>
                 </div>

@@ -32,6 +32,11 @@ $dependencia = $_SESSION["dependencia"];
 $usua_doc    = $_SESSION["usua_doc"];
 $codusuario  = $_SESSION["codusuario"];
 $entidad     = $_SESSION["entidad"];
+$usua_perm_anugestion = isset($_SESSION["usua_perm_anugestion"]) ? (int) $_SESSION["usua_perm_anugestion"] : 0;
+$usua_admin_sistema = isset($_SESSION["usua_admin_sistema"]) ? (int) $_SESSION["usua_admin_sistema"] : 0;
+$usua_perm_root = isset($_SESSION["usua_perm_root"]) ? (int) $_SESSION["usua_perm_root"] : 0;
+$es_admin = ($usua_admin_sistema >= 1 || $usua_perm_root >= 1);
+$puede_anular = ($usua_perm_anugestion === 1 || $usua_perm_anugestion === 3 || $es_admin);
 $datos_enviar = session_name() . "=" . session_id();
 
 include_once "$ruta_raiz/processConfig.php";
@@ -125,22 +130,24 @@ if ($_SESSION['envios_dependencia'] >= 1) {
             </div>
           </div>
 
-          <!-- === SECCIÓN: Anulaciones === -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-              <div class="card-header bg-danger text-white d-flex align-items-center">
-                <i class="fa fa-ban fa-2x me-2"></i>
-                <h5 class="mb-0">Anulaciones</h5>
-              </div>
+          <?php if ($puede_anular) { ?>
+            <!-- === SECCIÓN: Anulaciones === -->
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="card h-100 shadow-sm">
+                <div class="card-header bg-danger text-white d-flex align-items-center">
+                  <i class="fa fa-ban fa-2x me-2"></i>
+                  <h5 class="mb-0">Anulaciones</h5>
+                </div>
 
-              <div class="list-group list-group-flush">
-                <a href='../anulacion/anularRadicados.php?<?= $datos_enviar ?>&estado_sal=4&tpAnulacion=2&krd=<?= $krd ?>'
-                  class="list-group-item list-group-item-action">
-                  <i class="fa fa-trash-o me-2"></i> Anular Radicados
-                </a>
+                <div class="list-group list-group-flush">
+                  <a href='../anulacion/anularRadicados.php?<?= $datos_enviar ?>&estado_sal=4&tpAnulacion=2&krd=<?= $krd ?>'
+                    class="list-group-item list-group-item-action">
+                    <i class="fa fa-trash-o me-2"></i> Anular Radicados
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          <?php } ?>
 
           <!-- === SECCIÓN: Reportes === -->
           <div class="col-12 col-md-6 col-lg-4">
@@ -161,10 +168,12 @@ if ($_SESSION['envios_dependencia'] >= 1) {
                   <i class="fa fa-reply me-2"></i> Devoluciones
                 </a>
 
-                <a href='../anulacion/cuerpo_RepAnula.php?<?= $datos_enviar ?>&estado_sal=4&tpAnulacion=2&krd=<?= $krd ?>'
-                  class="list-group-item list-group-item-action">
-                  <i class="fa fa-ban me-2"></i> Anulaciones
-                </a>
+                <?php if ($puede_anular) { ?>
+                  <a href='../anulacion/cuerpo_RepAnula.php?<?= $datos_enviar ?>&estado_sal=4&tpAnulacion=2&krd=<?= $krd ?>'
+                    class="list-group-item list-group-item-action">
+                    <i class="fa fa-ban me-2"></i> Anulaciones
+                  </a>
+                <?php } ?>
 
                 <?php if (strtoupper($entidad) == 'correlibre') { ?>
                   <a href='../reportes/generar_listado_entrega.php?<?= $datos_enviar ?>&estado_sal=4&krd=<?= $krd ?>'
