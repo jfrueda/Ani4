@@ -60,6 +60,22 @@ function solAnulacion($radicados, $dependencia, $usuadoc, $comentario, $codUsuar
        $varcountError=0;
        $varGroup=0;
         foreach($radicados as $noRadicado){
+
+            // Regla de negocio: no permitir solicitud de anulacion para borradores ni radicados de entrada.
+            $sqlValidaTipo = "SELECT is_borrador, sgd_trad_codigo
+                FROM radicado
+                WHERE radi_nume_radi = $noRadicado";
+            $rsValidaTipo = $this->db->conn->Execute($sqlValidaTipo);
+            if ($rsValidaTipo && !$rsValidaTipo->EOF) {
+                $esBorrador = $rsValidaTipo->fields['IS_BORRADOR'];
+                $tipoRad = (int)$rsValidaTipo->fields['SGD_TRAD_CODIGO'];
+
+                if ($esBorrador === true || $esBorrador === 't' || $tipoRad === 2) {
+                    $radicadosErrorSolicitud[] = $noRadicado;
+                    continue;
+                }
+            }
+
          /*   $sql = "SELECT SGD_EANU_CODIGO
                 FROM radicado 
                 WHERE radi_nume_radi = " . $noRadicado; 
