@@ -313,7 +313,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                         </div>
 
                                         <!-- FECHA INICIAL -->
-                                        <div class="col-6 col-md-3">
+                                        <div class="col-6 col-md-2">
                                             <label class="form-label fw-semibold">Fecha inicial</label>
                                             <input type="date"
                                                 name="fecha_inicial_aux"
@@ -325,7 +325,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                         </div>
 
                                         <!-- FECHA FINAL -->
-                                        <div class="col-6 col-md-3">
+                                        <div class="col-6 col-md-2">
                                             <label class="form-label fw-semibold">Fecha final</label>
                                             <input type="date"
                                                 name="fecha_final_aux"
@@ -354,7 +354,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                         </div>
 
                                         <!-- BOTONES -->
-                                        <div class="col-12 col-md-1 d-flex gap-2 mt-3">
+                                        <div class="col-12 col-md-1 d-flex">
                                             <input type="button"
                                                 id="botongrande"
                                                 value="Filtrar"
