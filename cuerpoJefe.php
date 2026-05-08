@@ -353,15 +353,6 @@ $sqlTotalRad = "select count(1) as TOTAL
                                             </select>
                                         </div>
 
-                                        <!-- LOADER -->
-                                        <div class="col-6 col-md-2 d-flex align-items-end">
-                                            <img style="display: none;"
-                                                id="cargando_bandeja"
-                                                src="https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_800,h_600/https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"
-                                                width="40"
-                                                class="ms-2">
-                                        </div>
-
                                         <!-- BOTONES -->
                                         <div class="col-12 col-md-1 d-flex gap-2 mt-3">
                                             <input type="button"
@@ -373,6 +364,15 @@ $sqlTotalRad = "select count(1) as TOTAL
                                                 id="botongrandeBorrar"
                                                 value="Borrar"
                                                 class="btn btn-outline-secondary px-4">
+                                        </div>
+
+                                        <!-- LOADER -->
+                                        <div class="col-6 col-md-2 d-flex align-items-end">
+                                            <img style="display: none;"
+                                                id="cargando_bandeja"
+                                                src="https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_800,h_600/https://codigofuente.io/wp-content/uploads/2018/09/progress.gif"
+                                                width="40"
+                                                class="ms-2">
                                         </div>
                                     </div>
                                 </div>
