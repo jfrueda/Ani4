@@ -281,7 +281,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                 <article class="col-xs-12">
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                         <div>
-                            <div class="actions smart-form" style="position: absolute !important;top: 175px;z-index: 1;left: 465px;">
+                            <div class="actions smart-form" style="position: absolute !important;top: 94px;z-index: 1;left: 23px;">
                                 <?php
                                 $controlAgenda = 1;
                                 if ($carpeta == 11 && !$tipo_carp && $codusuario != 1) {
@@ -355,15 +355,8 @@ $sqlTotalRad = "select count(1) as TOTAL
 
                                         <!-- BOTONES -->
                                         <div class="col-12 col-md-1 d-flex">
-                                            <input type="button"
-                                                id="botongrande"
-                                                value="Filtrar"
-                                                class="btn btn-primary px-4">
-
-                                            <input type="button"
-                                                id="botongrandeBorrar"
-                                                value="Borrar"
-                                                class="btn btn-outline-secondary px-4">
+                                            <input type="button" id="botongrande" value="Filtrar" class="btn btn-primary px-2">
+                                            <input type="button" id="botongrandeBorrar" value="Borrar" class="btn btn-outline-secondary px-2">
                                         </div>
 
                                         <!-- LOADER -->
