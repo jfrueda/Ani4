@@ -304,6 +304,7 @@ if ($generar_informe || $aceptarAnular) {
                                                 while (!$rsSel->EOF) {
                                                     $radAnularE[$i] = $rsSel->fields['RADI_NUME_RADI'];
                                                     $radObservaE[$i] = $rsSel->fields['SGD_ANU_DESC'];
+                                                    $radFechaE[$i] = $rsSel->fields['RADI_FECH_RADI'];
                                                     $radDepeNombE[$i] = substr($rsSel->fields['DEPE_NOMB'], 0, 45);
                                                     $radDepeCodiE[$i] = $rsSel->fields['DEPE_CODI'];
                                                     $i++;
@@ -355,9 +356,19 @@ if ($generar_informe || $aceptarAnular) {
                                                     $fecha = date("d-m-Y");
                                                     $fecha_hoy_corto = date("d-m-Y");
                                                     include "$ruta_raiz/class_control/class_gen.php";
+                                                    include_once "$ruta_raiz/include/class/JefeArea.class.php";
                                                     $date = date("m/d/Y");
                                                     $b = new CLASS_GEN();
                                                     $fecha_hoy = $b->traducefecha($date);
+
+                                                    // Firma fija del jefe de la dependencia 11001.
+                                                    $jefeFirmaNombre = "PENDIENTE CONFIGURAR JEFE DEP 11001";
+                                                    $jefeFirmaCargo = "Jefe División de Gestión Documental";
+                                                    $jefeFirmaEntidad = "Universidad Militar Nueva Granada";
+                                                    $jefeInfo = JefeArea::getInfoCompletaJefe($db, 11001);
+                                                    if (is_array($jefeInfo) && !empty($jefeInfo['usua_nomb'])) {
+                                                        $jefeFirmaNombre = trim($jefeInfo['usua_nomb']);
+                                                    }
 
                                                     // Obtiene el cuerpo del acta desde la tabla parametrizada tomando la mayor fecha de vigencia no futura
                                                     $contenidoActaDefault = <<<'EOC'
@@ -394,19 +405,63 @@ if ($generar_informe || $aceptarAnular) {
                                                         $html = stripslashes($html);
                                                     }
                                                     //df->WriteHTML(iconv('UTF-8', 'ISO-8859-1', $html));
+                                                    // Inserta logo desde base64 para evitar dependencias de rutas locales.
+                                                    $logoTmp = null;
+                                                    $logoBase64Path = __DIR__ . "/umng_escudo_base64.php";
+                                                    if (is_readable($logoBase64Path)) {
+                                                        $logoBase64 = include $logoBase64Path;
+                                                        if (is_string($logoBase64) && trim($logoBase64) !== '') {
+                                                            $logoBin = base64_decode($logoBase64, true);
+                                                            if ($logoBin !== false) {
+                                                                $logoTmp = tempnam(sys_get_temp_dir(), 'umng_logo_');
+                                                                if ($logoTmp) {
+                                                                    file_put_contents($logoTmp, $logoBin);
+                                                                    // Se inserta más abajo junto con el bloque del encabezado.
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    if ($logoTmp && file_exists($logoTmp)) {
+                                                        @unlink($logoTmp);
+                                                    }
+                                                    $pdf->SetFont('Arial', 'B', 9);
+                                                    $w1 = 115;
+                                                    $w2 = 45;
+                                                    $w3 = 30;
+                                                    $hTop = 9;
+                                                    $hBottom = 8;
+
+                                                    $pdf->Cell($w1, $hTop, utf8_decode("ACTA DE ANULACIÓN DE RADICADOS No. $actaNo"), 1, 0, 'C');
+                                                    $pdf->Cell($w2, $hTop, utf8_decode("Fecha Emisión: " . date("Y/m/d")), 1, 0, 'C');
+                                                    $pdf->Cell($w3, $hTop, "GD-GD-F-27", 1, 1, 'C');
+
+                                                    $pdf->Cell($w1, $hBottom, "", 1, 0, 'C');
+                                                    $pdf->Cell($w2, $hBottom, utf8_decode("Revisión No.: 4"), 1, 0, 'C');
+                                                    $pdf->Cell($w3, $hBottom, utf8_decode("Página 1 de 1"), 1, 1, 'C');
+
+                                                    // Reposiciona logo centrado verticalmente dentro del bloque izquierdo (2 filas)
+                                                    if (isset($logoTmp) && $logoTmp && file_exists($logoTmp)) {
+                                                        $pdf->Image($logoTmp, 18, 8, 14, 0, 'JPG');
+                                                    }
+                                                    $pdf->Ln(6);
+
                                                     $pdf->SetFont('Arial', 'B', 12);
-                                                    $pdf->Cell(0, 10, utf8_decode("ACTA DE ANULACIÓN No. $actaNo"), 0, 1, 'C');
-                                                    $pdf->Cell(0, 10, utf8_decode("NÚMEROS DE RADICACIÓN DE CORRESPONDENCIA AÑO $anoActual"), 0, 1, 'C');
-                                                    $pdf->Ln(10);
+                                                    $pdf->Cell(0, 8, utf8_decode("ACTA DE ANULACIÓN No. $actaNo"), 0, 1, 'C');
+                                                    $pdf->SetFont('Arial', 'B', 11);
+                                                    $pdf->Cell(0, 8, utf8_decode("FECHA: " . $fecha_hoy), 0, 1, 'L');
+                                                    $pdf->Ln(2);
 
                                                     $pdf->SetFont('Arial', '', 11);
                                                     $pdf->MultiCell(0, 6, utf8_decode($contenidoActa), 0, 'J');
                                                     $pdf->Ln(5);
-                                                    $pdf->MultiCell(0, 6, utf8_decode("Por lo descrito, el Coordinador(a) del Grupo de Correspondencia procede a anular los siguientes números de radicado que no fueron tramitados por las dependencias radicadoras, y cuyas justificaciones fueron remitidas por los jefes de las mismas."), 0, 'J');
-                                                    $pdf->Ln(8);
-
-                                                    $pdf->MultiCell(0, 6, utf8_decode("1.- Números de radicación a anular:"), 0, 'J');
-                                                    $pdf->Ln(4);
+                                                    $pdf->SetFont('Arial', 'B', 11);
+                                                    $pdf->Cell(0, 6, utf8_decode("EN CONSECUENCIA"), 0, 1, 'C');
+                                                    $pdf->Ln(2);
+                                                    $pdf->SetFont('Arial', '', 11);
+                                                    $pdf->MultiCell(0, 6, utf8_decode("El responsable de la División de Gestión Documental de la Universidad Militar Nueva Granada, procede a anular los siguientes números de radicados, que no fueron tramitados por las Unidades Académico Administrativas radicadoras:"), 0, 'J');
+                                                    $pdf->Ln(5);
+                                                    $pdf->MultiCell(0, 6, utf8_decode("1. Radicados a anular:"), 0, 'J');
+                                                    $pdf->Ln(3);
 
                                                     // Helper: sanitize and convert text for FPDF (ISO-8859-1)
                                                     function _safe_for_pdf($text)
@@ -432,28 +487,70 @@ if ($generar_informe || $aceptarAnular) {
                                                         return $converted === false ? '' : $converted;
                                                     }
 
-                                                    // Radicados anulados
+                                                    // Envuelve texto para calcular alto dinámico en filas de tabla.
+                                                    function _wrap_for_table($text, $maxChars = 78)
+                                                    {
+                                                        $text = trim((string)$text);
+                                                        if ($text === '') {
+                                                            return '';
+                                                        }
+                                                        return wordwrap($text, $maxChars, "\n", true);
+                                                    }
+
+                                                    // Tabla de radicados anulados
+                                                    $pdf->SetFont('Arial', 'B', 10);
+                                                    $pdf->Cell(50, 8, utf8_decode("No. Radicado"), 1, 0, 'C');
+                                                    $pdf->Cell(35, 8, "Fecha", 1, 0, 'C');
+                                                    $pdf->Cell(105, 8, utf8_decode("Motivo Anulación"), 1, 1, 'C');
+
+                                                    $pdf->SetFont('Arial', '', 10);
+                                                    // Altura uniforme para todas las filas (según el motivo más largo).
+                                                    $altoLinea = 5;
+                                                    $maxLineasMotivo = 1;
+                                                    $motivosWrap = array();
+                                                    foreach ($radAnularE as $id => $noRadicado) {
+                                                        $motivoWrapTmp = _wrap_for_table($radObservaE[$id], 78);
+                                                        $motivosWrap[$id] = $motivoWrapTmp;
+                                                        $lineasTmp = max(1, substr_count($motivoWrapTmp, "\n") + 1);
+                                                        if ($lineasTmp > $maxLineasMotivo) {
+                                                            $maxLineasMotivo = $lineasTmp;
+                                                        }
+                                                    }
+                                                    $altoFilaFija = max(8, $maxLineasMotivo * $altoLinea);
+
                                                     foreach ($radAnularE as $id => $noRadicado) {
                                                         $norad = $radAnularE[$id];
                                                         $txrad = $radObservaE[$id];
-                                                        $depeNombAnu = substr($radDepeNombE[$id], 0, 40);
-                                                        $depeCodiAnu = $radDepeCodiE[$id];
+                                                        $fechaRad = '';
+                                                        if (!empty($radFechaE[$id])) {
+                                                            $fechaRad = substr($radFechaE[$id], 0, 10);
+                                                        }
 
-                                                        $linea = "Radicado No. $norad ($depeCodiAnu - $depeNombAnu)";
-                                                        $pdf->SetFont('Arial', 'B', 11);
-                                                        $pdf->MultiCell(0, 6, _safe_for_pdf($linea), 0, 'L');
-                                                        $pdf->SetFont('Arial', '', 11);
-                                                        $pdf->MultiCell(0, 6, _safe_for_pdf("Solicitud Anulación: $txrad"), 0, 'J');
-                                                        $pdf->Ln(4);
+                                                        $motivoWrap = isset($motivosWrap[$id]) ? $motivosWrap[$id] : _wrap_for_table($txrad, 78);
+
+                                                        $x = $pdf->GetX();
+                                                        $y = $pdf->GetY();
+                                                        $pdf->Cell(50, $altoFilaFija, _safe_for_pdf($norad), 1, 0, 'L');
+                                                        $pdf->Cell(35, $altoFilaFija, _safe_for_pdf($fechaRad), 1, 0, 'C');
+                                                        $pdf->MultiCell(105, $altoLinea, _safe_for_pdf($motivoWrap), 1, 'J');
+                                                        $pdf->SetXY($x, $y + $altoFilaFija);
                                                     }
 
-                                                    // Aquí agregas los radicados, firma, etc.
-                                                    $pdf->MultiCell(0, 6, utf8_decode("Se firma la presente el $fecha_hoy."), 0, 'J');
-                                                    $pdf->Ln(10);
-                                                    $pdf->Cell(0, 10, "____________________________________________________", 0, 1, 'C');
-                                                    $pdf->Cell(0, 10, utf8_decode("Coordinador(a) - Grupo De Correspondencia."), 0, 1, 'C');
+                                                    $pdf->Ln(6);
+                                                    $pdf->MultiCell(0, 6, utf8_decode("2. La presente acta reposa en el Sistema de Gestión de Documento Electrónico de Archivo - SGDEA, como constancia y en cumplimiento de las directrices de la Universidad en materia archivística."), 0, 'J');
+                                                    $pdf->Ln(16);
+                                                    $pdf->SetFont('Arial', 'B', 11);
+                                                    $pdf->Cell(0, 6, utf8_decode("Firmado electrónicamente por:"), 0, 1, 'C');
+                                                    $pdf->Cell(0, 6, _safe_for_pdf(strtoupper($jefeFirmaNombre)), 0, 1, 'C');
+                                                    $pdf->SetFont('Arial', '', 11);
+                                                    $pdf->Cell(0, 6, utf8_decode($jefeFirmaCargo), 0, 1, 'C');
+                                                    $pdf->Cell(0, 6, utf8_decode($jefeFirmaEntidad), 0, 1, 'C');
 
                                                     $noArchivo = "../bodega" . $noArchivo;
+                                                    $directorioSalida = dirname($noArchivo);
+                                                    if (!is_dir($directorioSalida)) {
+                                                        @mkdir($directorioSalida, 0775, true);
+                                                    }
                                                     $pdf->Output($noArchivo);
                                         ?>
                                             Ver Acta <a class="titulo2" href='<?= $noArchivo ?>'>Acta No <?= $actaNo ?> </a><?
