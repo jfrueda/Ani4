@@ -356,9 +356,19 @@ if ($generar_informe || $aceptarAnular) {
                                                     $fecha = date("d-m-Y");
                                                     $fecha_hoy_corto = date("d-m-Y");
                                                     include "$ruta_raiz/class_control/class_gen.php";
+                                                    include_once "$ruta_raiz/include/class/JefeArea.class.php";
                                                     $date = date("m/d/Y");
                                                     $b = new CLASS_GEN();
                                                     $fecha_hoy = $b->traducefecha($date);
+
+                                                    // Firma fija del jefe de la dependencia 11001.
+                                                    $jefeFirmaNombre = "PENDIENTE CONFIGURAR JEFE DEP 11001";
+                                                    $jefeFirmaCargo = "Jefe División de Gestión Documental";
+                                                    $jefeFirmaEntidad = "Universidad Militar Nueva Granada";
+                                                    $jefeInfo = JefeArea::getInfoCompletaJefe($db, 11001);
+                                                    if (is_array($jefeInfo) && !empty($jefeInfo['usua_nomb'])) {
+                                                        $jefeFirmaNombre = trim($jefeInfo['usua_nomb']);
+                                                    }
 
                                                     // Obtiene el cuerpo del acta desde la tabla parametrizada tomando la mayor fecha de vigencia no futura
                                                     $contenidoActaDefault = <<<'EOC'
@@ -530,10 +540,11 @@ if ($generar_informe || $aceptarAnular) {
                                                     $pdf->MultiCell(0, 6, utf8_decode("2. La presente acta reposa en el Sistema de Gestión de Documento Electrónico de Archivo - SGDEA, como constancia y en cumplimiento de las directrices de la Universidad en materia archivística."), 0, 'J');
                                                     $pdf->Ln(16);
                                                     $pdf->SetFont('Arial', 'B', 11);
-                                                    $pdf->Cell(0, 6, utf8_decode("NOMBRES Y APELLIDOS"), 0, 1, 'C');
+                                                    $pdf->Cell(0, 6, utf8_decode("Firmado electrónicamente por:"), 0, 1, 'C');
+                                                    $pdf->Cell(0, 6, _safe_for_pdf(strtoupper($jefeFirmaNombre)), 0, 1, 'C');
                                                     $pdf->SetFont('Arial', '', 11);
-                                                    $pdf->Cell(0, 6, utf8_decode("Jefe División de Gestión Documental"), 0, 1, 'C');
-                                                    $pdf->Cell(0, 6, utf8_decode("Universidad Militar Nueva Granada"), 0, 1, 'C');
+                                                    $pdf->Cell(0, 6, utf8_decode($jefeFirmaCargo), 0, 1, 'C');
+                                                    $pdf->Cell(0, 6, utf8_decode($jefeFirmaEntidad), 0, 1, 'C');
 
                                                     $noArchivo = "../bodega" . $noArchivo;
                                                     $directorioSalida = dirname($noArchivo);
