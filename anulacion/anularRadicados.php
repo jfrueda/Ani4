@@ -21,7 +21,7 @@ if (!$fecha_busq) {
 if (!$fecha_busq2) {
     $fecha_busq2 = date("Y-m-d");
 }
-include '../processConfig.php);';
+include '../processConfig.php';
 include_once "$ruta_raiz/include/tx/Anulacion.php";
 include_once "$ruta_raiz/include/tx/Historico.php";
 include_once "$ruta_raiz/include/db/ConnectionHandler.php";
@@ -336,7 +336,7 @@ if ($generar_informe || $aceptarAnular) {
                                                     $Historico = new Historico($db);
                                                     $radicados = $Historico->insertarHistorico($radAnularE, $dependencia, $codusuario, 'NULL', 0, $observa, 26);
 
-                                                    define(FPDF_FONTPATH, '../fpdf/font/');
+                                                    define('FPDF_FONTPATH', '../fpdf/font/');
                                                     $radAnulados = join(",", $radAnularE);
 
                                                     foreach ($radAnularE as $id => $noRadicado) {
@@ -421,29 +421,42 @@ if ($generar_informe || $aceptarAnular) {
                                                             }
                                                         }
                                                     }
-                                                    if ($logoTmp && file_exists($logoTmp)) {
-                                                        @unlink($logoTmp);
-                                                    }
-                                                    $pdf->SetFont('Arial', 'B', 9);
-                                                    $w1 = 115;
-                                                    $w2 = 45;
-                                                    $w3 = 30;
-                                                    $hTop = 9;
-                                                    $hBottom = 8;
-
-                                                    $pdf->Cell($w1, $hTop, utf8_decode("ACTA DE ANULACIÓN DE RADICADOS No. $actaNo"), 1, 0, 'C');
-                                                    $pdf->Cell($w2, $hTop, utf8_decode("Fecha Emisión: " . date("Y/m/d")), 1, 0, 'C');
-                                                    $pdf->Cell($w3, $hTop, "GD-GD-F-27", 1, 1, 'C');
-
-                                                    $pdf->Cell($w1, $hBottom, "", 1, 0, 'C');
-                                                    $pdf->Cell($w2, $hBottom, utf8_decode("Revisión No.: 4"), 1, 0, 'C');
-                                                    $pdf->Cell($w3, $hBottom, utf8_decode("Página 1 de 1"), 1, 1, 'C');
-
-                                                    // Reposiciona logo centrado verticalmente dentro del bloque izquierdo (2 filas)
+                                                    // Plantilla de encabezado: logo centrado arriba + tabla centrada.
+                                                    $pageW = isset($pdf->w) ? $pdf->w : 210;
                                                     if (isset($logoTmp) && $logoTmp && file_exists($logoTmp)) {
-                                                        $pdf->Image($logoTmp, 18, 8, 14, 0, 'JPG');
+                                                        $logoW = 34;
+                                                        $logoX = ($pageW - $logoW) / 2;
+                                                        $pdf->Image($logoTmp, $logoX, 8, $logoW, 0, 'JPG');
                                                     }
-                                                    $pdf->Ln(6);
+
+                                                    $wLeft = 95;
+                                                    $wMid = 40;
+                                                    $wRight = 35;
+                                                    $rowH = 10;
+                                                    $headerW = $wLeft + $wMid + $wRight;
+                                                    $x0 = ($pageW - $headerW) / 2;
+                                                    $y0 = 56;
+
+                                                    // Celda izquierda combinada (2 filas)
+                                                    $pdf->Rect($x0, $y0, $wLeft, $rowH * 2);
+                                                    $pdf->SetFont('Arial', 'B', 9);
+                                                    $pdf->SetXY($x0 + 2, $y0 + 6);
+                                                    $pdf->Cell($wLeft - 4, 8, utf8_decode("ACTA DE ANULACIÓN DE RADICADOS"), 0, 0, 'C');
+
+                                                    // Bloque derecho fila superior
+                                                    $pdf->SetFont('Arial', 'B', 10);
+                                                    $pdf->SetXY($x0 + $wLeft, $y0);
+                                                    $pdf->MultiCell($wMid, 5, utf8_decode("Fecha Emisión:\n" . date("Y/m/d")), 1, 'C');
+                                                    $pdf->SetXY($x0 + $wLeft + $wMid, $y0);
+                                                    $pdf->Cell($wRight, $rowH, "GD-GD-F-27", 1, 0, 'C');
+
+                                                    // Bloque derecho fila inferior
+                                                    $pdf->SetXY($x0 + $wLeft, $y0 + $rowH);
+                                                    $pdf->MultiCell($wMid, 5, utf8_decode("Revisión No.:\n4"), 1, 'C');
+                                                    $pdf->SetXY($x0 + $wLeft + $wMid, $y0 + $rowH);
+                                                    $pdf->Cell($wRight, $rowH, utf8_decode("Página 1 de 1"), 1, 0, 'C');
+
+                                                    $pdf->SetY($y0 + ($rowH * 2) + 8);
 
                                                     $pdf->SetFont('Arial', 'B', 12);
                                                     $pdf->Cell(0, 8, utf8_decode("ACTA DE ANULACIÓN No. $actaNo"), 0, 1, 'C');
@@ -552,6 +565,9 @@ if ($generar_informe || $aceptarAnular) {
                                                         @mkdir($directorioSalida, 0775, true);
                                                     }
                                                     $pdf->Output($noArchivo);
+                                                    if ($logoTmp && file_exists($logoTmp)) {
+                                                        @unlink($logoTmp);
+                                                    }
                                         ?>
                                             Ver Acta <a class="titulo2" href='<?= $noArchivo ?>'>Acta No <?= $actaNo ?> </a><?
                                                                                                                             exit;
