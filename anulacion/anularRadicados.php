@@ -365,9 +365,26 @@ if ($generar_informe || $aceptarAnular) {
                                                     $jefeFirmaNombre = "PENDIENTE CONFIGURAR JEFE DEP 11001";
                                                     $jefeFirmaCargo = "Jefe División de Gestión Documental";
                                                     $jefeFirmaEntidad = "Universidad Militar Nueva Granada";
+                                                    $jefeFirmaLogin = "";
+                                                    $firmaMecanicaActaPath = "";
+                                                    $firmaMecanicaTmp = "";
                                                     $jefeInfo = JefeArea::getInfoCompletaJefe($db, 11001);
                                                     if (is_array($jefeInfo) && !empty($jefeInfo['usua_nomb'])) {
                                                         $jefeFirmaNombre = trim($jefeInfo['usua_nomb']);
+                                                    }
+                                                    $sqlJefeLogin = "SELECT u.usua_login
+                                                        FROM usuario u
+                                                        INNER JOIN autm_membresias a ON u.id = a.autu_id
+                                                        WHERE a.autg_id = 2
+                                                          AND u.depe_codi = 11001
+                                                        ORDER BY u.id DESC
+                                                        LIMIT 1";
+                                                    $rsJefeLogin = $db->conn->Execute($sqlJefeLogin);
+                                                    if ($rsJefeLogin && !$rsJefeLogin->EOF) {
+                                                        $jefeFirmaLogin = strtolower(trim((string)$rsJefeLogin->fields['USUA_LOGIN']));
+                                                    }
+                                                    if ($jefeFirmaLogin !== '') {
+                                                        $firmaMecanicaActaPath = $ruta_raiz . "/bodega/firmas/grafo/" . $jefeFirmaLogin . ".png";
                                                     }
 
                                                     // Obtiene el cuerpo del acta desde la tabla parametrizada tomando la mayor fecha de vigencia no futura
@@ -510,6 +527,39 @@ if ($generar_informe || $aceptarAnular) {
                                                         return wordwrap($text, $maxChars, "\n", true);
                                                     }
 
+                                                    // Convierte PNG de firma mecánica a JPG para evitar incompatibilidades de alpha en FPDF 1.52.
+                                                    function _firma_png_to_jpg($pngPath)
+                                                    {
+                                                        if (!is_readable($pngPath)) {
+                                                            return '';
+                                                        }
+                                                        if (!function_exists('imagecreatefrompng') || !function_exists('imagejpeg')) {
+                                                            return '';
+                                                        }
+                                                        $im = @imagecreatefrompng($pngPath);
+                                                        if ($im === false) {
+                                                            return '';
+                                                        }
+                                                        $w = imagesx($im);
+                                                        $h = imagesy($im);
+                                                        $bg = imagecreatetruecolor($w, $h);
+                                                        $white = imagecolorallocate($bg, 255, 255, 255);
+                                                        imagefill($bg, 0, 0, $white);
+                                                        imagecopy($bg, $im, 0, 0, 0, 0, $w, $h);
+                                                        $tmpBase = tempnam(sys_get_temp_dir(), 'firma_jpg_');
+                                                        if ($tmpBase === false) {
+                                                            imagedestroy($im);
+                                                            imagedestroy($bg);
+                                                            return '';
+                                                        }
+                                                        $tmpJpg = $tmpBase . ".jpg";
+                                                        @rename($tmpBase, $tmpJpg);
+                                                        $ok = @imagejpeg($bg, $tmpJpg, 92);
+                                                        imagedestroy($im);
+                                                        imagedestroy($bg);
+                                                        return $ok ? $tmpJpg : '';
+                                                    }
+
                                                     // Tabla de radicados anulados
                                                     $pdf->SetFont('Arial', 'B', 10);
                                                     $pdf->Cell(50, 8, utf8_decode("No. Radicado"), 1, 0, 'C');
@@ -551,7 +601,30 @@ if ($generar_informe || $aceptarAnular) {
 
                                                     $pdf->Ln(6);
                                                     $pdf->MultiCell(0, 6, utf8_decode("2. La presente acta reposa en el Sistema de Gestión de Documento Electrónico de Archivo - SGDEA, como constancia y en cumplimiento de las directrices de la Universidad en materia archivística."), 0, 'J');
-                                                    $pdf->Ln(16);
+                                                    $pdf->Ln(8);
+
+                                                    // Firma mecánica del jefe (misma lógica de extracción del flujo de combinar).
+                                                    if ($firmaMecanicaActaPath && file_exists($firmaMecanicaActaPath)) {
+                                                        $firmaMecanicaTmp = _firma_png_to_jpg($firmaMecanicaActaPath);
+                                                        if ($firmaMecanicaTmp && file_exists($firmaMecanicaTmp)) {
+                                                            // Firma con ancho fijo y alto automático (proporcional).
+                                                            $firmaW = 62;
+                                                            $firmaH = 0;
+                                                            $firmaX = (isset($pdf->w) ? ($pdf->w - $firmaW) / 2 : 75);
+                                                            $firmaY = $pdf->GetY();
+                                                            $pdf->Image($firmaMecanicaTmp, $firmaX, $firmaY, $firmaW, $firmaH, 'JPG');
+
+                                                            // Salto dinámico según alto real renderizado.
+                                                            $firmaInfo = @getimagesize($firmaMecanicaTmp);
+                                                            $altoRender = 20;
+                                                            if ($firmaInfo && !empty($firmaInfo[0]) && !empty($firmaInfo[1])) {
+                                                                $altoRender = ($firmaW * $firmaInfo[1]) / $firmaInfo[0];
+                                                            }
+                                                            $pdf->SetY($firmaY + $altoRender + 2);
+                                                        }
+                                                    }
+
+                                                    $pdf->Ln(4);
                                                     $pdf->SetFont('Arial', 'B', 11);
                                                     $pdf->Cell(0, 6, utf8_decode("Firmado electrónicamente por:"), 0, 1, 'C');
                                                     $pdf->Cell(0, 6, _safe_for_pdf(strtoupper($jefeFirmaNombre)), 0, 1, 'C');
@@ -567,6 +640,9 @@ if ($generar_informe || $aceptarAnular) {
                                                     $pdf->Output($noArchivo);
                                                     if ($logoTmp && file_exists($logoTmp)) {
                                                         @unlink($logoTmp);
+                                                    }
+                                                    if ($firmaMecanicaTmp && file_exists($firmaMecanicaTmp)) {
+                                                        @unlink($firmaMecanicaTmp);
                                                     }
                                         ?>
                                             Ver Acta <a class="titulo2" href='<?= $noArchivo ?>'>Acta No <?= $actaNo ?> </a><?
