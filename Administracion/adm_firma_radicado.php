@@ -39,6 +39,39 @@ function file_exists_rel($contentPath, $relPath)
     return file_exists($full) ? $full : false;
 }
 
+function extract_docx_rel_from_input($value)
+{
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '';
+    }
+
+    $decoded = urldecode($value);
+    $parsed = parse_url($decoded);
+    $path = $decoded;
+
+    if (is_array($parsed) && isset($parsed['path'])) {
+        $path = $parsed['path'];
+    }
+
+    $path = str_replace('\\', '/', trim((string) $path));
+    if ($path === '') {
+        return '';
+    }
+
+    $bodegaPos = strpos($path, '/bodega/');
+    if ($bodegaPos !== false) {
+        $path = substr($path, $bodegaPos + strlen('/bodega'));
+    }
+
+    $relPath = normalize_rel_path($path);
+    if ($relPath === '' || !preg_match('/\.docx$/i', $relPath)) {
+        return '';
+    }
+
+    return $relPath;
+}
+
 if (isset($_POST['radicado'])) {
     header('Content-Type: application/json');
 
@@ -66,11 +99,29 @@ if (isset($_POST['radicado'])) {
     $radiPath = trim((string) $rsRad->fields['RADI_PATH']);
     $depeActu = trim((string) $rsRad->fields['RADI_DEPE_ACTU']);
     $contentBase = isset($CONTENT_PATH) ? rtrim($CONTENT_PATH, '/') : (rtrim($ABSOL_PATH, '/') . '/bodega');
+    $urlDocx = trim((string) ($_POST['url_docx'] ?? ''));
 
     $sourceRel = '';
     $sourceDocx = '';
 
-    if ($radiPath !== '' && preg_match('/\.docx$/i', $radiPath)) {
+    if ($urlDocx !== '') {
+        $urlRel = extract_docx_rel_from_input($urlDocx);
+        if ($urlRel === '') {
+            echo json_encode(['error' => 'La URL del DOCX no es válida']);
+            exit;
+        }
+
+        $urlFull = file_exists_rel($contentBase, $urlRel);
+        if ($urlFull === false) {
+            echo json_encode(['error' => 'No existe el DOCX indicado en la URL']);
+            exit;
+        }
+
+        $sourceRel = $urlRel;
+        $sourceDocx = $urlFull;
+    }
+
+    if ($sourceDocx === '' && $radiPath !== '' && preg_match('/\.docx$/i', $radiPath)) {
         $candidateRel = normalize_rel_path($radiPath);
         $candidateFull = file_exists_rel($contentBase, $candidateRel);
         if ($candidateFull !== false) {
@@ -317,6 +368,12 @@ if (isset($_POST['radicado'])) {
                                         <input type="password" maxlength="255" class="form-control shadow-none" id="clave" name="clave" placeholder="Si la deja vacía usa la configurada en sistema">
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    <div class="p-3 bg-white rounded-3 shadow-sm border border-light-subtle h-100">
+                                        <label for="url_docx" class="form-label fw-semibold text-secondary small mb-2">URL DOCX (opcional)</label>
+                                        <input type="text" maxlength="600" class="form-control shadow-none" id="url_docx" name="url_docx" placeholder="https://cadet.umng.edu.co/bodega/2026/14010/docs/120261401000000106_00001.docx">
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="my-4 border-top border-light-subtle"></div>
@@ -333,7 +390,7 @@ if (isset($_POST['radicado'])) {
                     </div>
                     <div class="card-footer bg-white py-2">
                         <small class="text-muted italic px-2">
-                            <i class="fa fa-info-circle me-1 text-primary"></i> El sistema toma el DOCX más reciente del radicado y publica el PDF firmado en la ruta productiva.
+                            <i class="fa fa-info-circle me-1 text-primary"></i> Si envía URL DOCX se prioriza ese archivo; si no, el sistema toma el DOCX más reciente del radicado y publica el PDF firmado en la ruta productiva.
                         </small>
                     </div>
                 </div>
