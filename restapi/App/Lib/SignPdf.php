@@ -101,27 +101,28 @@ class SignPdf extends ADOdb
         }
 
 				$archFirmado = $routeBodega . 'imagen-' . $consecutivo . '-' . date('Y-m-d-H:i') . '_signed.pdf';
+                $archivoSalida = $archFirmado;
+                if (!is_file($archFirmado)) {
+                    $archivoSalida = $full_path;
+                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf_api imagen-$consecutivo\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+                }
 				$sql = $twig->render('insertLogApiFirma.sql', [
-					'paths'=> $archFirmado,
+					'paths'=> $archivoSalida,
 				]);
 
 				$this->conn->Execute($sql);
 
-				if($inf == 'INFO Finished: Signature succesfully created.')
+				if($inf == 'INFO Finished: Signature succesfully created.' && is_file($archFirmado))
 				{
+                    $commandDel = 'rm -rf ' . $full_path;
+                    exec($commandDel, $out, $ret);
+				}
 
-						$commandDel = 'rm -rf ' . $full_path;
-						exec($commandDel, $out, $ret);
-
-						if(is_file($archFirmado))
-						{
-							array_push($mensajes, ['ArchivoFirmado' => base64_encode(file_get_contents($archFirmado))]);
-						}
-						else
-						{
-							array_push($mensajes, ['mensaje' => 'Error en la creación o firmado del archivo']);
-						}
-					}
+                if (is_file($archivoSalida)) {
+                    array_push($mensajes, ['ArchivoFirmado' => base64_encode(file_get_contents($archivoSalida))]);
+                } else {
+                    array_push($mensajes, ['mensaje' => 'Error en la creación o firmado del archivo']);
+                }
 			}
 			else
 			{

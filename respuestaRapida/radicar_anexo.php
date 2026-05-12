@@ -849,14 +849,6 @@ if ($_SESSION['apiFirmaDigital']=='false' && $_SESSION["usua_perm_firma"] >= 1){
         else
             $radicadosSelAux[0] = $numRadicadoPadre;
 
-
-    $hist->insertarHistorico($radicadosSelAux,
-        $coddepe,
-        $usua_actu,
-        $coddepe,
-        $usua_actu,
-        "Firmadada digitalmente la respuesta en PDF No " . $nurad, 40);    
-
     $firmasd = $ABSOL_PATH.'/bodega/firmas/';
    
     $P12_FILE =  $firmasd . 'server.p12';
@@ -903,6 +895,20 @@ if ($_SESSION['apiFirmaDigital']=='false' && $_SESSION["usua_perm_firma"] >= 1){
 
     if($ret == 0){
         rename($anexo.'_signed.pdf', $nombreArchivo);
+        $hist->insertarHistorico($radicadosSelAux,
+            $coddepe,
+            $usua_actu,
+            $coddepe,
+            $usua_actu,
+            "Firmadada digitalmente la respuesta en PDF No " . $nurad, 40);
+    } else {
+        error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf $numRadicadoPadre > $nurad\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+        $hist->insertarHistorico($radicadosSelAux,
+            $coddepe,
+            $usua_actu,
+            $coddepe,
+            $usua_actu,
+            "Respuesta en PDF generada sin firma por falla en JSignPdf No " . $nurad, 40);
     }
     
 }

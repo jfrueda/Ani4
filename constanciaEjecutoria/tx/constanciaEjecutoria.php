@@ -966,6 +966,7 @@ class ConstanciaEjecutoria{
         $ret = null;
         $cmd = $commandFirmadoTS ?? $commandFirmado;
         $inf = exec($cmd,$out,$ret);
+        $firmaAplicada = true;
 
         // si falla la ejecución de jsign guardar error en bodega/jsignpdf.log
         if ($ret != 0) {
@@ -980,17 +981,23 @@ class ConstanciaEjecutoria{
                 if ($ret != 0) {
                     $out = implode(PHP_EOL, $out);
                     error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) $radicado_p > $nurad: $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
-                    return;
+                    $firmaAplicada = false;
                 }
             }
-            else
-                return;
+            else {
+                $firmaAplicada = false;
+            }
         }
-        $data = explode(".", $ubicacion);
-        $sql = "update public.sgd_ce_constancia	set ubicacion = '" . $data[0] . "_signed.pdf' where id = " . $idSolicitud;
-        $this->db->conn->execute($sql);
-        unlink($ABSOL_PATH . $ubicacion);
-        $this->agergarHistorial($idSolicitud, $depeCodi, $usuaCodi, 'Se agrega firma digital - Estampa');
+        $signedUbicacion = preg_replace('/\\.pdf$/i', '_signed.pdf', $ubicacion);
+        if ($firmaAplicada && file_exists($ABSOL_PATH . $signedUbicacion)) {
+            $sql = "update public.sgd_ce_constancia	set ubicacion = '" . $signedUbicacion . "' where id = " . $idSolicitud;
+            $this->db->conn->execute($sql);
+            unlink($ABSOL_PATH . $ubicacion);
+            $this->agergarHistorial($idSolicitud, $depeCodi, $usuaCodi, 'Se agrega firma digital - Estampa');
+        } else {
+            error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf_constancia id=".$idSolicitud."\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+            $this->agergarHistorial($idSolicitud, $depeCodi, $usuaCodi, 'Firma digital no aplicada, se conserva PDF sin firma');
+        }
     }
 
     /**

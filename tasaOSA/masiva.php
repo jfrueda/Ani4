@@ -389,34 +389,26 @@ foreach ($sheetData as $t) {
 
                     $out = null;
                     $ret = null;
-                    $inf = exec($commandFirmado,$out,$ret);      
+                    $inf = exec($commandFirmado,$out,$ret);
+                    $firmaAplicada = true;
 
                     if($ret != 0) {
-                        //echo "error 1";
-                        $retorno = "Error firmando el documento: " . $nurad;
                         $out = implode(PHP_EOL, $out);
-                        error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) : $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");   
-
-                        $out = "Error firmando el documento: " . $nurad;
-                        $data_from_db[$i]=array("N° Radicado"=> "-" . $nurad,"Error"=>$out);
-                        error_log(date(DATE_ATOM)." ".basename(__FILE__)." $out\n $inf $ret", 3 , $file);  
-                        break;                             
+                        error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) : $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+                        $firmaAplicada = false;
                     } elseif($inf=="INFO  Finished: Creating of signature failed."){
-                        //echo "error 2";
-                        $retorno = "Error creando documento firmado: " . $nurad;
-                        $out = "Error creando documento firmado: " . $nurad;
-                        $data_from_db[$i]=array("N° Radicado"=> "-" . $nurad,"Error"=>$out);
-                        error_log(date(DATE_ATOM)." ".basename(__FILE__)." $out\n ", 3 , $file); 
-                        break;                                       
-                    } 
+                        error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf $nurad\n", 3 , "$ABSOL_PATH/bodega/jsignpdf.log");
+                        $firmaAplicada = false;
+                    }
 
                 $pathAuxPdf = $ABSOL_PATH . "bodega/" . $anho . "/". $depeRadica . "/docs/" . $anexo . ".pdf";
                 $pathAuxPdfSigned = $ABSOL_PATH . "bodega/" . $anho . "/". $depeRadica . "/docs/" . $anexo . "_signed.pdf";
-                exec("rm -rf $pathAuxPdf");
-                //$pathAux = $ABSOL_PATH . "bodega/" . $anho . "/". $depeRadica . "/docs/" . $anexo . ".docx";
-                //$pathFolderAux = $ABSOL_PATH . "bodega/" . $anho . "/". $depeRadica . "/docs/";
-
-                rename($pathAuxPdfSigned, $pathAuxPdf);                
+                if ($firmaAplicada && file_exists($pathAuxPdfSigned)) {
+                    @unlink($pathAuxPdf);
+                    rename($pathAuxPdfSigned, $pathAuxPdf);
+                } else {
+                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf $nurad\n", 3 , "$ABSOL_PATH/bodega/jsignpdf.log");
+                }
             
             /*
             Logica para crear expediente y asociarlo al radicado

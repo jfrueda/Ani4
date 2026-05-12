@@ -333,7 +333,12 @@ try {
         error_log(date(DATE_ATOM)." ".basename(__FILE__)." Finished: Creating of signature failed. intento 2 sin estampa\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
     }
 
-    rename($exp.'_signed.pdf',$ABSOL_PATH.'/bodega/indices_electronicos/'.$exp.'.pdf');
+    $signedIndexPath = $ABSOL_PATH.'/bodega/indices_electronicos/'.$exp.'_signed.pdf';
+    if (file_exists($signedIndexPath)) {
+        rename($signedIndexPath, $ABSOL_PATH.'/bodega/indices_electronicos/'.$exp.'.pdf');
+    } else {
+        error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf_indice $exp\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+    }
     $indice_e_filename = $exp.'.pdf';
 } catch (\Exception $e) {
 }

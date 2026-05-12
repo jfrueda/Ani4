@@ -380,29 +380,25 @@ foreach ($sheetData as $t) {
 
                                 $out = null;
                                 $ret = null;
-                                $inf = exec($commandFirmado,$out,$ret);      
+                                $inf = exec($commandFirmado,$out,$ret);
+                                $firmaAplicada = true;
 
                                 if($ret != 0) {
-                                    //echo "error 1";
-                                    $retorno = "Error firmando el documento: " . $nurad;
                                     $out = implode(PHP_EOL, $out);
-                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) : $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");   
-
-                                    $out = "Error firmando el documento: " . $nurad;
-                                    $data_from_db[$i]=array("N° Radicado"=> "-" . $nurad,"Error"=>$out);
-                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." $out\n ", 3 , $file);  
-                                    break;                             
+                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) : $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+                                    $firmaAplicada = false;
                                 } elseif($inf=="INFO  Finished: Creating of signature failed."){
-                                    //echo "error 2";
-                                    $retorno = "Error creando documento firmado: " . $nurad;
-                                    $out = "Error creando documento firmado: " . $nurad;
-                                    $data_from_db[$i]=array("N° Radicado"=> "-" . $nurad,"Error"=>$out);
-                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." $out\n ", 3 , $file); 
-                                    break;                                       
-                                } else {
+                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf $nurad\n", 3 , "$ABSOL_PATH/bodega/jsignpdf.log");
+                                    $firmaAplicada = false;
+                                }
 
-                                    rename($ABSOL_PATH . '/bodega/tmp/workDir/tasaTmp/' . $ubicacionPdfCombinadoExp[0] . '_signed.pdf', 
-                                            $ABSOL_PATH . "/bodega" . $path);
+                                $pdfFirmado = $ABSOL_PATH . '/bodega/tmp/workDir/tasaTmp/' . $ubicacionPdfCombinadoExp[0] . '_signed.pdf';
+                                $pdfPlano = $ABSOL_PATH . '/bodega/tmp/workDir/tasaTmp/' . $ubicacionPdfCombinado;
+                                if ($firmaAplicada && file_exists($pdfFirmado)) {
+                                    rename($pdfFirmado, $ABSOL_PATH . "/bodega" . $path);
+                                } else {
+                                    rename($pdfPlano, $ABSOL_PATH . "/bodega" . $path);
+                                }
 
                                     /*
                                       *Se agrega histórico de imagen asociada 

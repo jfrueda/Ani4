@@ -1316,14 +1316,18 @@ if ($ext == "ODT" || $ext == "odt") {
 
             $commandFirmado = 'java  -jar ' . $ABSOL_PATH . '/include/jsignpdf/JSignPdf.jar ' . str_replace('odt', 'pdf', $nombreArchivo) . ' -kst PKCS12  -ksf ' . $ABSOL_PATH . '/bodega/firmas/' . $usua_doc . '.p12   -ksp ' . $clave . ' --font-size 7    -r \'Firmado al Radicar en OrfeoGPL\'  -V --img-path ' . $ABSOL_PATH . '/imagenes/gnu.gif --render-mode  GRAPHIC_AND_DESCRIPTION -llx 0 -lly 0 -urx 550 -ury 27 2>&1';
 
-            //die (exec($commandFirmado));
+            $firmaAplicada = true;
             if (exec($commandFirmado) == "INFO  Finished: Creating of signature failed.") {
-                unset($answer);
-                $answer = array();
-                saveMessage('error', "Clave de firma digital erronea");
-                die(json_encode($answer));
+                $firmaAplicada = false;
+                error_log(date(DATE_ATOM) . " " . basename(__FILE__) . " fallback_unsigned_pdf_odt $radicado_p > $nurad\n", 3, "$ABSOL_PATH/bodega/jsignpdf.log");
             }
-            rename(str_replace(".odt", "_signed.pdf", $nombreArchivo), "../../$pathFinal");
+            $pdfFirmadoTmp = str_replace(".odt", "_signed.pdf", $nombreArchivo);
+            $pdfPlanoTmp = str_replace(".odt", ".pdf", $nombreArchivo);
+            if ($firmaAplicada && file_exists($pdfFirmadoTmp)) {
+                rename($pdfFirmadoTmp, "../../$pathFinal");
+            } else {
+                rename($pdfPlanoTmp, "../../$pathFinal");
+            }
         } elseif ($_SESSION['apiFirmaDigital'] == 'certicamara') {
             include "include/apiCerticamara/PdfSign.php";
             //ruta archivo a firmar
@@ -1508,6 +1512,7 @@ if ($ext == "ODT" || $ext == "odt") {
             $inf = exec($cmd, $out, $ret);
 
             // si falla la ejecución de jsign guardar error en bodega/jsignpdf.log
+            $firmaAplicada = true;
             if ($ret != 0) {
                 $out = implode(PHP_EOL, $out);
                 error_log(date(DATE_ATOM) . " " . basename(__FILE__) . " ($ret) $radicado_p > $nurad: $out\n", 3, "$ABSOL_PATH/bodega/jsignpdf.log");
@@ -1520,14 +1525,23 @@ if ($ext == "ODT" || $ext == "odt") {
                     if ($ret != 0) {
                         $out = implode(PHP_EOL, $out);
                         error_log(date(DATE_ATOM) . " " . basename(__FILE__) . " ($ret) $radicado_p > $nurad: $out\n", 3, "$ABSOL_PATH/bodega/jsignpdf.log");
-                        saveMessage('error', "Clave de firma digital erronea sin estampa intento 2");
-                        die(json_encode($answer));
+                        $firmaAplicada = false;
                     }
+                }
+                if (!isset($commandFirmadoTS)) {
+                    $firmaAplicada = false;
                 }
             }
 
             $linkarchivo_grabar = str_replace('.docx', '.pdf', $linkarchivo_grabar);
-            rename(str_replace(".docx", "_signed.pdf", $nombreArchivo), $CONTENT_PATH . $linkarchivo_grabar);
+            $pdfFirmadoTmp = str_replace(".docx", "_signed.pdf", $nombreArchivo);
+            $pdfPlanoTmp = str_replace(".docx", ".pdf", $nombreArchivo);
+            if ($firmaAplicada && file_exists($pdfFirmadoTmp)) {
+                rename($pdfFirmadoTmp, $CONTENT_PATH . $linkarchivo_grabar);
+            } else {
+                error_log(date(DATE_ATOM) . " " . basename(__FILE__) . " fallback_unsigned_pdf_docx $radicado_p > $nurad\n", 3, "$ABSOL_PATH/bodega/jsignpdf.log");
+                rename($pdfPlanoTmp, $CONTENT_PATH . $linkarchivo_grabar);
+            }
 
             if (substr($numrad, -1) == 2) {
                 $_numrad_aux[0] = $noRad;

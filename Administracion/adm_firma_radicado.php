@@ -186,6 +186,13 @@ if (isset($_POST['radicado'])) {
         exit;
     }
 
+    // Salvaguarda: esta opción no debe borrar el DOCX original.
+    $docxBackup = '/tmp/docx-preserve-' . $radicado . '-' . str_replace('.', '', microtime(true)) . '.docx';
+    if (!@copy($sourceDocx, $docxBackup)) {
+        echo json_encode(['error' => 'No se pudo crear respaldo temporal del DOCX']);
+        exit;
+    }
+
     $tmpSf = '/tmp/' . str_replace('.', '', microtime(true));
     $cmdToPdf = "soffice --headless -env:UserInstallation=file://$tmpSf --convert-to pdf "
         . escapeshellarg($sourceDocx)
@@ -202,6 +209,7 @@ if (isset($_POST['radicado'])) {
     if ($retToPdf !== 0 || !file_exists($convertedPdf)) {
         $outStr = implode("\n", $outToPdf);
         error_log(date(DATE_ATOM) . " " . basename(__FILE__) . " (soffice $retToPdf) $radicado: $outStr\n", 3, "$ABSOL_PATH/bodega/jsignpdf.log");
+        @unlink($docxBackup);
         echo json_encode(['error' => 'Falló la conversión a PDF']);
         exit;
     }
@@ -214,6 +222,7 @@ if (isset($_POST['radicado'])) {
     }
 
     if (!file_exists($P12_FILE)) {
+        @unlink($docxBackup);
         echo json_encode(['error' => 'No se encontró certificado de firma (.p12)']);
         exit;
     }
@@ -223,6 +232,7 @@ if (isset($_POST['radicado'])) {
         : (isset($P12_PASS) ? $P12_PASS : '');
 
     if ($clave === '') {
+        @unlink($docxBackup);
         echo json_encode(['error' => 'No hay clave de firma disponible']);
         exit;
     }
@@ -260,17 +270,19 @@ if (isset($_POST['radicado'])) {
         exec($cmdFirmado, $outFirmado, $retFirmado);
     }
 
+    $firmaAplicada = true;
     if ($retFirmado !== 0) {
         $outStr = implode("\n", $outFirmado);
         error_log(date(DATE_ATOM) . " " . basename(__FILE__) . " ($retFirmado) $radicado: $outStr\n", 3, "$ABSOL_PATH/bodega/jsignpdf.log");
-        echo json_encode(['error' => 'Falló el proceso de firma']);
-        exit;
+        $firmaAplicada = false;
     }
 
     $signedTmp = preg_replace('/\.pdf$/i', '_signed.pdf', $convertedPdf);
-    if (!file_exists($signedTmp)) {
-        echo json_encode(['error' => 'No se generó el archivo firmado']);
-        exit;
+    $sourceToPublish = $convertedPdf;
+    if ($firmaAplicada && file_exists($signedTmp)) {
+        $sourceToPublish = $signedTmp;
+    } else {
+        error_log(date(DATE_ATOM) . " " . basename(__FILE__) . " fallback_unsigned_pdf $radicado\n", 3, "$ABSOL_PATH/bodega/jsignpdf.log");
     }
 
     $destRel = '';
@@ -286,16 +298,18 @@ if (isset($_POST['radicado'])) {
     $destFull = path_join($contentBase, $destRel);
     $destDir = dirname($destFull);
     if (!is_dir($destDir) && !mkdir($destDir, 0775, true)) {
+        @unlink($docxBackup);
         echo json_encode(['error' => 'No se pudo crear directorio de destino']);
         exit;
     }
 
-    if (!rename($signedTmp, $destFull)) {
+    if (!rename($sourceToPublish, $destFull)) {
+        @unlink($docxBackup);
         echo json_encode(['error' => 'No se pudo mover el PDF firmado a la ruta productiva']);
         exit;
     }
 
-    if (file_exists($convertedPdf)) {
+    if ($sourceToPublish !== $convertedPdf && file_exists($convertedPdf)) {
         @unlink($convertedPdf);
     }
 
@@ -323,9 +337,15 @@ if (isset($_POST['radicado'])) {
     $db->conn->CompleteTrans();
 
     if (!$okUpdate) {
+        @unlink($docxBackup);
         echo json_encode(['error' => 'No se pudo actualizar RADI_PATH en base de datos']);
         exit;
     }
+
+    if (!file_exists($sourceDocx)) {
+        @copy($docxBackup, $sourceDocx);
+    }
+    @unlink($docxBackup);
 
     echo json_encode([
         'ok' => true,
