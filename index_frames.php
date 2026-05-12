@@ -500,6 +500,11 @@ if ($_SESSION["usua_admin_sistema"] >= 1 || $tiene_acceso_admin) {
         'url' => "./Administracion/adm_estado_anexos.php?$sendSession",
         'nombre' => "Estado Anexos"
     ];
+    $administracion['firmaRadicado'] = [
+        'subMenu' => 0,
+        'url' => "./Administracion/adm_firma_radicado.php?$sendSession",
+        'nombre' => "Firma radicado"
+    ];
     if (!UsuarioFiltro::tieneFiltro()) {
         $administracion['seguridadRadicado'] = [
             'subMenu' => 0,
