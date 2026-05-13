@@ -237,6 +237,9 @@ if (isset($_POST['radicado'])) {
         exit;
     }
 
+    // PRUEBA CONTROLADA: forzar fallo de firma para validar fallback a PDF sin firma.
+    $clave = '__FORZAR_FALLO_FIRMA_PRUEBA__';
+
     $jar = $ABSOL_PATH . '/include/jsignpdf/JSignPdf.jar';
     $cmdFirmado = 'java -jar ' . escapeshellarg($jar)
         . ' ' . escapeshellarg($convertedPdf)

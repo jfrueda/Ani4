@@ -229,12 +229,14 @@ class Tx extends Historico {
 
 
 
-				$esBorrador = intval($this->db->conn->GetOne(
-					"SELECT CASE WHEN is_borrador THEN 1 ELSE 0 END FROM radicado WHERE radi_nume_radi = ?",
+				$bloquearCorreo = intval($this->db->conn->GetOne(
+					"SELECT CASE WHEN is_borrador THEN 1 WHEN sgd_trad_codigo = 3 THEN 1 ELSE 0 END
+					 FROM radicado
+					 WHERE radi_nume_radi = ?",
 					array($radNum)
 				)) === 1;
 
-				if ($SendMail == true && !empty($emailUsuaDest) && !$esBorrador) {
+				if ($SendMail == true && !empty($emailUsuaDest) && !$bloquearCorreo) {
 					//LLENO LAS VARIABLES NECESARIAS PARA INFORMAR
 					$krd = $LoginUsuarioOrigen;
 					$radicadosSelText = $record["RADI_NUME_RADI"];
@@ -345,12 +347,14 @@ class Tx extends Historico {
 			}
 
 
-				$esBorrador = intval($this->db->conn->GetOne(
-					"SELECT CASE WHEN is_borrador THEN 1 ELSE 0 END FROM radicado WHERE radi_nume_radi = ?",
+				$bloquearCorreo = intval($this->db->conn->GetOne(
+					"SELECT CASE WHEN is_borrador THEN 1 WHEN sgd_trad_codigo = 3 THEN 1 ELSE 0 END
+					 FROM radicado
+					 WHERE radi_nume_radi = ?",
 					array($radNum)
 				)) === 1;
 
-				if ($SendMail == true && !empty($emailUsuaDest) && !$esBorrador) {
+				if ($SendMail == true && !empty($emailUsuaDest) && !$bloquearCorreo) {
 					//LLENO LAS VARIABLES NECESARIAS PARA INFORMAR
 					$krd = $LoginUsuarioOrigen;
 					$radicadosSelText = $record["RADI_NUME_RADI"];

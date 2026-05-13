@@ -322,7 +322,9 @@ if ($db) {
 		$rs = $db->conn->Execute($sql1 . $sql3);
 		$slc_dep4 = $rs->GetMenu2('Slc_dvis[]', $Slc_dvis, false, true, 10, 'Class="select2" style="width:100%" id="Slc_dvis"');
 		$rs = $db->conn->Execute($sql1 . $sql3);
-		$slc_cont = $Rs_Cont->GetMenu2('idcont1', 0, "111: -- Seleccione --", false, 0, "id=\"idcont1\" class=\"select\" onchange=\"cambia(this.form,'idpais1','idcont1')\"");
+			$slc_cont = '<select name="idcont1" id="idcont1" class="form-select" onchange="cambia(this.form,\'idpais1\',\'idcont1\')">'
+				. '<option value="1" selected>América</option>'
+				. '</select>';
 	} else {
 		$error = 2;
 	}
@@ -460,7 +462,7 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 				document.getElementById('Slc_dpadre').value = '';
 				document.getElementById('Slc_dterr').value = '';
 				document.getElementById('idcont1').value = 1;
-				document.getElementById('idpais').value = 1;
+				document.getElementById('idpais1').value = 170;
 				act_pes2('');
 				borra_datos(document.formSeleccion);
 			} else {
@@ -511,12 +513,38 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 			document.formSeleccion.muni_us1.value = str[1] * 1 + '-' + str[2] * 1 + '-' + str[3] * 1;
 		}
 
-		<?php
-		// Convertimos los vectores de los paises, dptos y municipios creados en crea_combos_universales.php a vectores en JavaScript.
-		echo arrayToJsArray($vpaisesv, 'vp');
-		echo arrayToJsArray($vdptosv, 'vd');
-		echo arrayToJsArray($vmcposv, 'vm');
-		?>
+			<?php
+			// Este modulo trabaja sobre geografia nacional.
+			// Reducimos el payload de combos para evitar respuestas HTML gigantes
+			// y garantizar que la ubicacion geográfica despliegue sin bloquear el navegador.
+			$geoPaisCodi = 170; // COLOMBIA
+			$vpaisesvDep = array();
+			$vdptosvDep = array();
+			$vmcposvDep = array();
+
+			foreach ((array)$vpaisesv as $row) {
+				if (isset($row['ID1']) && (int)$row['ID1'] === $geoPaisCodi) {
+					$vpaisesvDep[] = $row;
+				}
+			}
+
+			foreach ((array)$vdptosv as $row) {
+				if (isset($row['ID0']) && (int)$row['ID0'] === $geoPaisCodi) {
+					$vdptosvDep[] = $row;
+				}
+			}
+
+			foreach ((array)$vmcposv as $row) {
+				if (isset($row['ID']) && (int)$row['ID'] === $geoPaisCodi) {
+					$vmcposvDep[] = $row;
+				}
+			}
+
+			// Convertimos los vectores filtrados a JavaScript.
+			echo arrayToJsArray($vpaisesvDep, 'vp');
+			echo arrayToJsArray($vdptosvDep, 'vd');
+			echo arrayToJsArray($vmcposvDep, 'vm');
+			?>
 
 		function ValidarInformacion(accion) {
 			console.log(accion);
@@ -569,10 +597,13 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 			window.open('listados.php?<?= session_name() . "=" . session_id() ?>&var=dpc', '', 'scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
 		}
 
-		document.addEventListener("DOMContentLoaded", function() {
-			selectores();
-		})
-	</script>
+			document.addEventListener("DOMContentLoaded", function() {
+				cambia(document.formSeleccion, 'idpais1', 'idcont1');
+				document.getElementById('idpais1').value = 170;
+				cambia(document.formSeleccion, 'codep_us1', 'idpais1');
+				selectores();
+			})
+		</script>
 </head>
 
 <body>
@@ -669,13 +700,11 @@ if ($rs_cierre->fields["DEP_CIERRE"] == 0) {
 																echo $slc_cont;
 																?>
 															</div>
-															<div class="col-6 col-md-3">
-																<select name="idpais1" id="idpais1" class="form-select" onChange="cambia(this.form, 'codep_us1', 'idpais1')">
-																	<option value="0" selected>
-																		<< Seleccione País>>
-																	</option>
-																</select>
-															</div>
+																<div class="col-6 col-md-3">
+																	<select name="idpais1" id="idpais1" class="form-select" onChange="cambia(this.form, 'codep_us1', 'idpais1')">
+																		<option value="170" selected>COLOMBIA</option>
+																	</select>
+																</div>
 															<div class="col-6 col-md-3">
 																<select name='codep_us1' id="codep_us1" class='form-select' onChange="cambia(this.form, 'muni_us1', 'codep_us1')">
 																	<option value='0' selected>

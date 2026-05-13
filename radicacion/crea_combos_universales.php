@@ -71,13 +71,17 @@ $sql_pais = "SELECT SGD_DEF_PAISES.ID_PAIS AS ID1, SGD_DEF_PAISES.NOMBRE_PAIS AS
 $Rs_pais = $db->conn->Execute($sql_pais);
 if ($Rs_pais)
 {   $vpaises = $db->conn->GetAssoc($sql_pais,$inputarr=false,$force_array=false,$first2cols=false);
-	$vpaisesk = array_keys($vpaises);
-	$vpaisesv = array_values($vpaises);
-	$idx=0;
-	foreach ($vpaisesk as $vpk)
-	{	$vpaisesv[$idx]['ID1'] = $vpk;
-		$idx += 1;
-	}
+		$vpaisesk = array_keys($vpaises);
+		$vpaisesv = array_values($vpaises);
+		$idx=0;
+		foreach ($vpaisesk as $vpk)
+		{
+			// Normalizamos estructura para JS (crea_combos_2.js espera ID1, NOMBRE e ID0).
+			$vpaisesv[$idx]['ID1'] = $vpk;
+			$vpaisesv[$idx]['NOMBRE'] = isset($vpaisesv[$idx][0]) ? $vpaisesv[$idx][0] : '';
+			$vpaisesv[$idx]['ID0'] = isset($vpaisesv[$idx][1]) ? $vpaisesv[$idx][1] : '';
+			$idx += 1;
+		}
 
 	foreach( $vpaisesv as $clave => $vpv )
 	{
