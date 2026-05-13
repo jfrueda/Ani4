@@ -84,7 +84,7 @@ foreach($ids as $id) {
         $reemplazos = [
             "*RAD_S*" => $radicado['RADI_NUME_RADI'],
             "*USUARIO*" => $_SESSION["krd"],
-            "*LINK_ANEXOS*" => getBaseUrl().'/nuevo/lista_anexos_consulta.php?radiNume='.encrypt_decrypt('encrypt', $radicado['RADI_NUME_RADI'], '97SUP3RC0R33UDKA7128409EJA'),
+            "*LINK_ANEXOS*" => getBaseUrl().'/lista_anexos_consulta.php?radiNume='.encrypt_decrypt('encrypt', $radicado['RADI_NUME_RADI'], '97SUP3RC0R33UDKA7128409EJA'),
             "*IMAGEN*" => str_replace("*SERVIDOR_IMAGEN*", $servidorOrfeoBodega, $linkImagenes),
             "*ASUNTO*" => htmlentities($subject, ENT_QUOTES | ENT_IGNORE, "UTF-8"),
             "*ENTIDAD_LARGO*" => $_SESSION["entida_largo"],
