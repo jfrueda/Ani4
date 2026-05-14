@@ -950,12 +950,14 @@ class ConstanciaEjecutoria{
      */
     function firmaDigital($idSolicitud, $ABSOL_PATH, $P12_FILE, $clave, $depeCodi, $usuaCodi, 
                                 $tsUrlTimeStamp, $tsuUserTimeStamp, $tspPasswordTimeStamp) {
+        global $JSIGNPDF_OPTS;
+
         $ubicacion = $this->obtenerUbicacionConstancia($idSolicitud);
         $data = explode("/", $ubicacion);
 
         chdir($ABSOL_PATH . '/' . $data[1] . '/' . $data[2] . '/' . $data[3] . '/' . $data[4]);
 
-        $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$ABSOL_PATH . $ubicacion .' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27';
+        $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$ABSOL_PATH . $ubicacion .' '.($JSIGNPDF_OPTS ?? '').' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27';
 
         if ($tsUrlTimeStamp) {
             $commandFirmadoTS = "$commandFirmado -ta PASSWORD -ts $tsUrlTimeStamp -tsu $tsuUserTimeStamp -tsp $tspPasswordTimeStamp 2>&1";

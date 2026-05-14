@@ -82,7 +82,8 @@ class SignPdf extends ADOdb
 				$P12_FILE=$_SERVER['DOCUMENT_ROOT'].$_ENV['P12_FILE'];
 
         $ABSOL_PATH = $_SERVER['DOCUMENT_ROOT'].$_ENV['prefix'];
-        $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$full_path.' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$_ENV['CLAVE'].' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d '.$routeBodega;
+        $JSIGNPDF_OPTS = $_ENV['JSIGNPDF_OPTS'] ?? '';
+        $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$full_path.' '.$JSIGNPDF_OPTS.' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$_ENV['CLAVE'].' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d '.$routeBodega;
 
         if (!empty($_ENV['tsUrlTimeStamp'])) {
             $commandFirmadoTS = "$commandFirmado -ta PASSWORD -ts {$_ENV['tsUrlTimeStamp']} -tsu {$_ENV['tsuUserTimeStamp']} -tsp {$_ENV['tspPasswordTimeStamp']} 2>&1";

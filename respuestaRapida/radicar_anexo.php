@@ -864,7 +864,7 @@ if ($_SESSION['apiFirmaDigital']=='false' && $_SESSION["usua_perm_firma"] >= 1){
     $nombreArchivo = $ABSOL_PATH.$ruta2;
     chdir($ABSOL_PATH.'/bodega/tmp/workDir/');
 
-    $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$nombreArchivo.' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27';
+    $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$nombreArchivo.' '.($JSIGNPDF_OPTS ?? '').' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27';
 
     if ($tsUrlTimeStamp) {
         $commandFirmadoTS = "$commandFirmado -ta PASSWORD -ts $tsUrlTimeStamp -tsu $tsuUserTimeStamp -tsp $tspPasswordTimeStamp 2>&1";

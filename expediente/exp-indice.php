@@ -322,7 +322,7 @@ try {
     $firmasd = $ABSOL_PATH.'/bodega/firmas/';
     $P12_FILE =  $firmasd . 'server.p12';
     $clave = $P12_PASS;
-    $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$file_to_sign.' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27 -ta PASSWORD -ts ' . $tsUrlTimeStamp . ' -tsu ' . $tsuUserTimeStamp . ' -tsp ' . $tspPasswordTimeStamp . ' 2>&1';
+    $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$file_to_sign.' '.($JSIGNPDF_OPTS ?? '').' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27 -ta PASSWORD -ts ' . $tsUrlTimeStamp . ' -tsu ' . $tsuUserTimeStamp . ' -tsp ' . $tspPasswordTimeStamp . ' 2>&1';
     $out = null;
     $ret = null;
     $inf = exec($commandFirmado,$out,$ret);
