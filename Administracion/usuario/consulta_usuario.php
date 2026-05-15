@@ -30,6 +30,7 @@ $errorConsulta = '';
 
 if ($termino !== '') {
     $like = '%' . $termino . '%';
+    $likeNombre = '%' . preg_replace('/\s+/', '%', $termino) . '%';
     $sql = "SELECT
                 u.id,
                 u.usua_nomb AS nombres,
@@ -49,7 +50,7 @@ if ($termino !== '') {
             LEFT JOIN autm_membresias am ON am.autu_id = u.id
             LEFT JOIN autg_grupos ag ON ag.id = am.autg_id
             WHERE (
-                u.usua_nomb ILIKE ?
+                UPPER(u.usua_nomb) LIKE UPPER(?)
                 OR u.usua_email ILIKE ?
                 OR u.usua_login ILIKE ?
                 OR CAST(u.usua_doc AS VARCHAR) ILIKE ?
@@ -70,7 +71,7 @@ if ($termino !== '') {
             ORDER BY u.usua_nomb ASC
             LIMIT 200";
 
-    $resultados = $db->conn->GetAll($sql, array($like, $like, $like, $like));
+    $resultados = $db->conn->GetAll($sql, array($likeNombre, $like, $like, $like));
     if ($resultados === false) {
         $errorConsulta = $db->conn->ErrorMsg();
         $resultados = array();
