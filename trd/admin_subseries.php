@@ -117,7 +117,7 @@ if (!$fecha_busq2)  $fecha_busq2 = $date_result;
 
 					<div class="col-md-9">
 						<label for="detasub" class="form-label fw-semibold">Descripción</label>
-						<input name="detasub" type="text" size="75" class="form-control tex_area" value="<?= $detasub ?>">
+						<input name="detasub" type="text" size="75" maxlength="1000" class="form-control tex_area" value="<?= $detasub ?>">
 					</div>
 				</div>
 

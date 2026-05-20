@@ -371,8 +371,8 @@ foreach ($sheetData as $t) {
                                 //echo "<br>vamos bien<br> ";
                                     
                                 chdir($ABSOL_PATH.'bodega/tmp/workDir/tasaTmp');
-                                $commandFirmado='java -jar '.$ABSOL_PATH.'include/jsignpdf/JSignPdf.jar ' . $ABSOL_PATH . "/bodega/tmp/workDir/tasaTmp/" .  $ubicacionPdfCombinado.' -kst PKCS12 -ksf ' . $P12_FILE . ' -ksp ' 
-                                    . $clave . ' --font-size 7 -r \'Firmado al Radicar en SuperArgo\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d ' . $ABSOL_PATH . '/bodega/tmp/workDir/tasaTmp/ 2>&1';
+                                $commandFirmado='java -jar '.$ABSOL_PATH.'include/jsignpdf/JSignPdf.jar ' . $ABSOL_PATH . "/bodega/tmp/workDir/tasaTmp/" .  $ubicacionPdfCombinado.' '.($JSIGNPDF_OPTS ?? '').' -kst PKCS12 -ksf ' . $P12_FILE . ' -ksp '
+                                    . $clave . ' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d ' . $ABSOL_PATH . '/bodega/tmp/workDir/tasaTmp/ 2>&1';
 
                                       
 
@@ -380,29 +380,25 @@ foreach ($sheetData as $t) {
 
                                 $out = null;
                                 $ret = null;
-                                $inf = exec($commandFirmado,$out,$ret);      
+                                $inf = exec($commandFirmado,$out,$ret);
+                                $firmaAplicada = true;
 
                                 if($ret != 0) {
-                                    //echo "error 1";
-                                    $retorno = "Error firmando el documento: " . $nurad;
                                     $out = implode(PHP_EOL, $out);
-                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) : $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");   
-
-                                    $out = "Error firmando el documento: " . $nurad;
-                                    $data_from_db[$i]=array("N° Radicado"=> "-" . $nurad,"Error"=>$out);
-                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." $out\n ", 3 , $file);  
-                                    break;                             
+                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) : $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+                                    $firmaAplicada = false;
                                 } elseif($inf=="INFO  Finished: Creating of signature failed."){
-                                    //echo "error 2";
-                                    $retorno = "Error creando documento firmado: " . $nurad;
-                                    $out = "Error creando documento firmado: " . $nurad;
-                                    $data_from_db[$i]=array("N° Radicado"=> "-" . $nurad,"Error"=>$out);
-                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." $out\n ", 3 , $file); 
-                                    break;                                       
-                                } else {
+                                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf $nurad\n", 3 , "$ABSOL_PATH/bodega/jsignpdf.log");
+                                    $firmaAplicada = false;
+                                }
 
-                                    rename($ABSOL_PATH . '/bodega/tmp/workDir/tasaTmp/' . $ubicacionPdfCombinadoExp[0] . '_signed.pdf', 
-                                            $ABSOL_PATH . "/bodega" . $path);
+                                $pdfFirmado = $ABSOL_PATH . '/bodega/tmp/workDir/tasaTmp/' . $ubicacionPdfCombinadoExp[0] . '_signed.pdf';
+                                $pdfPlano = $ABSOL_PATH . '/bodega/tmp/workDir/tasaTmp/' . $ubicacionPdfCombinado;
+                                if ($firmaAplicada && file_exists($pdfFirmado)) {
+                                    rename($pdfFirmado, $ABSOL_PATH . "/bodega" . $path);
+                                } else {
+                                    rename($pdfPlano, $ABSOL_PATH . "/bodega" . $path);
+                                }
 
                                     /*
                                       *Se agrega histórico de imagen asociada 

@@ -82,7 +82,8 @@ class SignPdf extends ADOdb
 				$P12_FILE=$_SERVER['DOCUMENT_ROOT'].$_ENV['P12_FILE'];
 
         $ABSOL_PATH = $_SERVER['DOCUMENT_ROOT'].$_ENV['prefix'];
-        $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$full_path.' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$_ENV['CLAVE'].' --font-size 7 -r \'Firmado al Radicar en SuperArgo\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d '.$routeBodega;
+        $JSIGNPDF_OPTS = $_ENV['JSIGNPDF_OPTS'] ?? '';
+        $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$full_path.' '.$JSIGNPDF_OPTS.' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$_ENV['CLAVE'].' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d '.$routeBodega;
 
         if (!empty($_ENV['tsUrlTimeStamp'])) {
             $commandFirmadoTS = "$commandFirmado -ta PASSWORD -ts {$_ENV['tsUrlTimeStamp']} -tsu {$_ENV['tsuUserTimeStamp']} -tsp {$_ENV['tspPasswordTimeStamp']} 2>&1";
@@ -101,27 +102,28 @@ class SignPdf extends ADOdb
         }
 
 				$archFirmado = $routeBodega . 'imagen-' . $consecutivo . '-' . date('Y-m-d-H:i') . '_signed.pdf';
+                $archivoSalida = $archFirmado;
+                if (!is_file($archFirmado)) {
+                    $archivoSalida = $full_path;
+                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf_api imagen-$consecutivo\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+                }
 				$sql = $twig->render('insertLogApiFirma.sql', [
-					'paths'=> $archFirmado,
+					'paths'=> $archivoSalida,
 				]);
 
 				$this->conn->Execute($sql);
 
-				if($inf == 'INFO Finished: Signature succesfully created.')
+				if($inf == 'INFO Finished: Signature succesfully created.' && is_file($archFirmado))
 				{
+                    $commandDel = 'rm -rf ' . $full_path;
+                    exec($commandDel, $out, $ret);
+				}
 
-						$commandDel = 'rm -rf ' . $full_path;
-						exec($commandDel, $out, $ret);
-
-						if(is_file($archFirmado))
-						{
-							array_push($mensajes, ['ArchivoFirmado' => base64_encode(file_get_contents($archFirmado))]);
-						}
-						else
-						{
-							array_push($mensajes, ['mensaje' => 'Error en la creación o firmado del archivo']);
-						}
-					}
+                if (is_file($archivoSalida)) {
+                    array_push($mensajes, ['ArchivoFirmado' => base64_encode(file_get_contents($archivoSalida))]);
+                } else {
+                    array_push($mensajes, ['mensaje' => 'Error en la creación o firmado del archivo']);
+                }
 			}
 			else
 			{

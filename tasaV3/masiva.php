@@ -414,8 +414,8 @@ foreach ($sheetData as $t) {
                     break;                    
                 }          
 
-                $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar ' . str_replace('docx','pdf',$pathAux) . ' -kst PKCS12 -ksf ' . $P12_FILE . ' -ksp ' 
-                . $clave . ' --font-size 7 -r \'Firmado al Radicar en SuperArgo\' -V -llx 0 -lly 0 -urx 550 -ury 27';
+                $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar ' . str_replace('docx','pdf',$pathAux) . ' ' . ($JSIGNPDF_OPTS ?? '') . ' -kst PKCS12 -ksf ' . $P12_FILE . ' -ksp '
+                . $clave . ' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27';
 
                 if ($tsUrlTimeStamp) {
                     $commandFirmadoTS = "$commandFirmado -ta PASSWORD -ts $tsUrlTimeStamp -tsu $tsuUserTimeStamp -tsp $tspPasswordTimeStamp -d $pathFolderAux 2>&1";
@@ -426,6 +426,7 @@ foreach ($sheetData as $t) {
                 $ret = null;
                 $cmd = $commandFirmadoTS ?? $commandFirmado;
                 $inf = exec($cmd,$out,$ret);
+                $firmaAplicada = true;
 
                 // si falla la ejecución de jsign guardar error en bodega/jsignpdf.log
                 if ($ret != 0) {
@@ -440,27 +441,22 @@ foreach ($sheetData as $t) {
                         if ($ret != 0) {
                             $out = implode(PHP_EOL, $out);
                             error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) $nurad: $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
-                            $retorno = "Error firmando el documento: " . $nurad;
-                            $out = "Error firmando el documento: " . $nurad;
-                            $data_from_db[$i]=array("N° Radicado"=> "-" . $nurad,"Error"=>$out);
-                            break;
+                            $firmaAplicada = false;
                         }
                     }
                     else {
-                        $retorno = "Error firmando el documento: " . $nurad;
-                        $out = "Error firmando el documento: " . $nurad;
-                        $data_from_db[$i]=array("N° Radicado"=> "-" . $nurad,"Error"=>$out);
-                        break;
+                        $firmaAplicada = false;
                     }
                 }
 
                 $pathAuxPdf = $ABSOL_PATH . "bodega/" . $anho . "/". $depeRadica . "/docs/" . $anexo . ".pdf";
                 $pathAuxPdfSigned = $ABSOL_PATH . "bodega/" . $anho . "/". $depeRadica . "/docs/" . $anexo . "_signed.pdf";
-                exec("rm -rf $pathAuxPdf");
-                //$pathAux = $ABSOL_PATH . "bodega/" . $anho . "/". $depeRadica . "/docs/" . $anexo . ".docx";
-                //$pathFolderAux = $ABSOL_PATH . "bodega/" . $anho . "/". $depeRadica . "/docs/";
-
-                rename($pathAuxPdfSigned, $pathAuxPdf);                
+                if ($firmaAplicada && file_exists($pathAuxPdfSigned)) {
+                    @unlink($pathAuxPdf);
+                    rename($pathAuxPdfSigned, $pathAuxPdf);
+                } else {
+                    error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf $nurad\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
+                }
             
             /*
             Logica para crear expediente y asociarlo al radicado

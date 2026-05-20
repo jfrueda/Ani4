@@ -258,7 +258,7 @@ if(!$addAttachment or empty($emailVal)){
 
    
     $encripted = $encrypted_string = encrypt_decrypt('encrypt',$radicadoPadreGen,$secret_key);
-    $linkAnexos = $link.'/nuevo/lista_anexos_consulta.php?radiNume='.$encripted;
+    $linkAnexos = $link.'/lista_anexos_consulta.php?radiNume='.$encripted;
   
     //End::Link en GSE
 

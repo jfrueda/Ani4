@@ -223,10 +223,15 @@ class modeloOwncloud {
         // echo $datoFinal;
         //echo "<hr>mv " . $this->RUTA_BODEGA . "/$fileGrb " . $this->RUTA_BODEGA . "/$fileGrb2 <br>";
         exec("mv " . $this->RUTA_BODEGA . "/$fileGrb " . $this->RUTA_BODEGA . "/$fileGrb2");
-        //  echo "cp $rutaOwn$arch " . $this->RUTA_BODEGA . "$fileGrb <br>";
-        //exec("cp $rutaOwn$arch " . $this->RUTA_BODEGA . "$fileGrb");
-        exec("mv $rad" . "_signed.pdf " . $this->RUTA_BODEGA . "/$fileGrb");
-//echo "mv $rad" . "_signed.pdf " . $this->RUTA_BODEGA . "/$fileGrb";
+        $signedTmp = $rad . "_signed.pdf";
+        if (file_exists($signedTmp)) {
+            exec("mv $signedTmp " . $this->RUTA_BODEGA . "/$fileGrb");
+            @unlink($this->RUTA_BODEGA . "/$fileGrb2");
+        } else {
+            // Fallback: conservar PDF sin firma si JSignPdf falla.
+            exec("mv " . $this->RUTA_BODEGA . "/$fileGrb2 " . $this->RUTA_BODEGA . "/$fileGrb");
+            error_log(date(DATE_ATOM) . " " . basename(__FILE__) . " fallback_unsigned_pdf $rad\n");
+        }
         //exec("md5sum " . $this->RUTA_BODEGA . "$fileGrb | awk '{print $1}'", $md5s);
         //exec("md5sum $rutaOwn$arch | awk '{print $1}'", $md5s2);
         /* echo "<hr>";

@@ -380,6 +380,11 @@ if ($_SESSION["usua_admin_sistema"] >= 1 || $tiene_acceso_admin) {
             'url' => "./Administracion/usuario/index.php?$sendSession",
             'nombre' => "Usuarios y Perfiles"
         ),
+        "consultarUsuarios" => array(
+            'subMenu' => 0,
+            'url' => "./Administracion/usuario/consulta_usuario.php?$sendSession",
+            'nombre' => "Consultar usuario"
+        ),
         "creacionMasivaUsuarios" => array(
             'subMenu' => 0,
             'url' => "./Administracion/usuario/creacion_masiva.php?$sendSession",
@@ -499,6 +504,11 @@ if ($_SESSION["usua_admin_sistema"] >= 1 || $tiene_acceso_admin) {
         'subMenu' => 0,
         'url' => "./Administracion/adm_estado_anexos.php?$sendSession",
         'nombre' => "Estado Anexos"
+    ];
+    $administracion['firmaRadicado'] = [
+        'subMenu' => 0,
+        'url' => "./Administracion/adm_firma_radicado.php?$sendSession",
+        'nombre' => "Firma radicado"
     ];
     if (!UsuarioFiltro::tieneFiltro()) {
         $administracion['seguridadRadicado'] = [

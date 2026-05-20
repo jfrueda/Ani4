@@ -197,7 +197,7 @@ if(isset($_POST['Realizar'])) {
             $clave = $P12_PASS;
         }
 
-        $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$full_path.' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado al Radicar en SuperArgo\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d ' . $uploadDir;
+        $commandFirmado='java -jar '.$ABSOL_PATH.'/include/jsignpdf/JSignPdf.jar '.$full_path.' '.($JSIGNPDF_OPTS ?? '').' -kst PKCS12 -ksf '.$P12_FILE.' -ksp '.$clave.' --font-size 7 -r \'Firmado al Radicar en CADET\' -V -llx 0 -lly 0 -urx 550 -ury 27 -d ' . $uploadDir;
 
         if ($tsUrlTimeStamp) {
             $commandFirmadoTS = "$commandFirmado -ta PASSWORD -ts $tsUrlTimeStamp -tsu $tsuUserTimeStamp -tsp $tspPasswordTimeStamp 2>&1";
@@ -210,6 +210,7 @@ if(isset($_POST['Realizar'])) {
         $inf = exec($cmd,$out,$ret);
 
         // si falla la ejecución de jsign guardar error en bodega/jsignpdf.log
+        $firmaAplicada = true;
         if ($ret != 0) {
             $out = implode(PHP_EOL, $out);
             error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) $valRadio: $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
@@ -223,12 +224,19 @@ if(isset($_POST['Realizar'])) {
                 if ($ret != 0) {
                     $out = implode(PHP_EOL, $out);
                     error_log(date(DATE_ATOM)." ".basename(__FILE__)." ($ret) $numRadicadoPadre > $nurad: $out\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
-                    die("<table class='table table-bordered'><tr><td class=titulosError>Ocurrio un error al firmar el documento<br><blockquote></blockquote></td></tr></table>");
+                    $firmaAplicada = false;
                 }
             }
-        } else {
+            if (!isset($commandFirmadoTS)) {
+                $firmaAplicada = false;
+            }
+        }
+
+        if ($firmaAplicada && file_exists($uploadDir . $valRadio . '_signed.pdf')) {
             rename($uploadDir . $valRadio . '_signed.pdf', 
                 $full_path);
+        } else {
+            error_log(date(DATE_ATOM)." ".basename(__FILE__)." fallback_unsigned_pdf $valRadio\n",3,"$ABSOL_PATH/bodega/jsignpdf.log");
         }
       
     }else {

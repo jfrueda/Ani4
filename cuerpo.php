@@ -288,7 +288,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                             <!-- widget div-->
                             <div>
                                 <!-- widget content -->
-                                <div class="actions smart-form" style="position: absolute !important; top: 147; z-index: 1; left: 28px;">
+                                <div class="actions smart-form" style="position: absolute !important; top: 81px; z-index: 1; left: 13px;">
                                     <?php
                                     $controlAgenda = 1;
                                     if (($carpeta == 11 && !$_SESSION["USUA_JEFE_DE_GRUPO"]) && !$tipo_carp && $codusuario != 1) {
@@ -300,7 +300,7 @@ $sqlTotalRad = "select count(1) as TOTAL
                                 <div class="widget-body no-padding">
                                     <div class="widget-body-toolbar border rounded-4 p-2 bg-light mb-2">
                                         <!-- <span class="fw-bold">Filtrar por fechas</span> -->
-                                        <div class="row align-items-end">
+                                        <div class="row align-items-end" style="margin-bottom: 2.7rem;">
                                             <!-- Página -->
                                             <div class="col-sm-6 col-md-2">
                                                 <label for="resultados_aux" class="form-label fw-semibold">Página</label>

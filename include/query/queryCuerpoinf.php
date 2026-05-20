@@ -147,20 +147,17 @@ $isql = 'select distinct on (a.radi_nume_radi) '.$radi_nume_radi.' "IMG_Numero R
 			s.SGD_DIR_NOMBRE as "REMITENTE",
 			c.info_desc "Comentario",
 			a.ra_asun "Asunto",
-			b.sgd_tpr_descrip as "Tipo Documento",
+			COALESCE(b.sgd_tpr_descrip, \'SIN TIPO\') as "Tipo Documento",
 			'.chr(39).chr(39).'  AS "Informador",
 			'.$tmp_cad1.' "CHK_checkValue",
 			c.INFO_LEIDO as "HID_RADI_LEIDO",
  a.RADI_FECH_RADI
- 		from radicado a,
- 			sgd_tpr_tpdcumento b,
- 			informados c,
- 			usuario d,
- 			sgd_dir_drecciones s
-		where a.radi_nume_radi=c.radi_nume_radi and a.radi_nume_radi=s.radi_nume_radi
-				and a.tdoc_codi=b.sgd_tpr_codigo
-			and a.radi_usua_actu=d.usua_codi and a.radi_depe_actu=d.depe_codi
-			and c.depe_codi='.$dependencia.' and c.usua_codi='.$codusuario.' '.$where_filtro .'
+		from informados c
+			join radicado a on a.radi_nume_radi = c.radi_nume_radi
+			join usuario d on a.radi_usua_actu = d.usua_codi and a.radi_depe_actu = d.depe_codi
+			join sgd_dir_drecciones s on a.radi_nume_radi = s.radi_nume_radi
+			left join sgd_tpr_tpdcumento b on a.tdoc_codi = b.sgd_tpr_codigo
+		where c.depe_codi='.$dependencia.' and c.usua_codi='.$codusuario.' '.$where_filtro .'
 			and c.info_codi is null
 		UNION
 		select distinct on (a.radi_nume_radi) '.$radi_nume_radi.' "IMG_Numero Radicado",
@@ -171,20 +168,18 @@ $isql = 'select distinct on (a.radi_nume_radi) '.$radi_nume_radi.' "IMG_Numero R
 			s.SGD_DIR_NOMBRE as "REMITENTE",
 			c.info_desc "Comentario",
 			a.ra_asun "Asunto",
-			b.sgd_tpr_descrip as "Tipo Documento",
+			COALESCE(b.sgd_tpr_descrip, \'SIN TIPO\') as "Tipo Documento",
 			d2.usua_nomb  AS "Informador",
 			'.$tmp_cad2.' "CHK_checkValue",
 			c.INFO_LEIDO as "HID_RADI_LEIDO",
  a.RADI_FECH_RADI
- 		from radicado a,
- 			sgd_tpr_tpdcumento b,
- 			informados c,
- 			usuario d,
- 			sgd_dir_drecciones s,  usuario d2
-		where a.radi_nume_radi=c.radi_nume_radi and a.tdoc_codi=b.sgd_tpr_codigo
-			and a.radi_nume_radi=s.radi_nume_radi and a.radi_usua_actu=d.usua_codi and a.radi_depe_actu=d.depe_codi
-			and c.depe_codi='.$dependencia.' and c.usua_codi='.$codusuario.' '.$where_filtro .'
-			and c.info_codi is not null and d2.usua_doc = '.$info_codi.' and a.is_borrador = false 
+		from informados c
+			join radicado a on a.radi_nume_radi = c.radi_nume_radi
+			join usuario d on a.radi_usua_actu = d.usua_codi and a.radi_depe_actu = d.depe_codi
+			join sgd_dir_drecciones s on a.radi_nume_radi = s.radi_nume_radi
+			left join sgd_tpr_tpdcumento b on a.tdoc_codi = b.sgd_tpr_codigo
+			left join usuario d2 on d2.usua_doc = '.$info_codi.'
+		where c.depe_codi='.$dependencia.' and c.usua_codi='.$codusuario.' '.$where_filtro .'
+			and c.info_codi is not null and a.is_borrador = false 
 		order by '.$order.' '.$orderTipo;
 ?>
-
