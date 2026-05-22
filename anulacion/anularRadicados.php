@@ -527,6 +527,68 @@ if ($generar_informe || $aceptarAnular) {
                                                         return wordwrap($text, $maxChars, "\n", true);
                                                     }
 
+                                                    // Recorta el texto envuelto a un número máximo de líneas para conservar altura uniforme.
+                                                    function _clamp_wrapped_lines($wrappedText, $maxLines = 2)
+                                                    {
+                                                        $wrappedText = (string)$wrappedText;
+                                                        if ($wrappedText === '') {
+                                                            return '';
+                                                        }
+                                                        $lines = explode("\n", $wrappedText);
+                                                        if (count($lines) <= $maxLines) {
+                                                            return $wrappedText;
+                                                        }
+                                                        $lines = array_slice($lines, 0, $maxLines);
+                                                        $lastIdx = $maxLines - 1;
+                                                        $lines[$lastIdx] = rtrim($lines[$lastIdx], " .") . "...";
+                                                        return implode("\n", $lines);
+                                                    }
+
+                                                    // Ajusta texto a un ancho real de celda usando métricas de FPDF y limita líneas.
+                                                    function _fit_text_for_multicell($pdf, $text, $cellWidth, $maxLines = 2)
+                                                    {
+                                                        $text = trim((string)$text);
+                                                        if ($text === '') {
+                                                            return '';
+                                                        }
+                                                        $words = preg_split('/\s+/', $text);
+                                                        $lines = array();
+                                                        $current = '';
+                                                        foreach ($words as $word) {
+                                                            $probe = ($current === '') ? $word : ($current . ' ' . $word);
+                                                            if ($pdf->GetStringWidth($probe) <= ($cellWidth - 2)) {
+                                                                $current = $probe;
+                                                                continue;
+                                                            }
+                                                            if ($current === '') {
+                                                                $lines[] = $word;
+                                                            } else {
+                                                                $lines[] = $current;
+                                                                $current = $word;
+                                                            }
+                                                            if (count($lines) >= $maxLines) {
+                                                                break;
+                                                            }
+                                                        }
+                                                        if (count($lines) < $maxLines && $current !== '') {
+                                                            $lines[] = $current;
+                                                        }
+                                                        $lines = array_slice($lines, 0, $maxLines);
+                                                        $joined = implode("\n", $lines);
+                                                        // Si hubo truncamiento, agrega puntos suspensivos a la última línea.
+                                                        if (count($words) > 0 && $joined !== $text) {
+                                                            $last = count($lines) - 1;
+                                                            if ($last >= 0) {
+                                                                $base = rtrim($lines[$last], " .");
+                                                                while ($base !== '' && $pdf->GetStringWidth($base . '...') > ($cellWidth - 2)) {
+                                                                    $base = rtrim(substr($base, 0, -1));
+                                                                }
+                                                                $lines[$last] = ($base === '') ? '...' : ($base . '...');
+                                                            }
+                                                        }
+                                                        return implode("\n", $lines);
+                                                    }
+
                                                     // Convierte PNG de firma mecánica a JPG para evitar incompatibilidades de alpha en FPDF 1.52.
                                                     function _firma_png_to_jpg($pngPath)
                                                     {
@@ -567,19 +629,13 @@ if ($generar_informe || $aceptarAnular) {
                                                     $pdf->Cell(105, 8, utf8_decode("Motivo Anulación"), 1, 1, 'C');
 
                                                     $pdf->SetFont('Arial', '', 10);
-                                                    // Altura uniforme para todas las filas (según el motivo más largo).
+                                                    // Altura uniforme y texto recortado para mantener tabla alineada visualmente.
                                                     $altoLinea = 5;
-                                                    $maxLineasMotivo = 1;
-                                                    $motivosWrap = array();
-                                                    foreach ($radAnularE as $id => $noRadicado) {
-                                                        $motivoWrapTmp = _wrap_for_table($radObservaE[$id], 78);
-                                                        $motivosWrap[$id] = $motivoWrapTmp;
-                                                        $lineasTmp = max(1, substr_count($motivoWrapTmp, "\n") + 1);
-                                                        if ($lineasTmp > $maxLineasMotivo) {
-                                                            $maxLineasMotivo = $lineasTmp;
-                                                        }
-                                                    }
-                                                    $altoFilaFija = max(8, $maxLineasMotivo * $altoLinea);
+                                                    $maxLineasVisuales = 4;
+                                                    $altoFilaFija = $maxLineasVisuales * $altoLinea;
+                                                    $anchoRad = 50;
+                                                    $anchoFecha = 35;
+                                                    $anchoMotivo = 105;
 
                                                     foreach ($radAnularE as $id => $noRadicado) {
                                                         $norad = $radAnularE[$id];
@@ -589,16 +645,33 @@ if ($generar_informe || $aceptarAnular) {
                                                             $fechaRad = substr($radFechaE[$id], 0, 10);
                                                         }
 
-                                                        $motivoWrap = isset($motivosWrap[$id]) ? $motivosWrap[$id] : _wrap_for_table($txrad, 78);
+                                                        $motivoWrap = _fit_text_for_multicell($pdf, _safe_for_pdf($txrad), $anchoMotivo, $maxLineasVisuales);
+                                                        $altoFila = $altoFilaFija;
+
+                                                        // Si no cabe la fila completa, abrir nueva página y repetir encabezado de tabla.
+                                                        $espacioDisponible = ($pdf->h - $pdf->bMargin) - $pdf->GetY();
+                                                        if ($altoFila > $espacioDisponible) {
+                                                            $pdf->AddPage();
+                                                            $pdf->SetFont('Arial', 'B', 10);
+                                                            $pdf->Cell($anchoRad, 8, utf8_decode("No. Radicado"), 1, 0, 'C');
+                                                            $pdf->Cell($anchoFecha, 8, "Fecha", 1, 0, 'C');
+                                                            $pdf->Cell($anchoMotivo, 8, utf8_decode("Motivo Anulación"), 1, 1, 'C');
+                                                            $pdf->SetFont('Arial', '', 10);
+                                                        }
 
                                                         $x = $pdf->GetX();
                                                         $y = $pdf->GetY();
-                                                        $pdf->Cell(50, $altoFilaFija, _safe_for_pdf($norad), 1, 0, 'L');
-                                                        $pdf->Cell(35, $altoFilaFija, _safe_for_pdf($fechaRad), 1, 0, 'C');
-                                                        $pdf->MultiCell(105, $altoLinea, _safe_for_pdf($motivoWrap), 1, 'J');
-                                                        $pdf->SetXY($x, $y + $altoFilaFija);
+                                                        $pdf->Cell($anchoRad, $altoFila, _safe_for_pdf($norad), 1, 0, 'L');
+                                                        $pdf->Cell($anchoFecha, $altoFila, _safe_for_pdf($fechaRad), 1, 0, 'C');
+                                                        // Borde completo para mantener la grilla alineada.
+                                                        $xComentario = $x + $anchoRad + $anchoFecha;
+                                                        $pdf->Rect($xComentario, $y, $anchoMotivo, $altoFila);
+                                                        $pdf->MultiCell($anchoMotivo, $altoLinea, $motivoWrap, 0, 'J');
+                                                        $pdf->SetXY($x, $y + $altoFila);
                                                     }
 
+                                                    // El bloque de cierre (punto 2 + firma) va en página adicional para evitar cortes.
+                                                    $pdf->AddPage();
                                                     $pdf->Ln(6);
                                                     $pdf->MultiCell(0, 6, utf8_decode("2. La presente acta reposa en el Sistema de Gestión de Documento Electrónico de Archivo - SGDEA, como constancia y en cumplimiento de las directrices de la Universidad en materia archivística."), 0, 'J');
                                                     $pdf->Ln(8);
