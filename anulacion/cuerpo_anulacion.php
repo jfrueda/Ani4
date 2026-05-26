@@ -197,9 +197,7 @@ $adodb_next_page = $_GET["adodb_next_page"];
 									<th>Días</th>
 									<th>Enviado por</th>
 									<th>Observación</th>
-									<th>
-										<input type="checkbox" onclick="markAll();" id="checkAll">
-									</th>
+									<th></th>
 								</tr>
 							</thead>
 
