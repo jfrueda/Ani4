@@ -36,6 +36,13 @@ $db = new ConnectionHandler("$ruta_raiz");
 //$db->conn->debug = true;
 // Modificado Infom�trika 29-Septiembre-2009
 // Compatibilidad con register_globals = Off
+$dep_sel = isset($_SESSION['dependencia']) ? $_SESSION['dependencia'] : null;
+foreach ($_GET as $key => $valor) {
+	${$key} = $valor;
+}
+foreach ($_POST as $key => $valor) {
+	${$key} = $valor;
+}
 $dependencia = $_SESSION['dependencia'];
 $checkValue = $_POST['checkValue'];
 
@@ -75,7 +82,7 @@ error_reporting(7);
 			next($checkValue);
 			$i++;
 		}
-		if ($radicadosSel) {
+		if (!empty($setFiltroSelect)) {
 			$whereFiltro = " and b.radi_nume_radi in($setFiltroSelect)";
 		}
 	}
