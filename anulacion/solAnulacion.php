@@ -44,7 +44,7 @@ foreach ($_POST as $key => $valor) {
 	${$key} = $valor;
 }
 $dependencia = $_SESSION['dependencia'];
-$checkValue = $_POST['checkValue'];
+$checkValue = isset($_POST['checkValue']) ? $_POST['checkValue'] : array();
 
 if (!$dependencia) {
 	include_once "$ruta_raiz/rec_session.php";
@@ -67,50 +67,40 @@ error_reporting(7);
  *  @$whereFiltro  Si filtroSelect trae valor la rutina del where para este filtro es almacenado aqui.
  *
  */
-	if ($checkValue) {
-		$num = count($checkValue);
-		$i = 0;
-		while ($i < $num) {
-			$record_id = key($checkValue);
-			$setFiltroSelect .= $record_id;
-			//Validacion de anulaciÃ³n respecto de aplicativos externos
+	$whereFiltro = "";
+	$radicadosSeleccionados = array();
 
-
-			if ($i <= ($num - 2)) {
-				$setFiltroSelect .= ",";
+	if (!empty($checkValue) && is_array($checkValue)) {
+		foreach ($checkValue as $record_id => $valor) {
+			if (preg_match('/^[0-9]+$/', (string) $record_id)) {
+				$radicadosSeleccionados[] = $record_id;
 			}
-			next($checkValue);
-			$i++;
 		}
-		if (!empty($setFiltroSelect)) {
+		if (!empty($radicadosSeleccionados)) {
+			$setFiltroSelect = implode(",", $radicadosSeleccionados);
+			$filtroSelect = $setFiltroSelect;
 			$whereFiltro = " and b.radi_nume_radi in($setFiltroSelect)";
 		}
 	}
-	if ($setFiltroSelect) {
-		$filtroSelect = $setFiltroSelect;
-	}
-	if ($filtroSelect) {
-		// En este proceso se utilizan las variabels $item, $textElements, $newText que son temporales para esta operacion.
+
+	if (!$whereFiltro && !empty($filtroSelect)) {
 		$filtroSelect = trim($filtroSelect);
 		$textElements = explode(",", $filtroSelect);
-		$newText = "";
+		$condiciones = array();
 		foreach ($textElements as $item) {
 			$item = trim($item);
-			if (strlen($item) != 0) {
-				if (strlen($item) <= 6) {
-					$sec = str_pad($item, 6, "0", STR_PAD_left);
-					//$item = date("Y") . $dep_sel . $sec;
-				} else {
-				}
-				$whereFiltro .= " b.radi_nume_radi = '$item' or";
+			if ($item !== "" && preg_match('/^[0-9]+$/', $item)) {
+				$condiciones[] = "b.radi_nume_radi = '$item'";
 			}
 		}
-		if (substr($whereFiltro, -2) == "or") {
-			$whereFiltro = substr($whereFiltro, 0, strlen($whereFiltro) - 2);
+		if (!empty($condiciones)) {
+			$whereFiltro = "and ( " . implode(" or ", $condiciones) . " ) ";
 		}
-		if (trim($whereFiltro)) {
-			$whereFiltro = "and ( $whereFiltro ) ";
-		}
+	}
+
+	if (!$whereFiltro) {
+		// Seguridad: si no llega seleccion previa, no se listan radicados.
+		$whereFiltro = "and 1 = 0 ";
 	}
 	/*
  * OPERACIONES EN JAVASCRIPT
@@ -178,7 +168,7 @@ error_reporting(7);
 	?>
 </head>
 
-<body bgcolor="#FFFFFF" topmargin="0" onLoad="markAll();">
+<body bgcolor="#FFFFFF" topmargin="0">
 	<form action='enviarReporte.php?<?= $encabezado ?>' method=post name=formAnulados>
 		<div class="col-sm-12">
 			<!-- widget grid -->
@@ -259,7 +249,7 @@ error_reporting(7);
 													include $ruta_raiz . "/include/query/anulacion/querySolAnulacion.php";
 													//$db->debug = false;
 													$pager = new ADODB_Pager($db, $isql, 'adodb', true, $orderNo, $orderTipo);
-													$pager->checkAll = true;
+													$pager->checkAll = false;
 													$pager->checkTitulo = true;
 													$pager->toRefLinks = $linkPagina;
 													$pager->toRefVars = $encabezado;
