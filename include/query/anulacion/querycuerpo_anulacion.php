@@ -2,6 +2,12 @@
 /**
   * CONSULTA VERIFICACION PREVIA A LA RADICACION
   */
+$whereUsuarioActual = '';
+if ((int) $tpAnulacion === 1) {
+	$whereUsuarioActual = ' and b.radi_depe_actu = ' . (int) $dep_sel .
+		' and b.radi_usua_actu = ' . (int) $codusuario . ' ';
+}
+
 switch($db->driver){
 	case 'mssql':
 		$isql = 'select
@@ -21,7 +27,7 @@ switch($db->driver){
 				and b.SGD_TRAD_CODIGO <> 2
 				and b.tdoc_codi=c.sgd_tpr_codigo
 				and sgd_eanu_codigo is null '.
-				$whereTpAnulacion.' '.$whereFiltro.'
+				$whereTpAnulacion.' '.$whereFiltro.' '.$whereUsuarioActual.'
 			order by '.$order .' ' .$orderTipo;
 		break;
 	case 'oracle':
@@ -50,7 +56,7 @@ switch($db->driver){
 				and b.tdoc_codi=c.sgd_tpr_codigo
 				and b.radi_fech_radi >='.$dateMin.'
 				and sgd_eanu_codigo is null'.
-				$whereTpAnulacion.' '.$whereFiltro.'
+				$whereTpAnulacion.' '.$whereFiltro.' '.$whereUsuarioActual.'
 			order by '.$order .' ' .$orderTipo;
 //			$db->conn->debug = true;
 		break;
@@ -72,6 +78,6 @@ switch($db->driver){
 				(a.anex_estado is null or a.anex_estado < 4)
 				and b.SGD_TRAD_CODIGO <> 2
 				and (env.sgd_renv_planilla = \'00\' or env.sgd_renv_planilla is null) 
-				and is_borrador = false and ( cast(b.radi_nume_radi as varchar(20)) not like \'3000%\' ) '. $whereTpAnulacion.' '.$whereFiltro;
+				and is_borrador = false and ( cast(b.radi_nume_radi as varchar(20)) not like \'3000%\' ) '. $whereTpAnulacion.' '.$whereFiltro.' '.$whereUsuarioActual;
 }
 ?>

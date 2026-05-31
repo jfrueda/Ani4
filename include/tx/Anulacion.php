@@ -70,7 +70,11 @@ function solAnulacion($radicados, $dependencia, $usuadoc, $comentario, $codUsuar
                 $esBorrador = $rsValidaTipo->fields['IS_BORRADOR'];
                 $tipoRad = (int)$rsValidaTipo->fields['SGD_TRAD_CODIGO'];
 
-                if ($esBorrador === true || $esBorrador === 't' || $tipoRad === 2) {
+                $esBorradorRad = ($esBorrador === true || $esBorrador === 't' || $esBorrador === 1 || $esBorrador === '1');
+                $esResolucion = ($tipoRad === 6);
+                // Se mantiene bloqueo para entrada (tipo 2). Para resoluciones (tipo 6)
+                // se permite solicitud aunque vengan marcadas como borrador.
+                if ($tipoRad === 2 || ($esBorradorRad && !$esResolucion)) {
                     $radicadosErrorSolicitud[] = $noRadicado;
                     continue;
                 }

@@ -51,17 +51,13 @@ $db = new ConnectionHandler($ruta_raiz);
 $tx = new Tx($db);
 
 $esadmin = $_SESSION['usua_admin_sistema'];
-$whereDep = '';
-if ($esadmin) {
-  $whereDep = ' d.depe_codi in (900,999)';
-}
 $query  = "
     SELECT d.DEPE_CODI || ' - ' || d.DEPE_NOMB,
         d.DEPE_CODI
     FROM
     DEPENDENCIA d
     where
-        d.depe_estado = '1' and ( $whereDep)
+        d.depe_estado = '1'
     ORDER BY d.DEPE_CODI, d.DEPE_NOMB";
 
 $rs1 = $db->conn->Execute($query);

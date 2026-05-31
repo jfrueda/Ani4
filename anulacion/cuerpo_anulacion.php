@@ -127,6 +127,10 @@ $adodb_next_page = $_GET["adodb_next_page"];
 		if (trim($busqRadicadosTmp)) {
 			$whereFiltro .= " and ( $busqRadicadosTmp ) ";
 		}
+	} elseif ((int)$tpAnulacion === 1) {
+		// En solicitud de anulacion no se listan radicados por defecto.
+		// Solo se muestran cuando el usuario realiza una busqueda explicita.
+		$whereFiltro .= " and 1 = 0 ";
 	}
 	/**  GENERACION LISTADO DE RADICADOS
 	 *  Aqui utilizamos la clase adodb para generar el listado de los radicados
@@ -193,9 +197,7 @@ $adodb_next_page = $_GET["adodb_next_page"];
 									<th>Días</th>
 									<th>Enviado por</th>
 									<th>Observación</th>
-									<th>
-										<input type="checkbox" onclick="markAll();" id="checkAll">
-									</th>
+									<th></th>
 								</tr>
 							</thead>
 
